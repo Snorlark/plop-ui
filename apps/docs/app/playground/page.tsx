@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SiteFooter } from "../_site/SiteFooter";
 import { SiteHeader } from "../_site/SiteHeader";
-import { Playground } from "./Playground";
+import { PlaygroundTools } from "./PlaygroundTools";
 
 export const metadata: Metadata = {
   title: "Playground",
-  description: "Try every Plop! component live: change props, switch surfaces and themes, and copy the code.",
+  description: "Stick real Plop! components on a board, letter anything in Sketchpop, or tweak every prop, then copy the code or export an image.",
 };
 
 export default function PlaygroundPage() {
@@ -15,9 +15,9 @@ export default function PlaygroundPage() {
       <SiteHeader />
       <main id="main" className="pg-page">
         <h1 className="doc-h1">Playground</h1>
-        <p className="doc-lede">Pick a piece, change its props, try it on every paper in light and dark, then copy the code.</p>
+        <p className="doc-lede">Play with the real components, then take your work away as code, HTML or an image.</p>
         <Suspense fallback={<p>Loading the playground…</p>}>
-          <Playground />
+          <PlaygroundTools />
         </Suspense>
       </main>
       <SiteFooter />
