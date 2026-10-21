@@ -37,33 +37,61 @@ export function App() {
 
 ## Components
 
-**Actions** Button, IconButton, Tooltip · **Inputs** Switch, Checkbox, RadioGroup, TextField, TextArea · **Display** Tag, Avatar, AvatarStack, TicketCard, UnitCard, StickyNote, Tabs, Count, StatusDot, EmptyState · **Feedback** StatusTimeline, Progress, Callout, Toast / `toast()` · **Foundations** PlopProvider, Sheet, Heading, Lettering · **Hooks** `useHaptics`, `useBoil`, `useInkBurst`, `useReducedMotion`, `useSound`
+**Actions** Button, ButtonLink, IconButton, Tooltip · **Inputs** Switch, Checkbox, RadioGroup, TextField, TextArea · **Display** Tag, Avatar, AvatarStack, TicketCard, UnitCard, StickyNote, Tabs, Count, StatusDot, EmptyState · **Feedback** StatusTimeline, Progress, Callout, Toast / `toast()` · **Foundations** PlopProvider, Sheet, Heading, Lettering · **Hooks** `useHaptics`, `useBoil`, `useInkBurst`, `useReducedMotion`, `useSound`
 
 Accessible by default: native elements first, full keyboard support, WCAG 2.2 AA contrast on every surface in light and dark, and every effect respects `prefers-reduced-motion`.
+
+## Run it locally
+
+Needs Node 20+ and pnpm 11 (`corepack enable` sets it up).
+
+```sh
+pnpm install
+pnpm build                              # builds tokens, fonts, the library and the apps
+pnpm --filter @plop-ui/docs dev         # docs website → http://localhost:4321
+pnpm --filter @plop-ui/storybook dev    # Storybook   → http://localhost:6006
+```
+
+Editing the library while the website runs? Keep `pnpm --filter @plop-ui/react dev` going in a second terminal; it rebuilds on save.
+
+| Page | What it is |
+| --- | --- |
+| `/` | The landing page |
+| `/docs/getting-started` | Docs: installation, Next.js guide, surfaces, tokens, one page per component |
+| `/playground` | Change any component's props, surface and theme live, then copy the code |
+| `/kit` | Every piece on one page (the original prototype, rebuilt from the library) |
+
+## Checks
+
+```sh
+pnpm lint
+pnpm typecheck
+pnpm test                               # Vitest + Testing Library (packages/react)
+pnpm size                               # size-limit budgets
+pnpm --filter @plop-ui/docs test:e2e    # Playwright: hydration, axe on every page and surface, keyboard
+                                        # (builds into .next-e2e, so it's safe while `pnpm dev` runs)
+```
 
 ## Repo
 
 ```
+PRD.md            what we're building and why (with a status table)
+TASKS.md          what to do next: the tracker
+CLAUDE.md         rules the codebase follows
 packages/tokens   design tokens → CSS variables + typed object
 packages/fonts    Sketchpop woff2/ttf + OFL license + font build tools
 packages/react    @plop-ui/react (esbuild, CSS Modules, per-file "use client")
-apps/docs         Next.js 15 docs site: the kit showcase + one page per component
+apps/docs         Next.js 15 website: landing, docs, Playground, /kit
 apps/storybook    Storybook 8 workshop with the a11y addon
-docs/             PRD, decision records, the original v0.6 prototype, brand assets
+docs/decisions    why things are the way they are
+docs/prototype    the original v0.6 HTML prototype
+docs/assets       logo and mark
 ```
 
-```sh
-pnpm install
-pnpm build        # all packages and apps
-pnpm test         # Vitest + Testing Library
-pnpm lint
-pnpm --filter @plop-ui/docs dev        # docs on :3000
-pnpm --filter @plop-ui/storybook dev   # Storybook on :6006
-pnpm --filter @plop-ui/docs test:e2e   # Playwright: hydration, axe on every surface, keyboard
-```
+## Contributing
 
-Read [`docs/PRD.md`](docs/PRD.md) for the plan and [`CLAUDE.md`](CLAUDE.md) for the rules the codebase follows.
+Pick something from [TASKS.md](TASKS.md). Every pull request that changes a package adds a changeset (`pnpm changeset`). Read [CLAUDE.md](CLAUDE.md) for the rules: no `next/*` in the library, no `Math.random()` in render, colors only from tokens, a story and a keyboard test for every component.
 
 ## License
 
-Code: MIT. Sketchpop font: SIL Open Font License 1.1.
+Code: MIT (pending, see TASKS.md). Sketchpop font: SIL Open Font License 1.1.
