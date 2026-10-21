@@ -1,0 +1,48 @@
+.root {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 6px;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-heading);
+  font-feature-settings: "calt" 1;
+  font-synthesis: none;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.05;
+  color: var(--plop-on);
+  -webkit-text-stroke: 1.5px currentColor;
+}
+[data-plop-filters] .root { filter: url(#plop-crayon); }
+.h1 { font-size: clamp(40px, 6vw, 64px); }
+.h2 { font-size: clamp(28px, 4vw, 38px); }
+.h3 { font-size: 22px; -webkit-text-stroke: 0.8px currentColor; }
+.h4 { font-size: 17px; -webkit-text-stroke: 0.5px currentColor; }
+
+/* A tomato marker scribble that draws itself under the heading. */
+.scribble {
+  position: absolute;
+  left: -4px;
+  bottom: -8px;
+  width: calc(100% + 10px);
+  height: 14px;
+  overflow: visible;
+}
+.scribble path {
+  fill: none;
+  stroke: var(--plop-tomato);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.6, 0.1, 0.3, 1) 0.35s;
+}
+[data-plop-surface="riso"] .scribble path { stroke: var(--plop-mustard); }
+.root[data-in] .scribble path,
+.still .scribble path { stroke-dashoffset: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *) .scribble path { stroke-dashoffset: 0; transition: none; }
+}
+[data-plop-motion="reduce"] .root .scribble path { stroke-dashoffset: 0; transition: none; }

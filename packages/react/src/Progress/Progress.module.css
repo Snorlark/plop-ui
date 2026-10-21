@@ -1,0 +1,51 @@
+.root { display: grid; gap: 10px; }
+.top { display: flex; justify-content: space-between; gap: 10px; }
+.label {
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--plop-on);
+}
+.value { font-family: var(--plop-font-body); font-size: 18px; color: var(--plop-on-soft); }
+.track {
+  position: relative;
+  height: 26px;
+  background: var(--plop-paper);
+  border-radius: 15px 12px 14px 11px / 12px 14px 11px 15px;
+}
+.track::after { content: ""; position: absolute; inset: 0; border-radius: inherit; border: 2.5px solid var(--plop-ink); }
+[data-plop-filters] .track::after { filter: url(#plop-wob2); }
+/* Filled with crayon hatching instead of a flat bar; the leading edge is one heavier stroke. */
+.fill {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  bottom: 4px;
+  width: calc((100% - 8px) * var(--v, 0));
+  border-radius: 10px 6px 8px 9px;
+  background: repeating-linear-gradient(-55deg, var(--pc) 0 3.5px, transparent 3.5px 8px);
+  transition: width 0.6s var(--plop-ease-spring);
+}
+.fill::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -2px;
+  bottom: -2px;
+  width: 4px;
+  border-radius: 3px;
+  background: var(--pc);
+  transform: rotate(6deg);
+}
+.ink { --pc: var(--plop-ink); }
+.mint { --pc: var(--plop-leaf); }
+.tomato { --pc: var(--plop-tomato); }
+.solid .fill { background: var(--pc); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fill:not([data-plop-motion="full"] *) { transition-duration: 0.01ms; }
+}
+[data-plop-motion="reduce"] .fill { transition-duration: 0.01ms; }

@@ -1,0 +1,104 @@
+.field { display: grid; gap: 8px; }
+
+.label {
+  justify-self: start;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--plop-on);
+}
+/* Focus swipes a highlighter across the label. */
+.label > span {
+  padding: 0 4px;
+  background: linear-gradient(transparent 55%, var(--hl, var(--plop-mustard)) 55% 92%, transparent 92%) no-repeat 0 0 / 0% 100%;
+  transition: background-size 0.35s var(--plop-ease-squish);
+}
+.field:focus-within .label > span { background-size: 100% 100%; }
+.req { color: var(--plop-tomato-text); margin-left: 2px; }
+
+.box {
+  position: relative;
+  background: var(--plop-paper);
+  border-radius: var(--plop-radius-box);
+  box-shadow: 3px 4px 0 var(--plop-shadow);
+}
+.box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2.5px solid var(--plop-ink);
+  pointer-events: none;
+  transition: border-width 0.15s;
+}
+[data-plop-filters] .box::before { filter: url(#plop-wob1); }
+/* ...and makes the outline boil. */
+.field:focus-within .box::before { border-width: 3.5px; }
+[data-plop-filters] .field:focus-within .box::before { animation: boil 0.5s steps(1) infinite; }
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 13px 16px 14px;
+  border: 0;
+  background: transparent;
+  font-family: var(--plop-font-body);
+  font-size: 20px;
+  color: var(--plop-ink-text);
+  outline: none;
+  resize: vertical;
+}
+.input::placeholder { color: var(--plop-placeholder); }
+.input:disabled { cursor: not-allowed; opacity: 0.6; }
+
+/* Ruled lines for longer writing. */
+.ruled {
+  min-height: 116px;
+  line-height: 28px;
+  padding-top: 8px;
+  background: repeating-linear-gradient(transparent 0 27px, color-mix(in srgb, var(--plop-periwinkle) 70%, transparent) 27px 28px);
+  background-position: 0 8px;
+  background-attachment: local;
+}
+
+.hint {
+  margin: 0;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-family: var(--plop-font-body);
+  font-size: 16.5px;
+  color: var(--plop-on-soft);
+}
+.hint svg { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+
+/* Errors switch to tomato ink and say how to fix it. */
+.error { --hl: var(--plop-bubblegum); }
+.error .box::before { border-color: var(--plop-tomato); }
+.error .hint { color: var(--plop-tomato-text); font-weight: 600; }
+
+.ok .box::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  transform: translateY(-50%);
+  background: var(--plop-leaf);
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4 13 C7 15 8 18 9 20 C12 12 16 7 22 3' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round'/></svg>") no-repeat center / contain;
+}
+.ok .input { padding-right: 44px; }
+
+@keyframes boil {
+  0% { filter: url(#plop-wob1); }
+  33.33% { filter: url(#plop-wob2); }
+  66.66% { filter: url(#plop-wob3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .field:not([data-plop-motion="full"] *) * { animation: none !important; transition-duration: 0.01ms !important; }
+}
+[data-plop-motion="reduce"] .field * { animation: none !important; transition-duration: 0.01ms !important; }

@@ -1,0 +1,50 @@
+/* Index-card dividers. The active one comes forward and joins the page. */
+.list { display: flex; flex-wrap: wrap; gap: 4px; padding-left: 12px; position: relative; z-index: 1; }
+.tab {
+  --tc: var(--plop-periwinkle);
+  position: relative;
+  margin: 0;
+  padding: 10px 20px 14px;
+  border: 2.5px solid var(--plop-ink);
+  border-bottom: 0;
+  border-radius: 14px 18px 0 0;
+  background: var(--tc);
+  color: var(--plop-ink-text);
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: translateY(8px) rotate(var(--tr, 0deg));
+  transform-origin: bottom center;
+  transition:
+    transform 0.35s var(--plop-ease-spring),
+    background-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.tab:nth-child(2) { --tc: var(--plop-mint); --tr: 1deg; }
+.tab:nth-child(3) { --tc: var(--plop-bubblegum); --tr: -1deg; }
+.tab:nth-child(4) { --tc: var(--plop-mustard); --tr: 1.5deg; }
+.tab:hover { transform: translateY(3px) rotate(var(--tr, 0deg)); }
+.tab[aria-selected="true"] { background: var(--plop-paper); transform: translateY(2.5px); z-index: 2; }
+.tab:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
+.tab > span + span { margin-left: 6px; }
+
+.panel {
+  position: relative;
+  padding: 22px;
+  background: var(--plop-paper);
+  color: var(--plop-ink-text);
+  border: 2.5px solid var(--plop-ink);
+  border-radius: 6px 16px 14px 18px;
+  box-shadow: 5px 7px 0 var(--plop-shadow);
+}
+.panel:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
+.panel[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tab:not([data-plop-motion="full"] *) { transition-duration: 0.01ms; }
+}
+[data-plop-motion="reduce"] .tab { transition-duration: 0.01ms; }
