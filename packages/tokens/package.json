@@ -1,0 +1,29 @@
+{
+  "name": "@plop-ui/tokens",
+  "version": "0.0.0",
+  "description": "Design tokens for Plop!: colors, contrast roles, type, motion and 5 paper surfaces, as CSS variables and a typed object.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "files": ["dist"],
+  "repository": { "type": "git", "url": "git+https://github.com/Snorlark/plop-ui.git", "directory": "packages/tokens" },
+  "publishConfig": { "access": "public", "provenance": true },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/emit-css.mjs",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src scripts"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

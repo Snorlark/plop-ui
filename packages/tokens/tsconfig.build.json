@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "outDir": "dist", "declaration": true, "noEmit": false, "verbatimModuleSyntax": false, "module": "ESNext" },
+  "exclude": ["src/**/*.test.ts"]
+}
