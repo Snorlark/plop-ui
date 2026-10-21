@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { BuddyPeek, type BuddyMood } from "../Buddy/Buddy.js";
 import { ErrorIcon, InfoIcon, SuccessIcon } from "../icons.js";
 import { cx } from "../internal/cx.js";
 import { Lettering } from "../Lettering/Lettering.js";
-import { dismiss, getToasts, subscribe, type ToastItem, type ToastKind } from "./store.js";
+import { dismiss, getToasts, subscribe, TOAST_BUDDY, type ToastItem, type ToastKind } from "./store.js";
 import styles from "./Toast.module.css";
 
 const icon: Record<ToastKind, ReactNode> = { info: <InfoIcon />, success: <SuccessIcon />, error: <ErrorIcon /> };
@@ -32,7 +33,7 @@ function ToastView({ item }: { item: ToastItem }) {
       window.clearTimeout(gone);
     };
   }, [item]);
-  return (
+  const body = (
     <div className={cx(styles.toast, item.kind !== "info" && styles[item.kind])} data-leaving={leaving ? "" : undefined}>
       {icon[item.kind]}
       <span>
@@ -40,17 +41,26 @@ function ToastView({ item }: { item: ToastItem }) {
       </span>
     </div>
   );
+  return item.buddy ? (
+    <BuddyPeek mood={item.buddy} className={styles.withBuddy}>
+      {body}
+    </BuddyPeek>
+  ) : (
+    body
+  );
 }
 
 export interface ToastProps {
   children: ReactNode;
   kind?: ToastKind;
+  /** A character peeks over the toast: `true` picks one for the kind, or name a mood. */
+  buddy?: boolean | BuddyMood;
   className?: string;
 }
 
 /** A toast drawn in place (for docs and empty states); use `toast()` to show real ones. */
-export function Toast({ children, kind = "info", className }: ToastProps) {
-  return (
+export function Toast({ children, kind = "info", buddy, className }: ToastProps) {
+  const body = (
     <div className={cx(styles.toast, styles.static, kind !== "info" && styles[kind], className)}>
       {icon[kind]}
       <span>
@@ -58,4 +68,6 @@ export function Toast({ children, kind = "info", className }: ToastProps) {
       </span>
     </div>
   );
+  const mood = buddy === true ? TOAST_BUDDY[kind] : buddy || undefined;
+  return mood ? <BuddyPeek mood={mood}>{body}</BuddyPeek> : body;
 }
