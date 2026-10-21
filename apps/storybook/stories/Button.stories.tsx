@@ -23,6 +23,39 @@ export const Hero: Story = {
   parameters: { docs: { description: { story: "Add a buddy for the one action that matters most on a screen." } } },
 };
 
+export const BuddyPeek: Story = {
+  args: { children: "Get started", size: "lg", tilt: -2, buddy: "peek" },
+  render: (args) => (
+    <div style={{ paddingTop: 90 }}>
+      <Button {...args} />
+    </div>
+  ),
+  parameters: { docs: { description: { story: 'buddy="peek" hides the buddy behind the sticker until hover or keyboard focus.' } } },
+};
+
+export const Shadows: Story = {
+  render: () => (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 36, alignItems: "center" }}>
+      <Button shadow="soft" seed="s0">Soft (default)</Button>
+      <Button shadow="stripes" seed="s1">Stripes</Button>
+      <Button shadow="solid" seed="s2">Solid</Button>
+      <Button shadow="outline" seed="s3">Outline</Button>
+      <Button shadow="none" seed="s4">None</Button>
+    </div>
+  ),
+  parameters: { docs: { description: { story: 'Set one sticker\'s `shadow`, or every sticker\'s with `<PlopProvider stickerShadow="solid">`.' } } },
+};
+
+export const DestructivePoof: Story = {
+  render: () => (
+    <div style={{ display: "flex", gap: 36 }}>
+      <Button variant="mint">Save (confetti)</Button>
+      <Button variant="tomato">Delete (poof)</Button>
+    </div>
+  ),
+  parameters: { docs: { description: { story: "Tomato is the cancel/delete color, so it shakes its head and puffs dust instead of throwing confetti. Force either with `burst=\"poof\"` or `burst=\"confetti\"`." } } },
+};
+
 export const Variants: Story = {
   render: () => (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 36, alignItems: "center" }}>

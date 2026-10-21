@@ -40,7 +40,7 @@
   position: absolute;
   inset: 0;
   border-radius: var(--plop-radius-sticker);
-  background: var(--plop-shadow-hatch);
+  background: var(--plop-shadow-strong);
   transform: translate(var(--shadow-x), var(--shadow-y));
   filter: blur(var(--shadow-blur));
   transition:
@@ -346,6 +346,52 @@
 }
 .root[data-happy]:not([data-pressed]) .buddyHead { transform: translateY(-14px) rotate(-6deg); }
 .root[data-happy]:not([data-pressed]) .buddyHands { transform: translateY(-4px); }
+
+/* ---- shadow styles: soft (default), solid, stripes, outline, none. Per sticker (data-shadow) or per provider (data-plop-shadow). ---- */
+.root[data-shadow="stripes"] .shadow,
+[data-plop-shadow="stripes"] .root:not([data-shadow]) .shadow { background: var(--plop-shadow-hatch); }
+.root[data-shadow="solid"] .shadow,
+[data-plop-shadow="solid"] .root:not([data-shadow]) .shadow { background: var(--plop-ink); }
+.root[data-shadow="outline"] .shadow,
+[data-plop-shadow="outline"] .root:not([data-shadow]) .shadow { background: transparent; box-shadow: inset 0 0 0 2.5px var(--plop-ink); }
+.root[data-shadow="none"] .shadow,
+[data-plop-shadow="none"] .root:not([data-shadow]) .shadow { display: none; }
+
+/* Cancel / delete: a short head-shake with the poof (instead of confetti). */
+.root[data-shake] .paper { animation: headshake 0.42s ease-out; }
+@keyframes headshake {
+  0%, 100% { translate: 0 0; }
+  20% { translate: -5px 0; }
+  45% { translate: 4px 0; }
+  70% { translate: -2px 0; }
+}
+
+/* A cast character as the buddy (buddyMood): same frame as Pip, its own face. */
+.buddyCast svg { width: 100%; height: 100%; overflow: visible; }
+
+/* buddy="peek": tucked behind the sticker, pops up on hover or keyboard focus (and stays up while it cheers). */
+.peek .buddyHead,
+.peek .buddyHands {
+  opacity: 0;
+  transition:
+    transform var(--plop-duration-spring) var(--plop-ease-spring),
+    opacity 0.12s;
+}
+.peek .buddyHead { transform: translateY(58px) scale(0.9); }
+.lg.peek .buddyHead { transform: translateY(72px) scale(0.9); }
+.sm.peek .buddyHead { transform: translateY(46px) scale(0.9); }
+.peek .buddyHands { transform: translateY(10px) scale(0.6); }
+@media (hover: hover) {
+  .peek:not(:disabled):hover .buddyHead { opacity: 1; transform: translateY(-6px); }
+  .peek:not(:disabled):hover .buddyHands { opacity: 1; transform: none; }
+}
+.peek:not(:disabled):focus-visible .buddyHead { opacity: 1; transform: none; }
+.peek:not(:disabled):focus-visible .buddyHands,
+.peek:not(:disabled)[data-happy] .buddyHands { opacity: 1; transform: none; }
+.peek:not(:disabled)[data-happy]:not([data-pressed]) .buddyHead { opacity: 1; transform: translateY(-14px) rotate(-6deg); }
+.peek:not(:disabled)[data-happy]:not([data-pressed]) .buddyHands { transform: translateY(-4px); }
+.peek:not(:disabled)[data-pressed] .buddyHead { opacity: 1; transform: translateY(13px); }
+.peek:not(:disabled)[data-pressed] .buddyHands { opacity: 1; transform: translateY(3px); }
 
 .blink {
   transform-origin: center;

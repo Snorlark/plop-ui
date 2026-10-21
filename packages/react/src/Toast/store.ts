@@ -1,3 +1,5 @@
+import type { BuddyMood } from "../Buddy/Buddy.js";
+
 export type ToastKind = "info" | "success" | "error";
 
 export interface ToastItem {
@@ -6,6 +8,8 @@ export interface ToastItem {
   kind: ToastKind;
   /** Milliseconds on screen. */
   duration: number;
+  /** A character peeking over the toast, or none. */
+  buddy?: BuddyMood;
 }
 
 type Listener = (items: readonly ToastItem[]) => void;
@@ -32,12 +36,18 @@ export function dismiss(id: number) {
 export interface ToastOptions {
   /** Milliseconds on screen. Default 4000: long enough to read twice. */
   duration?: number;
+  /** A character peeks over the toast: `true` picks one for the kind (Pip, Bix, Specs), or name a mood, e.g. `"congrats"`. */
+  buddy?: boolean | BuddyMood;
 }
+
+/** The character that fits each kind of toast. */
+export const TOAST_BUDDY: Record<ToastKind, BuddyMood> = { success: "success", error: "error", info: "preview" };
 
 function show(kind: ToastKind, text: string, options: ToastOptions = {}): number {
   const id = nextId++;
   // One stamp at a time, like the prototype: a new toast replaces the last.
-  items = [{ id, text, kind, duration: options.duration ?? 4000 }];
+  const buddy = options.buddy === true ? TOAST_BUDDY[kind] : options.buddy || undefined;
+  items = [{ id, text, kind, duration: options.duration ?? 4000, buddy }];
   emit();
   return id;
 }

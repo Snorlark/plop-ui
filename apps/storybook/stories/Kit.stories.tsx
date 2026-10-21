@@ -40,7 +40,7 @@ type Story = StoryObj;
 export const TooltipStory: Story = {
   name: "Tooltip",
   render: () => (
-    <div className="row" style={{ display: "flex", gap: 80, paddingTop: 90 }}>
+    <div className="row" style={{ display: "flex", gap: 80, paddingTop: 90, paddingBottom: 90 }}>
       <Tooltip content="Priority sets who gets paged first.">
         <IconButton variant="plain" size="sm" icon={<InfoIcon size={22} />} label="What does priority do?" />
       </Tooltip>
@@ -49,6 +49,9 @@ export const TooltipStory: Story = {
       </Tooltip>
       <Tooltip content="Sends your live location for 30 minutes." side="right" open>
         <Button size="sm" iconLeft={<PinIcon />}>Share pin</Button>
+      </Tooltip>
+      <Tooltip content="Opens below, for triggers in a header." side="bottom" open>
+        <Button size="sm" variant="plain">Bottom</Button>
       </Tooltip>
     </div>
   ),

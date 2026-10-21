@@ -35,6 +35,31 @@
 .success { --tb: var(--plop-mint); --tt: var(--plop-on-fill-mint); }
 .error { --tb: var(--plop-bubblegum); --tt: var(--plop-on-fill-bubblegum); }
 .toast[data-leaving] { animation: lift 220ms ease-in forwards; }
+/* With a character on top, the whole thing leaves together. */
+.withBuddy { pointer-events: auto; }
+.withBuddy:has([data-leaving]) { animation: lift 220ms ease-in forwards; }
+.withBuddy .toast[data-leaving] { animation: none; }
+
+/*
+ * A soft ink wash rising from the bottom of the screen while a toast is up,
+ * so it reads apart from whatever is underneath without hiding it. Never
+ * blocks clicks.
+ */
+.zone::before {
+  content: "";
+  position: fixed;
+  inset: auto 0 0 0;
+  height: min(220px, 32vh);
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 90% at 50% 100%, color-mix(in srgb, var(--plop-ink-text) 26%, transparent), transparent 70%),
+    linear-gradient(to top, color-mix(in srgb, var(--plop-ink-text) 18%, transparent), transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.zone:has(.toast)::before { opacity: 1; }
+.zone:has(.toast[data-leaving])::before { opacity: 0; transition-duration: 0.22s; }
 
 /* Toast looks for docs/stories, without the fixed zone. */
 .static { position: relative; animation: none; }
