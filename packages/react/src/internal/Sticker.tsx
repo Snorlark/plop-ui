@@ -1,12 +1,15 @@
 "use client";
 
 import {
+  type AnchorHTMLAttributes,
+  type ElementType,
   useCallback,
   useEffect,
   useRef,
   useState,
   type ButtonHTMLAttributes,
   type CSSProperties,
+  type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
@@ -38,7 +41,7 @@ const variantClass: Record<StickerVariant, string | undefined> = {
 export interface StickerOwnProps {
   /** Spot color printed under the ink. Default `ink`. */
   variant?: StickerVariant;
-  /** Default `md`. */
+  /** Sticker size: `sm` for dense rows, `lg` for the one hero action. Default `md`. */
   size?: StickerSize;
   /** Rotation in degrees. Defaults to a small seeded tilt; pass `0` to sit straight. */
   tilt?: number;
@@ -194,6 +197,17 @@ export function Sticker({
         release();
       }}
     >
+      <StickerInner buddy={buddy} loading={loading} loadingLabel={loadingLabel}>
+        {children}
+      </StickerInner>
+    </button>
+  );
+}
+
+
+function StickerInner({ buddy, loading, loadingLabel, children }: { buddy: boolean; loading: boolean; loadingLabel: string; children: ReactNode }) {
+  return (
+    <>
       <span className={styles.shadow} aria-hidden="true" />
       {buddy && <BuddyHead />}
       <span className={styles.paper}>
@@ -218,7 +232,98 @@ export function Sticker({
       <span className={styles.fold} aria-hidden="true" />
       {buddy && <BuddyHands />}
       <span className={styles.cut} aria-hidden="true" />
-    </button>
+    </>
+  );
+}
+
+interface StickerLinkProps extends Omit<StickerOwnProps, "loading" | "loadingLabel">, Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
+  ref?: Ref<HTMLAnchorElement>;
+  href: string;
+  /** Render with your router's link component, e.g. Next.js `Link`. Default `a`. */
+  as?: ElementType;
+  round?: boolean;
+  buddy?: boolean;
+  children: ReactNode;
+}
+
+/**
+ * The same sticker as a link. Pointer presses squish it; Enter shows the
+ * press (Space doesn't activate links, so it doesn't here either).
+ */
+export function StickerLink({
+  ref,
+  as: Tag = "a",
+  variant = "ink",
+  size = "md",
+  tilt,
+  seed,
+  burst = true,
+  round = false,
+  buddy = false,
+  className,
+  style,
+  children,
+  onClick,
+  onPointerDown,
+  onPointerUp,
+  onPointerLeave,
+  onKeyDown,
+  onBlur,
+  ...rest
+}: StickerLinkProps) {
+  const autoSeed = useSeed(seed);
+  const angle = tilt ?? seededTilt(autoSeed);
+  const haptics = useHaptics();
+  const inkBurst = useInkBurst();
+  const [pressed, setPressed] = useState(false);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  const press = () => {
+    setPressed(true);
+    haptics.tap();
+  };
+  const release = () => setPressed(false);
+
+  return (
+    <Tag
+      {...rest}
+      ref={ref}
+      data-pressed={pressed ? "" : undefined}
+      className={cx(styles.root, styles.link, variantClass[variant], size !== "md" && styles[size], round && styles.round, className)}
+      style={{ "--tilt": `${angle}deg`, ...style } as CSSProperties}
+      onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+        if (burst !== false) inkBurst(event.currentTarget, burst === true ? BURST_COLORS[variant] : burst, round ? 7 : 9);
+        onClick?.(event);
+      }}
+      onPointerDown={(event: PointerEvent<HTMLAnchorElement>) => {
+        onPointerDown?.(event);
+        if (event.button === 0) press();
+      }}
+      onPointerUp={(event: PointerEvent<HTMLAnchorElement>) => {
+        onPointerUp?.(event);
+        release();
+      }}
+      onPointerLeave={(event: PointerEvent<HTMLAnchorElement>) => {
+        onPointerLeave?.(event);
+        release();
+      }}
+      onKeyDown={(event: KeyboardEvent<HTMLAnchorElement>) => {
+        onKeyDown?.(event);
+        if (event.key === "Enter" && !event.repeat) {
+          press();
+          timer.current = window.setTimeout(release, 110);
+        }
+      }}
+      onBlur={(event: FocusEvent<HTMLAnchorElement>) => {
+        onBlur?.(event);
+        release();
+      }}
+    >
+      <StickerInner buddy={buddy} loading={false} loadingLabel="">
+        {children}
+      </StickerInner>
+    </Tag>
   );
 }
 

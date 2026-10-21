@@ -9,7 +9,7 @@ export type CalloutTone = "info" | "warn" | "error" | "success";
 export interface CalloutProps {
   title: ReactNode;
   children?: ReactNode;
-  /** Default `info`. */
+  /** Sets the color and icon: info, warn, error or success. Default `info`. */
   tone?: CalloutTone;
   /** A button under the text, e.g. "Try again". */
   action?: ReactNode;
