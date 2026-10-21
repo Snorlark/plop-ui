@@ -15,18 +15,18 @@ for (const path of PAGES) {
 }
 
 for (const surface of SURFACES) {
-  test(`first paint uses the ${surface} surface from the cookie`, async ({ context, request, baseURL }) => {
-    await context.addCookies([{ name: "plop-surface", value: surface, url: baseURL! }]);
+  test(`/kit server-renders the ${surface} surface from the cookie`, async ({ request }) => {
     // The raw server HTML, before any JavaScript runs.
-    const html = await (await request.get("/docs/getting-started", { headers: { cookie: `plop-surface=${surface}` } })).text();
-    expect(html).toMatch(new RegExp(`<html[^>]*data-plop-surface="${surface}"`));
+    const html = await (await request.get("/kit", { headers: { cookie: `plop-surface=${surface}` } })).text();
+    expect(html).toContain(`data-plop-surface="${surface}"`);
   });
 }
 
-test("the surface switcher repaints the page and survives a reload", async ({ page }) => {
-  await page.goto("/docs/surfaces");
+test("the /kit surface switcher repaints the kit and survives a reload", async ({ page }) => {
+  await page.goto("/kit");
   await page.getByRole("radio", { name: "Kraft" }).check();
-  await expect(page.locator("html")).toHaveAttribute("data-plop-surface", "kraft");
+  const kit = page.locator(".kit-root");
+  await expect(kit).toHaveAttribute("data-plop-surface", "kraft");
   await page.reload();
-  await expect(page.locator("html")).toHaveAttribute("data-plop-surface", "kraft");
+  await expect(kit).toHaveAttribute("data-plop-surface", "kraft");
 });
