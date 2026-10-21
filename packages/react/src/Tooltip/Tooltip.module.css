@@ -1,0 +1,64 @@
+.wrap { position: relative; display: inline-flex; }
+
+/* A speech bubble that pops out of whatever it explains. */
+.tip {
+  position: absolute;
+  bottom: calc(100% + 18px);
+  left: 50%;
+  width: max-content;
+  max-width: 240px;
+  padding: 10px 14px 11px;
+  background: var(--plop-paper);
+  color: var(--plop-ink-text);
+  border: 2.5px solid var(--plop-ink);
+  border-radius: 16px 12px 18px 11px;
+  font-family: var(--plop-font-body);
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: 3px 4px 0 var(--plop-shadow);
+  transform: translateX(-50%) rotate(-3deg) scale(0.6);
+  transform-origin: 50% 120%;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.35s var(--plop-ease-spring),
+    opacity 0.15s;
+  z-index: 5;
+}
+.tip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -11px;
+  width: 18px;
+  height: 18px;
+  background: var(--plop-paper);
+  border-right: 2.5px solid var(--plop-ink);
+  border-bottom: 2.5px solid var(--plop-ink);
+  transform: translateX(-50%) rotate(45deg) skew(10deg, 10deg);
+  border-radius: 0 0 4px 0;
+}
+.wrap:not([data-dismissed]):hover .tip,
+.wrap:not([data-dismissed]):focus-within .tip,
+.wrap[data-open] .tip {
+  opacity: 1;
+  transform: translateX(-50%) rotate(-3deg) scale(1);
+}
+
+.right { left: auto; right: -14px; transform: rotate(3deg) scale(0.6); transform-origin: 85% 120%; }
+.right::after { left: auto; right: 22px; transform: rotate(45deg) skew(10deg, 10deg); }
+.wrap:not([data-dismissed]):hover .right,
+.wrap:not([data-dismissed]):focus-within .right,
+.wrap[data-open] .right {
+  transform: rotate(3deg) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tip:not([data-plop-motion="full"] *) { transition-duration: 0.01ms; }
+}
+[data-plop-motion="reduce"] .tip { transition-duration: 0.01ms; }

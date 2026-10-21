@@ -1,0 +1,31 @@
+/* A sheet of paper taped onto the surface. Everything inside it is printed on paper. */
+.root {
+  --tape-a: var(--plop-mustard);
+  position: relative;
+  padding: 44px 30px 40px;
+  border: 2.5px solid var(--plop-ink);
+  border-radius: 14px 18px 11px 20px / 18px 12px 20px 14px;
+  box-shadow: 7px 9px 0 var(--plop-shadow);
+  transform: rotate(var(--tilt, 0deg));
+}
+.root::before,
+.root::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  width: 96px;
+  height: 26px;
+  background: repeating-linear-gradient(-45deg, var(--tape-a) 0 7px, color-mix(in srgb, var(--tape-a) 65%, white) 7px 14px);
+  opacity: 0.9;
+  clip-path: polygon(4% 0, 96% 0, 100% 16%, 96% 33%, 100% 50%, 96% 66%, 100% 83%, 96% 100%, 4% 100%, 0 83%, 4% 66%, 0 50%, 4% 33%, 0 16%);
+}
+.root::before { left: 26px; transform: rotate(-7deg); }
+.root::after { right: 30px; transform: rotate(6deg); }
+.noTape::before,
+.noTape::after { display: none; }
+.periwinkle { --tape-a: var(--plop-periwinkle); }
+.bubblegum { --tape-a: var(--plop-bubblegum); }
+.mint { --tape-a: var(--plop-mint); }
+@media (max-width: 560px) {
+  .root { padding: 38px 18px 32px; }
+}

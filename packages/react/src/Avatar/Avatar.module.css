@@ -1,0 +1,79 @@
+.root {
+  --ab: var(--plop-periwinkle);
+  --as: 52px;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--as);
+  height: var(--as);
+  border-radius: var(--plop-radius-blob);
+  background: var(--ab);
+  border: 2.5px solid var(--plop-ink);
+  box-shadow: 0 0 0 4px var(--plop-paper), 2px 4px 0 4px var(--plop-shadow);
+  transform: rotate(var(--tilt, 0deg));
+  vertical-align: middle;
+}
+.root > svg { width: 100%; height: 100%; overflow: visible; }
+[data-plop-filters] .root > svg { filter: url(#plop-wob1); }
+.photo { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.sm { --as: 36px; }
+.lg { --as: 76px; }
+.xl { --as: 86px; }
+
+/* Avatars wiggle when you hover them. */
+@media (hover: hover) {
+  .root { transition: transform 0.4s var(--plop-ease-spring); }
+  .root:hover { transform: rotate(-8deg) scale(1.08); }
+  [data-plop-filters] .root:hover > svg { animation: boil 0.4s steps(1) infinite; }
+}
+
+.status {
+  position: absolute;
+  right: -4px;
+  bottom: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--sc, var(--plop-leaf));
+  border: 2.5px solid var(--plop-ink);
+  box-shadow: 0 0 0 3px var(--plop-paper);
+}
+.busy { --sc: var(--plop-mustard); }
+.offline { --sc: var(--plop-tomato); }
+
+.stack { display: inline-flex; align-items: center; }
+.stack > * + * { margin-left: -8px; }
+.stack > :nth-child(odd) { --tilt: -6deg; }
+.stack > :nth-child(even) { --tilt: 5deg; }
+.more {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--plop-radius-blob);
+  background: var(--plop-paper);
+  color: var(--plop-ink-text);
+  border: 2.5px dashed var(--plop-ink);
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-heading);
+  font-size: 13px;
+}
+
+.blink { transform-origin: center; transform-box: fill-box; animation: blink 5s infinite; animation-delay: var(--blink-delay, 0s); }
+@keyframes blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+@keyframes boil {
+  0% { filter: url(#plop-wob1); }
+  33.33% { filter: url(#plop-wob2); }
+  66.66% { filter: url(#plop-wob3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *),
+  .root:not([data-plop-motion="full"] *) * { animation: none !important; transition-duration: 0.01ms !important; }
+}
+[data-plop-motion="reduce"] .root,
+[data-plop-motion="reduce"] .root * { animation: none !important; transition-duration: 0.01ms !important; }
