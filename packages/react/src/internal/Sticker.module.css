@@ -1,0 +1,367 @@
+/* The die-cut sticker behind Button and IconButton. Ported from the v0.6 prototype's .stk. */
+
+@property --plop-peel {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+.root {
+  --tilt: 0deg;
+  --fill: var(--plop-fill-ink);
+  --label: var(--plop-on-fill-ink);
+  --y: 0px;
+  --s: 1;
+  --shadow-x: var(--plop-hatch-offset-x);
+  --shadow-y: var(--plop-hatch-offset-y);
+  --shadow-blur: 0px;
+  position: relative;
+  display: inline-grid;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+  vertical-align: middle;
+  transform: translateY(var(--y)) rotate(var(--tilt)) scale(var(--s));
+  transition:
+    transform var(--plop-duration-spring) var(--plop-ease-spring),
+    --plop-peel 0.35s var(--plop-ease-squish);
+}
+
+.shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--plop-radius-sticker);
+  background: var(--plop-shadow-hatch);
+  transform: translate(var(--shadow-x), var(--shadow-y));
+  filter: blur(var(--shadow-blur));
+  transition:
+    transform var(--plop-duration-spring) var(--plop-ease-spring),
+    filter 0.3s ease;
+}
+
+.paper {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 7px;
+  background: var(--plop-paper);
+  border-radius: var(--plop-radius-sticker);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--plop-peel)), calc(100% - var(--plop-peel)) 100%, 0 100%);
+  transform-origin: 50% 80%;
+}
+
+.face {
+  position: relative;
+  display: block;
+  padding: 15px 30px 17px;
+  border-radius: var(--plop-radius-face);
+  isolation: isolate;
+}
+
+/* The spot color is printed under the ink, a little off-register. */
+.fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--fill);
+  transform: translate(3px, 2.5px);
+}
+
+.ink {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 3.4px solid var(--plop-ink);
+  pointer-events: none;
+}
+
+.ink::after {
+  content: "";
+  position: absolute;
+  inset: -4px -3px -2px -5px;
+  border-radius: 22px 16px 20px 15px / 16px 20px 15px 22px;
+  border: 1.5px solid var(--plop-ink);
+  opacity: 0.45;
+  transform: rotate(0.8deg);
+}
+
+[data-plop-filters] .ink {
+  filter: url(#plop-wob1);
+}
+
+.label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-feature-settings: "calt" 1;
+  font-synthesis: none;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--label);
+  -webkit-text-stroke: 0.4px currentColor;
+  white-space: nowrap;
+}
+
+.label svg {
+  flex: none;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fold {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  width: var(--plop-peel);
+  height: var(--plop-peel);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background: linear-gradient(135deg, var(--plop-paper) 0%, var(--plop-paper-back) 70%);
+  border-radius: 3px;
+  filter: drop-shadow(1px 1px 0 var(--plop-shadow));
+  pointer-events: none;
+}
+
+/* Focus: a dashed "cut here" line with scissors, never removed. */
+.cut {
+  position: absolute;
+  inset: -11px;
+  z-index: 3;
+  border: 2.5px dashed var(--plop-focus);
+  border-radius: var(--plop-radius-cut);
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.cut::before {
+  content: "\2702";
+  position: absolute;
+  top: -15px;
+  left: 14px;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--plop-focus);
+  transform: rotate(-12deg);
+}
+
+.root:focus-visible .cut {
+  opacity: 1;
+}
+
+/* ---- hover: the corner peels up ---- */
+@media (hover: hover) and (pointer: fine) {
+  .root:not(:disabled):not([aria-busy="true"]):hover {
+    --plop-peel: 18px;
+    --y: -3px;
+    --shadow-x: 7px;
+    --shadow-y: 10px;
+  }
+
+  [data-plop-filters] .root:not(:disabled):hover .ink,
+  [data-plop-filters] .root:not(:disabled):hover .buddyHead svg {
+    animation: boil 0.42s steps(1) infinite;
+  }
+
+  .root:not(:disabled):hover .buddyHead {
+    transform: translateY(-6px);
+  }
+}
+
+/* ---- press: squish flat into the paper ---- */
+.root[data-pressed]:not(:disabled) {
+  --y: 3px;
+  --s: 0.95;
+  --plop-peel: 0px;
+  --shadow-x: 1px;
+  --shadow-y: 1px;
+  --shadow-blur: 1px;
+  transition:
+    transform var(--plop-duration-squish) var(--plop-ease-squish),
+    --plop-peel var(--plop-duration-squish) linear;
+}
+
+.root[data-pressed]:not(:disabled) .shadow {
+  transition:
+    transform var(--plop-duration-squish) var(--plop-ease-squish),
+    filter var(--plop-duration-squish) linear;
+}
+
+/* ---- release: the paper springs back ---- */
+.root[data-released] .paper {
+  animation: spring 420ms ease-out;
+}
+
+@keyframes spring {
+  0% { transform: scale(1.07, 0.92); }
+  35% { transform: scale(0.97, 1.04); }
+  70% { transform: scale(1.01, 0.99); }
+  100% { transform: scale(1, 1); }
+}
+
+@keyframes boil {
+  0% { filter: url(#plop-wob1); }
+  33.33% { filter: url(#plop-wob2); }
+  66.66% { filter: url(#plop-wob3); }
+}
+
+/* ---- sizes ---- */
+.sm {
+  --shadow-x: 3px;
+  --shadow-y: 5px;
+}
+.sm .paper { padding: 5px; }
+.sm .face { padding: 9px 18px 10px; }
+.sm .label { font-size: 13px; }
+.sm .ink { border-width: 2.5px; }
+
+.lg .face { padding: 24px 52px 26px; }
+.lg .label { font-size: 24px; }
+
+/* ---- variants: fill + its contrast role ---- */
+.inkFill { --fill: var(--plop-fill-ink); --label: var(--plop-on-fill-ink); }
+.periwinkle { --fill: var(--plop-fill-periwinkle); --label: var(--plop-on-fill-periwinkle); }
+.mint { --fill: var(--plop-fill-mint); --label: var(--plop-on-fill-mint); }
+.mustard { --fill: var(--plop-fill-mustard); --label: var(--plop-on-fill-mustard); }
+.tomato { --fill: var(--plop-fill-tomato); --label: var(--plop-on-fill-tomato); }
+.plain { --fill: var(--plop-fill-plain); --label: var(--plop-on-fill-plain); }
+
+/* ---- round (IconButton) ---- */
+.round .paper,
+.round .shadow { border-radius: var(--plop-radius-blob); }
+.round .face { padding: 14px; border-radius: 50% 46% 53% 48%; }
+.round.sm .face { padding: 9px; }
+.round.lg .face { padding: 20px; }
+.round .ink::after { border-radius: 50%; }
+.round .cut { border-radius: 50%; }
+.round .label svg { width: 26px; height: 26px; display: block; }
+.round.sm .label svg { width: 20px; height: 20px; }
+.round.lg .label svg { width: 34px; height: 34px; }
+
+/* ---- disabled: half-peeled and faded ---- */
+.root:disabled {
+  cursor: not-allowed;
+  --plop-peel: 22px;
+}
+.root:disabled .paper { filter: saturate(0.25) brightness(0.97); }
+.root:disabled .fill { opacity: 0.55; }
+.root:disabled .ink { opacity: 0.5; }
+
+/* ---- loading ---- */
+.root[aria-busy="true"] { cursor: progress; }
+.hidden { visibility: hidden; }
+.loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dots { display: inline-flex; gap: 4px; }
+.dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: hop 0.7s var(--plop-ease-squish) infinite;
+}
+.dots i:nth-child(2) { animation-delay: 0.12s; }
+.dots i:nth-child(3) { animation-delay: 0.24s; }
+@keyframes hop {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-5px); }
+}
+
+/* ---- buddy: a little character peeking over the top edge ---- */
+.buddyHead,
+.buddyHands {
+  position: absolute;
+  left: 16px;
+  width: 84px;
+  pointer-events: none;
+}
+.buddyHead {
+  top: -60px;
+  height: 68px;
+  z-index: 0;
+  transition: transform var(--plop-duration-spring) var(--plop-ease-spring);
+}
+.buddyHead svg,
+.buddyHands svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+[data-plop-filters] .buddyHead svg { filter: url(#plop-wob1); }
+.buddyHands {
+  top: -11px;
+  height: 22px;
+  z-index: 2;
+  transition: transform var(--plop-duration-spring) var(--plop-ease-spring);
+}
+.lg .buddyHead { width: 100px; height: 81px; top: -74px; left: 22px; }
+.lg .buddyHands { width: 100px; height: 26px; top: -13px; left: 22px; }
+.sm .buddyHead { width: 64px; height: 52px; top: -46px; left: 10px; }
+.sm .buddyHands { width: 64px; height: 17px; top: -8px; left: 10px; }
+
+.facePress,
+.faceHappy { opacity: 0; }
+.root[data-pressed] .faceIdle,
+.root[data-happy] .faceIdle { opacity: 0; }
+.root[data-pressed] .facePress { opacity: 1; }
+.root[data-happy]:not([data-pressed]) .faceHappy { opacity: 1; }
+.root[data-pressed] .buddyHead {
+  transform: translateY(13px);
+  transition: transform 0.1s var(--plop-ease-squish);
+}
+.root[data-pressed] .buddyHands {
+  transform: translateY(3px);
+  transition: transform 0.1s var(--plop-ease-squish);
+}
+.root[data-happy]:not([data-pressed]) .buddyHead { transform: translateY(-14px) rotate(-6deg); }
+.root[data-happy]:not([data-pressed]) .buddyHands { transform: translateY(-4px); }
+
+.blink {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: blink 5s infinite;
+}
+@keyframes blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+
+/* ---- reduced motion: state changes still show, instantly ---- */
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *),
+  .root:not([data-plop-motion="full"] *) * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+[data-plop-motion="reduce"] .root,
+[data-plop-motion="reduce"] .root * {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+}

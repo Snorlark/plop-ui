@@ -1,0 +1,30 @@
+{
+  "name": "@plop-ui/storybook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build -o storybook-static",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint stories .storybook"
+  },
+  "dependencies": {
+    "@plop-ui/fonts": "workspace:*",
+    "@plop-ui/react": "workspace:*",
+    "@plop-ui/tokens": "workspace:*",
+    "react": "19.2.9",
+    "react-dom": "19.2.9"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "8.6.19",
+    "@storybook/addon-essentials": "8.6.19",
+    "@storybook/react": "8.6.19",
+    "@storybook/react-vite": "8.6.19",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "storybook": "8.6.19",
+    "typescript": "5.9.3",
+    "vite": "6.4.4"
+  }
+}

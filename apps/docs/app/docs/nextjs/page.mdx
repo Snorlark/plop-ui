@@ -1,0 +1,76 @@
+export const metadata = { title: "Using with Next.js" };
+
+# Using with Next.js
+
+<p className="lede">Plop! never imports from <code>next/*</code>, so it runs in any React app. It is built to work well with the App Router, Server Components and SSR.</p>
+
+## Server and client components
+
+Interactive components (`Button`, `IconButton`, `Switch`, `Checkbox`, `PlopProvider`) ship with `"use client"` in their own files. `StatusTimeline` and `Tag` without `onRemove` are Server Components, so they render with no client JavaScript.
+
+```tsx
+// app/incidents/[id]/page.tsx: a Server Component
+import { StatusTimeline, Tag } from "@plop-ui/react";
+
+export default async function Incident({ params }) {
+  const incident = await getIncident((await params).id);
+  return (
+    <>
+      <Tag status={incident.status}>{incident.statusLabel}</Tag>
+      <StatusTimeline steps={incident.steps} current={incident.step} />
+    </>
+  );
+}
+```
+
+## Hydration-safe randomness
+
+`Math.random()` tilt would differ between the server and the browser and break hydration. Every tilt and wobble in Plop! comes from a seed: the `seed` prop if you pass one, otherwise React's `useId()`, which is the same on both sides.
+
+## Fonts with next/font
+
+Self-host Sketchpop with `next/font/local` and expose it as `--plop-sketchpop`; every Plop! font token reads that variable first.
+
+```ts
+// app/fonts.ts
+import localFont from "next/font/local";
+import { Patrick_Hand } from "next/font/google";
+
+export const sketchpop = localFont({
+  variable: "--plop-sketchpop",
+  src: [
+    { path: "../node_modules/@plop-ui/fonts/files/sketchpop-regular.woff2", weight: "400", style: "normal" },
+    { path: "../node_modules/@plop-ui/fonts/files/sketchpop-bold-italic.woff2", weight: "700", style: "italic" },
+    // …the other weights you use
+  ],
+});
+
+// Fallback for characters Sketchpop doesn't cover (ñ, curly quotes, @, %).
+export const patrickHand = Patrick_Hand({ weight: "400", subsets: ["latin"], variable: "--plop-patrick-hand" });
+```
+
+## A surface without a flash
+
+Store the surface in a cookie and read it in the root layout, so the right paper renders on the first paint:
+
+```tsx
+// app/layout.tsx
+import "@plop-ui/react/styles.css";
+import { PlopProvider } from "@plop-ui/react";
+import { cookies } from "next/headers";
+
+export default async function RootLayout({ children }) {
+  const surface = (await cookies()).get("plop-surface")?.value ?? "poster";
+  return (
+    <html lang="en" className={`${sketchpop.variable} ${patrickHand.variable}`} data-plop-surface={surface}>
+      <body className="plop-surface">
+        <PlopProvider surface={surface} paint={false}>{children}</PlopProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+`paint={false}` because `<body className="plop-surface">` already paints the page.
+
+Reading cookies makes the layout render per request. If you'd rather keep pages static, keep the default surface and set `data-plop-surface` from a small inline script instead.

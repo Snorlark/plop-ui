@@ -1,0 +1,16 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  overflow: hidden;
+}
+.layer svg {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  overflow: visible;
+}
+[data-plop-filters] .layer svg {
+  filter: url(#plop-wob1);
+}

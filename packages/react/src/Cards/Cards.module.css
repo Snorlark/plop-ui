@@ -1,0 +1,118 @@
+/* ---- Ticket stub: queue items ---- */
+.ticket {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: var(--plop-paper);
+  color: var(--plop-ink-text);
+  border: 2.5px solid var(--plop-ink);
+  border-radius: 14px 12px 15px 11px;
+  box-shadow: 4px 6px 0 var(--plop-shadow);
+  transform: rotate(var(--tilt, -1.2deg));
+}
+.ticketMain { padding: 18px 18px 18px 20px; display: grid; gap: 10px; }
+.ticketId { font-family: var(--plop-font-body); font-size: 16px; color: var(--plop-ink-soft); }
+.ticketTitle {
+  margin: 0;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.ticketMeta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 16px; color: var(--plop-ink-soft); }
+.stub {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 14px 16px;
+  border-left: 2.5px dashed var(--plop-ink);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-heading);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--plop-ink);
+}
+.stub::before,
+.stub::after {
+  content: "";
+  position: absolute;
+  right: -11px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--notch, var(--plop-sheet));
+  border: 2.5px solid var(--plop-ink);
+}
+.stub::before { top: -13px; clip-path: inset(50% 0 0 0); }
+.stub::after { bottom: -13px; clip-path: inset(0 0 50% 0); }
+
+/* ---- Unit card: people and vehicles ---- */
+.unit {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding: 22px 20px 20px;
+  background: var(--plop-paper);
+  color: var(--plop-ink-text);
+  border-radius: var(--plop-radius-box);
+  box-shadow: 0 0 0 2.5px var(--plop-ink), 5px 7px 0 2.5px var(--plop-shadow);
+  transform: rotate(var(--tilt, 0.8deg));
+}
+.unitTop { display: flex; align-items: center; gap: 14px; }
+.unitName {
+  margin: 0;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.unitSub { font-family: var(--plop-font-body); font-size: 16px; color: var(--plop-ink-soft); }
+.unitRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+.eta {
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-heading);
+  font-size: 34px;
+  line-height: 1;
+  color: var(--plop-ink);
+}
+[data-plop-filters] .eta { filter: url(#plop-crayon); }
+.eta small { font-family: var(--plop-font-body); font-style: normal; font-weight: 400; font-size: 16px; color: var(--plop-ink-soft); margin-left: 4px; text-transform: none; }
+
+/* ---- Sticky note: quick context ---- */
+.sticky {
+  --note: var(--plop-mustard);
+  position: relative;
+  padding: 30px 22px;
+  min-height: 160px;
+  background: linear-gradient(155deg, transparent 72%, var(--plop-shadow) 100%), var(--note);
+  color: var(--plop-ink-text);
+  border-radius: 2px 3px 18px 2px / 2px 3px 30px 2px;
+  box-shadow: 3px 5px 0 var(--plop-shadow);
+  transform: rotate(var(--tilt, 2deg));
+}
+.sticky::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 92px;
+  height: 24px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--plop-paper) 75%, transparent) 0 6px, color-mix(in srgb, var(--plop-paper) 55%, transparent) 6px 12px);
+  clip-path: polygon(4% 0, 96% 0, 100% 16%, 96% 33%, 100% 50%, 96% 66%, 100% 83%, 96% 100%, 4% 100%, 0 83%, 4% 66%, 0 50%, 4% 33%, 0 16%);
+}
+.sticky p, .stickyBody { margin: 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: var(--plop-weight-letter); font-size: 16px; line-height: 1.55; letter-spacing: 0.02em; }
+.stickyFoot { display: block; margin-top: 14px; font-family: var(--plop-font-body); font-size: 16px; color: var(--plop-ink-text); }
+.pink { --note: var(--plop-bubblegum); }
+.mint { --note: var(--plop-mint); }

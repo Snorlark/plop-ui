@@ -1,0 +1,59 @@
+import { Sheet } from "../../_components/Sheet";
+import { ButtonHero } from "../../_demos";
+
+export const metadata = { title: "Getting started" };
+
+# Getting started
+
+<p className="lede">Plop! is a hand-lettered sticker UI kit for real-time operations apps: dispatch consoles, field service, ticketing. Press it like you mean it.</p>
+
+<Sheet>
+  <ButtonHero />
+</Sheet>
+
+## Install
+
+```sh
+pnpm add @plop-ui/react @plop-ui/fonts
+```
+
+`@plop-ui/react` brings `@plop-ui/tokens` with it. React 19 is a peer dependency.
+
+## Add the styles and the provider
+
+```tsx
+// app root (any React app)
+import "@plop-ui/fonts/fonts.css";      // Sketchpop @font-face rules
+import "@plop-ui/react/styles.css";      // tokens + component styles
+import { PlopProvider, Button } from "@plop-ui/react";
+
+export function App() {
+  return (
+    <PlopProvider surface="poster">
+      <Button variant="tomato" buddy>Send report</Button>
+    </PlopProvider>
+  );
+}
+```
+
+`PlopProvider` sets the surface (the paper everything sits on), light or dark, haptics, sound and reduced motion. It also renders the SVG filters that make outlines wobble, so put it once near the root. In Next.js, follow [Using with Next.js](/docs/nextjs) instead: it loads the fonts with `next/font`.
+
+## What's in v0.1
+
+| Piece | What it is |
+| --- | --- |
+| `PlopProvider` | Surface, theme, haptics, sound and reduced-motion settings |
+| `Button`, `IconButton` | Die-cut sticker buttons that peel, squish and spring |
+| `Tag` | Washi-tape status labels, optionally removable |
+| `Switch`, `Checkbox` | Inputs with a sleepy/awake knob and a hand-drawn tick |
+| `StatusTimeline` | Where an incident is now, as an ordered list |
+| `useHaptics`, `useBoil` | Phone haptics and "boiling" ink lines |
+| `onColor` | Picks readable text for any fill at runtime |
+
+## Principles
+
+1. **Stickers, not boxes.** Things you press are die-cut stickers with a paper border and a hatched shadow.
+2. **One ink.** All lines and text use the ink color. Spot colors fill shapes but never draw lines.
+3. **Imperfect on purpose, but seeded.** Tilt and wobble come from a seed, so a component looks the same on every render and in SSR.
+4. **Every press answers.** Squish on press, spring on release, a tap on phones. Motion only happens in response to a person.
+5. **Readable first.** Lettering is for short labels and headings. Anything people read in full is upright Sketchpop Regular at 17px or larger.
