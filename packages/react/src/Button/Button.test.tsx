@@ -2,7 +2,7 @@ import { act, fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderWithPlop } from "../../test/render";
 import { PinIcon } from "../icons";
-import { Button } from "./Button";
+import { Button, ButtonLink } from "./Button";
 
 describe("Button", () => {
   it("is a native button that defaults to type=button", () => {
@@ -135,5 +135,37 @@ describe("Button", () => {
     renderWithPlop(<Button>Buzz</Button>);
     fireEvent.pointerDown(screen.getByRole("button"), { button: 0 });
     expect(vibrate).toHaveBeenCalledWith(8);
+  });
+});
+
+describe("ButtonLink", () => {
+  it("is a link with the sticker look, pressed by pointer and Enter", () => {
+    renderWithPlop(<ButtonLink href="/docs">Get started</ButtonLink>);
+    const link = screen.getByRole("link", { name: "Get started" });
+    expect(link).toHaveAttribute("href", "/docs");
+    fireEvent.pointerDown(link, { button: 0 });
+    expect(link).toHaveAttribute("data-pressed");
+    fireEvent.pointerUp(link);
+    expect(link).not.toHaveAttribute("data-pressed");
+    fireEvent.keyDown(link, { key: "Enter" });
+    expect(link).toHaveAttribute("data-pressed");
+    fireEvent.blur(link);
+    expect(link).not.toHaveAttribute("data-pressed");
+  });
+
+  it("renders through a custom link component", () => {
+    const Custom = ({ children, ...p }: { children: React.ReactNode; href: string }) => (
+      <a data-custom="" {...p}>
+        {children}
+      </a>
+    );
+    renderWithPlop(
+      <ButtonLink as={Custom} href="/x" onClick={(e) => e.preventDefault()}>
+        Go
+      </ButtonLink>,
+    );
+    const link = screen.getByRole("link", { name: "Go" });
+    expect(link).toHaveAttribute("data-custom");
+    fireEvent.click(link);
   });
 });

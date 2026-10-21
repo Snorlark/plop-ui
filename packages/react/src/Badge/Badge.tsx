@@ -6,8 +6,9 @@ export interface CountProps {
   children: number | string;
   /** What the number means, read by screen readers: "3 unread". Required, because a bare number says nothing. */
   label: string;
-  /** Default `tomato`. */
+  /** Fill: `tomato` for attention, `ink` for plain counts. Default `tomato`. */
   tone?: "tomato" | "ink";
+  /** `sm` fits inside tabs and buttons. Default `md`. */
   size?: "sm" | "md";
   className?: string;
 }

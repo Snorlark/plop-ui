@@ -84,7 +84,7 @@ export interface StickyNoteProps extends Tilted, HTMLAttributes<HTMLElement> {
   children: ReactNode;
   /** Small line at the bottom, e.g. "Added by dispatcher Ana, 9:06 AM". */
   footer?: ReactNode;
-  /** Default `mustard`. */
+  /** Paper color of the note. Default `mustard`. */
   tone?: "mustard" | "pink" | "mint";
 }
 
