@@ -1,6 +1,6 @@
 # Plop! — PRD for a hand-lettered sticker UI library
 
-Oct 21, 2026 · @lark pogi
+Oct 21, 2026 · @lark pogi · **Living document**: updated as the project moves. Day-to-day work is tracked in [TASKS.md](TASKS.md).
 
 ## Overview
 
@@ -25,6 +25,22 @@ The visual reference is the Plop! v0.6 prototype: cobalt marker lettering on cre
 - Vue, Svelte or React Native ports (React DOM only until v1.0).
 - A data grid, rich text editor, date picker or charting library.
 - Selling a Figma kit. The Figma file exists to keep design and code in sync.
+
+## Status (updated Oct 21, 2026)
+
+| Area | State | Notes |
+| --- | --- | --- |
+| Monorepo, tooling, CI | Done | pnpm + Turborepo, ESLint (jsx-a11y, no `next/*` or `Math.random()` in the library), Changesets, GitHub Actions |
+| `@plop-ui/tokens` | Done | One TS source → typed object + `tokens.css`; 5 surfaces × light/dark; `.plop-surface`, `.plop-paper` |
+| `@plop-ui/fonts` | Done | Sketchpop 4 weights × italic/upright, woff2 + ttf, OFL, font build tools |
+| `@plop-ui/react` v0.1 scope | Done | PlopProvider, Button, IconButton, Tag, Switch, Checkbox, StatusTimeline, useHaptics, useBoil |
+| Rest of the prototype kit | Done (pulled forward) | ButtonLink, Tooltip, TextField/TextArea, RadioGroup, Avatar, Cards, Tabs, Progress, Callout, Toast, Count/StatusDot, Sheet, Heading, Lettering, ink burst. See decision 0005 |
+| Tests | Done | 100+ Vitest tests (~96% lines); Playwright: hydration, axe on every page, surface × theme matrix, keyboard |
+| Storybook | Done | Every state, a11y addon, surface/theme toolbar |
+| Docs site | Done | Home (landing design), docs per component with generated props tables, search, Playground, `/kit` showcase |
+| Dispatch demo app | Not started | See TASKS.md |
+| npm publish, Vercel deploys | Not started | Blocked on the open questions below |
+| Figma sync, MapPanel | Not started | v1.0 |
 
 ## Audience and positioning
 
@@ -112,14 +128,14 @@ Each surface also defines its own `on` and `on-soft` text colors for light and d
 
 ## Scope by release
 
-v0.1 is deliberately small: foundations plus 6 components, chosen because the offline dispatch app needs them first.
+v0.1 is deliberately small: foundations plus 6 components, chosen because the offline dispatch app needs them first. **Update:** the v0.2 and most of the v0.3 components shipped early, ported straight from the prototype (decision 0005); the release plan below now tracks what is left.
 
-| Release | Components and features | Exit criteria |
-| --- | --- | --- |
-| v0.1 (week 6) | Tokens + 5 surfaces, `PlopProvider`, `Button`, `IconButton`, `Tag`, `Switch`, `Checkbox`, `StatusTimeline`, `useHaptics`, `useBoil` | Published to npm, Storybook live, all v0.1 tests and a11y checks green |
-| v0.2 | `TextField`, `TextArea`, `RadioGroup`, `Tooltip`, `Toast`, `Callout`, `Avatar`, `Progress` | Used in the dispatch app's report form |
-| v0.3 (ops pack) | `DispatchQueue`, `SyncIndicator`, `UnitCard`, `TicketCard`, `Tabs`, `RoleGate` | Dispatch app console built only from Plop! |
-| v1.0 | `MapPanel` (MapLibre wrapper), dark mode audit, Figma file synced, docs site with case study | 30 days in production use, no open a11y bugs |
+| Release | Components and features | Exit criteria | State |
+| --- | --- | --- | --- |
+| v0.1 | Tokens + 5 surfaces, `PlopProvider`, `Button`, `IconButton`, `Tag`, `Switch`, `Checkbox`, `StatusTimeline`, `useHaptics`, `useBoil` | Published to npm, Storybook live, all v0.1 tests and a11y checks green | Built and tested; **not published yet** |
+| v0.2 | `TextField`, `TextArea`, `RadioGroup`, `Tooltip`, `Toast`, `Callout`, `Avatar`, `Progress` | Used in the dispatch app's report form | Built and tested; waits for the dispatch app |
+| v0.3 (ops pack) | `DispatchQueue`, `SyncIndicator`, `UnitCard`, `TicketCard`, `Tabs`, `RoleGate` | Dispatch app console built only from Plop! | `UnitCard`, `TicketCard`, `Tabs` done; `DispatchQueue`, `SyncIndicator`, `RoleGate` to do |
+| v1.0 | `MapPanel` (MapLibre wrapper), dark mode audit, Figma file synced, docs site with case study | 30 days in production use, no open a11y bugs | Not started |
 
 Anything not in this table needs a written reason before it is added, so the project does not turn into an endless polishing loop.
 
@@ -175,8 +191,8 @@ plop-ui/
 | Language | TypeScript, `strict: true` | Typed props are the library's API contract |
 | Components | React 19 + Radix primitives | Radix handles focus, ARIA and keyboard; Plop! adds the look |
 | Styling | CSS Modules + CSS variables from `tokens` | Zero runtime, safe in Server Components, easy to theme by surface |
-| Library build | tsup, ESM + `.d.ts`, `"use client"` banner per interactive entry | Tree-shakeable; keeps client boundaries intact after bundling |
-| Docs site | Next.js 15 App Router, MDX, `next/font` | Real-world proof of SSR, RSC and font loading |
+| Library build | esbuild (one module per file) + `tsc` for `.d.ts`; `"use client"` restored per interactive file | Keeps client boundaries and CSS Modules intact. tsup was the plan; see decision 0003 for why it changed |
+| Docs site | Next.js 15 App Router, MDX, `next/font`, generated props tables | Real-world proof of SSR, RSC and font loading |
 | Demo app | Next.js 15 with Route Handlers (SSE) and Server Actions | Live dispatch queue without a separate backend |
 | Workshop | Storybook 8 | Every state of every component in isolation |
 | Monorepo and releases | pnpm workspaces, Turborepo, Changesets | Fast cached builds; versioned releases with a changelog |
@@ -186,7 +202,7 @@ plop-ui/
 
 - **Server and client boundaries.** Deciding which components need `"use client"` and keeping the rest as Server Components.
 - **Hydration-safe randomness.** `Math.random()` tilt would differ between server and browser and break hydration. Plop! derives every tilt and wobble from a `seed`, so both renders match.
-- **Theme without a flash.** The chosen surface is stored in a cookie and read in the root layout, so the right paper renders on the first paint.
+- **Theme without a flash.** The chosen surface is stored in a cookie and read on the server (the docs site does this on `/kit`), so the right paper renders on the first paint. The rest of the docs site is static, printed on poster paper.
 - **Fonts done right.** `next/font/local` self-hosts the Sketchpop woff2 files from `packages/fonts` and exposes them as CSS variables that Plop!'s tokens point to; Patrick Hand comes in through `next/font/google` only as the fallback.
 - **Real-time in one framework.** A Route Handler streams incident updates over Server-Sent Events; a Server Action handles the "Send report" form.
 - **Performance budget.** Lighthouse and Core Web Vitals checked on the docs site; the SVG filters must not push Interaction to Next Paint over 200 ms.
@@ -241,7 +257,8 @@ The Next.js docs site is the public face of Plop!; Storybook is the workshop whe
 **Docs site (`apps/docs`, Next.js)**
 
 - One MDX page per component: live demo, props table generated from the TypeScript types, do and don't examples, accessibility notes.
-- A surface switcher in the header, stored in a cookie so the server renders the right paper.
+- A landing page (the "PlopUI docs website" design), a header search, and a **Playground** where every component's props, surface and theme can be changed live and the code copied.
+- A surface switcher on `/kit`, stored in a cookie so the server renders the right paper.
 - Pages: Getting started, Tokens, each component, Surfaces, "Using Plop! with Next.js", and a case study of the dispatch demo.
 - Static where possible (`generateStaticParams`), so pages load fast and cost nothing to host.
 
@@ -277,7 +294,7 @@ Use Claude Code to build faster, but keep the decisions yours: you write the API
 
 ```markdown
 # Plop!
-Hand-lettered sticker UI kit for real-time ops apps. Read docs/PRD.md first.
+Hand-lettered sticker UI kit for real-time ops apps. Read PRD.md first.
 
 ## Rules
 - packages/react must never import from next/*. Next.js lives only in apps/.
@@ -331,7 +348,8 @@ Plop! succeeds if it saves real build time on client work and gives the author c
 
 **Open questions**
 
-- [ ] Library name on npm: is `@plop-ui` available, or use a personal scope?
-- [ ] MIT license, or keep source-available until v1.0?
+- [ ] Library name on npm: is `@plop-ui` available, or use a personal scope? (blocks publishing)
+- [ ] MIT license, or keep source-available until v1.0? (packages say MIT for now; no LICENSE file yet)
+- [ ] Where do the docs live: `plop-ui.vercel.app`, or a custom domain?
 - [ ] Should `MapPanel` use MapLibre or Leaflet given the dispatch app's offline needs?
 - [ ] Does Quadsync or MEC need sign-off before Plop! is used in client work?
