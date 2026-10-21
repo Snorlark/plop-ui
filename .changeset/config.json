@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [["@plop-ui/tokens", "@plop-ui/react", "@plop-ui/fonts"]],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@plop-ui/docs", "@plop-ui/dispatch-demo", "@plop-ui/storybook"]
+}
