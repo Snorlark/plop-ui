@@ -69,20 +69,20 @@ function Face({ name }: { name: string }) {
   ];
   const blinkDelay = { "--blink-delay": `${-((h % 5000) / 1000)}s` } as CSSProperties;
   const eyeSets = [
-    <g className={styles.blink} style={blinkDelay} key="a">
+    <g className={styles.blink} style={blinkDelay}>
       <ellipse cx="28" cy="33" rx="2" ry="3.1" fill={INK} />
       <ellipse cx="38" cy="32" rx="2" ry="3.1" fill={INK} />
     </g>,
-    <path key="b" d="M25.5 33 C 26.5 31, 29.5 31, 30.5 33 M35.5 32 C 36.5 30, 39.5 30, 40.5 32" {...line} strokeWidth={2.4} />,
-    <g className={styles.blink} style={blinkDelay} key="c">
+    <path d="M25.5 33 C 26.5 31, 29.5 31, 30.5 33 M35.5 32 C 36.5 30, 39.5 30, 40.5 32" {...line} strokeWidth={2.4} />,
+    <g className={styles.blink} style={blinkDelay}>
       <circle cx="28" cy="33" r="2.1" fill={INK} />
       <circle cx="38" cy="32" r="2.1" fill={INK} />
     </g>,
   ];
   const mouths = [
-    <path key="a" d="M28 41 C 32 45, 38 44, 41 39" {...line} strokeWidth={2.5} />,
-    <path key="b" d="M28.5 40 C 30 46, 38 46, 40 39 Z" fill="var(--plop-tomato)" stroke={INK} strokeWidth="2.3" strokeLinejoin="round" />,
-    <ellipse key="c" cx="34" cy="42" rx="2" ry="2.5" fill={INK} />,
+    <path d="M28 41 C 32 45, 38 44, 41 39" {...line} strokeWidth={2.5} />,
+    <path d="M28.5 40 C 30 46, 38 46, 40 39 Z" fill="var(--plop-tomato)" stroke={INK} strokeWidth="2.3" strokeLinejoin="round" />,
+    <ellipse cx="34" cy="42" rx="2" ry="2.5" fill={INK} />,
   ];
   return (
     <svg viewBox="2 2 56 56" aria-hidden="true">
