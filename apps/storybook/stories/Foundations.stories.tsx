@@ -1,4 +1,7 @@
-import { onColor, useBoil, useHaptics, Button } from "@plop-ui/react";
+import {
+  onColor, useBoil, useHaptics, Button,
+  PlusIcon, CloseIcon, PinIcon, PhoneIcon, BellIcon, CheckIcon, CopyIcon, LinkIcon, SearchIcon, ArrowDownIcon, ArrowRightIcon, ExternalIcon, MenuIcon, HapticsIcon, SoundIcon, PaperIcon, CuttingMatIcon,
+} from "@plop-ui/react";
 import { color, surfaces } from "@plop-ui/tokens";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
@@ -92,4 +95,25 @@ function HapticsDemo() {
 export const Haptics: Story = {
   name: "useHaptics",
   render: () => <HapticsDemo />,
+};
+
+const ICONS = {
+  PlusIcon, CloseIcon, PinIcon, PhoneIcon, BellIcon, CheckIcon, CopyIcon, LinkIcon, SearchIcon, ArrowDownIcon, ArrowRightIcon, ExternalIcon, MenuIcon, HapticsIcon, SoundIcon, PaperIcon, CuttingMatIcon,
+};
+
+export const Icons: Story = {
+  render: () => (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 24, color: "var(--plop-ink)" }}>
+      {Object.entries(ICONS).map(([name, Icon]) => (
+        <figure key={name} style={{ margin: 0, display: "grid", justifyItems: "center", gap: 8, fontSize: 13 }}>
+          <Icon size={32} />
+          <figcaption>{name}</figcaption>
+        </figure>
+      ))}
+      <figure style={{ margin: 0, display: "grid", justifyItems: "center", gap: 8, fontSize: 13 }}>
+        <span style={{ display: "flex", gap: 8 }}><HapticsIcon size={32} off /><SoundIcon size={32} off /></span>
+        <figcaption>off</figcaption>
+      </figure>
+    </div>
+  ),
 };
