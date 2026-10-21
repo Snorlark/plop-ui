@@ -1,0 +1,43 @@
+/* Hand lettering: every letter gets its own small, seeded tilt, lift and size. */
+.root { display: inline; }
+.word { display: inline-block; white-space: nowrap; }
+.letter {
+  display: inline-block;
+  transform: translateY(var(--ty, 0)) rotate(var(--rz, 0deg)) scale(var(--sc, 1));
+}
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Write-on: letters pop in one after another once `data-in` is set on the element or an ancestor (Heading does this on scroll). */
+.writeOn .letter {
+  opacity: 0;
+  transform: translateY(calc(var(--ty, 0px) + 12px)) rotate(calc(var(--rz, 0deg) - 16deg)) scale(0.5);
+  transition:
+    opacity 0.18s ease,
+    transform var(--plop-duration-spring) var(--plop-ease-spring);
+  transition-delay: calc(var(--i, 0) * 32ms);
+}
+[data-in] .writeOn .letter,
+.writeOn[data-in] .letter {
+  opacity: 1;
+  transform: translateY(var(--ty, 0)) rotate(var(--rz, 0deg)) scale(var(--sc, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .writeOn:not([data-plop-motion="full"] *) .letter {
+    opacity: 1;
+    transform: translateY(var(--ty, 0)) rotate(var(--rz, 0deg)) scale(var(--sc, 1));
+    transition: none;
+  }
+}
+[data-plop-motion="reduce"] .writeOn .letter {
+  opacity: 1;
+  transform: translateY(var(--ty, 0)) rotate(var(--rz, 0deg)) scale(var(--sc, 1));
+  transition: none;
+}
