@@ -7,7 +7,7 @@ export const metadata = { title: "Hooks & onColor" };
 
 ## useHaptics
 
-Phone haptics, always paired with a visual change. Android Chrome vibrates; iPhone Safari (iOS 18+) uses the system switch tick; everywhere else it silently does nothing. Turned off by `<PlopProvider haptics={false}>`.
+Phone haptics, always paired with a visual change. Android Chrome vibrates; iPhone Safari (iOS 18+) uses the system switch tick; everywhere else it silently does nothing. Turned off by `<PlopProvider haptics={false}>`; nested providers inherit the setting, so a single switch at the root (like the one in this site's header) covers everything. `useSound` follows `sound` the same way.
 
 <Sheet>
   <HapticsDemo />
