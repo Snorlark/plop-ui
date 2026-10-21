@@ -33,10 +33,39 @@ import {
   UnitCard,
   UnitCardRow,
 } from "@plop-ui/react";
+import { PlopProvider } from "@plop-ui/react";
+import { surfaceNames, surfaces } from "@plop-ui/tokens";
 import type { ReactNode } from "react";
+import { ButtonHero, ButtonVariants, Checkboxes, IconButtons, Switches, TagFilters, TagStatuses, TimelineDemo } from "../_demos";
 
 /** Live demos for the generic component pages (app/docs/components/[slug]). */
 const DEMOS: Record<string, () => ReactNode> = {
+  button: () => (
+    <div className="stack" style={{ gap: 40, justifyItems: "center" }}>
+      <ButtonHero />
+      <ButtonVariants />
+    </div>
+  ),
+  "icon-button": () => <IconButtons />,
+  tag: () => (
+    <div className="stack" style={{ gap: 30 }}>
+      <TagStatuses />
+      <TagFilters />
+    </div>
+  ),
+  switch: () => <Switches />,
+  checkbox: () => <Checkboxes />,
+  "status-timeline": () => <TimelineDemo />,
+  provider: () => (
+    <div className="surface-strip">
+      {surfaceNames.map((s) => (
+        <PlopProvider key={s} surface={s} theme="light" toaster={false} className="surface-strip__item">
+          <span className="surface-strip__name">{surfaces[s].label}</span>
+          <Button size="sm" seed={s}>Send</Button>
+        </PlopProvider>
+      ))}
+    </div>
+  ),
   tooltip: () => (
     <div className="row" style={{ paddingTop: 80, justifyContent: "space-around" }}>
       <Tooltip content="Priority sets who gets paged first.">

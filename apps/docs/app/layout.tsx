@@ -1,35 +1,30 @@
 import "@plop-ui/react/styles.css";
 import "./globals.css";
+import "./site.css";
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import type { ReactNode } from "react";
 import { Providers } from "./_kit/Providers";
+import { SiteFilters } from "./_site/Wordmark";
 import { patrickHand, sketchpop } from "./fonts";
-import { parseSurface, parseTheme, SURFACE_COOKIE, THEME_COOKIE } from "./surface";
 
 export const metadata: Metadata = {
-  title: { default: "Plop! — hand-lettered sticker UI kit", template: "%s · Plop!" },
+  title: { default: "PlopUI — hand-drawn UI for apps that can’t wait", template: "%s · PlopUI" },
   description: "A hand-lettered, one-ink sticker UI kit for real-time operations apps. Press it like you mean it.",
 };
 
 /**
- * The surface lives in a cookie and is read here, so the server renders the
- * right paper on the first paint (no flash of the default surface).
+ * The site itself is printed on poster paper in light mode, so every page can
+ * be static. Other surfaces and dark mode live in the Playground and on /kit.
  */
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  const jar = await cookies();
-  const surface = parseSurface(jar.get(SURFACE_COOKIE)?.value);
-  const theme = parseTheme(jar.get(THEME_COOKIE)?.value);
-
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${sketchpop.variable} ${patrickHand.variable}`}
-      data-plop-surface={surface}
-      data-plop-theme={theme === "system" ? undefined : theme}
-    >
+    <html lang="en" className={`${sketchpop.variable} ${patrickHand.variable}`} data-plop-surface="poster" data-plop-theme="light">
       <body className="plop-surface">
-        <Providers surface={surface} theme={theme} paint={false}>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        <SiteFilters />
+        <Providers surface="poster" theme="light" paint={false}>
           {children}
         </Providers>
       </body>

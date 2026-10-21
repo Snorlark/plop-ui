@@ -19,8 +19,8 @@ function setCookie(name: string, value: string) {
 }
 
 /**
- * Stores the surface and theme in cookies so the server renders the right
- * paper on the next request, and repaints this page right away.
+ * Stores the surface and theme in cookies, then refreshes so the server
+ * re-renders the page's PlopProvider on the new paper.
  */
 export function SurfaceSwitcher({ surface, theme }: { surface: SurfaceName; theme: Theme }) {
   const router = useRouter();
@@ -32,7 +32,6 @@ export function SurfaceSwitcher({ surface, theme }: { surface: SurfaceName; them
   const pickSurface = (next: SurfaceName) => {
     setCurrent(next);
     setCookie(SURFACE_COOKIE, next);
-    document.documentElement.dataset.plopSurface = next;
     haptics.tap();
     startTransition(() => router.refresh());
   };
@@ -40,8 +39,6 @@ export function SurfaceSwitcher({ surface, theme }: { surface: SurfaceName; them
   const pickTheme = (next: Theme) => {
     setCurrentTheme(next);
     setCookie(THEME_COOKIE, next);
-    if (next === "system") delete document.documentElement.dataset.plopTheme;
-    else document.documentElement.dataset.plopTheme = next;
     startTransition(() => router.refresh());
   };
 
