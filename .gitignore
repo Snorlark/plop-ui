@@ -1,0 +1,15 @@
+node_modules
+dist
+.next
+out
+coverage
+storybook-static
+.turbo
+*.tsbuildinfo
+.DS_Store
+.env*
+!.env.example
+test-results
+playwright-report
+next-env.d.ts
+apps/docs/app/_generated
