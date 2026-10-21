@@ -3,7 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 3107;
 
 /**
- * Runs against a production build (`next build && next start`), which is
+ * Runs against a production build in .next-e2e (`pnpm test:e2e` builds it), which is
  * where hydration mismatches show up for real. Uses installed Chrome locally;
  * CI installs Playwright's Chromium (PLAYWRIGHT_CHANNEL unset).
  */
@@ -23,6 +23,6 @@ export default defineConfig({
     command: `pnpm next start -p ${PORT}`,
     port: PORT,
     reuseExistingServer: !process.env.CI,
-    env: { NEXT_TELEMETRY_DISABLED: "1" },
+    env: { NEXT_TELEMETRY_DISABLED: "1", NEXT_DIST_DIR: ".next-e2e" },
   },
 });
