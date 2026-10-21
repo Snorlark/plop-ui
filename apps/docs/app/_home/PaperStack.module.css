@@ -1,0 +1,147 @@
+/* "How a piece is made": a pile of paper sheets tossed off one by one as you scroll. Colors from Plop! tokens. */
+.root { padding: 40px 0 60px; }
+.head { display: grid; justify-items: center; gap: 6px; padding-top: 7vh; text-align: center; }
+.kicker { font-family: var(--plop-font-body); font-size: 24px; color: var(--plop-tomato); }
+[data-plop-surface="mat"] .kicker { color: var(--plop-mustard); }
+.title { margin: 0; font-style: italic; font-weight: 900; font-size: clamp(2.1rem, 5vw, 3rem); line-height: 1.05; color: var(--site-ink, var(--plop-ink)); filter: url(#plop-crayon); }
+
+/* A tall track you scroll through; the stage sticks to the screen while the pile plays out. */
+.track { position: relative; height: calc(var(--n) * 75vh + 100vh); }
+.stage { position: sticky; top: 0; display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+.stack { position: relative; margin: 0; padding: 0; list-style: none; }
+
+/*
+ * One sheet. --depth is how far down the pile it is (0 = on top), --leave (0..1) how far it has
+ * been tossed off. Its pile pose (--px, --py, --pr) settles toward the top position as it rises.
+ */
+.sheet {
+  --sheet: var(--plop-paper);
+  --depth: 0;
+  --leave: 0;
+  position: absolute; left: 50%; top: 47%;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px 40px;
+  width: min(900px, 90vw); min-height: min(400px, 56vh); padding: 44px 48px;
+  color: var(--plop-ink-text); background: var(--sheet);
+  border-radius: 4px 6px 5px 3px;
+  box-shadow: 0 1px 0 rgba(18, 36, 120, 0.08), 0 18px 34px -20px rgba(18, 36, 120, 0.5);
+  transform:
+    translate(-50%, -50%)
+    translate(calc(var(--px) * min(var(--depth), 1) + var(--tx) * var(--leave)), calc(var(--py) * min(var(--depth), 1) - 110vh * var(--leave)))
+    rotate(calc(var(--pr) + var(--tr) * var(--leave)))
+    scale(calc(1 - min(var(--depth), 4) * 0.025));
+  will-change: transform;
+}
+/* sheets lower in the pile sit in a little shadow */
+.sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; background: rgba(18, 36, 120, 0.18); opacity: calc(min(var(--depth), 1) * 0.6); }
+.sheet:not([data-active]) { pointer-events: none; }
+
+/* Papers */
+.sheet[data-paper="poster"] { --sheet: #fffdf7; }
+.sheet[data-paper="notebook"] {
+  --sheet: #f8f4e9;
+  background: linear-gradient(90deg, transparent 34px, #e79c9c 34px 36px, transparent 36px), repeating-linear-gradient(#f8f4e9 0 31px, #cbd6f4 31px 32px);
+}
+.sheet[data-paper="kraft"] { --sheet: #d4b48c; background: radial-gradient(rgba(90, 60, 30, 0.2) 1px, transparent 1.4px) 0 0 / 7px 7px, #d4b48c; }
+.sheet[data-paper="mint"] { --sheet: #dcf1e5; }
+.sheet[data-paper="riso"] { --sheet: #fde3e8; background: radial-gradient(rgba(210, 56, 30, 0.16) 1.3px, transparent 1.7px) 0 0 / 7px 7px, #fde3e8; }
+
+.tape {
+  position: absolute; top: -12px; left: 50%; width: 110px; height: 26px; margin-left: -55px; transform: rotate(-3deg);
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--plop-mustard) 80%, transparent) 0 7px, color-mix(in srgb, var(--plop-mustard) 55%, transparent) 7px 14px);
+  opacity: 0.9;
+}
+.sheet:nth-child(even) .tape { left: 18%; transform: rotate(4deg); background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--plop-periwinkle) 85%, transparent) 0 7px, color-mix(in srgb, var(--plop-periwinkle) 55%, transparent) 7px 14px); }
+
+.copy { position: relative; display: grid; gap: 8px; }
+.num { font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; font-size: 64px; line-height: 0.9; color: transparent; -webkit-text-stroke: 2px var(--plop-ink); }
+.copy h3 { margin: 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; font-size: clamp(28px, 4vw, 40px); line-height: 1; text-transform: uppercase; letter-spacing: 0.02em; color: var(--plop-ink); filter: url(#plop-crayon); }
+.copy p { margin: 0; max-width: 34ch; font-size: 19px; line-height: 1.45; color: var(--plop-ink-text); }
+
+/* ---- the drawings: wobbly marker lines that boil, and little loops that play while the sheet is on top ---- */
+.art { position: relative; display: grid; place-items: center; min-height: 210px; }
+.art svg { width: 100%; max-width: 320px; height: auto; overflow: visible; filter: url(#plop-wob1); }
+.sheet[data-active] .art svg { animation: boil 0.42s steps(1) infinite; }
+@keyframes boil { 0% { filter: url(#plop-wob1); } 33.33% { filter: url(#plop-wob2); } 66.66% { filter: url(#plop-wob3); } }
+.ink { stroke: var(--plop-ink); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.label { font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 15px; letter-spacing: 0.06em; fill: var(--plop-ink-text); }
+.labelLight { font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 15px; letter-spacing: 0.06em; fill: var(--plop-on-ink); }
+.code { font-family: var(--plop-font-mono); font-size: 16px; fill: var(--plop-ink-text); }
+
+/* 1. the pencil draws the outline and a scribble, then starts over */
+.draw, .scribble { fill-opacity: 0; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.scribble { fill: none; stroke-width: 3; }
+.fadeIn { opacity: 0; }
+.pencil { transform: translate(22px, 30px); }
+.sheet[data-active] .draw { animation: draw-loop 3.6s ease-in-out infinite; }
+.sheet[data-active] .scribble { animation: scribble-loop 3.6s ease-in-out infinite; }
+.sheet[data-active] .pencil { animation: trace 3.6s ease-in-out infinite; }
+.sheet[data-active] .fadeIn { animation: shade-loop 3.6s ease-in-out infinite; }
+@keyframes draw-loop { 0% { stroke-dashoffset: 1; fill-opacity: 0; } 45% { stroke-dashoffset: 0; fill-opacity: 0; } 55%, 88% { stroke-dashoffset: 0; fill-opacity: 1; opacity: 1; } 100% { stroke-dashoffset: 0; fill-opacity: 0; opacity: 0; } }
+@keyframes scribble-loop { 0%, 50% { stroke-dashoffset: 1; } 66%, 88% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes shade-loop { 0%, 45% { opacity: 0; } 55%, 88% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes trace {
+  0% { transform: translate(22px, 30px); }
+  12% { transform: translate(138px, 18px); }
+  23% { transform: translate(141px, 70px); }
+  34% { transform: translate(30px, 77px); }
+  45% { transform: translate(22px, 30px); }
+  50% { transform: translate(44px, 47px); }
+  66% { transform: translate(118px, 45px); }
+  88% { transform: translate(150px, 20px) rotate(10deg); }
+  100% { transform: translate(22px, 30px); }
+}
+
+/* 2. scissors snip around a marching die line */
+.die { fill: none; stroke: var(--plop-ink); stroke-width: 2.2; stroke-dasharray: 5 5; }
+.sheet[data-active] .die { animation: march 0.6s linear infinite; }
+@keyframes march { to { stroke-dashoffset: -10; } }
+.scissors { offset-path: path("M13 30 C 13 15, 24 9, 38 9 L 124 8 C 141 8, 149 18, 149 30 L 150 62 C 150 79, 140 85, 125 85 L 37 86 C 21 86, 12 78, 12 63 Z"); offset-rotate: auto; }
+.sheet[data-active] .scissors { animation: around 4s linear infinite; }
+.sheet[data-active] .snip { animation: snip 0.3s ease-in-out infinite alternate; transform-origin: -7px 0; }
+@keyframes around { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+@keyframes snip { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+
+/* 3. the sticker peels back to show the button underneath, then sticks down again */
+.peel { transform-box: view-box; transform-origin: 21px 18px; }
+.sheet[data-active] .peel { animation: peel-loop 3.2s cubic-bezier(.5, 0, .3, 1) infinite; }
+@keyframes peel-loop {
+  0%, 12% { transform: none; }
+  45%, 70% { transform: rotate(-24deg) translate(-12px, -22px) scale(0.9); }
+  92%, 100% { transform: none; }
+}
+
+/* 4. a hand taps the real button, and it squishes */
+.press { position: relative; padding-top: 72px; }
+.pressBtn { transform: scale(1.12); }
+.art .hand { position: absolute; right: -70px; bottom: -62px; width: 54px; transform: rotate(-24deg); }
+.sheet[data-active] .hand { animation: tap 1.8s ease-in-out infinite; }
+.sheet[data-active] .pressBtn { animation: squish 1.8s ease-in-out infinite; }
+@keyframes tap { 0%, 100% { transform: translate(12px, 14px) rotate(-24deg); } 40% { transform: translate(-18px, -20px) rotate(-30deg); } 48% { transform: translate(-21px, -15px) rotate(-30deg); } 60% { transform: translate(-18px, -20px) rotate(-30deg); } }
+@keyframes squish { 0%, 40%, 62%, 100% { transform: scale(1.12); } 48% { transform: scale(1.04, 1.02) translateY(3px); } 56% { transform: scale(1.16, 1.18); } }
+
+/* 5. a paper plane flies the package off */
+.ship { display: grid; justify-items: center; gap: 10px; }
+.art .planeSvg { width: 100%; max-width: 300px; }
+.trail { fill: none; stroke: var(--plop-ink); stroke-width: 2.4; stroke-dasharray: 2 8; stroke-linecap: round; opacity: 0.6; }
+.plane { offset-path: path("M6 60 C 40 62, 50 30, 80 34 C 108 38, 116 14, 150 12"); offset-rotate: auto; }
+.sheet[data-active] .plane { animation: fly 2.8s ease-in-out infinite; }
+@keyframes fly { 0% { offset-distance: 0%; opacity: 0; } 10% { opacity: 1; } 85% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+
+@media (max-width: 760px) {
+  .sheet { grid-template-columns: minmax(0, 1fr); padding: 30px 22px 24px; min-height: 0; gap: 10px; }
+  .art { min-height: 150px; }
+  .num { font-size: 40px; }
+  .copy p { font-size: 17px; }
+}
+/* Reduced motion: no pile, no loops; just the sheets one after another, finished. */
+.root[data-static] .track { height: auto; }
+.root[data-static] .stage { position: static; height: auto; }
+.root[data-static] .stack { display: grid; gap: 34px; justify-items: center; padding: 20px 0 40px; }
+.root[data-static] .sheet { position: relative; left: auto; top: auto; transform: rotate(var(--pr)); pointer-events: auto; }
+.root[data-static] .sheet::after { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .sheet * { animation: none !important; }
+  .draw, .scribble { stroke-dashoffset: 0; fill-opacity: 1; }
+  .fadeIn { opacity: 1; }
+  .pencil { opacity: 0; }
+}

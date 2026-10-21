@@ -1,29 +1,39 @@
 "use client";
 
-import { toast } from "@plop-ui/react";
+import { CheckIcon, CopyIcon, IconButton, toast } from "@plop-ui/react";
+import { useEffect, useState } from "react";
+import { stamp } from "../_site/pass";
 
-/** The install command with a copy button. */
+/** The install command with a copy sticker. The icon turns into a tick for a moment after copying. */
 export function CopyCommand({ command = "npm i @plop-ui/react" }: { command?: string }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const id = window.setTimeout(() => setCopied(false), 1800);
+    return () => window.clearTimeout(id);
+  }, [copied]);
+
   return (
     <span className="home-npm">
       <code>{command}</code>
-      <button
-        type="button"
-        aria-label="Copy install command"
+      <IconButton
+        size="sm"
+        variant={copied ? "mint" : "mustard"}
+        tilt={4}
+        label={copied ? "Copied install command" : "Copy install command"}
+        icon={copied ? <CheckIcon /> : <CopyIcon />}
         onClick={async () => {
           try {
             await navigator.clipboard.writeText(command);
-            toast.success("Copied to clipboard");
+            setCopied(true);
+            // The first copy earns a Plop Pass stamp (its own toast says so); otherwise just confirm.
+            if (stamp("install") === null) toast.success("Copied to clipboard", { buddy: true });
           } catch {
-            toast.error("Couldn't copy. Select it instead.");
+            toast.error("Couldn't copy. Select it instead.", { buddy: true });
           }
         }}
-      >
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 9 C 9 8, 9.5 7.5, 10.5 7.5 L 19 7.5 C 20 7.5, 20.5 8, 20.5 9 L 20.5 19 C 20.5 20, 20 20.5, 19 20.5 L 10.5 20.5 C 9.5 20.5, 9 20, 9 19 Z" />
-          <path d="M5 15.5 C 4 15.5, 3.5 15, 3.5 14 L 3.5 5 C 3.5 4, 4 3.5, 5 3.5 L 14 3.5 C 15 3.5, 15.5 4, 15.5 5" />
-        </svg>
-      </button>
+      />
     </span>
   );
 }

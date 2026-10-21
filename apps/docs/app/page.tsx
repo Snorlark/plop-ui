@@ -5,7 +5,7 @@ import { SiteHeader } from "./_site/SiteHeader";
 export default function HomePage() {
   return (
     <div className="site site--home">
-      <SiteHeader search={false} />
+      <SiteHeader />
       <Home />
       <SiteFooter />
     </div>
