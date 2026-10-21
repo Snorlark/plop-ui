@@ -1,5 +1,7 @@
 "use client";
 
+import { BuddyDemo } from "./BuddyDemo";
+import { SearchDemo } from "./SearchDemo";
 import {
   Avatar,
   AvatarStack,
@@ -33,13 +35,26 @@ import {
   UnitCard,
   UnitCardRow,
 } from "@plop-ui/react";
-import { PlopProvider } from "@plop-ui/react";
+import { Doodle, PlopProvider, WordSticker } from "@plop-ui/react";
 import { surfaceNames, surfaces } from "@plop-ui/tokens";
 import type { ReactNode } from "react";
 import { ButtonHero, ButtonVariants, Checkboxes, IconButtons, Switches, TagFilters, TagStatuses, TimelineDemo } from "../_demos";
 
 /** Live demos for the generic component pages (app/docs/components/[slug]). */
 const DEMOS: Record<string, () => ReactNode> = {
+  buddy: () => <BuddyDemo />,
+  search: () => <SearchDemo />,
+  "word-sticker": () => (
+    <div className="row" style={{ gap: 36, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
+      <WordSticker tone="mustard" size={64} tilt={-4}>Plop!</WordSticker>
+      <WordSticker tone="bubblegum" size={48} tilt={3} jitter={3.5}>Squish!</WordSticker>
+      <WordSticker tone="mint" size={40}>All clear</WordSticker>
+      <Doodle kind="star" size={56} tilt={-10} />
+      <Doodle kind="heart" tone="bubblegum" size={52} />
+      <Doodle kind="sparkle" tone="mustard" size={52} tilt={12} />
+      <Doodle kind="burst" tone="mint" size={56} />
+    </div>
+  ),
   button: () => (
     <div className="stack" style={{ gap: 40, justifyItems: "center" }}>
       <ButtonHero />

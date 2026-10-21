@@ -27,6 +27,9 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     code: `import { Button, ButtonLink } from "@plop-ui/react";
 
 <Button variant="ink" size="lg" buddy>Send report</Button>
+<ButtonLink href="/start" size="lg" buddy="peek">Get started</ButtonLink> {/* buddy pops up on hover or focus */}
+<Button shadow="stripes">Crayon shadow</Button>   {/* or "solid", "outline", "none"; default "soft" */}
+<Button variant="tomato">Delete</Button>   {/* tomato shakes off a poof of dust, never confetti */}
 
 <Button>Save changes</Button>
 <Button variant="periwinkle">Add note</Button>
@@ -57,7 +60,11 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     code: `import { IconButton, PhoneIcon, PlusIcon } from "@plop-ui/react";
 
 <IconButton icon={<PlusIcon />} label="New incident" variant="mustard" />
-<IconButton icon={<PhoneIcon />} label="Start SOS call" variant="tomato" />`,
+<IconButton icon={<PhoneIcon />} label="Start SOS call" variant="tomato" />
+
+// Hand-drawn icons in the same marker line:
+// PlusIcon CloseIcon CheckIcon CopyIcon LinkIcon SearchIcon ArrowDownIcon ArrowRightIcon
+// ExternalIcon MenuIcon PinIcon PhoneIcon BellIcon HapticsIcon SoundIcon (both take \`off\`)`,
     tables: [{ of: "IconButton", inheritedFrom: "<button>" }],
     do: "Use it for actions everyone already recognizes: call, close, add.",
     dont: "Hide an unusual action behind an icon. If it needs explaining, use a Button.",
@@ -291,6 +298,68 @@ toast("Mobile 2 is 6 min away", { duration: 6000 });`,
     dont: "Ask a question or hide a button in a toast. It disappears.",
     a11y: ["Shown in a polite live region (role=\"status\") rendered by PlopProvider.", "Stays 4 seconds by default; never the only place an important message appears."],
   },
+  search: {
+    title: "SearchField & CommandPalette",
+    group: "Inputs",
+    badges: ["Client component", AA, "New"],
+    lede: "A search box with a wobbly marker outline that boils while it has focus, grouped results on a taped sheet, highlighter matches and keycap shortcuts. The same field powers a ⌘K command palette.",
+    code: `import { CommandPalette, SearchField } from "@plop-ui/react";
+
+<SearchField
+  label="Search the dispatch board"
+  shortcut="/"
+  groups={[incidents, units, people]}   // { id, label, items: [{ id, title, sub, meta, lead }] }
+  recentKey="recent-searches"
+  onSelect={(item) => open(item)}
+/>
+
+<CommandPalette groups={[pages, people]} emptyGroups={[actions]} onSelect={run} />  // ⌘K / Ctrl K`,
+    tables: [{ of: "SearchField" }, { of: "CommandPalette" }],
+    do: "Group results by kind and give each a lead (a face, a status dot, an icon) so people can scan without reading.",
+    dont: "Hide the only way to reach a page inside the palette. It's a shortcut, not the map.",
+    a11y: ["The input is a combobox: aria-expanded, aria-controls and aria-activedescendant follow the arrow keys.", "Enter opens the active (or first) result; Escape clears the text, then closes.", "The result count is announced in a polite live region; group headings are never focusable.", "The palette is a native <dialog>, so focus stays inside and Escape closes it."],
+  },
+  "word-sticker": {
+    title: "WordSticker & Doodle",
+    group: "Display",
+    badges: ["Server component", AA, "New"],
+    lede: "Words lettered in Sketchpop and cut out like a sticker, plus little marker doodles to go with them. Design one in the playground's Lettering tool and copy the component.",
+    code: `import { Doodle, WordSticker } from "@plop-ui/react";
+
+<WordSticker tone="mustard" size={64} tilt={-4}>Plop!</WordSticker>
+<WordSticker tone="bubblegum" jitter={3.5}>Squish!</WordSticker>
+<Doodle kind="sparkle" tone="mustard" size={52} />`,
+    tables: [{ of: "WordSticker" }, { of: "Doodle" }],
+    do: "Use it for a word or two of personality: an empty state, a celebration, a section mark.",
+    dont: "Set body text or long labels in it; the die-cut border is for short, loud words.",
+    a11y: ["The words are read once; the three stacked layers are hidden from screen readers.", "Doodles are decorative (aria-hidden) and never take focus.", "Same words, same wobble: the jitter is seeded by the text, so it matches on the server and in the browser."],
+  },
+  buddy: {
+    title: "Buddy",
+    group: "Feedback",
+    badges: ["Server component", AA, "New"],
+    lede: "A cast of characters, one per state: Pip cheers success, Bix winces at errors, Snooze dozes on stale data, Confetti celebrates, Specs previews and Hum thinks while loading. Stand one alone, or let it peek over any component.",
+    code: `import { Buddy, BuddyPeek, Callout, toast } from "@plop-ui/react";
+
+<Buddy mood="congrats" size="lg" />
+
+// Peek over anything: the head ducks behind it, the hands grip the edge.
+<BuddyPeek mood="preview">
+  <TicketCard title="Flooded underpass" meta="#1042 · Draft" />
+</BuddyPeek>
+
+// Built into Toast and Callout: true picks the character for the kind or tone.
+toast.success("Copied to clipboard", { buddy: true });   // Pip
+toast("All units checked in", { buddy: "congrats" });    // Confetti
+<Callout tone="warn" title="Last update 12 min ago" buddy />  // Snooze
+
+// On a Button: pick who peeks over it.
+<Button variant="tomato" buddy buddyMood="error">Retry</Button>  // Bix`,
+    tables: [{ of: "Buddy" }, { of: "BuddyPeek" }],
+    do: "Let one character stand for one state everywhere, so people learn to read it: Bix always means something failed.",
+    dont: "Use a character as the only signal. Say it in words too; the character just makes it quicker to read.",
+    a11y: ["Decorative by default (aria-hidden); the words next to it carry the message.", "Pass label to announce it as an image when it stands alone.", "Pop, wince and confetti play once; Snooze's z's and Hum's bubbles keep going while the state lasts. Everything holds still under reduced motion."],
+  },
   provider: {
     title: "PlopProvider",
     group: "Foundations",
@@ -303,7 +372,7 @@ import { PlopProvider } from "@plop-ui/react";
   {children}
 </PlopProvider>`,
     tables: [{ of: "PlopProvider", inheritedFrom: "<div>" }],
-    do: "Put one provider near the root of your app.",
+    do: "Put one provider near the root and give people a haptics and sound switch (this site's header has one). Nested providers inherit those settings, so one switch covers the page.",
     dont: "Turn sound on by default. Let people choose it.",
     a11y: ["theme=\"system\" follows prefers-color-scheme.", "reducedMotion=\"system\" follows prefers-reduced-motion.", "Haptics always pair with a visual change."],
   },
