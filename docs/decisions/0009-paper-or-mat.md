@@ -1,0 +1,7 @@
+# 0009 — The website's light and dark look is paper or the cutting mat
+
+**Decision.** Instead of a light/dark theme, the site switches surface: paper (poster) or the cutting mat. The switch is a round sticker button (`aria-pressed`, hand-drawn `PaperIcon` / `CuttingMatIcon`) right after the first word of the home headline. The old page is torn off like a notepad sheet: a view transition tugs it, rips it along a ragged top edge and drops it, showing the new surface underneath. (A circle reveal and a sliding sheet came first; the circle lagged because it animated a clip-path over the whole page, and the sheet didn't read as paper. The tear only moves the old snapshot with transforms.) The headline follows the surface: "Hand-drawn UI…" on paper, "Die-cut UI…" on the mat, and the new word writes itself on. The choice is saved per device and applied to `<html>` by a tiny script before paint, so pages stay static and never flash. Supersedes the "site is always poster" part of 0004.
+
+**How.** Text that sits right on the page uses `--site-ink/-text/-soft/-rule`, which turn cream on the mat. Cards and panels are "paper islands" that reset to ink, so kit components inside them read correctly. The root `PlopProvider` no longer sets a surface, so it follows `<html>`; `PlopProvider` now inherits `surface` when it isn't given.
+
+**Trade-offs.** The switch lives on the home page only; other pages follow the saved choice. Reduced motion switches instantly.

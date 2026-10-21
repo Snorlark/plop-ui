@@ -1,0 +1,7 @@
+# 0012 — The footer is the back of the sticker sheet; the story is a paper stack
+
+**Decision.** The footer is the other side of the sheet: the page above ends in a torn edge and you land on the deep-cobalt backing paper (split-back slits, a faint "PlopUI · peel here" print). As you scroll, the six PlopUI letters are stuck back into their die-cut spots one by one and the cast pops up behind them to say bye ("Every sticker goes back on the sheet"). It's scroll-driven CSS on the compositor; without support, or under reduced motion, it simply sits finished. The **Plop Pass** (five stamps: daily visit, GitHub, install, board, lettering; a full card unlocks Holo Pip) lives on the backing next to the links.
+
+"How a piece is made" moved out of the footer into the home page: five paper sheets (poster, notebook, kraft, mint, riso) start in one pile on a sticky stage, and as you scroll the top sheet is tossed off to reveal the next. The sheet on top plays its drawing on a loop in the kit's boiling marker style (a pencil drawing the sticker, scissors on a marching die line, a peel-back to `<button>`, a hand tapping a real Button, a paper plane with the install command). One passive scroll listener sets each sheet's depth and toss; only transforms change. Under reduced motion they are a plain, still list.
+
+**Trade-offs.** The Pass is stored in this browser only. Each reason stamps once per card, so a curious visitor can fill one card in a session.
