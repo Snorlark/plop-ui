@@ -1,0 +1,32 @@
+/* A strip torn off a pad. */
+.root {
+  --cc: var(--plop-periwinkle);
+  --ct: var(--plop-on-fill-periwinkle);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 18px 20px 26px;
+  background: var(--cc);
+  color: var(--ct);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), 96% 100%, 91% calc(100% - 6px), 85% 100%, 78% calc(100% - 7px), 71% 100%, 64% calc(100% - 5px), 57% 100%, 49% calc(100% - 7px), 42% 100%, 35% calc(100% - 6px), 28% 100%, 21% calc(100% - 7px), 14% 100%, 7% calc(100% - 5px), 0 100%);
+  transform: rotate(var(--tilt, -0.5deg));
+}
+.root svg { width: 32px; height: 32px; overflow: visible; }
+[data-plop-filters] .root > svg { filter: url(#plop-wob1); }
+.title {
+  margin: 2px 0 4px;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.body { font-family: var(--plop-font-body); font-size: 18.5px; line-height: 1.4; }
+.body > p { margin: 0; }
+.action { margin-top: 14px; }
+.warn { --cc: var(--plop-mustard); --ct: var(--plop-on-fill-mustard); }
+.error { --cc: var(--plop-bubblegum); --ct: var(--plop-on-fill-bubblegum); }
+.success { --cc: var(--plop-mint); --ct: var(--plop-on-fill-mint); }

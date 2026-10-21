@@ -1,0 +1,28 @@
+import { PropsTable } from "../../../_components/PropsTable";
+import { Sheet } from "../../../_components/Sheet";
+import { Checkboxes } from "../../../_demos";
+
+export const metadata = { title: "Checkbox" };
+
+# Checkbox
+
+<p className="lede">The tick is drawn in one stroke and overshoots the box, like a pen would.</p>
+
+<Sheet>
+  <Checkboxes />
+</Sheet>
+
+```tsx
+<Checkbox checked={all} indeterminate={some} onCheckedChange={toggleAll}>Everyone</Checkbox>
+<Checkbox tickColor="var(--plop-leaf)">Caller, by SMS</Checkbox>
+```
+
+## Props
+
+<PropsTable of="Checkbox" inheritedFrom="<input>" />
+
+## Accessibility
+
+- A real `<input type="checkbox">`: it works in forms, with the keyboard and with every screen reader.
+- `indeterminate` sets the input's own indeterminate state and `aria-checked="mixed"`.
+- Focus shows a dashed outline around the box.

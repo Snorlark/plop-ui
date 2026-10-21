@@ -1,0 +1,24 @@
+export const metadata = { title: "Accessibility" };
+
+# Accessibility
+
+<p className="lede">The hand-drawn look must never cost usability. Every component targets WCAG 2.2 AA, and every effect has an off switch.</p>
+
+## What every component does
+
+- Native elements first (`button`, `input`, `ol`); ARIA only where no native element exists.
+- Works with the keyboard alone. Focus shows as a dashed "cut here" line and is never removed.
+- Text contrast of at least 4.5:1, large lettering and outlines at least 3:1. Text color always comes from a contrast role, never from an opacity fade.
+- Status is never color alone: every tag and timeline step carries a text label.
+- Wobble and crayon filters apply to lines and lettering only, never to body text.
+
+## Motion
+
+- Motion answers a person's action (press, toggle, remove). The only ambient motion is the current timeline step.
+- `prefers-reduced-motion` turns off boil, peel-offs and spring overshoot. State changes still show, instantly.
+- Override it per app with `<PlopProvider reducedMotion="always" | "never">`.
+
+## Haptics and sound
+
+- Haptics never stand alone; they always go with a visual change.
+- Sound is off by default and only plays after a person turns it on.

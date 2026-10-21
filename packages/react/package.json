@@ -1,0 +1,60 @@
+{
+  "name": "@plop-ui/react",
+  "version": "0.0.0",
+  "description": "Plop! — a hand-lettered sticker UI kit for real-time operations apps. Press it like you mean it.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist"],
+  "keywords": ["react", "ui", "components", "hand-drawn", "sticker", "dispatch", "operations", "accessible"],
+  "repository": { "type": "git", "url": "git+https://github.com/Snorlark/plop-ui.git", "directory": "packages/react" },
+  "publishConfig": { "access": "public", "provenance": true },
+  "scripts": {
+    "build": "node scripts/build.mjs && tsc -p tsconfig.build.json && node scripts/check-css.mjs",
+    "dev": "node scripts/build.mjs --watch",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src scripts",
+    "size": "size-limit"
+  },
+  "dependencies": {
+    "@plop-ui/tokens": "workspace:*",
+    "@radix-ui/react-switch": "1.2.6"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "11.2.0",
+    "@testing-library/jest-dom": "6.10.0",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.8",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "@vitest/coverage-v8": "3.2.7",
+    "esbuild": "0.25.12",
+    "jsdom": "26.1.0",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "size-limit": "11.2.0",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  },
+  "size-limit": [
+    { "name": "Button", "path": "dist/Button/Button.js", "import": "{ Button }", "ignore": ["react", "react-dom"], "limit": "6 kB" },
+    { "name": "whole library (JS)", "path": "dist/index.js", "import": "*", "ignore": ["react", "react-dom"], "limit": "40 kB" },
+    { "name": "styles.css", "path": "dist/styles.css", "limit": "12 kB" }
+  ]
+}

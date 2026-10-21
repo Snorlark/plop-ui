@@ -1,0 +1,31 @@
+{
+  "name": "plop-ui",
+  "private": true,
+  "description": "Plop! — a hand-lettered sticker UI kit for real-time operations apps.",
+  "packageManager": "pnpm@11.24.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "size": "pnpm --filter @plop-ui/react size",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter=./packages/* && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.31.1",
+    "@eslint/js": "9.39.5",
+    "eslint": "9.39.5",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "globals": "17.13.0",
+    "turbo": "2.11.8",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.0"
+  }
+}

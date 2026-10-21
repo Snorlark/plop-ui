@@ -1,0 +1,38 @@
+import { PropsTable } from "../../../_components/PropsTable";
+import { Sheet } from "../../../_components/Sheet";
+import { TimelineDemo } from "../../../_demos";
+
+export const metadata = { title: "StatusTimeline" };
+
+# StatusTimeline
+
+<p className="lede">Where an incident is right now. Done steps get a tick, the current step boils, the rest are pencilled in.</p>
+
+<Sheet>
+  <TimelineDemo />
+</Sheet>
+
+```tsx
+<StatusTimeline
+  steps={["Reported", "Dispatched", "En route", "Resolved"]}
+  current={2}
+/>
+```
+
+## Vertical
+
+<Sheet tape="mint">
+  <TimelineDemo orientation="vertical" />
+</Sheet>
+
+`orientation="auto"` (the default) is horizontal and turns vertical when its container is narrower than 520px.
+
+## Props
+
+<PropsTable of="StatusTimeline" />
+
+## Accessibility
+
+- An `<ol>` with `aria-current="step"` on the current step.
+- Each step's status is written in text for screen readers ("done", "current step", "not started"); change the words with `statusText`.
+- A Server Component: no client JavaScript.

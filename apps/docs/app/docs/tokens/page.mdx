@@ -1,0 +1,94 @@
+import { color, fontSize, onFill, status } from "@plop-ui/tokens";
+import { Sheet } from "../../_components/Sheet";
+import { TryOnColor } from "../../_demos";
+
+export const metadata = { title: "Tokens" };
+
+# Tokens
+
+<p className="lede">One cobalt ink draws everything on cream paper. A few spot colors are printed underneath, slightly off-register.</p>
+
+Every token lives in `@plop-ui/tokens` and ships twice from one source: as CSS variables (`--plop-*`, in `@plop-ui/tokens/tokens.css`, already included in `@plop-ui/react/styles.css`) and as a typed object.
+
+```ts
+import { color, status, surfaces } from "@plop-ui/tokens";
+color.ink;            // "#2848D8"
+status.critical;      // "tomato"
+```
+
+## Color
+
+<div className="table-wrap" tabIndex={0} role="region" aria-label="Color tokens">
+<table>
+  <thead><tr><th>Token</th><th>Value</th><th></th></tr></thead>
+  <tbody>
+    {Object.entries(color).filter(([k]) => !k.startsWith("shadow")).map(([k, v]) => (
+      <tr key={k}>
+        <td><code>{`--plop-${k.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()}`}</code></td>
+        <td><code>{v}</code></td>
+        <td><span aria-hidden="true" style={{ display: "inline-block", width: 34, height: 22, background: v, border: "2px solid var(--plop-ink)", borderRadius: 6 }} /></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+</div>
+
+## Contrast roles
+
+Like Material's "on" colors, every fill has a paired text color that passes WCAG AA. The bright ink draws lines; the deeper text ink carries words on color.
+
+<div className="table-wrap" tabIndex={0} role="region" aria-label="Contrast roles">
+<table>
+  <thead><tr><th>Fill</th><th>Text role</th><th>Contrast</th></tr></thead>
+  <tbody>
+    {Object.entries(onFill).map(([fill, role]) => (
+      <tr key={fill}>
+        <td><code>{`--plop-fill-${fill}`}</code></td>
+        <td><code>{`--plop-on-fill-${fill}`}</code> ({role.text})</td>
+        <td>{role.ratio}:1</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+</div>
+
+For colors set at runtime, such as a client's brand color, use `onColor(bg)`. It measures the fill and returns deep ink or cream, whichever has the higher contrast:
+
+<Sheet tape="blue">
+  <TryOnColor />
+</Sheet>
+
+## Status
+
+Every status also carries a text label, never color alone.
+
+<div className="table-wrap" tabIndex={0} role="region" aria-label="Status colors">
+<table>
+  <tbody>
+    {Object.entries(status).map(([s, fill]) => (
+      <tr key={s}><td><code>{s}</code></td><td><code>{fill}</code></td></tr>
+    ))}
+  </tbody>
+</table>
+</div>
+
+## Type
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--plop-font-logo` | Sketchpop Black Italic (900) | The wordmark only |
+| `--plop-font-letter` | Sketchpop Bold Italic (700); Black Italic for headings | Headings, buttons, tags; uppercase, `calt` on |
+| `--plop-font-body` | Sketchpop Regular upright (400) | Body, hints, inputs; sentence case |
+
+Type scale (px): {Object.values(fontSize).join(", ")}. Body defaults to {fontSize.body}.
+
+## Shape and motion
+
+| Token | Value |
+| --- | --- |
+| `--plop-radius-sticker` | `26px 20px 28px 18px / 20px 28px 18px 26px` (irregular on purpose) |
+| `--plop-stroke` | 3px default, 2.5px small, 7px illustrations |
+| `--plop-shadow-hatch` | 45° ink lines, 2.2px on / 3.4px off, offset 5px 7px |
+| `--plop-ease-spring` | `cubic-bezier(.28, 1.75, .5, 1)`, 500ms |
+| `--plop-ease-squish` | `cubic-bezier(.2, .9, .3, 1)`, 80ms |
+| `--plop-boil-interval` | 140ms between the 3 wobble filters |

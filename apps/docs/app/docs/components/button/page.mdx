@@ -1,0 +1,60 @@
+import { PropsTable } from "../../../_components/PropsTable";
+import { Sheet } from "../../../_components/Sheet";
+import { ButtonHero, ButtonLoading, ButtonSizes, ButtonVariants } from "../../../_demos";
+
+export const metadata = { title: "Button" };
+
+# Button
+
+<p className="lede">The hero sticker. Peels on hover, squishes on press, springs back on release. Add a buddy for the one action that matters most on a screen.</p>
+
+<Sheet>
+  <ButtonHero />
+</Sheet>
+
+```tsx
+<Button variant="tomato" size="lg" tilt={-3} buddy loading={sending}>
+  Send report
+</Button>
+```
+
+## Variants
+
+<Sheet tape="blue">
+  <ButtonVariants />
+</Sheet>
+
+Each variant prints its fill under the ink and takes its text color from that fill's contrast role, so labels always pass WCAG AA.
+
+## Sizes and icons
+
+<Sheet tape="mint">
+  <ButtonSizes />
+</Sheet>
+
+## Loading
+
+<Sheet tape="pink">
+  <ButtonLoading />
+</Sheet>
+
+While `loading`, the button keeps its width, shows hopping dots, sets `aria-busy="true"` and ignores clicks. `loadingLabel` is what screen readers hear.
+
+## Props
+
+<PropsTable of="Button" inheritedFrom="<button>" />
+
+## Do and don't
+
+<div className="do-dont">
+  <div className="do"><strong>Do</strong><ul><li>Use short verbs: "Send report", "Call back".</li><li>Use one buddy per screen, on the main action.</li><li>Use `tomato` for destructive actions.</li></ul></div>
+  <div className="dont"><strong>Don't</strong><ul><li>Put long sentences in a button; lettering is for short labels.</li><li>Pass `tilt` from `Math.random()`; use `seed`.</li><li>Use a buddy on every button.</li></ul></div>
+</div>
+
+## Accessibility
+
+- A native `<button>`, `type="button"` by default.
+- Space and Enter both show the press; the press releases on keyup, pointer up, pointer leave and blur.
+- Focus shows a dashed "cut here" line with scissors; it is never removed.
+- Under reduced motion, the press and release still change instantly, without the spring.
+- On phones, a press taps the haptics (8 ms), always together with the visual squish.

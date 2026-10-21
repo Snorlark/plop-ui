@@ -1,0 +1,27 @@
+import { PropsTable } from "../../../_components/PropsTable";
+import { Sheet } from "../../../_components/Sheet";
+import { IconButtons } from "../../../_demos";
+
+export const metadata = { title: "IconButton" };
+
+# IconButton
+
+<p className="lede">A round sticker with just an icon. The <code>label</code> is required, so it can never ship without a name.</p>
+
+<Sheet>
+  <IconButtons />
+</Sheet>
+
+```tsx
+<IconButton icon={<PhoneIcon />} label="Start SOS call" variant="tomato" />
+```
+
+## Props
+
+<PropsTable of="IconButton" inheritedFrom="<button>" />
+
+## Accessibility
+
+- `label` becomes `aria-label`. Leaving it out is a TypeScript error, so the build fails instead of shipping a silent button.
+- The icon is hidden from screen readers.
+- Same keyboard, focus and press behavior as `Button`.
