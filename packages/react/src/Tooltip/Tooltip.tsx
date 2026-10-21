@@ -16,8 +16,8 @@ export interface TooltipProps {
   content: ReactNode;
   /** The one element it explains. It must be focusable (a button, a link, or tabIndex={0}). */
   children: ReactElement<TriggerProps>;
-  /** Where the bubble points from. Default `top` (centered above). */
-  side?: "top" | "right";
+  /** Where the bubble points from. Default `top` (centered above); `bottom` is for triggers near the top edge, like a header. */
+  side?: "top" | "right" | "bottom";
   /** Keep it open (for docs or onboarding). */
   open?: boolean;
   className?: string;
@@ -56,7 +56,7 @@ export function Tooltip({ content, children, side = "top", open = false, classNa
       data-dismissed={dismissed ? "" : undefined}
     >
       {child}
-      <span role="tooltip" id={id} className={cx(styles.tip, side === "right" && styles.right)}>
+      <span role="tooltip" id={id} className={cx(styles.tip, side !== "top" && styles[side])}>
         {content}
       </span>
     </span>

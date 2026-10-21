@@ -112,6 +112,19 @@ describe("Tooltip", () => {
     );
     expect(screen.getByRole("tooltip").parentElement).toHaveAttribute("data-open");
   });
+
+  it("opens below for the bottom side, still on keyboard focus", async () => {
+    renderWithPlop(
+      <Tooltip content="Sound off" side="bottom">
+        <button type="button">Sound</button>
+      </Tooltip>,
+    );
+    await userEvent.tab();
+    const trigger = screen.getByRole("button", { name: "Sound" });
+    expect(trigger).toHaveFocus();
+    expect(trigger).toHaveAccessibleDescription("Sound off");
+    expect(screen.getByRole("tooltip").className).toMatch(/bottom/);
+  });
 });
 
 describe("TextField and TextArea", () => {
@@ -308,5 +321,26 @@ describe("Heading", () => {
   it("is a real heading with a clean name", () => {
     renderWithPlop(<Heading level={2}>Status timeline</Heading>);
     expect(screen.getByRole("heading", { level: 2, name: "Status timeline" })).toBeInTheDocument();
+  });
+});
+
+describe("icons", () => {
+  it("are decorative and draw in currentColor", async () => {
+    const icons = await import("./icons");
+    for (const [name, Icon] of Object.entries(icons)) {
+      const { container, unmount } = renderWithPlop(<Icon />);
+      const svg = container.querySelector("svg");
+      expect(svg, name).toHaveAttribute("aria-hidden", "true");
+      expect(svg, name).toHaveAttribute("focusable", "false");
+      unmount();
+    }
+  });
+
+  it("draw an off state for the feedback toggles", async () => {
+    const { HapticsIcon, SoundIcon } = await import("./icons");
+    const on = renderWithPlop(<SoundIcon />).container.innerHTML;
+    const off = renderWithPlop(<SoundIcon off />).container.innerHTML;
+    expect(off).not.toBe(on);
+    expect(renderWithPlop(<HapticsIcon off />).container.querySelectorAll("path").length).toBe(3);
   });
 });

@@ -111,6 +111,53 @@ describe("Button", () => {
     vi.useRealTimers();
   });
 
+  it("tucks a peek buddy away and brings it up for keyboard users too", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    renderWithPlop(<ButtonLink href="/start" buddy="peek">Get started</ButtonLink>, { reducedMotion: "never" });
+    const link = screen.getByRole("link", { name: "Get started" });
+    expect(link.className).toMatch(/peek/);
+    await userEvent.tab();
+    expect(link).toHaveFocus();
+    fireEvent.keyDown(link, { key: "Enter" });
+    expect(link).toHaveAttribute("data-pressed");
+    vi.useRealTimers();
+  });
+
+  it("takes a shadow style, from itself or from the provider, and still presses with Space", async () => {
+    const onClick = vi.fn();
+    const { container } = renderWithPlop(
+      <>
+        <Button shadow="solid" onClick={onClick}>Solid</Button>
+        <Button>Inherits</Button>
+      </>,
+      { stickerShadow: "outline" },
+    );
+    expect(screen.getByRole("button", { name: "Solid" })).toHaveAttribute("data-shadow", "solid");
+    expect(screen.getByRole("button", { name: "Inherits" })).not.toHaveAttribute("data-shadow");
+    expect(container.querySelector("[data-plop-shadow]")).toHaveAttribute("data-plop-shadow", "outline");
+    screen.getByRole("button", { name: "Solid" }).focus();
+    await userEvent.keyboard(" ");
+    expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it("shakes off a poof instead of confetti on tomato (cancel, delete)", () => {
+    vi.useFakeTimers();
+    renderWithPlop(
+      <>
+        <Button variant="tomato">Delete</Button>
+        <Button variant="mint">Save</Button>
+      </>,
+      { reducedMotion: "never" },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    expect(screen.getByRole("button", { name: "Delete" })).toHaveAttribute("data-shake");
+    expect(screen.getByRole("button", { name: "Save" })).not.toHaveAttribute("data-shake");
+    act(() => vi.advanceTimersByTime(500));
+    expect(screen.getByRole("button", { name: "Delete" })).not.toHaveAttribute("data-shake");
+    vi.useRealTimers();
+  });
+
   it("springs back after release when motion is allowed", () => {
     vi.useFakeTimers();
     renderWithPlop(<Button>Spring</Button>, { reducedMotion: "never" });
