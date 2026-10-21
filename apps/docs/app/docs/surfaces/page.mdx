@@ -1,0 +1,26 @@
+import { Sheet } from "../../_components/Sheet";
+import { TagStatuses, TimelineDemo } from "../../_demos";
+
+export const metadata = { title: "Surfaces" };
+
+# Surfaces
+
+<p className="lede">Five papers to print on: poster (default), cutting mat, notebook, kraft and riso. Each has a light and a dark value.</p>
+
+Use the switcher at the top of this page to try them. Your choice is stored in a cookie and read by the root layout, so the server renders the right paper on the first paint.
+
+Each surface sets its own background, pattern, text color (`--plop-on`, `--plop-on-soft`), focus color (`--plop-focus`) and hatch color. Components never hard-code a surface: text that sits directly on the page uses the surface's "on" colors, and everything printed on paper uses ink.
+
+<Sheet tape="pink">
+  <TimelineDemo />
+</Sheet>
+
+<TagStatuses />
+
+## Choosing a surface
+
+```tsx
+<PlopProvider surface="mat" theme="dark">…</PlopProvider>
+```
+
+`theme="system"` (the default) follows `prefers-color-scheme`. You can also put `data-plop-surface` and `data-plop-theme` on any element (the docs site puts them on `<html>`); the tokens resolve per element.

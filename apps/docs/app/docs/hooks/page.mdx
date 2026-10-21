@@ -1,0 +1,58 @@
+import { Sheet } from "../../_components/Sheet";
+import { BoilDemo, HapticsDemo, TryOnColor } from "../../_demos";
+
+export const metadata = { title: "Hooks & onColor" };
+
+# Hooks & onColor
+
+## useHaptics
+
+Phone haptics, always paired with a visual change. Android Chrome vibrates; iPhone Safari (iOS 18+) uses the system switch tick; everywhere else it silently does nothing. Turned off by `<PlopProvider haptics={false}>`.
+
+<Sheet>
+  <HapticsDemo />
+</Sheet>
+
+```tsx
+const haptics = useHaptics();
+haptics.tap();      // 8 ms
+haptics.success();  // [6, 40, 14]
+haptics.error();    // [14, 30, 14]
+```
+
+## useBoil
+
+"Boiling ink": swaps between three wobble filters so a hand-drawn line looks alive. Holds still under reduced motion.
+
+<Sheet tape="blue">
+  <BoilDemo />
+</Sheet>
+
+```tsx
+const boil = useBoil({ seed: "star", active: hovering });
+return <svg style={boil}>…</svg>;
+```
+
+## onColor
+
+Measures any fill and returns the text color with the higher contrast: deep ink or cream.
+
+<Sheet tape="mint">
+  <TryOnColor />
+</Sheet>
+
+```ts
+import { onColor, contrastRatio } from "@plop-ui/react";
+onColor("#7FB3E8");      // { color: "#1C2E8C", ratio: 6.1, passesAA: true }
+contrastRatio("#2848D8", "#FFFDF7");
+```
+
+## seed
+
+Every imperfection comes from `seed()`, never `Math.random()`, so the server and the browser agree.
+
+```ts
+import { seed, seededTilt } from "@plop-ui/react";
+const rand = seed("Send report");  // same sequence every time
+seededTilt("Send report", 2.5);    // a stable angle in [-2.5, 2.5]
+```
