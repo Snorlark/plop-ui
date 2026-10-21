@@ -4,7 +4,7 @@ export { PlopProvider, type PlopProviderProps, type PlopTheme } from "./PlopProv
 export { usePlop, type PlopSettings, type ReducedMotionSetting } from "./PlopProvider/context.js";
 export { PlopFilters } from "./PlopFilters.js";
 
-export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from "./Button/Button.js";
+export { Button, ButtonLink, type ButtonProps, type ButtonLinkProps, type ButtonSize, type ButtonVariant } from "./Button/Button.js";
 export { IconButton, type IconButtonProps } from "./IconButton/IconButton.js";
 export { Tag, type TagPattern, type TagProps, type TagTone } from "./Tag/Tag.js";
 export { Switch, type SwitchColor, type SwitchProps } from "./Switch/Switch.js";

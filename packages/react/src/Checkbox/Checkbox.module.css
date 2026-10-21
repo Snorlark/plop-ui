@@ -11,9 +11,11 @@
 .root[data-disabled] {
   cursor: not-allowed;
 }
-.root[data-disabled] .box,
-.root[data-disabled] .text {
+.root[data-disabled] .box {
   opacity: 0.5;
+}
+.root[data-disabled] .text {
+  color: var(--plop-on-soft);
 }
 
 /* The real checkbox stays in the page for keyboard, forms and screen readers; it's just invisible. */

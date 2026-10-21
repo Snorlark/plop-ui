@@ -10,7 +10,7 @@ export interface AvatarProps {
   name: string;
   /** A photo URL; replaces the doodle. */
   src?: string;
-  /** Default `md` (52px). */
+  /** Face size: sm 36px, md 52px, lg 76px, xl 86px. Default `md`. */
   size?: "sm" | "md" | "lg" | "xl";
   /** A status dot. Its meaning is added to the accessible name ("Jun Reyes, online"). */
   status?: AvatarStatus;

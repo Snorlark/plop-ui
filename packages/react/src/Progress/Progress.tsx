@@ -6,11 +6,11 @@ export interface ProgressProps {
   /** What is progressing, e.g. "Syncing offline reports". */
   label: ReactNode;
   value: number;
-  /** Default 100. */
+  /** The value that means "done". Default 100. */
   max?: number;
   /** Shown on the right and read by screen readers, e.g. "4 of 10". Default "<n>%". */
   valueText?: string;
-  /** Default `ink`. */
+  /** Hatching color: `mint` for good news, `tomato` for running out. Default `ink`. */
   tone?: "ink" | "mint" | "tomato";
   /** A solid bar instead of crayon hatching. */
   solid?: boolean;
