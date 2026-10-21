@@ -1,5 +1,5 @@
 # Plop!
-Hand-lettered sticker UI kit for real-time ops apps. Read docs/PRD.md first.
+Hand-lettered sticker UI kit for real-time ops apps. Read PRD.md first.
 
 ## Rules
 - packages/react must never import from next/*. Next.js lives only in apps/.

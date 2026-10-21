@@ -1,7 +1,7 @@
 "use client";
 
-import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
-import { Sticker, type StickerOwnProps } from "../internal/Sticker.js";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ElementType, ReactNode, Ref } from "react";
+import { Sticker, StickerLink, type StickerOwnProps } from "../internal/Sticker.js";
 import { Lettering } from "../Lettering/Lettering.js";
 
 export type ButtonVariant = NonNullable<StickerOwnProps["variant"]>;
@@ -29,5 +29,29 @@ export function Button({ children, iconLeft, buddy = false, ...props }: ButtonPr
         <Lettering amp={1.8}>{children}</Lettering>
       </span>
     </Sticker>
+  );
+}
+
+export interface ButtonLinkProps
+  extends Omit<StickerOwnProps, "loading" | "loadingLabel">,
+    Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
+  ref?: Ref<HTMLAnchorElement>;
+  href: string;
+  children: ReactNode;
+  /** Your router's link component, e.g. Next.js `Link`. Default `a`. */
+  as?: ElementType;
+  buddy?: boolean;
+  iconLeft?: ReactNode;
+}
+
+/** A Button that navigates: the same sticker, rendered as a link. */
+export function ButtonLink({ children, iconLeft, buddy = false, ...props }: ButtonLinkProps) {
+  return (
+    <StickerLink {...props} buddy={buddy}>
+      {iconLeft}
+      <span>
+        <Lettering amp={1.8}>{children}</Lettering>
+      </span>
+    </StickerLink>
   );
 }

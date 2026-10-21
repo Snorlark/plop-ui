@@ -67,6 +67,11 @@
   isolation: isolate;
 }
 
+/* As a link: no underline, no link color. */
+.link {
+  text-decoration: none;
+}
+
 /* The spot color is printed under the ink, a little off-register. */
 .fill {
   position: absolute;
