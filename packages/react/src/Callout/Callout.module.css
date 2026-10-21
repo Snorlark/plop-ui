@@ -30,3 +30,6 @@
 .warn { --cc: var(--plop-mustard); --ct: var(--plop-on-fill-mustard); }
 .error { --cc: var(--plop-bubblegum); --ct: var(--plop-on-fill-bubblegum); }
 .success { --cc: var(--plop-mint); --ct: var(--plop-on-fill-mint); }
+
+/* A character peeking over the strip: let the strip keep its full width. */
+.withBuddy { display: block; }
