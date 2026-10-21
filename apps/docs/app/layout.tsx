@@ -3,7 +3,7 @@ import "./globals.css";
 import "./site.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Providers } from "./_kit/Providers";
+import { Providers, SURFACE_SCRIPT } from "./_kit/Providers";
 import { SiteFilters } from "./_site/Wordmark";
 import { patrickHand, sketchpop } from "./fonts";
 
@@ -13,18 +13,24 @@ export const metadata: Metadata = {
 };
 
 /**
- * The site itself is printed on poster paper in light mode, so every page can
- * be static. Other surfaces and dark mode live in the Playground and on /kit.
+ * The site is printed on paper (poster) or laid on the cutting mat, picked by
+ * the header toggle and remembered per device. Pages stay static: a tiny
+ * script sets the surface on <html> before paint. Other surfaces and dark
+ * mode live in the Playground and on /kit.
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${sketchpop.variable} ${patrickHand.variable}`} data-plop-surface="poster" data-plop-theme="light">
+    <html lang="en" className={`${sketchpop.variable} ${patrickHand.variable}`} data-plop-surface="poster" data-plop-theme="light" suppressHydrationWarning>
+      <head>
+        {/* Paper or cutting mat: applied before the first paint so a static page never flashes the wrong surface. */}
+        <script dangerouslySetInnerHTML={{ __html: SURFACE_SCRIPT }} />
+      </head>
       <body className="plop-surface">
         <a href="#main" className="skip-link">
           Skip to content
         </a>
         <SiteFilters />
-        <Providers surface="poster" theme="light" paint={false}>
+        <Providers theme="light" paint={false}>
           {children}
         </Providers>
       </body>

@@ -26,6 +26,10 @@ const COMPONENTS = {
   TextArea: "TextAreaProps",
   RadioGroup: "RadioGroupProps",
   Radio: "RadioProps",
+  SearchField: "SearchFieldProps",
+  CommandPalette: "CommandPaletteProps",
+  Buddy: "BuddyProps",
+  BuddyPeek: "BuddyPeekProps",
   Avatar: "AvatarProps",
   AvatarStack: "AvatarStackProps",
   TicketCard: "TicketCardProps",
@@ -42,6 +46,8 @@ const COMPONENTS = {
   Sheet: "SheetProps",
   Heading: "HeadingProps",
   Lettering: "LetteringProps",
+  WordSticker: "WordStickerProps",
+  Doodle: "DoodleProps",
 };
 
 const program = ts.createProgram([entry], {
