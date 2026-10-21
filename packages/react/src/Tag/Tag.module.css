@@ -1,0 +1,97 @@
+/* Status labels are strips of washi tape. */
+
+.root {
+  --t: var(--plop-periwinkle);
+  --tc: var(--plop-on-fill-periwinkle);
+  --tilt: 0deg;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-feature-settings: "calt" 1;
+  font-synthesis: none;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--tc);
+  white-space: nowrap;
+  vertical-align: middle;
+  /* Torn tape ends. */
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 20%, calc(100% - 4px) 40%, 100% 60%, calc(100% - 4px) 80%, 100% 100%, 4px 100%, 0 80%, 4px 60%, 0 40%, 4px 20%, 0 0);
+  transform: rotate(var(--tilt));
+}
+
+/* Patterns are a lighter print of the same fill, so text contrast stays the fill's role. */
+.stripes {
+  background: repeating-linear-gradient(-45deg, var(--t) 0 6px, color-mix(in srgb, var(--t) 82%, white) 6px 12px);
+}
+.dots {
+  background:
+    radial-gradient(color-mix(in srgb, white 45%, transparent) 1.6px, transparent 2px) 0 0 / 8px 8px,
+    var(--t);
+}
+.grid {
+  background:
+    linear-gradient(color-mix(in srgb, white 35%, transparent) 1px, transparent 1px) 0 0 / 7px 7px,
+    linear-gradient(90deg, color-mix(in srgb, white 35%, transparent) 1px, transparent 1px) 0 0 / 7px 7px,
+    var(--t);
+}
+
+.ink { --t: var(--plop-ink); --tc: var(--plop-on-fill-ink); }
+.tomato { --t: var(--plop-tomato); --tc: var(--plop-on-fill-tomato); }
+.mustard { --t: var(--plop-mustard); --tc: var(--plop-on-fill-mustard); }
+.mint { --t: var(--plop-mint); --tc: var(--plop-on-fill-mint); }
+.periwinkle { --t: var(--plop-periwinkle); --tc: var(--plop-on-fill-periwinkle); }
+.bubblegum { --t: var(--plop-bubblegum); --tc: var(--plop-on-fill-bubblegum); }
+
+/* Dark fills keep their stripes subtle so cream text stays readable. */
+.ink.stripes,
+.tomato.stripes {
+  background: repeating-linear-gradient(-45deg, var(--t) 0 6px, color-mix(in srgb, var(--t) 90%, white) 6px 12px);
+}
+
+.remove {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin: -3px -9px -3px 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.remove:hover {
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+.remove:focus-visible {
+  outline: 2px dashed currentColor;
+  outline-offset: 1px;
+}
+.remove svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Removing: the strip peels off and flutters away. */
+.root[data-removing] {
+  animation: peel 380ms ease-in forwards;
+  pointer-events: none;
+}
+@keyframes peel {
+  0% { transform: rotate(var(--tilt)); opacity: 1; }
+  40% { transform: translate(10px, -14px) rotate(14deg) scale(1.05); opacity: 1; }
+  100% { transform: translate(40px, -50px) rotate(30deg) scale(0.8); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *) { animation: none !important; }
+}
+[data-plop-motion="reduce"] .root { animation: none !important; }

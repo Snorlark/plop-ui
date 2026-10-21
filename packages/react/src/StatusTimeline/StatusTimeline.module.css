@@ -1,0 +1,180 @@
+.root {
+  container-type: inline-size;
+}
+
+.list {
+  --cols: 4;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 8px;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 8px;
+  text-align: center;
+}
+
+/* The ink line between steps. Pending steps are pencilled in (dashed). */
+.step::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: calc(-50% + 26px);
+  right: calc(50% + 26px);
+  height: 3px;
+  /* Lines and text sit on the surface itself, so they use its "on" color (ink on paper, cream on dark). */
+  background: var(--plop-on);
+  border-radius: 3px;
+  transform: rotate(var(--wobble, -1deg));
+}
+.step:first-child::before {
+  display: none;
+}
+.pending::before {
+  background: repeating-linear-gradient(90deg, var(--plop-on) 0 7px, transparent 7px 13px);
+}
+
+.dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 3px solid var(--plop-ink);
+  border-radius: var(--plop-radius-blob);
+  background: var(--plop-paper);
+  box-shadow: 0 0 0 4px var(--plop-sheet);
+  transform: rotate(var(--wobble, 0deg));
+  transition:
+    background-color 0.3s,
+    transform 0.45s var(--plop-ease-spring);
+}
+.dot svg {
+  width: 22px;
+  height: 22px;
+  overflow: visible;
+}
+.done .dot {
+  background: var(--plop-ink);
+  color: var(--plop-on-fill-ink);
+}
+.current .dot {
+  background: var(--plop-mustard);
+  color: var(--plop-on-fill-mustard);
+  transform: scale(1.14) rotate(-6deg);
+}
+[data-plop-filters] .current .dot {
+  animation: boil 0.5s steps(1) infinite;
+}
+.pending .dot {
+  border-style: dashed;
+  border-color: var(--plop-on);
+  background: transparent;
+  box-shadow: none;
+}
+
+.label {
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-feature-settings: "calt" 1;
+  font-synthesis: none;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--plop-on);
+}
+
+.time {
+  font-family: var(--plop-font-body);
+  font-size: 16px;
+  color: var(--plop-on-soft);
+}
+
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Vertical: dots down the left, label and time beside them. `auto` switches to this in narrow containers. */
+.vertical .list {
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+.vertical .step {
+  grid-template-columns: auto 1fr;
+  justify-items: start;
+  text-align: left;
+  column-gap: 14px;
+  row-gap: 0;
+}
+.vertical .dot {
+  grid-row: span 2;
+}
+.vertical .step::before {
+  left: 19.5px;
+  right: auto;
+  top: -18px;
+  width: 3px;
+  height: 22px;
+  transform: none;
+}
+.vertical .pending::before {
+  background: repeating-linear-gradient(var(--plop-on) 0 5px, transparent 5px 9px);
+}
+
+@container (max-width: 520px) {
+  .auto .list {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .auto .step {
+    grid-template-columns: auto 1fr;
+    justify-items: start;
+    text-align: left;
+    column-gap: 14px;
+    row-gap: 0;
+  }
+  .auto .dot {
+    grid-row: span 2;
+  }
+  .auto .step::before {
+    left: 19.5px;
+    right: auto;
+    top: -18px;
+    width: 3px;
+    height: 22px;
+    transform: none;
+  }
+  .auto .pending::before {
+    background: repeating-linear-gradient(var(--plop-on) 0 5px, transparent 5px 9px);
+  }
+}
+
+@keyframes boil {
+  0% { filter: url(#plop-wob1); }
+  33.33% { filter: url(#plop-wob2); }
+  66.66% { filter: url(#plop-wob3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *) * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+[data-plop-motion="reduce"] .root * {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+}
