@@ -1,5 +1,6 @@
 import { act, render, renderHook, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
+import { usePlop } from "../PlopProvider/context";
 import { PlopProvider } from "../PlopProvider/PlopProvider";
 import { useBoil } from "./useBoil";
 import { HAPTIC_PATTERNS, useHaptics } from "./useHaptics";
@@ -36,6 +37,39 @@ describe("useHaptics", () => {
     const { result } = renderHook(() => useHaptics(), { wrapper: wrap() });
     result.current.tap();
     expect(document.querySelector("input[switch]")).not.toBeNull();
+  });
+});
+
+describe("nested PlopProvider", () => {
+  it("inherits haptics, sound and motion from the parent unless set", () => {
+    const nested = ({ children }: { children: ReactNode }) => (
+      <PlopProvider haptics={false} sound reducedMotion="always">
+        <PlopProvider surface="kraft">{children}</PlopProvider>
+      </PlopProvider>
+    );
+    expect(renderHook(() => usePlop(), { wrapper: nested }).result.current).toEqual({ haptics: false, sound: true, reducedMotion: "always" });
+
+    const overridden = ({ children }: { children: ReactNode }) => (
+      <PlopProvider haptics={false}>
+        <PlopProvider haptics>{children}</PlopProvider>
+      </PlopProvider>
+    );
+    expect(renderHook(() => useHaptics().enabled, { wrapper: overridden }).result.current).toBe(true);
+  });
+});
+
+describe("PlopProvider surface", () => {
+  it("keeps the surrounding surface when none is given, so a page-level switch reaches it", () => {
+    const { container } = render(
+      <div data-plop-surface="mat">
+        <PlopProvider>
+          <span>inside</span>
+        </PlopProvider>
+      </div>,
+    );
+    const root = container.querySelector("[data-plop-filters]");
+    expect(root).not.toHaveAttribute("data-plop-surface");
+    expect(root?.closest("[data-plop-surface]")).toHaveAttribute("data-plop-surface", "mat");
   });
 });
 

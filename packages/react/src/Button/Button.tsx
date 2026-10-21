@@ -1,6 +1,7 @@
 "use client";
 
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ElementType, ReactNode, Ref } from "react";
+import type { BuddyMood } from "../Buddy/Buddy.js";
 import { Sticker, StickerLink, type StickerOwnProps } from "../internal/Sticker.js";
 import { Lettering } from "../Lettering/Lettering.js";
 
@@ -11,8 +12,13 @@ export interface ButtonProps extends StickerOwnProps, Omit<ButtonHTMLAttributes<
   ref?: Ref<HTMLButtonElement>;
   /** Short label; lettered in Sketchpop Bold Italic, uppercase. */
   children: ReactNode;
-  /** A little character peeking over the top. Use it on the one action that matters most on a screen. */
-  buddy?: boolean;
+  /**
+   * A little character peeking over the top. Use it on the one action that matters most on a screen.
+   * `"peek"` keeps it hidden behind the sticker until hover or keyboard focus, then it pops up.
+   */
+  buddy?: boolean | "peek";
+  /** Which character the buddy is: `success` (Pip, default), `error` (Bix) for a Retry, `congrats` (Confetti) for a finish line… */
+  buddyMood?: BuddyMood;
   /** An icon drawn before the label. */
   iconLeft?: ReactNode;
 }
@@ -40,7 +46,10 @@ export interface ButtonLinkProps
   children: ReactNode;
   /** Your router's link component, e.g. Next.js `Link`. Default `a`. */
   as?: ElementType;
-  buddy?: boolean;
+  /** See Button: `true` always shows the buddy, `"peek"` pops it up on hover or keyboard focus. */
+  buddy?: boolean | "peek";
+  /** See Button. */
+  buddyMood?: BuddyMood;
   iconLeft?: ReactNode;
 }
 

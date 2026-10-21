@@ -16,8 +16,9 @@ import {
   type ReactNode,
   type Ref,
 } from "react";
+import { BuddyArt, type BuddyMood } from "../Buddy/Buddy.js";
 import { useHaptics } from "../hooks/useHaptics.js";
-import { BURST_COLORS } from "../InkBurst/burst.js";
+import { BURST_COLORS, type BurstStyle } from "../InkBurst/burst.js";
 import { useInkBurst } from "../InkBurst/useInkBurst.js";
 import { useReducedMotion } from "../hooks/useReducedMotion.js";
 import { useSound } from "../hooks/useSound.js";
@@ -51,19 +52,42 @@ export interface StickerOwnProps {
   loading?: boolean;
   /** Screen reader text while loading. Default "Loading". */
   loadingLabel?: string;
-  /** Ink marks fly out on click. `true` uses colors that suit the variant; pass your own list, or `false` to turn it off. Default `true`. Skipped under reduced motion. */
-  burst?: boolean | readonly string[];
+  /**
+   * What flies out on click. `true` picks for the variant: confetti for most, a `"poof"` of dust
+   * (and a little head-shake) for `tomato`, the cancel/delete color. Or force `"confetti"` / `"poof"`,
+   * pass your own colors, or `false` for nothing. Skipped under reduced motion.
+   */
+  burst?: boolean | BurstStyle | readonly string[];
+  /**
+   * The shadow under the sticker: `soft` (a flat, quiet offset), `solid` (ink), `stripes` (crayon hatching),
+   * `outline` or `none`. Defaults to PlopProvider's `stickerShadow`, which defaults to `soft`.
+   */
+  shadow?: StickerShadow;
+}
+
+export type StickerShadow = "soft" | "solid" | "stripes" | "outline" | "none";
+
+/** Resolves the `burst` prop to what actually flies out. */
+function burstFor(burst: StickerOwnProps["burst"], variant: StickerVariant): { colors: readonly string[]; style: BurstStyle } | null {
+  if (burst === false) return null;
+  const poof = burst === "poof" || (burst === true && variant === "tomato");
+  if (Array.isArray(burst)) return { colors: burst, style: "confetti" };
+  if (poof) return { colors: BURST_COLORS.tomato, style: "poof" };
+  return { colors: BURST_COLORS[variant === "tomato" ? "all" : variant], style: "confetti" };
 }
 
 interface StickerProps extends StickerOwnProps, Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
   ref?: Ref<HTMLButtonElement>;
   round?: boolean;
-  buddy?: boolean;
+  buddy?: boolean | "peek";
+  /** Which character the buddy is. Default `success` (Pip); e.g. `error` puts Bix on a Retry button. */
+  buddyMood?: BuddyMood;
   children: ReactNode;
 }
 
 const RELEASE_MS = 420;
 const HAPPY_MS = 1100;
+const SHAKE_MS = 420;
 
 export function Sticker({
   ref,
@@ -76,6 +100,8 @@ export function Sticker({
   burst = true,
   round = false,
   buddy = false,
+  buddyMood = "success",
+  shadow,
   disabled,
   type = "button",
   className,
@@ -100,6 +126,7 @@ export function Sticker({
   const [pressed, setPressed] = useState(false);
   const [released, setReleased] = useState(false);
   const [happy, setHappy] = useState(false);
+  const [shake, setShake] = useState(false);
   const pressedRef = useRef(false);
   const timers = useRef<number[]>([]);
 
@@ -137,8 +164,13 @@ export function Sticker({
       event.preventDefault();
       return;
     }
-    if (burst !== false) {
-      inkBurst(event.currentTarget, burst === true ? BURST_COLORS[variant] : burst, round ? 7 : 9);
+    const b = burstFor(burst, variant);
+    if (b) {
+      inkBurst(event.currentTarget, b.colors, round ? 7 : 9, b.style);
+      if (b.style === "poof" && !reduced) {
+        setShake(true);
+        later(() => setShake(false), SHAKE_MS);
+      }
     }
     if (buddy) {
       setHappy(true);
@@ -183,7 +215,9 @@ export function Sticker({
       data-pressed={pressed ? "" : undefined}
       data-released={released ? "" : undefined}
       data-happy={happy ? "" : undefined}
-      className={cx(styles.root, variantClass[variant], size !== "md" && styles[size], round && styles.round, className)}
+      data-shake={shake ? "" : undefined}
+      className={cx(styles.root, variantClass[variant], size !== "md" && styles[size], round && styles.round, buddy === "peek" && styles.peek, className)}
+      data-shadow={shadow}
       style={{ "--tilt": `${angle}deg`, ...style } as CSSProperties}
       onClick={handleClick}
       onPointerDown={handlePointerDown}
@@ -197,7 +231,7 @@ export function Sticker({
         release();
       }}
     >
-      <StickerInner buddy={buddy} loading={loading} loadingLabel={loadingLabel}>
+      <StickerInner buddy={buddy} buddyMood={buddyMood} loading={loading} loadingLabel={loadingLabel}>
         {children}
       </StickerInner>
     </button>
@@ -205,11 +239,18 @@ export function Sticker({
 }
 
 
-function StickerInner({ buddy, loading, loadingLabel, children }: { buddy: boolean; loading: boolean; loadingLabel: string; children: ReactNode }) {
+function StickerInner({ buddy, buddyMood, loading, loadingLabel, children }: { buddy: boolean | "peek"; buddyMood: BuddyMood; loading: boolean; loadingLabel: string; children: ReactNode }) {
   return (
     <>
       <span className={styles.shadow} aria-hidden="true" />
-      {buddy && <BuddyHead />}
+      {buddy &&
+        (buddyMood === "success" ? (
+          <BuddyHead />
+        ) : (
+          <span className={cx(styles.buddyHead, styles.buddyCast)} aria-hidden="true">
+            <BuddyArt mood={buddyMood} />
+          </span>
+        ))}
       <span className={styles.paper}>
         <span className={styles.face}>
           <span className={styles.fill} />
@@ -242,7 +283,9 @@ interface StickerLinkProps extends Omit<StickerOwnProps, "loading" | "loadingLab
   /** Render with your router's link component, e.g. Next.js `Link`. Default `a`. */
   as?: ElementType;
   round?: boolean;
-  buddy?: boolean;
+  buddy?: boolean | "peek";
+  /** Which character the buddy is. Default `success` (Pip); e.g. `error` puts Bix on a Retry button. */
+  buddyMood?: BuddyMood;
   children: ReactNode;
 }
 
@@ -260,6 +303,8 @@ export function StickerLink({
   burst = true,
   round = false,
   buddy = false,
+  buddyMood = "success",
+  shadow,
   className,
   style,
   children,
@@ -290,10 +335,12 @@ export function StickerLink({
       {...rest}
       ref={ref}
       data-pressed={pressed ? "" : undefined}
-      className={cx(styles.root, styles.link, variantClass[variant], size !== "md" && styles[size], round && styles.round, className)}
+      className={cx(styles.root, styles.link, variantClass[variant], size !== "md" && styles[size], round && styles.round, buddy === "peek" && styles.peek, className)}
+      data-shadow={shadow}
       style={{ "--tilt": `${angle}deg`, ...style } as CSSProperties}
       onClick={(event: MouseEvent<HTMLAnchorElement>) => {
-        if (burst !== false) inkBurst(event.currentTarget, burst === true ? BURST_COLORS[variant] : burst, round ? 7 : 9);
+        const b = burstFor(burst, variant);
+        if (b) inkBurst(event.currentTarget, b.colors, round ? 7 : 9, b.style);
         onClick?.(event);
       }}
       onPointerDown={(event: PointerEvent<HTMLAnchorElement>) => {
@@ -320,7 +367,7 @@ export function StickerLink({
         release();
       }}
     >
-      <StickerInner buddy={buddy} loading={false} loadingLabel="">
+      <StickerInner buddy={buddy} buddyMood={buddyMood} loading={false} loadingLabel="">
         {children}
       </StickerInner>
     </Tag>

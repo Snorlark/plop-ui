@@ -44,7 +44,7 @@
   border-radius: 0 0 4px 0;
 }
 .wrap:not([data-dismissed]):hover .tip,
-.wrap:not([data-dismissed]):focus-within .tip,
+.wrap:not([data-dismissed]):has(:focus-visible) .tip,
 .wrap[data-open] .tip {
   opacity: 1;
   transform: translateX(-50%) rotate(-3deg) scale(1);
@@ -53,9 +53,17 @@
 .right { left: auto; right: -14px; transform: rotate(3deg) scale(0.6); transform-origin: 85% 120%; }
 .right::after { left: auto; right: 22px; transform: rotate(45deg) skew(10deg, 10deg); }
 .wrap:not([data-dismissed]):hover .right,
-.wrap:not([data-dismissed]):focus-within .right,
+.wrap:not([data-dismissed]):has(:focus-visible) .right,
 .wrap[data-open] .right {
   transform: rotate(3deg) scale(1);
+}
+
+.bottom { bottom: auto; top: calc(100% + 18px); transform: translateX(-50%) rotate(3deg) scale(0.6); transform-origin: 50% -20%; }
+.bottom::after { bottom: auto; top: -11px; transform: translateX(-50%) rotate(-135deg) skew(10deg, 10deg); }
+.wrap:not([data-dismissed]):hover .bottom,
+.wrap:not([data-dismissed]):has(:focus-visible) .bottom,
+.wrap[data-open] .bottom {
+  transform: translateX(-50%) rotate(3deg) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
