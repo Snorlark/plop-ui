@@ -161,7 +161,10 @@ def build(weight, italic):
     ps = 'Sketchpop-' + style.replace(' ', '')
     fb.setupNameTable({'familyName': 'Sketchpop', 'styleName': style, 'uniqueFontIdentifier': ps + '-3.0',
                        'fullName': 'Sketchpop ' + style, 'psName': ps, 'version': 'Version 3.000',
-                       'licenseDescription': 'SIL Open Font License 1.1'})
+                       'copyright': 'Copyright (c) 2026, Lark Sigmuond Babao (https://github.com/Snorlark/plop-ui).',
+                       'designer': 'Lark Sigmuond Babao',
+                       'licenseDescription': 'This Font Software is licensed under the SIL Open Font License, Version 1.1.',
+                       'licenseInfoURL': 'https://openfontlicense.org'})
     sel = (0x01 if italic else 0) | (0x20 if weight == 'Bold' else 0) or 0x40
     fb.setupOS2(usWeightClass=wclass, sTypoAscender=900, sTypoDescender=-260, sTypoLineGap=100,
                 usWinAscent=1000, usWinDescent=320, sxHeight=424, sCapHeight=700,
