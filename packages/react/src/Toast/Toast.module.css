@@ -21,7 +21,8 @@
   color: var(--tt);
   border: 3px solid var(--plop-ink);
   border-radius: 16px 11px 18px 12px;
-  box-shadow: 4px 5px 0 var(--plop-shadow-strong);
+  /* A die-cut paper edge and a flat printed shadow, like every sticker: that's what lifts it off the page. */
+  box-shadow: 0 0 0 5px var(--plop-paper), 4px 6px 0 5px var(--plop-shadow);
   font-family: var(--plop-font-letter);
   font-style: italic;
   font-weight: var(--plop-weight-letter);
@@ -35,29 +36,43 @@
 .success { --tb: var(--plop-mint); --tt: var(--plop-on-fill-mint); }
 .error { --tb: var(--plop-bubblegum); --tt: var(--plop-on-fill-bubblegum); }
 .toast[data-leaving] { animation: lift 220ms ease-in forwards; }
-/* With a character on top, the whole thing leaves together. */
-.withBuddy { pointer-events: auto; }
+/*
+ * With a character on top, the character and the toast tilt as one piece: a tilted toast
+ * on its own drops away from the hands on a long message. The whole thing leaves together.
+ */
+.withBuddy { pointer-events: auto; transform: rotate(-3deg); }
+.withBuddy .toast { transform: none; animation-name: stamp-flat; }
 .withBuddy:has([data-leaving]) { animation: lift 220ms ease-in forwards; }
 .withBuddy .toast[data-leaving] { animation: none; }
 
 /*
- * A soft ink wash rising from the bottom of the screen while a toast is up,
- * so it reads apart from whatever is underneath without hiding it. Never
- * blocks clicks.
+ * What shows behind a toast while it's up (Toaster `backdrop`), fading out from under
+ * the toast to the page. `dots`: a comic halftone screen (one dot grid, staggered into
+ * the diagonal comic lattice) over a faint periwinkle wash. `solid`: just the wash.
+ * `none`: nothing. Never blocks clicks.
  */
 .zone::before {
   content: "";
   position: fixed;
   inset: auto 0 0 0;
-  height: min(220px, 32vh);
+  height: min(240px, 36vh);
   z-index: -1;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 60% 90% at 50% 100%, color-mix(in srgb, var(--plop-ink-text) 26%, transparent), transparent 70%),
-    linear-gradient(to top, color-mix(in srgb, var(--plop-ink-text) 18%, transparent), transparent);
+  --wash: linear-gradient(to top, color-mix(in srgb, var(--plop-periwinkle) 55%, transparent), transparent);
+  background: var(--wash);
+  -webkit-mask: radial-gradient(ellipse 58% 100% at 50% 100%, black 20%, transparent 75%);
+          mask: radial-gradient(ellipse 58% 100% at 50% 100%, black 20%, transparent 75%);
   opacity: 0;
   transition: opacity 0.25s ease;
 }
+.zone[data-backdrop="dots"]::before {
+  --dot: color-mix(in srgb, var(--plop-ink) 40%, transparent);
+  background:
+    radial-gradient(circle, var(--dot) 2px, transparent 2.5px) 0 0 / 14px 14px,
+    radial-gradient(circle, var(--dot) 2px, transparent 2.5px) 7px 7px / 14px 14px,
+    var(--wash);
+}
+.zone[data-backdrop="none"]::before { content: none; }
 .zone:has(.toast)::before { opacity: 1; }
 .zone:has(.toast[data-leaving])::before { opacity: 0; transition-duration: 0.22s; }
 
@@ -68,6 +83,11 @@
   0% { transform: scale(1.5) rotate(-10deg); opacity: 0; }
   60% { transform: scale(0.94) rotate(-2deg); opacity: 1; }
   100% { transform: scale(1) rotate(-3deg); opacity: 1; }
+}
+@keyframes stamp-flat {
+  0% { transform: scale(1.5) rotate(-7deg); opacity: 0; }
+  60% { transform: scale(0.94) rotate(1deg); opacity: 1; }
+  100% { transform: none; opacity: 1; }
 }
 @keyframes lift {
   to { opacity: 0; transform: translateY(10px) rotate(-3deg); }
