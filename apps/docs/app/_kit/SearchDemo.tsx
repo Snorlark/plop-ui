@@ -28,7 +28,7 @@ const ACTIONS: SearchGroup[] = [{ id: "a", label: "Actions", items: [{ id: "a1",
 export function SearchDemo() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="stack" style={{ gap: 30, justifyItems: "center", minHeight: 360 }}>
+    <div className="stack" style={{ gap: 30, justifyItems: "center", alignContent: "start", minHeight: 360 }}>
       <SearchField label="Search the dispatch board" placeholder="Try “brgy”, “mobile” or “rosa”" groups={GROUPS} recentKey="plop-demo-recent" onSelect={(it) => toast.success(`Opened ${it.title}`, { buddy: true })} />
       <Button variant="plain" onClick={() => setOpen(true)}>
         Open the command palette
