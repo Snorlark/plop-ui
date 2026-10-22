@@ -42,7 +42,7 @@
 [data-plop-surface="mat"] 
 /* Paper islands: cards and panels stay printed on paper on any surface, so page text and the kit
    components inside them read in ink (the same reset as the kit's .plop-paper, without its fill). */
-:is(.grid-card, .pack, .piece-polaroid, .piece-ticket, .piece-notebook, .piece-note, .piece-receipt, .home-code,   .doc-table, .doc-example, .doc-dodont > div, .pg-controls, .pg-code, .preview-picker, .home-npm) {
+:is(.grid-card, .pack, .piece-polaroid, .piece-ticket, .piece-notebook, .piece-note, .piece-receipt, .home-code,   .doc-table, .doc-example, .doc-dodont > div, .pg-controls, .pg-code, .home-npm) {
   --plop-on: var(--plop-ink);
   --plop-on-soft: var(--plop-ink-soft);
   --plop-focus: var(--plop-ink);
@@ -244,67 +244,22 @@ html[data-tear]::view-transition-old(root) {
 }
 .home-down:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 8px; }
 
-/* ---------- hero → letter scroll transitions (temporary options, see Preview.tsx) ---------- */
+/* ---------- hero → letter: Drift ---------- */
+/* Scroll-linked, on the compositor (CSS scroll-driven animations): the crowd rows slide apart sideways as the hero
+   leaves and the letter rises in. Browsers without scroll timelines, or with reduced motion, just show the page still. */
 .home-next { position: relative; }
-.gap-icon {
-  display: inline-grid; place-items: center; width: 64px; height: 64px; flex: none; border-radius: 50% 46% 53% 48%;
-  background: var(--fill); color: var(--plop-ink-text); border: 3px solid var(--plop-ink); box-shadow: 0 0 0 4px var(--plop-paper), 2px 4px 0 4px var(--plop-shadow);
-}
-.gap-icon svg { width: 30px; height: 30px; }
-.home-burst svg { filter: none !important; }
-
-/* Scroll-linked options run on the compositor (CSS scroll-driven animations). Browsers without them just show the page still. */
+.home-letter { position: relative; z-index: 1; }
 @supports (animation-timeline: view()) {
-  /* Option 1, Drift: crowd rows slide apart sideways as the hero leaves; the letter rises in. */
-  .home-flow[data-anim="drift"] .home-crowd__row { animation: drift-a linear both; animation-timeline: view(); animation-range: contain 0% exit 100%; }
-  .home-flow[data-anim="drift"] .home-crowd__row:nth-child(2) { animation-name: drift-b; }
-  .home-flow[data-anim="drift"] .home-letter { animation: rise-in ease-out both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
-
-  /* Option 3, Sheet slide: the letter is a paper sheet that slides up over the crowd while the faces sink. */
-  .home-flow[data-anim="sheet"] .home-crowd__row { animation: sink linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
-  .home-flow[data-anim="sheet"] .home-next { animation: sheet-up linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
+  .home-flow .home-crowd__row { animation: drift-a linear both; animation-timeline: view(); animation-range: contain 0% exit 100%; }
+  .home-flow .home-crowd__row:nth-child(2) { animation-name: drift-b; }
+  .home-flow .home-letter { animation: rise-in ease-out both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
 }
 @keyframes drift-a { from { transform: translateX(0); } to { transform: translateX(-320px); } }
 @keyframes drift-b { from { transform: translateX(0); } to { transform: translateX(320px); } }
 @keyframes rise-in { from { opacity: 0; transform: translateY(70px); } to { opacity: 1; transform: none; } }
-@keyframes sink { to { transform: translateY(70px) scale(.94); } }
-@keyframes sheet-up { from { transform: translateY(140px); } to { transform: none; } }
-
-.home-flow[data-anim="sheet"] .home-next {
-  --site-ink: var(--plop-ink); --site-text: var(--plop-ink-text); --site-soft: var(--plop-ink-soft);
-  z-index: 2; margin-top: -70px; padding-top: 30px; background: var(--plop-paper);
-  border-radius: 28px 34px 0 0 / 18px 22px 0 0; box-shadow: 0 -10px 24px -14px rgba(18,36,120,.35), 0 -2px 0 rgba(40,72,216,.12);
-}
-
-/* Option 2, Pop burst: plays once when the letter comes into view. Pieces arc up out of the crowd and land in the margins. */
-.home-burst { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.home-burst__piece { position: absolute; left: var(--x); top: var(--y); opacity: 0; transform: translate(var(--from), -60px) scale(.2); }
-.home-burst[data-in] .home-burst__piece { animation: burst-land .9s var(--plop-ease-spring) both; animation-delay: calc(var(--i) * 45ms); }
-@keyframes burst-land {
-  0% { opacity: 0; transform: translate(var(--from), -40px) scale(.2) rotate(0deg); }
-  15% { opacity: 1; }
-  55% { transform: translate(calc(var(--from) * .35), -150px) scale(1.1) rotate(calc(var(--r) * 2)); }
-  100% { opacity: 1; transform: rotate(var(--r)); }
-}
-.home-letter { position: relative; z-index: 1; }
-@media (max-width: 1360px) { .home-burst__piece:nth-child(-n+10) { display: none; } }
-@media (max-width: 640px) { .home-burst__piece:nth-child(even) { display: none; } }
-
 @media (prefers-reduced-motion: reduce) {
-  .home-flow .home-crowd__row, .home-flow .home-letter, .home-flow .home-next { animation: none !important; }
-  .home-burst__piece { animation: none !important; opacity: 1; transform: rotate(var(--r)); }
+  .home-flow .home-crowd__row, .home-flow .home-letter { animation: none !important; }
 }
-
-.preview-picker {
-  position: fixed; right: 16px; bottom: 16px; z-index: 60; display: flex; flex-direction: column; gap: 8px; max-width: calc(100vw - 32px);
-  padding: 12px 14px; background: var(--plop-paper); color: var(--plop-ink-text); border: 2.5px dashed var(--plop-ink); border-radius: 14px 10px 15px 11px;
-  box-shadow: 4px 6px 0 var(--plop-shadow); font-size: 15px;
-}
-.preview-picker__title { font-style: italic; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; color: var(--plop-tomato-text); }
-.preview-picker fieldset { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0; padding: 0; border: 0; }
-.preview-picker legend { padding: 0; margin-bottom: 2px; font-size: 13px; color: var(--plop-ink-soft); }
-.preview-picker label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
-.preview-picker input { accent-color: var(--plop-ink); }
 
 .home-letter { max-width: 1100px; margin: 0 auto; padding: 90px 40px 70px; display: flex; flex-wrap: wrap; gap: 36px 70px; }
 .home-letter__head { flex: 1 1 360px; display: flex; flex-direction: column; gap: 18px; }
