@@ -24,7 +24,6 @@ import { Hand, Scribble } from "./Doodles";
 import { PaperStack } from "./PaperStack";
 import { PassCta } from "./PassCta";
 import { WhyPlop } from "./WhyPlop";
-import { Preview } from "./Preview";
 import { HeroTitle } from "./HeroTitle";
 
 const CROWD_NAMES = [
@@ -684,7 +683,15 @@ function Surfaces() {
 export function Home() {
   return (
     <main id="main">
-      <Preview hero={<Hero />} next={<Letter />} />
+      {/* Drift: as the hero scrolls away its crowd rows slide apart sideways and the letter rises in (site.css). */}
+      <div className="home-flow">
+        <div className="home-top">
+          <Hero />
+        </div>
+        <div className="home-next">
+          <Letter />
+        </div>
+      </div>
       <WhyPlop />
       <Pieces />
       <ComponentsGrid />
