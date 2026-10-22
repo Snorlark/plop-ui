@@ -3,7 +3,7 @@
 import { Buddy, Button, PlopProvider, seededTilt, toast, useHaptics, useSound } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
-import { getPass, getServerPass, stamp, subscribe } from "../_site/pass";
+import { getPass, getServerPass, subscribe } from "../_site/pass";
 import { Choice, Slider, Swatches, Text } from "./controls";
 import { boardCode, codeFor, describe, KINDS, REGULARS_SHELF, SHELVES, type Item, type TrayEntry } from "./stickers";
 import styles from "./tools.module.css";
@@ -95,7 +95,6 @@ export function StickerBoard() {
     setSelected(id);
     haptics.tap();
     sound("down");
-    stamp("board");
   };
 
   const remove = (id: string) => {

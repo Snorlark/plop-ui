@@ -22,7 +22,7 @@ import {
   type DoodleKind,
 } from "@plop-ui/react";
 import type { ReactNode } from "react";
-import { HoloPip } from "../_site/PlopPass";
+import { HoloPip } from "../_site/RideAlong";
 import styles from "./tools.module.css";
 
 /*
@@ -220,11 +220,11 @@ export const KINDS: Record<Kind, KindSpec> = {
     imports: ["Buddy"],
     fields: [],
     render: () => <HoloPip size={120} />,
-    code: () => `{/* Holo Pip: a Plop Pass reward. The character is <Buddy mood="congrats" />; the foil is yours to style. */}\n<Buddy mood="congrats" size="lg" />`,
+    code: () => `{/* Holo Pip: the Ride-along pass reward. The character is <Buddy mood="congrats" />; the foil is yours to style. */}\n<Buddy mood="congrats" size="lg" />`,
   },
 };
 
-/** The shelf that appears once the Plop Pass is full. */
+/** The shelf that appears once the Ride-along pass is full. */
 export const REGULARS_SHELF = { id: "regulars", label: "Regulars ★", items: [{ kind: "holo" as Kind, props: {}, hint: "Holo Pip" }] };
 
 export interface TrayEntry {

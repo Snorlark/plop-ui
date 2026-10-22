@@ -79,7 +79,8 @@ export function Search() {
     if (item.id === "install") {
       try {
         await navigator.clipboard.writeText("npm i @plop-ui/react");
-        if (stamp("install") === null) toast.success("Copied to clipboard", { buddy: true });
+        stamp("install");
+        toast.success("Copied to clipboard!", { buddy: true });
       } catch {
         toast.error("Couldn't copy. Select it instead.", { buddy: true });
       }
