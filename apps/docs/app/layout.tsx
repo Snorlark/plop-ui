@@ -5,13 +5,21 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Providers, SURFACE_SCRIPT } from "./_kit/Providers";
 import { GITHUB } from "./_site/nav";
+import { SITE_DESCRIPTION, SITE_URL } from "./_site/site";
 import { RideAlong } from "./_site/RideAlong";
 import { SiteFilters } from "./_site/Wordmark";
 import { patrickHand, sketchpop } from "./fonts";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: "PlopUI — hand-drawn UI for apps that can’t wait", template: "%s · PlopUI" },
-  description: "A hand-lettered, one-ink sticker UI kit for real-time operations apps. Press it like you mean it.",
+  description: SITE_DESCRIPTION,
+  applicationName: "PlopUI",
+  authors: [{ name: "Lark Sigmuond Babao", url: GITHUB }],
+  keywords: ["React UI library", "React components", "hand-drawn UI", "Next.js", "accessible components", "dispatch app UI", "design system", "sticker UI"],
+  // Shared previews on X, Slack, Discord, LinkedIn: the image is app/opengraph-image.png.
+  openGraph: { type: "website", siteName: "PlopUI", title: "PlopUI — hand-drawn UI for apps that can’t wait", description: SITE_DESCRIPTION },
+  twitter: { card: "summary_large_image", title: "PlopUI — hand-drawn UI for apps that can’t wait", description: SITE_DESCRIPTION },
 };
 
 /** Tells search engines what PlopUI is (schema.org). */
@@ -19,8 +27,10 @@ const JSON_LD = {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   name: "PlopUI",
-  description: "Hand-drawn React UI component library for real-time operations apps: dispatch, field service and ticketing. Accessible to WCAG AA, server-rendered with Next.js.",
+  description: SITE_DESCRIPTION,
+  url: SITE_URL,
   codeRepository: GITHUB,
+  license: `${GITHUB}/blob/main/LICENSE`,
   programmingLanguage: ["TypeScript", "React"],
   author: { "@type": "Person", name: "Lark Sigmuond Babao" },
 };
