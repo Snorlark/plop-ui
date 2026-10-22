@@ -1,0 +1,3 @@
+/* Dispatch demo page. Colors, fonts and motion come only from Plop! tokens. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; line-height: 1.5; }

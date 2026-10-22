@@ -104,6 +104,7 @@ You need Node 20+ and pnpm 11 (`corepack enable` sets pnpm up for you).
 pnpm install
 pnpm build                              # builds tokens, fonts, the library and the apps
 pnpm --filter @plop-ui/docs dev         # docs site  → http://localhost:4321
+pnpm --filter @plop-ui/dispatch-demo dev  # dispatch demo → http://localhost:4322
 pnpm --filter @plop-ui/storybook dev    # Storybook  → http://localhost:6006
 ```
 
@@ -131,6 +132,7 @@ packages/tokens   design tokens → CSS variables + typed object (source: src/to
 packages/fonts    Sketchpop woff2/ttf, the OFL license, font build tools
 packages/react    @plop-ui/react (esbuild, CSS Modules, per-file "use client")
 apps/docs         Next.js 15 site: landing, docs, playground, /kit
+apps/dispatch-demo  Next.js 15 live incident queue built only from Plop! (SSE + Server Action)
 apps/storybook    Storybook 8 workshop with the a11y addon
 docs/decisions    one short file per decision: what we chose and why
 docs/prototype    the original v0.6 HTML prototype
