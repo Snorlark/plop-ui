@@ -11,11 +11,19 @@ import styles from "./Toast.module.css";
 const icon: Record<ToastKind, ReactNode> = { info: <InfoIcon />, success: <SuccessIcon />, error: <ErrorIcon /> };
 const empty: readonly ToastItem[] = [];
 
+/** What shows behind a toast while it's up, so it reads apart from the page. */
+export type ToastBackdrop = "dots" | "solid" | "none";
+
+export interface ToasterProps {
+  /** `solid`: a faint gradient wash. `dots`: a comic halftone screen over the wash. `none`: nothing. Default `solid`. */
+  backdrop?: ToastBackdrop;
+}
+
 /** The toast zone: a polite live region at the bottom of the screen. PlopProvider renders one. */
-export function Toaster() {
+export function Toaster({ backdrop = "solid" }: ToasterProps) {
   const items = useSyncExternalStore(subscribe, getToasts, () => empty);
   return (
-    <div className={styles.zone} role="status" aria-live="polite">
+    <div className={styles.zone} role="status" aria-live="polite" data-backdrop={backdrop}>
       {items.map((t) => (
         <ToastView key={t.id} item={t} />
       ))}
@@ -69,5 +77,5 @@ export function Toast({ children, kind = "info", buddy, className }: ToastProps)
     </div>
   );
   const mood = buddy === true ? TOAST_BUDDY[kind] : buddy || undefined;
-  return mood ? <BuddyPeek mood={mood}>{body}</BuddyPeek> : body;
+  return mood ? <BuddyPeek mood={mood} className={styles.withBuddy}>{body}</BuddyPeek> : body;
 }

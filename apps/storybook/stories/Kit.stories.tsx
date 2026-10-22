@@ -175,6 +175,20 @@ export const Toasts: Story = {
   ),
 };
 
+/** What shows behind a live toast: set with PlopProvider `toastBackdrop`. Press a button to see it. */
+const backdropStory = (backdrop: "dots" | "solid" | "none"): Story => ({
+  parameters: { toastBackdrop: backdrop },
+  render: () => (
+    <div style={{ display: "flex", gap: 22 }}>
+      <Button size="sm" variant="mint" onClick={() => toast.success("Copied to clipboard!", { buddy: true })}>Show a toast</Button>
+      <Button size="sm" variant="plain" onClick={() => toast("Mobile 2 is 6 min away")}>Show one without a buddy</Button>
+    </div>
+  ),
+});
+export const ToastBackdropDots = backdropStory("dots");
+export const ToastBackdropSolid = backdropStory("solid");
+export const ToastBackdropNone = backdropStory("none");
+
 export const Badges: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 26, alignItems: "center" }}>
