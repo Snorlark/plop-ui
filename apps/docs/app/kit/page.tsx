@@ -44,7 +44,7 @@ export default async function Kit() {
     <PlopProvider surface={surface} theme={theme} toaster={false} className="kit-root">
     <div className="shell">
       <aside className="side" aria-label="Components">
-        <Link className="brand" href="/" aria-label="PlopUI home">
+        <Link className="brand logo-sticker" href="/" aria-label="PlopUI home">
           <Image src="/plop-logo.png" alt="Plop UI" width={964} height={401} priority />
         </Link>
         <nav>
@@ -81,7 +81,7 @@ export default async function Kit() {
         <header className="kit-hero">
           <div>
             <h1 className="vh">Plop UI</h1>
-            <Image className="kit-hero__logo" src="/plop-logo.png" alt="" width={964} height={401} priority />
+            <Image className="kit-hero__logo logo-sticker" src="/plop-logo.png" alt="" width={964} height={401} priority />
             <span className="version">v0.1</span>
             <p className="lede">A sticker-pack UI kit, drawn in one cobalt marker on cream paper. Every press squishes, springs back, and buzzes on your phone.</p>
             <SurfaceSwitcher surface={surface} theme={theme} />
