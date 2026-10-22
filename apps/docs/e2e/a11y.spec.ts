@@ -18,6 +18,14 @@ for (const path of PAGES) {
   });
 }
 
+/** A header menu while it's open. */
+test("axe: header menu open", async ({ page, isMobile }) => {
+  await page.goto("/");
+  if (isMobile) await page.getByRole("button", { name: "Menu" }).click();
+  else await page.getByRole("button", { name: "Components" }).click();
+  expect(await blocking(page)).toEqual([]);
+});
+
 /** The kit and the playground render on every paper, light and dark: check them all. */
 for (const surface of SURFACES) {
   for (const theme of THEMES) {
