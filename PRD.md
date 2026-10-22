@@ -179,7 +179,7 @@ plop-ui/
     fonts/           # Sketchpop woff2 (4 weights, italic + upright) + OFL license
     react/           # @plop-ui/react: components, hooks, SVG filters
   apps/
-    docs/            # Next.js App Router + MDX docs site (plop-ui.vercel.app)
+    docs/            # Next.js App Router + MDX docs site (plopui.com)
     dispatch-demo/   # Next.js demo: live incident queue built only from Plop!
     storybook/       # component workshop, a11y and visual tests
   .changeset/        # versioning and changelog
@@ -350,6 +350,6 @@ Plop! succeeds if it saves real build time on client work and gives the author c
 
 - [ ] Library name on npm: is `@plop-ui` available, or use a personal scope? (blocks publishing)
 - [ ] MIT license, or keep source-available until v1.0? (packages say MIT for now; no LICENSE file yet)
-- [ ] Where do the docs live: `plop-ui.vercel.app`, or a custom domain?
+- [x] Where do the docs live: `plop-ui.vercel.app`, or a custom domain? Decided: `plopui.com`.
 - [ ] Should `MapPanel` use MapLibre or Leaflet given the dispatch app's offline needs?
 - [ ] Does Quadsync or MEC need sign-off before Plop! is used in client work?
