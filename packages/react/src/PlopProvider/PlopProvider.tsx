@@ -6,7 +6,7 @@ import { cx } from "../internal/cx.js";
 import burstStyles from "../InkBurst/InkBurst.module.css";
 import { PlopFilters } from "../PlopFilters.js";
 import type { StickerShadow } from "../internal/Sticker.js";
-import { Toaster } from "../Toast/Toaster.js";
+import { Toaster, type ToastBackdrop } from "../Toast/Toaster.js";
 import { BurstLayerContext, PlopContext, type ReducedMotionSetting } from "./context.js";
 
 export type PlopTheme = "system" | "light" | "dark";
@@ -29,6 +29,8 @@ export interface PlopProviderProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   paint?: boolean;
   /** Render the toast zone that `toast()` shows messages in. Default `true`. */
   toaster?: boolean;
+  /** What shows behind a toast: `solid` (a faint gradient wash), `dots` (a comic halftone screen) or `none`. Default `solid`. */
+  toastBackdrop?: ToastBackdrop;
 }
 
 /**
@@ -49,6 +51,7 @@ export function PlopProvider({
   stickerShadow,
   paint = true,
   toaster = true,
+  toastBackdrop,
   className,
   ...rest
 }: PlopProviderProps) {
@@ -73,7 +76,7 @@ export function PlopProvider({
         <PlopFilters />
         {children}
         <div ref={burstLayer} className={burstStyles.layer} aria-hidden="true" />
-        {toaster && <Toaster />}
+        {toaster && <Toaster backdrop={toastBackdrop} />}
       </div>
       </BurstLayerContext.Provider>
     </PlopContext.Provider>

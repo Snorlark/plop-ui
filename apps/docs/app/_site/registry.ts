@@ -292,7 +292,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
 
 toast.success("Report sent");
 toast.error("Couldn't send. Saved for later.");
-toast("Mobile 2 is 6 min away", { duration: 6000 });`,
+toast("Mobile 2 is 6 min away", { duration: 6000 });
+
+// Behind a live toast: a solid gradient wash (default), comic dots, or nothing.
+<PlopProvider toastBackdrop="solid" />   // "dots" | "none"`,
     tables: [{ of: "Toast" }],
     do: "Confirm something that already happened: \"Report sent\".",
     dont: "Ask a question or hide a button in a toast. It disappears.",
