@@ -1,32 +1,26 @@
 "use client";
 
 /*
- * The Plop Pass: a five-stamp card kept on this device. You earn a stamp for
- * a visit on a new day, opening the GitHub repo, copying the install
- * command, sticking something on the board and lettering something. Five stamps unlock the
+ * The Ride-along pass: a five-stop tour of Plop UI for first-time visitors,
+ * kept on this device. Each stop gets stamped when you reach it (see
+ * RideAlong.tsx for what counts), in any order. A full pass unlocks the
  * Holo Pip sticker, which stays yours (and shows up in the playground tray).
  */
 
-export type StampReason = "visit" | "github" | "install" | "board" | "lettering";
+export type Step = "what" | "install" | "components" | "playground" | "github";
 
-export interface Stamp {
-  reason: StampReason;
-  at: number;
-}
+export const STEPS: Step[] = ["what", "install", "components", "playground", "github"];
 
 export interface Pass {
-  stamps: Stamp[];
+  /** When each step was stamped (ms since epoch). */
+  stamps: Partial<Record<Step, number>>;
   holo: boolean;
-  cards: number;
-  /** The day (YYYY-MM-DD) of the last visit stamp. */
-  lastVisit: string;
-  /** Reasons already stamped on this card (each non-visit reason counts once per card). */
-  seen: StampReason[];
 }
 
-const KEY = "plop-pass-v1";
-export const CARD_SIZE = 5;
-const EMPTY: Pass = { stamps: [], holo: false, cards: 0, lastVisit: "", seen: [] };
+const KEY = "plop-ride-along-v1";
+/** The old Plop Pass. Only its Holo Pip carries over. */
+const OLD_KEY = "plop-pass-v1";
+const EMPTY: Pass = { stamps: {}, holo: false };
 
 let state: Pass = EMPTY;
 let loaded = false;
@@ -36,7 +30,9 @@ function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
   try {
-    state = { ...EMPTY, ...JSON.parse(localStorage.getItem(KEY) ?? "{}") };
+    const saved = localStorage.getItem(KEY);
+    if (saved) state = { ...EMPTY, ...JSON.parse(saved) };
+    else if (JSON.parse(localStorage.getItem(OLD_KEY) ?? "{}").holo === true) state = { ...EMPTY, holo: true };
   } catch {
     state = EMPTY;
   }
@@ -47,7 +43,7 @@ function save(next: Pass) {
   try {
     localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
-    // Storage blocked: the card just lasts for this visit.
+    // Storage blocked: the pass just lasts for this visit.
   }
   listeners.forEach((l) => l());
 }
@@ -65,36 +61,22 @@ export function getPass(): Pass {
 
 export const getServerPass = () => EMPTY;
 
-const today = () => new Date().toISOString().slice(0, 10);
+export const stampCount = (p: Pass) => STEPS.filter((s) => p.stamps[s]).length;
 
-/** Adds a stamp if this reason hasn't earned one yet (visits: once a day). Returns the new stamp count, or null when nothing changed. */
-export function stamp(reason: StampReason): number | null {
+/** Stamps a step if it isn't stamped yet. Returns the new stamp count, or null when nothing changed. */
+export function stamp(step: Step): number | null {
   load();
-  const s = state;
-  if (s.stamps.length >= CARD_SIZE) return null;
-  if (reason === "visit" ? s.lastVisit === today() : s.seen.includes(reason)) return null;
-  const stamps = [...s.stamps, { reason, at: Date.now() }];
-  save({
-    ...s,
-    stamps,
-    lastVisit: reason === "visit" ? today() : s.lastVisit,
-    seen: reason === "visit" ? s.seen : [...s.seen, reason],
-    holo: s.holo || stamps.length >= CARD_SIZE,
-  });
-  window.dispatchEvent(new CustomEvent("plop:stamp", { detail: { reason, count: stamps.length } }));
-  return stamps.length;
+  if (state.stamps[step]) return null;
+  const stamps = { ...state.stamps, [step]: Date.now() };
+  const next = { stamps, holo: state.holo || STEPS.every((s) => stamps[s]) };
+  save(next);
+  const count = stampCount(next);
+  window.dispatchEvent(new CustomEvent("plop:stamp", { detail: { step, count } }));
+  return count;
 }
 
-/** A fresh card. Holo Pip stays unlocked. */
-export function newCard() {
+/** A fresh pass. Holo Pip stays unlocked. */
+export function resetPass() {
   load();
-  save({ ...state, stamps: [], seen: [], cards: state.cards + 1, lastVisit: state.lastVisit });
+  save({ ...state, stamps: {} });
 }
-
-export const STAMP_LABEL: Record<StampReason, string> = {
-  visit: "Visit",
-  github: "GitHub",
-  install: "Install",
-  board: "Board",
-  lettering: "Lettered",
-};

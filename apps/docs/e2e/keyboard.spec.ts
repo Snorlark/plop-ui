@@ -51,3 +51,17 @@ test("Playground: changing a prop updates the preview and the code", async ({ pa
   await expect(page.locator(".pg-stage")).toHaveAttribute("data-plop-surface", "kraft");
   await expect(page).toHaveURL(/surface=kraft/);
 });
+
+test("Ride-along pass: Enter opens it from the corner stub, Escape closes it and returns focus", async ({ page }) => {
+  await page.goto("/docs/getting-started");
+  const stub = page.getByRole("button", { name: /Ride-along pass/ });
+  await expect(stub).toHaveAccessibleName(/1 of 5 stops stamped/);
+  await stub.focus();
+  await page.keyboard.press("Enter");
+  const pass = page.getByRole("dialog", { name: "Ride-along pass" });
+  await expect(pass).toBeFocused();
+  await expect(pass.getByRole("link", { name: /^2\. Install it, stamped/ })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(pass).toBeHidden();
+  await expect(stub).toBeFocused();
+});
