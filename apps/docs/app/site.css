@@ -69,6 +69,30 @@
 .site--docs .site-header { border-bottom: 2.5px dashed var(--site-rule); }
 .site-header__logo { display: inline-flex; text-decoration: none; border-radius: 10px; }
 .site-header__logo:focus-visible, .site-header__nav a:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
+/* Every Plop UI logo is a sticker: hover lifts it off the page with a little peel tilt and a deeper
+   shadow, a press squishes it flat, and letting go springs it back. Uses the individual
+   translate/rotate/scale properties so it stacks on top of each logo's own resting tilt. */
+.logo-sticker {
+  transition:
+    translate var(--plop-duration-spring) var(--plop-ease-spring),
+    rotate var(--plop-duration-spring) var(--plop-ease-spring),
+    scale var(--plop-duration-spring) var(--plop-ease-spring),
+    filter var(--plop-duration-spring) var(--plop-ease-squish);
+  filter: drop-shadow(0 0 0 transparent);
+}
+.logo-sticker:is(:hover, :focus-visible) {
+  translate: 0 -4px; rotate: 3deg; scale: 1.06;
+  filter: drop-shadow(3px 7px 0 var(--plop-shadow));
+}
+.logo-sticker:active {
+  translate: 0 1px; rotate: 1deg; scale: .96;
+  filter: drop-shadow(1px 1px 0 var(--plop-shadow));
+  transition-duration: var(--plop-duration-squish);
+  transition-timing-function: var(--plop-ease-squish);
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-sticker, .logo-sticker:is(:hover, :focus-visible, :active) { translate: none; rotate: none; scale: none; transition: filter .01ms; }
+}
 /* Header search: looks like a small sticker field; opens the command palette. */
 .site-search {
   position: relative; display: inline-flex; align-items: center; gap: 8px; min-width: 210px; height: 42px; padding: 0 8px 0 12px; cursor: pointer;
