@@ -8,7 +8,7 @@ import { Wordmark } from "./Wordmark";
 export function SiteHeader() {
   return (
     <header className="site-header">
-      <Link href="/" aria-label="PlopUI home" className="site-header__logo">
+      <Link href="/" aria-label="PlopUI home" className="site-header__logo logo-sticker">
         <Wordmark size={40} />
       </Link>
       <MainNav />
