@@ -14,7 +14,7 @@ These block publishing. Nothing else in "Next up" depends on them, so work can c
 
 - [ ] 🔴 **npm scope.** Check whether `@plop-ui` is free on npm (`npm view @plop-ui/react`). If not, pick a personal scope and rename the 3 packages.
   Done when: the scope is reserved on npm under your account.
-- [ ] 🔴 **License.** MIT now, or source-available until v1.0? The packages say MIT, but there's no `LICENSE` file at the root.
+- [x] 🔴 **License.** MIT now, or source-available until v1.0? The packages say MIT, but there's no `LICENSE` file at the root.
   Done when: `LICENSE` exists and matches every `package.json` `license` field.
 - [ ] 🟡 **Docs domain.** `plop-ui.vercel.app` or a custom domain?
 - [ ] 🟡 **Client sign-off.** Does Quadsync or MEC need to approve Plop! before it's used in client work? (PRD open question)
@@ -23,7 +23,7 @@ These block publishing. Nothing else in "Next up" depends on them, so work can c
 ## 2. Next up (in order)
 
 ### Ship v0.1 to npm
-- [ ] 🔴 Add the root `LICENSE` file (after the decision above).
+- [x] 🔴 Add the root `LICENSE` file (after the decision above).
 - [ ] 🔴 Write the first changeset: `pnpm changeset` → minor for `@plop-ui/tokens`, `@plop-ui/fonts`, `@plop-ui/react`.
 - [ ] 🔴 Add `NPM_TOKEN` to the GitHub repo secrets and a release workflow (Changesets action: opens the "Version packages" PR, publishes on merge, with provenance).
   Done when: `npm i @plop-ui/react` works in a fresh project.

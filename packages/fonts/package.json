@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Sketchpop: the hand-drawn marker family behind Plop! \u2014 Light, Regular, Bold and Black, italic and upright, as woff2.",
   "license": "OFL-1.1",
+  "author": "Lark Sigmuond Babao",
+  "homepage": "https://github.com/Snorlark/plop-ui#readme",
+  "bugs": "https://github.com/Snorlark/plop-ui/issues",
   "sideEffects": [
     "*.css"
   ],
