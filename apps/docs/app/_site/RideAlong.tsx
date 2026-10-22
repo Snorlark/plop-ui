@@ -319,7 +319,7 @@ export function RideAlong() {
         </div>
       )}
 
-      <div className={styles.corner} data-done={done ? "" : undefined}>
+      <div className={styles.corner} data-done={done ? "" : undefined} data-open={open ? "" : undefined}>
         {hint && !open && !done && (
           <div className={styles.hint}>
             <button type="button" className={styles.hintText} onClick={() => { dismissHint(); setOpen(true); }}>
