@@ -9,6 +9,11 @@
   --site-text: var(--plop-ink-text);
   --site-soft: var(--plop-ink-soft);
   --site-rule: rgba(40,72,216,.35);
+  /* The page's texture as variables, so the header bar and its menus can print the very same paper (or mat). */
+  --site-texture: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .38  0 0 0 0 .3  0 0 0 .5 -.1'/></filter><rect width='100%' height='100%' filter='url(%23g)' opacity='.45'/></svg>"),
+    radial-gradient(ellipse at 15% 0%, rgba(255,255,255,.7), transparent 60%);
+  --site-texture-size: 240px 240px, 100% 100%;
+  --site-texture-position: 0 0;
   position: relative; isolation: isolate; min-height: 100vh; display: flex; flex-direction: column; overflow-x: clip;
   background-color: var(--site-bg);
 }
@@ -16,11 +21,11 @@
 .site::before {
   content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background-color: var(--site-bg);
-  background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .38  0 0 0 0 .3  0 0 0 .5 -.1'/></filter><rect width='100%' height='100%' filter='url(%23g)' opacity='.45'/></svg>"),
-    radial-gradient(ellipse at 15% 0%, rgba(255,255,255,.7), transparent 60%);
-  background-size: 240px 240px, 100% 100%;
+  background-image: var(--site-texture);
+  background-size: var(--site-texture-size);
+  background-position: var(--site-texture-position);
 }
+
 /* The cutting mat: the site's dark look. The header toggle puts data-plop-surface="mat" on <html>. */
 [data-plop-surface="mat"] .site {
   --site-bg: var(--plop-bg);
@@ -28,14 +33,11 @@
   --site-text: var(--plop-on);
   --site-soft: var(--plop-on-soft);
   --site-rule: rgba(255,248,231,.4);
+  --site-texture: var(--plop-surface-image);
+  --site-texture-size: var(--plop-surface-size);
+  --site-texture-position: var(--plop-surface-position);
   background-color: var(--plop-bg);
   color: var(--plop-on);
-}
-[data-plop-surface="mat"] .site::before {
-  background-color: var(--plop-bg);
-  background-image: var(--plop-surface-image);
-  background-size: var(--plop-surface-size);
-  background-position: var(--plop-surface-position);
 }
 [data-plop-surface="mat"] .home-kicker { color: var(--plop-mustard) !important; }
 [data-plop-surface="mat"] .home-kicker path { stroke: var(--plop-mustard); }
@@ -62,13 +64,30 @@
 .wordmark { display: inline-flex; align-items: flex-end; padding: 5px 6px 3px; transform: rotate(-4deg); }
 
 /* ---------- header ---------- */
+/* A full-width bar (the mega-menu panels hang off its bottom edge) around a centered row. At the top of the page it
+   has no background at all; once you've scrolled, it slides away while you scroll down and comes back on the
+   page's own background (paper, or the cutting mat in the dark look) when you scroll up (HeaderBar.tsx). */
 .site-header {
-  position: relative; z-index: 10; width: 100%; max-width: 1280px; margin: 0 auto; padding: 40px 40px 18px;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px;
+  position: sticky; top: 0; z-index: 30; width: 100%; background: transparent;
+  transition: transform .3s var(--plop-ease-squish), background-color .2s ease;
 }
-.site--docs .site-header { border-bottom: 2.5px dashed var(--site-rule); }
+.site-header[data-scrolled] {
+  background-color: var(--site-bg); background-image: var(--site-texture);
+  background-size: var(--site-texture-size); background-position: var(--site-texture-position); background-attachment: fixed;
+}
+.site-header[data-hidden] { transform: translateY(-100%); }
+.site-header__in { width: 100%; max-width: 1280px; margin: 0 auto; padding: 18px 40px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
+html { scroll-padding-top: calc(var(--header-offset, 0px) + 24px); }
+.doc-nav, .pg-picker { top: calc(var(--header-offset, 0px) + 20px) !important; transition: top .3s var(--plop-ease-squish); }
+.doc-nav { max-height: calc(100vh - var(--header-offset, 0px) - 40px) !important; }
+@media (prefers-reduced-motion: reduce) { .site-header, .doc-nav, .pg-picker { transition: none; } }
+@media (max-width: 900px) {
+  .site-header__in > .feedback-toggles { order: 2; margin-left: auto; }
+  .site-header__in > .site-search { order: 4; flex: 1 1 100%; }
+}
 .site-header__logo { display: inline-flex; text-decoration: none; border-radius: 10px; }
-.site-header__logo:focus-visible, .site-header__nav a:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
+.feedback-toggles { display: inline-flex; align-items: center; gap: 8px; }
+.site-header__logo:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
 /* Every Plop UI logo is a sticker: hover lifts it off the page with a little peel tilt and a deeper
    shadow, a press squishes it flat, and letting go springs it back. Uses the individual
    translate/rotate/scale properties so it stacks on top of each logo's own resting tilt. */
@@ -112,15 +131,6 @@
   display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 5px; border: 2px solid var(--plop-ink); border-bottom-width: 3.5px;
   border-radius: 7px 6px 8px 6px; background: var(--plop-paper); font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 11px; color: var(--plop-ink-text);
 }
-.site-header__nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 26px; flex: 1 1 auto; }
-.site-header__nav a {
-  padding: 10px 0; font-style: italic; font-weight: 700; font-size: 15px; letter-spacing: .04em; text-transform: uppercase;
-  color: var(--site-text); text-decoration: none;
-}
-.feedback-toggles { display: inline-flex; align-items: center; gap: 8px; }
-.site-header__nav a:hover { color: var(--site-ink); }
-.site-header__nav a[aria-current="page"] { color: var(--site-ink); text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: var(--plop-tomato); }
-
 
 /* ---------- home ---------- */
 .home-kicker { position: relative; display: inline-block; width: fit-content; font-style: italic; font-weight: 400; font-size: 24px; padding-bottom: 6px; }
@@ -351,9 +361,7 @@ html[data-tear]::view-transition-old(root) {
 .tk-s { color: #1F6B44; }
 
 @media (max-width: 640px) {
-  .site-header { padding: 40px 18px 16px; }
-  .site-header__nav { order: 3; flex-basis: 100%; gap: 4px 18px; }
-  .site-search { order: 4; flex: 1 1 100%; }
+  .site-header__in { padding: 16px 18px 12px; }
     .home-letter, .home-pieces, .home-components,   .pieces { grid-template-columns: 1fr; }
   .home-crowd { height: 240px; }
   .home-crowd__hand { display: none; }
