@@ -35,9 +35,10 @@ These block publishing. Nothing else in "Next up" depends on them, so work can c
 - [ ] 🟡 Replace the placeholder npm and Changelog links in `apps/docs/app/_site/SiteFooter.tsx` once they exist.
 
 ### Dispatch demo (PRD: `apps/dispatch-demo`)
-- [ ] 🟡 Scaffold a Next.js 15 app in `apps/dispatch-demo` that uses only Plop! components.
-- [ ] 🟡 Live incident queue fed by a Server-Sent Events Route Handler (`app/api/incidents/stream/route.ts`), mock incidents every few seconds.
-- [ ] 🟡 "Send report" form with a Server Action, `useOptimistic` and `<Button loading>`.
+- [x] 🟡 Scaffold a Next.js 15 app in `apps/dispatch-demo` that uses only Plop! components.
+- [x] 🟡 Live incident queue fed by a Server-Sent Events Route Handler (`app/api/incidents/stream/route.ts`), mock incidents every few seconds.
+- [x] 🟡 "Send report" form with a Server Action, `useOptimistic` and `<Button loading>`.
+- [ ] 🟡 Deploy it (Vercel) and add the "Dispatch demo" link to the footer.
 - [ ] ⚪ Take the portfolio screenshot and write the case study page on the docs site.
   Done when: the demo is deployed and linked from the footer ("Dispatch demo").
 
