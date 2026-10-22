@@ -79,3 +79,17 @@ test("Header menus: Enter opens one, Tab walks into it, Escape closes it and ret
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
   await expect(trigger).toBeFocused();
 });
+
+test("404: a 404 status under the site header; the buddy talks back and the buttons lead out", async ({ page }) => {
+  await page.goto("/playground");
+  const response = await page.goto("/docs/buton");
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole("heading", { level: 1, name: "This page is still on the press." })).toBeVisible();
+  const say = page.locator("#nf-say");
+  const first = await say.textContent();
+  await page.getByRole("button", { name: "Ask the buddy what happened" }).click();
+  await expect(say).not.toHaveText(first ?? "");
+  await expect(page.getByRole("link", { name: "Browse components" })).toHaveAttribute("href", "/kit");
+  await page.getByRole("button", { name: "Go back" }).click();
+  await expect(page).toHaveURL(/\/playground/);
+});

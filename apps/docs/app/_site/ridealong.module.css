@@ -212,3 +212,4 @@
 
 /* Step aside while the header's menu or phone sheet is open. */
 :global(html[data-menu-open]) .corner, :global(html[data-menu-open]) .panel { visibility: hidden; }
+:global(html:has([data-not-found])) .corner { display: none; }
