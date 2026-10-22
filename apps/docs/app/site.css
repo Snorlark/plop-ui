@@ -485,3 +485,8 @@ html[data-tear]::view-transition-old(root) {
 
 /* Privacy and other plain reading pages: one readable column. */
 .legal-page { width: 100%; max-width: 820px; margin: 0 auto; padding: 40px 22px 80px; }
+.changelog__list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 18px; }
+.changelog__list li { display: grid; gap: 8px; padding-bottom: 18px; border-bottom: 2px dashed var(--site-rule); }
+.changelog__list p { margin: 0; }
+.changelog__tags { display: inline-flex; flex-wrap: wrap; gap: 8px; vertical-align: middle; }
+.changelog h2 .changelog__tags { margin-left: 10px; font-size: 16px; }
