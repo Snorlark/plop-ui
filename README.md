@@ -2,6 +2,21 @@
 
 <p align="center"><strong>A hand-lettered sticker UI kit for real-time operations apps.</strong><br>Press it like you mean it.</p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/@plop-ui/react"><img src="https://img.shields.io/npm/v/@plop-ui/react?label=%40plop-ui%2Freact&color=2848D8" alt="npm version"></a>
+  <a href="https://github.com/Snorlark/plop-ui/actions/workflows/ci.yml"><img src="https://github.com/Snorlark/plop-ui/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2848D8" alt="MIT license"></a>
+  <a href="https://plop-ui.vercel.app"><img src="https://img.shields.io/badge/docs-plop--ui.vercel.app-F6C445" alt="Docs"></a>
+</p>
+
+<p align="center">
+  <a href="https://plop-ui.vercel.app"><b>Docs</b></a> ·
+  <a href="https://plop-ui.vercel.app/docs/getting-started">Getting started</a> ·
+  <a href="https://plop-ui.vercel.app/playground">Playground</a> ·
+  <a href="https://plop-ui.vercel.app/kit">Every component</a> ·
+  <a href="https://plop-ui.vercel.app/changelog">Changelog</a>
+</p>
+
 Plop! is an open-source React + TypeScript component library for dispatch, field service and ticketing apps. Everything is drawn in one cobalt marker on cream paper: die-cut sticker buttons, hatched shadows, boiling ink outlines, a cast of little characters, and press feedback you can feel (a squish, an ink burst, a buzz on your phone). Every "imperfection" is seeded, so it renders the same on the server and the client.
 
 The "o" in the logo is the capped buddy who peeks over the top of a `Button`. He is the kit's mascot, and his friends show up wherever the kit has something to tell you.
@@ -17,7 +32,7 @@ The "o" in the logo is the capped buddy who peeks over the top of a `Button`. He
 ## Quick start
 
 ```sh
-pnpm add @plop-ui/react @plop-ui/fonts
+npm i @plop-ui/react @plop-ui/fonts      # or: pnpm add @plop-ui/react @plop-ui/fonts
 ```
 
 ```tsx
@@ -37,7 +52,9 @@ export function App() {
 }
 ```
 
-Using Next.js? The library never imports `next/*`, and every interactive component already carries `"use client"`, so it drops straight into the App Router. Static pieces like `StatusTimeline` stay Server Components. See `/docs/nextjs` on the docs site.
+For the paper to cover the whole screen (not just your content), and why buttons stretch inside a grid, see [Good to know](https://plop-ui.vercel.app/docs/getting-started) in the Getting Started guide.
+
+Using Next.js? The library never imports `next/*`, and every interactive component already carries `"use client"`, so it drops straight into the App Router. Static pieces like `StatusTimeline` stay Server Components. See [Using with Next.js](https://plop-ui.vercel.app/docs/nextjs).
 
 ## What's in the kit
 
@@ -83,7 +100,7 @@ Native elements first, full keyboard support, visible focus, AA contrast on ever
 
 ## The docs site
 
-Run it locally (see below) and you get:
+It's live at **[plop-ui.vercel.app](https://plop-ui.vercel.app)** (or run it locally, see below):
 
 | Page | What it is |
 | --- | --- |
