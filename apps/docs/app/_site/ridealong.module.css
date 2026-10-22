@@ -5,7 +5,8 @@
   position: fixed; right: max(20px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom)); z-index: 19;
   display: flex; align-items: flex-end; gap: 14px;
 }
-/* A faint comic halftone glow behind the stub, fading out from the corner, so it reads as something to press. */
+/* A faint comic halftone glow behind the stub, fading out from the corner, so it reads as something to press.
+   When the pass is open it grows up behind the card too, so ticket and pass share one backdrop. */
 .corner::before {
   content: ""; position: absolute; z-index: -1; pointer-events: none;
   right: -40px; bottom: -40px; width: 340px; height: 200px;
@@ -16,6 +17,12 @@
     linear-gradient(to top left, color-mix(in srgb, var(--plop-periwinkle) 40%, transparent), transparent 70%);
   -webkit-mask: radial-gradient(ellipse 100% 100% at 100% 100%, black 15%, transparent 72%);
           mask: radial-gradient(ellipse 100% 100% at 100% 100%, black 15%, transparent 72%);
+  transition: width var(--plop-duration-spring) var(--plop-ease-spring), height var(--plop-duration-spring) var(--plop-ease-spring);
+}
+.corner[data-open]::before {
+  width: min(720px, 100vw + 40px); height: min(860px, 100vh + 40px);
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 100% 100%, black 30%, transparent 85%);
+          mask-image: radial-gradient(ellipse 100% 100% at 100% 100%, black 30%, transparent 85%);
 }
 .fab {
   display: block; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer;
@@ -200,5 +207,5 @@
   .fab, .fab:is(:hover, :active, [aria-expanded="true"]) { translate: none; scale: none; transition: filter 0.01ms; }
   .fab[data-bump], .panel, .stamp[data-fresh], .reward[open], .hint { animation: none; }
   .slot, .close { transition: none; }
-  .holo, .holo::after { transition: none; }
+  .holo, .holo::after, .corner::before { transition: none; }
 }
