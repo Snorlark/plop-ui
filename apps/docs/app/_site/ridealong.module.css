@@ -1,0 +1,204 @@
+/* The Ride-along pass: a die-cut paper boarding pass and its floating ticket-stub button. Colors from Plop! tokens. */
+
+/* ---- the floating stub ---- */
+.corner {
+  position: fixed; right: max(20px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom)); z-index: 19;
+  display: flex; align-items: flex-end; gap: 14px;
+}
+/* A faint comic halftone glow behind the stub, fading out from the corner, so it reads as something to press. */
+.corner::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  right: -40px; bottom: -40px; width: 340px; height: 200px;
+  --dot: color-mix(in srgb, var(--plop-ink) 26%, transparent);
+  background:
+    radial-gradient(circle, var(--dot) 1.8px, transparent 2.3px) 0 0 / 12px 12px,
+    radial-gradient(circle, var(--dot) 1.8px, transparent 2.3px) 6px 6px / 12px 12px,
+    linear-gradient(to top left, color-mix(in srgb, var(--plop-periwinkle) 40%, transparent), transparent 70%);
+  -webkit-mask: radial-gradient(ellipse 100% 100% at 100% 100%, black 15%, transparent 72%);
+          mask: radial-gradient(ellipse 100% 100% at 100% 100%, black 15%, transparent 72%);
+}
+.fab {
+  display: block; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer;
+  /* a flat printed shadow that follows the notched outline */
+  filter: drop-shadow(4px 6px 0 var(--plop-shadow));
+  rotate: -3deg;
+  transition:
+    translate var(--plop-duration-spring) var(--plop-ease-spring),
+    rotate var(--plop-duration-spring) var(--plop-ease-spring),
+    scale var(--plop-duration-spring) var(--plop-ease-spring),
+    filter var(--plop-duration-spring) var(--plop-ease-squish);
+}
+.fab:hover, .fab[aria-expanded="true"] { translate: 0 -3px; rotate: 1deg; scale: 1.04; filter: drop-shadow(5px 9px 0 var(--plop-shadow)); }
+.fab:active { translate: 0 1px; scale: 0.96; filter: drop-shadow(1px 2px 0 var(--plop-shadow)); transition-duration: var(--plop-duration-squish); }
+.fab:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 6px; border-radius: 14px; }
+.fab[data-bump] { animation: bump 0.7s var(--plop-ease-spring); }
+@keyframes bump { 0% { scale: 1; } 25% { scale: 1.12; rotate: -9deg; } 50% { rotate: 5deg; } 75% { rotate: -4deg; } 100% { scale: 1; } }
+
+.fabStub {
+  position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 18px; overflow: hidden;
+  background: var(--plop-fill-mustard); color: var(--plop-on-fill-mustard); border-radius: 14px;
+  -webkit-mask: radial-gradient(circle 8px at 0 50%, transparent 97%, black 100%) left / 51% 100% no-repeat, radial-gradient(circle 8px at 100% 50%, transparent 97%, black 100%) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle 8px at 0 50%, transparent 97%, black 100%) left / 51% 100% no-repeat, radial-gradient(circle 8px at 100% 50%, transparent 97%, black 100%) right / 51% 100% no-repeat;
+}
+.fabStub::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 9px; background: var(--plop-ink); }
+.corner[data-done] .fabStub { background: var(--plop-paper); color: var(--plop-ink-text); }
+.fabPeek { display: block; }
+.fabFace { display: grid; width: 34px; height: 34px; flex: none; color: var(--plop-ink); }
+.fabFace svg { width: 100%; height: 100%; }
+.fabLabel { font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 16px; white-space: nowrap; }
+.fabCount { padding-left: 11px; border-left: 2.5px dotted color-mix(in srgb, var(--plop-ink) 55%, transparent); font-size: 14px; letter-spacing: 0.08em; white-space: nowrap; }
+
+/* ---- "Not sure where to start?": a speech bubble beside the stub, pointing at it ---- */
+.hint {
+  position: relative; display: flex; align-items: flex-start; gap: 4px; margin-bottom: 26px; padding: 10px 8px 11px 16px;
+  background: var(--plop-paper); color: var(--plop-ink-text); border: 2.5px solid var(--plop-ink); border-radius: 18px 14px 4px 16px;
+  filter: drop-shadow(3px 4px 0 var(--plop-shadow)); rotate: -2deg;
+  animation: pop var(--plop-duration-spring) var(--plop-ease-spring) both;
+}
+/* the tail, pointing down-right at the stub */
+.hint::after {
+  content: ""; position: absolute; right: -12px; bottom: 6px; width: 18px; height: 16px;
+  background: var(--plop-paper); border-right: 2.5px solid var(--plop-ink); border-bottom: 2.5px solid var(--plop-ink);
+  transform: skewX(38deg) rotate(-12deg); border-radius: 0 0 4px 0;
+}
+.hintText {
+  display: grid; gap: 2px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-align: left;
+  font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 15px; color: var(--plop-ink);
+}
+.hintText span { font-family: var(--plop-font-body); font-style: normal; font-weight: 400; text-transform: none; font-size: 14px; color: var(--plop-ink-soft); }
+.hintText:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.hintText:focus-visible, .hintClose:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; border-radius: 6px; }
+.hintClose { display: grid; place-items: center; width: 26px; height: 26px; flex: none; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--plop-ink-soft); cursor: pointer; }
+.hintClose:hover { background: color-mix(in srgb, var(--plop-ink) 10%, transparent); }
+.hintClose svg { width: 14px; height: 14px; }
+@keyframes pop { from { opacity: 0; transform: translate(14px, 10px) scale(0.6); } }
+
+/* ---- the pass ---- */
+.panel {
+  position: fixed; right: max(20px, env(safe-area-inset-right)); bottom: calc(max(20px, env(safe-area-inset-bottom)) + 112px); z-index: 40;
+  width: min(470px, calc(100vw - 32px)); outline: none;
+  transform-origin: 92% 100%; animation: open var(--plop-duration-spring) var(--plop-ease-spring) both;
+}
+@keyframes open { from { opacity: 0; transform: translateY(18px) scale(0.6) rotate(4deg); } }
+
+.lift { filter: drop-shadow(var(--plop-hatch-offset-x) var(--plop-hatch-offset-y) 0 var(--plop-shadow)); transform: rotate(-1.2deg); }
+.pass {
+  --foot: 74px; /* the tear line sits this far from the bottom: the stub below it is a fixed height */
+  position: relative; overflow: hidden; background: var(--plop-paper); color: var(--plop-ink-text); border-radius: 18px;
+  /* two half-circle notches cut right out of the card at the tear line, so the shadow follows them */
+  -webkit-mask: radial-gradient(circle 13px at 0 calc(100% - var(--foot)), transparent 97%, black 100%) left / 51% 100% no-repeat,
+                radial-gradient(circle 13px at 100% calc(100% - var(--foot)), transparent 97%, black 100%) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle 13px at 0 calc(100% - var(--foot)), transparent 97%, black 100%) left / 51% 100% no-repeat,
+                radial-gradient(circle 13px at 100% calc(100% - var(--foot)), transparent 97%, black 100%) right / 51% 100% no-repeat;
+}
+/* paper: fine grain, faint fibres and a slightly darker edge */
+.pass::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .42 0 0 0 0 .28 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .2' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .48 0 0 0 0 .35 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23f)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 50% 40%, transparent 55%, color-mix(in srgb, var(--plop-paper-back) 60%, transparent) 100%);
+}
+
+.band { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 22px; background: var(--plop-ink); color: var(--plop-on-ink); }
+.title { margin: 0; flex: 1; font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 23px; line-height: 1; }
+.seat { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; white-space: nowrap; }
+.close {
+  display: grid; place-items: center; width: 34px; height: 34px; flex: none; padding: 0; border: 0; border-radius: 50% 46% 53% 48%; cursor: pointer;
+  background: color-mix(in srgb, var(--plop-on-ink) 14%, transparent); color: var(--plop-on-ink);
+  transition: transform 0.3s var(--plop-ease-spring);
+}
+.close:hover { transform: rotate(-10deg) scale(1.08); }
+.close:focus-visible { outline: 2.5px dashed var(--plop-mustard); outline-offset: 3px; }
+.close svg { width: 18px; height: 18px; }
+
+.body { position: relative; z-index: 1; padding: 16px 22px 18px; }
+.intro { margin: 0 0 14px; font-size: 16px; color: var(--plop-ink-soft); }
+
+.route { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
+/* the dashed road between the stops; the stops sit on top of it */
+.route::before { content: ""; position: absolute; left: 10%; right: 10%; top: calc(var(--slot) / 2); border-top: 3px dashed color-mix(in srgb, var(--plop-ink) 32%, transparent); }
+.route { --slot: clamp(46px, 12vw, 62px); }
+.stop { display: flex; flex-direction: column; align-items: center; gap: 7px; color: inherit; text-decoration: none; border-radius: 12px; }
+.stop:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }
+.slot {
+  position: relative; z-index: 1; display: grid; place-items: center; width: var(--slot); height: var(--slot); border-radius: 50%;
+  background: var(--plop-paper); border: 2.5px dashed color-mix(in srgb, var(--plop-ink) 38%, transparent);
+  font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; font-size: 19px; color: color-mix(in srgb, var(--plop-ink) 45%, transparent);
+  transition: transform 0.35s var(--plop-ease-spring);
+}
+.slot[data-next] { border-color: var(--plop-ink); color: var(--plop-ink); }
+.slot[data-done] { border-color: transparent; }
+.stop:hover .slot { transform: translateY(-3px) rotate(-4deg); }
+.name { font-size: 13px; line-height: 1.1; text-align: center; }
+
+/* each stop presses its own ink */
+.stamp { position: absolute; inset: -5px; display: grid; transform: rotate(var(--sr, -10deg)); filter: url(#plop-crayon); opacity: 0.92; mix-blend-mode: multiply; color: var(--st); }
+.stamp svg { width: 100%; height: 100%; }
+.stamp[data-step="what"] { --st: var(--plop-tomato); }
+.stamp[data-step="install"] { --st: var(--plop-ink); }
+.stamp[data-step="components"] { --st: var(--plop-leaf); }
+.stamp[data-step="playground"] { --st: var(--plop-ochre); }
+.stamp[data-step="github"] { --st: var(--plop-berry); }
+.stamp[data-fresh] { animation: thunk 0.6s cubic-bezier(0.2, 1.5, 0.4, 1) both; }
+@keyframes thunk { 0% { transform: rotate(-30deg) scale(1.9); opacity: 0; } 60% { transform: rotate(var(--sr)) scale(0.92); opacity: 1; } 100% { transform: rotate(var(--sr)) scale(1); } }
+.date { font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 7px; letter-spacing: 0.08em; fill: currentColor; }
+
+.next { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 16px; padding-top: 14px; border-top: 2px dashed color-mix(in srgb, var(--plop-ink) 22%, transparent); }
+.next > div { flex: 1 1 200px; }
+.kicker { font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px; color: var(--plop-tomato-text); }
+.nextTitle { margin: 2px 0 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 19px; color: var(--plop-ink); }
+.nextText { margin: 2px 0 0; font-size: 15px; line-height: 1.35; color: var(--plop-ink-soft); }
+
+.perf { position: relative; margin: 0 18px; border-top: 3px dotted color-mix(in srgb, var(--plop-ink) 40%, transparent); }
+.foot { position: relative; display: flex; align-items: center; gap: 18px; height: var(--foot); padding: 0 22px 4px; }
+.barcode {
+  flex: 1; height: 34px; opacity: 0.72; border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--plop-ink-text) 0 2px, transparent 2px 4px, var(--plop-ink-text) 4px 7px, transparent 7px 9px, var(--plop-ink-text) 9px 10px, transparent 10px 13px, var(--plop-ink-text) 13px 15px, transparent 15px 18px);
+}
+.count { font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; font-size: 28px; line-height: 1; color: var(--plop-ink); text-align: right; }
+.count small { display: block; font-family: inherit; font-style: normal; font-weight: 400; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--plop-ink-text); }
+
+/* ---- Holo Pip: a foil sticker whose rainbow shifts on hover ---- */
+@property --ha { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.holo {
+  position: relative; display: inline-grid; place-items: center; flex: none; overflow: hidden; border-radius: 50% 46% 53% 48%;
+  border: 3px solid var(--plop-ink); box-shadow: 0 0 0 6px var(--plop-paper), 0 0 0 7.5px color-mix(in srgb, var(--plop-ink) 25%, transparent);
+  background: conic-gradient(from var(--ha), var(--plop-bubblegum), var(--plop-periwinkle), var(--plop-mint), var(--plop-mustard), var(--plop-bubblegum));
+  transition: --ha 1.6s ease;
+}
+.holo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, color-mix(in srgb, var(--plop-paper) 75%, transparent) 45%, transparent 60%); background-size: 250% 100%; background-position: 120% 0; mix-blend-mode: soft-light; transition: background-position 1.2s ease; }
+.holo:hover, .reward .holo { --ha: 360deg; }
+.holo:hover::after, .reward .holo::after { background-position: -120% 0; }
+.holo > * { position: relative; z-index: 1; width: 78%; }
+
+/* ---- the full-pass reward ---- */
+.reward {
+  max-width: min(480px, 92vw); padding: 34px 30px 28px; border: 0; border-radius: 20px; background: var(--plop-paper); color: var(--plop-ink-text);
+  text-align: center; box-shadow: var(--plop-hatch-offset-x) var(--plop-hatch-offset-y) 0 var(--plop-shadow-strong);
+}
+.reward[open] { display: flex; flex-direction: column; align-items: center; gap: 14px; animation: stampIn 0.45s var(--plop-ease-spring); }
+.reward::backdrop { background: color-mix(in srgb, var(--plop-ink-text) 55%, transparent); }
+.reward p { margin: 0; max-width: 32ch; font-size: 18px; color: var(--plop-ink-soft); }
+.rewardTape { padding: 4px 14px 5px; background: repeating-linear-gradient(-45deg, var(--plop-bubblegum) 0 7px, color-mix(in srgb, var(--plop-bubblegum) 60%, var(--plop-paper)) 7px 14px); font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; text-transform: uppercase; font-size: 13px; transform: rotate(-2deg); }
+.rewardTitle { margin: 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; font-size: 40px; line-height: 1; color: var(--plop-ink); filter: url(#plop-crayon); }
+.rewardActions { margin-top: 10px; }
+@keyframes stampIn { from { transform: scale(1.3) rotate(-6deg); opacity: 0; } }
+
+@media (max-width: 520px) {
+  /* no room beside the stub on a phone: the bubble sits above it */
+  .corner { flex-direction: column; align-items: flex-end; gap: 0; }
+  .hint { margin: 0 6px 6px 0; }
+  .hint::after { right: 34px; bottom: -12px; transform: skewX(-30deg); border-left: 0; }
+  .fabLabel { font-size: 14px; }
+  .seat { display: none; }
+  .body { padding: 14px 14px 16px; }
+  .name { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab, .fab:is(:hover, :active, [aria-expanded="true"]) { translate: none; scale: none; transition: filter 0.01ms; }
+  .fab[data-bump], .panel, .stamp[data-fresh], .reward[open], .hint { animation: none; }
+  .slot, .close { transition: none; }
+  .holo, .holo::after { transition: none; }
+}

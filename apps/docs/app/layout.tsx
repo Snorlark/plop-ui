@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Providers, SURFACE_SCRIPT } from "./_kit/Providers";
 import { GITHUB } from "./_site/nav";
+import { RideAlong } from "./_site/RideAlong";
 import { SiteFilters } from "./_site/Wordmark";
 import { patrickHand, sketchpop } from "./fonts";
 
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SiteFilters />
         <Providers theme="light" paint={false}>
           {children}
+          <RideAlong />
         </Providers>
       </body>
     </html>

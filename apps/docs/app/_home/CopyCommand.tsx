@@ -27,8 +27,8 @@ export function CopyCommand({ command = "npm i @plop-ui/react" }: { command?: st
           try {
             await navigator.clipboard.writeText(command);
             setCopied(true);
-            // The first copy earns a Plop Pass stamp (its own toast says so); otherwise just confirm.
-            if (stamp("install") === null) toast.success("Copied to clipboard", { buddy: true });
+            stamp("install");
+            toast.success("Copied to clipboard!", { buddy: true });
           } catch {
             toast.error("Couldn't copy. Select it instead.", { buddy: true });
           }

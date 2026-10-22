@@ -4,7 +4,6 @@ import { BUDDY_CAST, BuddyPeek, Button, Doodle, PlopProvider, toast, WordSticker
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Choice, Slider, Swatches, Text } from "./controls";
 import { download, toHTML, toPNG, toSVG } from "./lettering-export";
-import { stamp } from "../_site/pass";
 import { CodeBlock, copy } from "./StickerBoard";
 import styles from "./tools.module.css";
 
@@ -140,7 +139,6 @@ export function LetteringStudio() {
   const name = (pascal(d.text) || "lettering").toLowerCase();
 
   const exportIt = async () => {
-    stamp("lettering");
     if (format === "react") return copy(code, "React code");
     const root = art.current?.firstElementChild as HTMLElement | null;
     if (!root) return;
