@@ -65,3 +65,17 @@ test("Ride-along pass: Enter opens it from the corner stub, Escape closes it and
   await expect(pass).toBeHidden();
   await expect(stub).toBeFocused();
 });
+
+test("Header menus: Enter opens one, Tab walks into it, Escape closes it and returns focus", async ({ page, isMobile }) => {
+  test.skip(isMobile, "phones use the burger sheet");
+  await page.goto("/docs/getting-started");
+  const trigger = page.getByRole("button", { name: "Community" });
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "GitHub", exact: true }).first()).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await expect(trigger).toBeFocused();
+});
