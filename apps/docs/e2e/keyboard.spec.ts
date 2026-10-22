@@ -34,7 +34,9 @@ test("Docs: Preview/Code tabs switch with arrow keys", async ({ page }) => {
 
 test("Search: typing filters pages and Enter opens the first match", async ({ page }) => {
   await page.goto("/docs/getting-started");
-  await page.getByRole("searchbox", { name: "Search the docs" }).fill("timeline");
+  // Search lives in the header's command palette: open it, then type.
+  await page.getByRole("button", { name: /Search the docs/ }).click();
+  await page.getByRole("dialog", { name: "Type a command or search" }).getByRole("combobox").fill("timeline");
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/docs\/components\/status-timeline$/);
 });
