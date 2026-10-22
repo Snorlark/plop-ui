@@ -22,8 +22,9 @@ const preview: Preview = {
     controls: { expanded: true },
   },
   decorators: [
-    (Story, { globals }) => (
+    (Story, { globals, parameters }) => (
       <PlopProvider
+        toastBackdrop={parameters.toastBackdrop}
         surface={(globals.surface as SurfaceName) ?? "poster"}
         theme={(globals.theme as "system" | "light" | "dark") ?? "light"}
         style={{ minHeight: "100vh", padding: "72px 40px 48px", boxSizing: "border-box" }}

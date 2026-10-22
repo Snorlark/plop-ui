@@ -22,7 +22,7 @@ export { Tabs, TabList, Tab, TabPanel, type TabsProps, type TabListProps, type T
 export { Progress, type ProgressProps } from "./Progress/Progress.js";
 export { Callout, type CalloutProps, type CalloutTone } from "./Callout/Callout.js";
 export { Count, StatusDot, EmptyState, type CountProps, type StatusDotProps } from "./Badge/Badge.js";
-export { Toast, Toaster, type ToastProps } from "./Toast/Toaster.js";
+export { Toast, Toaster, type ToastProps, type ToasterProps, type ToastBackdrop } from "./Toast/Toaster.js";
 export { toast, type ToastKind, type ToastOptions } from "./Toast/store.js";
 export { Sheet, type SheetProps } from "./Sheet/Sheet.js";
 export { Heading, type HeadingProps } from "./Heading/Heading.js";
