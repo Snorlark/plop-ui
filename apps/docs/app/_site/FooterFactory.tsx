@@ -3,31 +3,13 @@
 import { IconButton, Tooltip, useReducedMotion } from "@plop-ui/react";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import styles from "./footer.module.css";
-
-/** Hand-drawn icons in the kit's marker stroke (see packages/react/src/icons.tsx). */
-const marker = { fill: "none", stroke: "currentColor", strokeWidth: 2.8, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+import { marker, PauseIcon, PlayIcon } from "./handIcons";
 
 function LeverIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path {...marker} d="M4 20.5 C 8 20, 12 20.8, 15.5 20.2 M8.5 20 C 10.5 15.5, 12.5 11, 15 7" />
       <path {...marker} fill="currentColor" d="M15.2 3.4 C 17.4 2.9, 19.2 4.6, 18.6 6.6 C 18 8.4, 15.4 8.8, 14.3 7.2 C 13.3 5.8, 13.9 3.8, 15.2 3.4 Z" />
-    </svg>
-  );
-}
-
-function PauseIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path {...marker} strokeWidth={3.4} d="M8.5 5 C 8.2 9.5, 8.8 14.5, 8.4 19 M15.6 5.2 C 15.9 9.8, 15.3 14.2, 15.7 18.8" />
-    </svg>
-  );
-}
-
-function PlayIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path {...marker} fill="currentColor" d="M7.5 4.8 C 11.5 6.8, 15.5 9.4, 19 12.2 C 15.4 14.6, 11.6 17, 7.8 19.3 C 7.2 14.5, 7.4 9.6, 7.5 4.8 Z" />
     </svg>
   );
 }

@@ -18,7 +18,11 @@ for (const path of PAGES) {
   });
 }
 
-/** A header menu while it's open. */
+/** The 404 page, and a header menu while it's open. */
+test("axe: 404 page", async ({ page }) => {
+  await page.goto("/this-page-does-not-exist");
+  expect(await blocking(page)).toEqual([]);
+});
 test("axe: header menu open", async ({ page, isMobile }) => {
   await page.goto("/");
   if (isMobile) await page.getByRole("button", { name: "Menu" }).click();
