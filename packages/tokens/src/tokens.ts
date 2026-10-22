@@ -25,6 +25,9 @@ export const color = {
   leaf: "#2F8A57",
   /** Tomato dark enough to carry error text on paper. */
   tomatoText: "#A1301A",
+  /** Deep stamp inks for marks pressed onto paper, where mustard and bubblegum are too light to read. */
+  ochre: "#B7791F",
+  berry: "#B83A68",
   placeholder: "#5D69A6",
   /** Flat "printed" drop shadow under stickers and sheets. */
   shadow: "rgba(18, 36, 120, 0.2)",
