@@ -14,7 +14,7 @@ export const metadata = { title: "Getting started", description: "Install PlopUI
 ## Install
 
 ```sh
-pnpm add @plop-ui/react @plop-ui/fonts
+pnpm add @plop-ui/react @plop-ui/fonts   # or: npm i @plop-ui/react @plop-ui/fonts
 ```
 
 `@plop-ui/react` brings `@plop-ui/tokens` with it. React 19 is a peer dependency.
@@ -37,6 +37,20 @@ export function App() {
 ```
 
 `PlopProvider` sets the surface (the paper everything sits on), light or dark, haptics, sound and reduced motion. It also renders the SVG filters that make outlines wobble, so put it once near the root. In Next.js, follow [Using with Next.js](/docs/nextjs) instead: it loads the fonts with `next/font`.
+
+## Good to know
+
+**The paper only covers what's inside the provider.** `PlopProvider` paints the surface on its own box, so on a short page the paper stops where your content ends (and the browser's default 8px body margin shows as a white frame). To cover the whole screen, put the paper on `<body>`, give it the full height, and let the provider skip painting:
+
+```tsx
+<body className="plop-surface" style={{ margin: 0, minHeight: "100vh" }}>
+  <PlopProvider surface="poster" paint={false}>{children}</PlopProvider>
+</body>
+```
+
+The full height matters: the paper's soft light is sized to the page, so on a page shorter than the screen it would repeat and leave a faint line.
+
+**Buttons stretch in a grid or a column.** A grid (or a flex column) stretches its children to full width, buttons included. That's standard CSS, not the sticker. To keep a button its natural size, set `justify-self: start` on it in a grid, `align-self: flex-start` in a flex column, or wrap it in a `<div>`.
 
 ## What's in v0.1
 
