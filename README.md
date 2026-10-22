@@ -143,4 +143,4 @@ Contributions are welcome: bug fixes, new components, docs, or a new character. 
 
 ## License
 
-Sketchpop font: SIL Open Font License 1.1 (see `packages/fonts`). The packages declare MIT, but the root `LICENSE` file hasn't been added yet (tracked in TASKS.md).
+Code: [MIT](LICENSE), © 2026 Lark Sigmuond Babao. The Sketchpop font: [SIL Open Font License 1.1](packages/fonts/OFL.txt), so you can use, bundle and modify it freely, including in commercial work.
