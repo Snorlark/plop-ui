@@ -74,7 +74,7 @@
 }
 .pill input:checked + span { border-color: var(--plop-ink); background: var(--plop-mustard); color: var(--plop-ink-text); transform: rotate(-1.5deg); font-weight: 700; }
 .pill input:focus-visible + span { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }
-.actions { display: flex; flex-wrap: wrap; gap: 14px 16px; margin-top: 20px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 16px; margin-top: 20px; }
 
 .code { margin-top: 18px; }
 .codeBar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
