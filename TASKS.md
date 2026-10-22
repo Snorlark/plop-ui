@@ -15,8 +15,9 @@ Only you can settle these. The client sign-off should be answered before the lau
 - [x] 🔴 **npm scope.** `@plop-ui` is reserved (the `plop-ui` npm organization) and all three packages are published.
 - [x] 🔴 **License.** MIT now, or source-available until v1.0? The packages say MIT, but there's no `LICENSE` file at the root.
   Done when: `LICENSE` exists and matches every `package.json` `license` field.
-- [ ] 🟡 **Docs domain.** Live at `plop-ui.vercel.app`. Recommended: buy `plopui.com` (matches "PlopUI", no hyphen to forget; `plop-ui.com` as a cheap redirect). `ui.plop.com` isn't possible: `plop.com` belongs to someone else.
-  Done when: the domain points at the docs project, `NEXT_PUBLIC_SITE_URL` is set in Vercel, and the README, package `homepage` fields and GitHub About link to it.
+- [x] 🟡 **Docs domain.** `plopui.com` (bought at Spaceship, DNS points at Vercel, HTTPS on). `ui.plop.com` wasn't possible: `plop.com` belongs to someone else.
+- [ ] 🟡 Finish the domain switch: make `plopui.com` the primary domain in Vercel (with `www` redirecting to it), set `NEXT_PUBLIC_SITE_URL=https://plopui.com` for Production and redeploy, redirect `plop-ui.vercel.app` to it, and update the GitHub About website.
+  Done when: https://plopui.com/sitemap.xml lists `plopui.com` URLs.
 - [ ] 🔴 **Client sign-off.** Does Quadsync or MEC need to approve Plop! before it's used in client work, or before it's announced publicly? (PRD open question)
   Done when: answered in writing, before the launch posts go out.
 - [ ] ⚪ **MapPanel engine** for v1.0: MapLibre or Leaflet, given the dispatch app works offline.
@@ -39,8 +40,8 @@ Only you can settle these. The client sign-off should be answered before the lau
 - [ ] 🟡 GitHub Release for `@plop-ui/react@0.1.0`: the changelog plus a GIF.
 
 ### Deploy
-- [x] 🔴 Deploy `apps/docs` to Vercel: live at https://plop-ui.vercel.app, with the sitemap, robots, social preview, `llms.txt`, privacy and changelog pages.
-- [ ] 🟡 **Google Search Console:** verify `plop-ui.vercel.app` (or the custom domain) and submit `sitemap.xml`.
+- [x] 🔴 Deploy `apps/docs` to Vercel: live at https://plopui.com, with the sitemap, robots, social preview, `llms.txt`, privacy and changelog pages.
+- [ ] 🟡 **Google Search Console:** verify `https://plopui.com` and submit `https://plopui.com/sitemap.xml`.
 - [ ] 🟡 Deploy Storybook to Vercel (or Chromatic) and link it from the footer ("Find PlopUI on").
 - [x] 🟡 Replace the placeholder npm and Changelog links in the footer (npm links go to the real packages; Changelog goes to `/changelog`).
 

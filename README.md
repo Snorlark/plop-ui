@@ -6,15 +6,15 @@
   <a href="https://www.npmjs.com/package/@plop-ui/react"><img src="https://img.shields.io/npm/v/@plop-ui/react?label=%40plop-ui%2Freact&color=2848D8" alt="npm version"></a>
   <a href="https://github.com/Snorlark/plop-ui/actions/workflows/ci.yml"><img src="https://github.com/Snorlark/plop-ui/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2848D8" alt="MIT license"></a>
-  <a href="https://plop-ui.vercel.app"><img src="https://img.shields.io/badge/docs-plop--ui.vercel.app-F6C445" alt="Docs"></a>
+  <a href="https://plopui.com"><img src="https://img.shields.io/badge/docs-plopui.com-F6C445" alt="Docs"></a>
 </p>
 
 <p align="center">
-  <a href="https://plop-ui.vercel.app"><b>Docs</b></a> ·
-  <a href="https://plop-ui.vercel.app/docs/getting-started">Getting started</a> ·
-  <a href="https://plop-ui.vercel.app/playground">Playground</a> ·
-  <a href="https://plop-ui.vercel.app/kit">Every component</a> ·
-  <a href="https://plop-ui.vercel.app/changelog">Changelog</a>
+  <a href="https://plopui.com"><b>Docs</b></a> ·
+  <a href="https://plopui.com/docs/getting-started">Getting started</a> ·
+  <a href="https://plopui.com/playground">Playground</a> ·
+  <a href="https://plopui.com/kit">Every component</a> ·
+  <a href="https://plopui.com/changelog">Changelog</a>
 </p>
 
 Plop! is an open-source React + TypeScript component library for dispatch, field service and ticketing apps. Everything is drawn in one cobalt marker on cream paper: die-cut sticker buttons, hatched shadows, boiling ink outlines, a cast of little characters, and press feedback you can feel (a squish, an ink burst, a buzz on your phone). Every "imperfection" is seeded, so it renders the same on the server and the client.
@@ -52,9 +52,9 @@ export function App() {
 }
 ```
 
-For the paper to cover the whole screen (not just your content), and why buttons stretch inside a grid, see [Good to know](https://plop-ui.vercel.app/docs/getting-started) in the Getting Started guide.
+For the paper to cover the whole screen (not just your content), and why buttons stretch inside a grid, see [Good to know](https://plopui.com/docs/getting-started) in the Getting Started guide.
 
-Using Next.js? The library never imports `next/*`, and every interactive component already carries `"use client"`, so it drops straight into the App Router. Static pieces like `StatusTimeline` stay Server Components. See [Using with Next.js](https://plop-ui.vercel.app/docs/nextjs).
+Using Next.js? The library never imports `next/*`, and every interactive component already carries `"use client"`, so it drops straight into the App Router. Static pieces like `StatusTimeline` stay Server Components. See [Using with Next.js](https://plopui.com/docs/nextjs).
 
 ## What's in the kit
 
@@ -100,7 +100,7 @@ Native elements first, full keyboard support, visible focus, AA contrast on ever
 
 ## The docs site
 
-It's live at **[plop-ui.vercel.app](https://plop-ui.vercel.app)** (or run it locally, see below):
+It's live at **[plopui.com](https://plopui.com)** (or run it locally, see below):
 
 | Page | What it is |
 | --- | --- |
