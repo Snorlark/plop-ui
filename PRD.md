@@ -38,7 +38,7 @@ The visual reference is the Plop! v0.6 prototype: cobalt marker lettering on cre
 | Tests | Done | 100+ Vitest tests (~96% lines); Playwright: hydration, axe on every page, surface × theme matrix, keyboard |
 | Storybook | Done | Every state, a11y addon, surface/theme toolbar |
 | Docs site | Done | Home (landing design), docs per component with generated props tables, search, Playground, `/kit` showcase |
-| Dispatch demo app | Not started | See TASKS.md |
+| Dispatch demo app | Built, not deployed yet | See TASKS.md |
 | npm publish, Vercel deploys | Not started | Blocked on the open questions below |
 | Figma sync, MapPanel | Not started | v1.0 |
 
