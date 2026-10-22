@@ -22,7 +22,6 @@ import type { ReactNode } from "react";
 import { CopyCommand } from "./CopyCommand";
 import { Hand, Scribble } from "./Doodles";
 import { PaperStack } from "./PaperStack";
-import { PassCta } from "./PassCta";
 import { WhyPlop } from "./WhyPlop";
 import { HeroTitle } from "./HeroTitle";
 
@@ -697,7 +696,6 @@ export function Home() {
       <ComponentsGrid />
       <PaperStack />
       <Surfaces />
-      <PassCta />
     </main>
   );
 }

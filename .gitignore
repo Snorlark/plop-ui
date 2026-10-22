@@ -14,3 +14,4 @@ playwright-report
 next-env.d.ts
 apps/docs/app/_generated
 .next-e2e
+.superpowers/

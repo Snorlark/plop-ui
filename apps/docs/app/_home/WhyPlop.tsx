@@ -70,7 +70,7 @@ const REASONS: Reason[] = [
  */
 export function WhyPlop() {
   return (
-    <section className={styles.root} aria-labelledby="why-h">
+    <section id="why" className={styles.root} aria-labelledby="why-h">
       <div className={styles.head}>
         <span className={styles.kicker}>Why PlopUI</span>
         <h2 id="why-h" className={styles.title}>
