@@ -33,6 +33,7 @@ const COLUMNS: Array<[string, Array<[string, string]>]> = [
       ["npm package", "https://www.npmjs.com/package/@plop-ui/react"],
       ["Contributing guide", `${GITHUB}/blob/main/CONTRIBUTING.md`],
       ["Sticker playground", "/playground"],
+      ["Changelog", "/changelog"],
     ],
   ],
   [
