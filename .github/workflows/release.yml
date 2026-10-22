@@ -1,0 +1,49 @@
+name: Release
+
+# Publishes @plop-ui/tokens, @plop-ui/fonts and @plop-ui/react to npm with provenance.
+#
+# On every push to main, the Changesets action does one of two things:
+# - pending changesets in .changeset/: it opens (or updates) a "Version packages" PR that bumps versions and
+#   writes the CHANGELOG.md files. Merging that PR is how you cut a release.
+# - no pending changesets: it publishes any version that isn't on npm yet, then pushes the git tags.
+# It can also be started by hand from the Actions tab.
+#
+# Needs: the NPM_TOKEN repo secret (a granular npm token with read/write on the @plop-ui packages), and
+# Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write # push the version commit and tags
+  pull-requests: write # open the "Version packages" PR
+  id-token: write # npm provenance
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+          publish: pnpm release
+          title: "chore(release): version packages"
+          commit: "chore(release): version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
