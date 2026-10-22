@@ -35,6 +35,14 @@ const COLUMNS: Array<[string, Array<[string, string]>]> = [
       ["Sticker playground", "/playground"],
     ],
   ],
+  [
+    "Legal",
+    [
+      ["Privacy policy", "/privacy"],
+      ["MIT license", `${GITHUB}/blob/main/LICENSE`],
+      ["Font license (OFL)", `${GITHUB}/blob/main/packages/fonts/OFL.txt`],
+    ],
+  ],
 ];
 
 function Item({ label, href }: { label: string; href: string }) {
@@ -42,7 +50,7 @@ function Item({ label, href }: { label: string; href: string }) {
 }
 
 /**
- * The site footer: the big PlopUI sticker, a short description for people and search engines, three
+ * The site footer: the big PlopUI sticker, a short description for people and search engines, four
  * short link columns, and the sticker factory scene. Arriving here is
  * scroll-driven CSS: the logo slaps on, the links slide up, and the factory
  * pops up station by station like a pop-up book while the scene drifts up
@@ -84,7 +92,7 @@ export function SiteFooter() {
 
       <p className={styles.legal}>
         <small>
-          © 2026 PlopUI by Lark Sigmuond Babao. Lettered in <a href={`${GITHUB}/blob/main/packages/fonts/OFL.txt`}>Sketchpop (SIL OFL 1.1)</a>.
+          © 2026 PlopUI by Lark Sigmuond Babao. Lettered in Sketchpop.
         </small>
       </p>
     </footer>
