@@ -1,0 +1,26 @@
+{
+  "name": "@plop-ui/dispatch-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 4322",
+    "build": "next build",
+    "start": "next start -p 4322",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint app lib"
+  },
+  "dependencies": {
+    "@plop-ui/fonts": "workspace:*",
+    "@plop-ui/react": "workspace:*",
+    "@plop-ui/tokens": "workspace:*",
+    "next": "15.5.28",
+    "react": "19.2.9",
+    "react-dom": "19.2.9"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "typescript": "5.9.3"
+  }
+}
