@@ -140,12 +140,12 @@ describe("Button", () => {
     expect(onClick).toHaveBeenCalledOnce();
   });
 
-  it("shakes off a poof instead of confetti on tomato (cancel, delete)", () => {
+  it("shakes off a poof instead of confetti on tomato (cancel, delete) when bursts are on", () => {
     vi.useFakeTimers();
     renderWithPlop(
       <>
-        <Button variant="tomato">Delete</Button>
-        <Button variant="mint">Save</Button>
+        <Button variant="tomato" burst>Delete</Button>
+        <Button variant="mint" burst>Save</Button>
       </>,
       { reducedMotion: "never" },
     );

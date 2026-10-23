@@ -42,9 +42,24 @@ export function HeroActions() {
 export function ButtonHero() {
   return (
     <div style={{ display: "grid", justifyItems: "center", padding: "40px 0 20px" }}>
-      <Button size="lg" tilt={-3} buddy>
+      <Button size="lg" tilt={-3} buddy burst>
         Send report
       </Button>
+    </div>
+  );
+}
+
+/** Every burst style, celebrations then the ones for when something went wrong. Bursts are opt-in. */
+export function ButtonBursts() {
+  return (
+    <div className="row">
+      <Button variant="mint" burst="confetti" seed="bu1">Confetti</Button>
+      <Button variant="mustard" burst="stars" seed="bu2">Stars</Button>
+      <Button variant="periwinkle" burst="sparkle" seed="bu3">Sparkle</Button>
+      <Button variant="plain" burst="hearts" seed="bu4">Hearts</Button>
+      <Button variant="tomato" burst="poof" seed="bu5">Poof</Button>
+      <Button variant="tomato" burst="zap" seed="bu6">Zap</Button>
+      <Button variant="plain" burst="drops" seed="bu7">Drops</Button>
     </div>
   );
 }
