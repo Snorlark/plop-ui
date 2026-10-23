@@ -1,16 +1,18 @@
 name: Release
 
-# Publishes @plop-ui/tokens, @plop-ui/fonts and @plop-ui/react to npm with provenance.
+# Releases @plop-ui/tokens, @plop-ui/fonts and @plop-ui/react to npm (staged, with provenance).
 #
 # On every push to main, the Changesets action does one of two things:
 # - pending changesets in .changeset/: it opens (or updates) a "Version packages" PR that bumps versions and
 #   writes the CHANGELOG.md files. Merging that PR is how you cut a release.
-# - no pending changesets: it publishes any version that isn't on npm yet, then pushes the git tags.
+# - no pending changesets: it stages any version that isn't on npm yet, then pushes the git tags.
+#   Staged versions go live only when a maintainer approves them on npmjs.com with 2FA.
 # It can also be started by hand from the Actions tab.
 #
 # Needs: trusted publishing set up on npm for each package (owner Snorlark, repo plop-ui, workflow release.yml),
 # and Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests". No npm token.
-# Publishing itself is scripts/publish.mjs (pnpm packs, npm 11 publishes), not `changeset publish`.
+# The trusted publishers allow `npm stage publish` only (leave "Allow npm publish" unticked).
+# Staging itself is scripts/publish.mjs (pnpm packs, npm 11 stages), not `changeset publish`.
 
 on:
   push:
