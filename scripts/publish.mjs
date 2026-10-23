@@ -6,7 +6,8 @@
 //
 // Why not `changeset publish`: it uses `pnpm publish`, which fails npm trusted publishing (OIDC). Here
 // pnpm packs each package (turning `workspace:*` into real versions) and npm 11.5+ stages the tarball,
-// with provenance. Versions already on npm are skipped, and a version already staged and waiting for
+// with provenance when the repo is public (npm refuses provenance from private repos; the workflow sets
+// NPM_PROVENANCE). Versions already on npm are skipped, and a version already staged and waiting for
 // approval is left alone, so later pushes to main don't fail. `changeset tag` then creates the git tags,
 // which the Changesets action pushes.
 //
@@ -18,6 +19,7 @@ import { join } from "node:path";
 
 const PACKAGES = ["tokens", "fonts", "react"];
 const dry = Boolean(process.env.DRY_RUN);
+const provenance = process.env.NPM_PROVENANCE === "true";
 const run = (cmd, args, cwd) => execFileSync(cmd, args, { cwd, stdio: ["ignore", "pipe", "inherit"], encoding: "utf8" });
 
 const out = mkdtempSync(join(tmpdir(), "plop-publish-"));
@@ -40,7 +42,7 @@ try {
     // Pre-releases (0.2.0-next.0) must not become `latest`.
     const tag = version.includes("-") ? "next" : "latest";
     console.log(`Staging ${name}@${version} (tag ${tag})${dry ? " (dry run)" : ""}`);
-    const staged = spawnSync("npm", ["stage", "publish", tarball, "--access", "public", "--tag", tag, "--provenance", ...(dry ? ["--dry-run"] : [])], {
+    const staged = spawnSync("npm", ["stage", "publish", tarball, "--access", "public", "--tag", tag, ...(provenance ? ["--provenance"] : []), ...(dry ? ["--dry-run"] : [])], {
       stdio: ["ignore", "inherit", "pipe"],
       encoding: "utf8",
     });
