@@ -30,7 +30,7 @@ export { Lettering, type LetteringProps } from "./Lettering/Lettering.js";
 export { WordSticker, type WordStickerProps, type WordStickerTone } from "./WordSticker/WordSticker.js";
 export { Doodle, DOODLE_PATHS, type DoodleProps, type DoodleKind, type DoodleTone } from "./Doodle/Doodle.js";
 export { useInkBurst } from "./InkBurst/useInkBurst.js";
-export { BURST_COLORS, type BurstStyle } from "./InkBurst/burst.js";
+export { BURST_COLORS, BURST_PRESETS, BURST_STYLES, type BurstStyle } from "./InkBurst/burstStyles.js";
 
 export { useHaptics, HAPTIC_PATTERNS, type Haptics } from "./hooks/useHaptics.js";
 export { useBoil, type UseBoilOptions } from "./hooks/useBoil.js";

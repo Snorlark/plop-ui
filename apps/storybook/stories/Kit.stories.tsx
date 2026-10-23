@@ -175,6 +175,19 @@ export const Toasts: Story = {
   ),
 };
 
+/** A toast can celebrate or wince when it lands; the wash behind it takes its kind. Press a button to see it. */
+export const ToastBursts: Story = {
+  render: () => (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+      <Button size="sm" variant="mint" onClick={() => toast.success("Saved!", { burst: true, buddy: true })}>Success + confetti</Button>
+      <Button size="sm" variant="mustard" onClick={() => toast.success("All done!", { burst: "stars", buddy: "congrats" })}>Success + stars</Button>
+      <Button size="sm" variant="tomato" onClick={() => toast.error("Couldn't send", { burst: true, buddy: true })}>Error + poof</Button>
+      <Button size="sm" variant="tomato" onClick={() => toast.error("Payment failed", { burst: "zap" })}>Error + zap</Button>
+      <Button size="sm" variant="plain" onClick={() => toast("New version ready", { burst: true })}>Info + sparkle</Button>
+    </div>
+  ),
+};
+
 /** What shows behind a live toast: set with PlopProvider `toastBackdrop`. Press a button to see it. */
 const backdropStory = (backdrop: "dots" | "solid" | "none"): Story => ({
   parameters: { toastBackdrop: backdrop },
