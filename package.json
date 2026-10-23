@@ -15,7 +15,7 @@
     "size": "pnpm --filter @plop-ui/react size",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --filter=./packages/* && changeset publish"
+    "release": "turbo run build --filter=./packages/* && node scripts/publish.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "2.31.1",
