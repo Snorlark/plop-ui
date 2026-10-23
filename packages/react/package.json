@@ -1,13 +1,15 @@
 {
   "name": "@plop-ui/react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Plop! — a hand-lettered sticker UI kit for real-time operations apps. Press it like you mean it.",
   "license": "MIT",
   "author": "Lark Sigmuond Babao",
   "homepage": "https://github.com/Snorlark/plop-ui#readme",
   "bugs": "https://github.com/Snorlark/plop-ui/issues",
   "type": "module",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -17,10 +19,28 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "files": ["dist"],
-  "keywords": ["react", "ui", "components", "hand-drawn", "sticker", "dispatch", "operations", "accessible"],
-  "repository": { "type": "git", "url": "git+https://github.com/Snorlark/plop-ui.git", "directory": "packages/react" },
-  "publishConfig": { "access": "public", "provenance": true },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "ui",
+    "components",
+    "hand-drawn",
+    "sticker",
+    "dispatch",
+    "operations",
+    "accessible"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snorlark/plop-ui.git",
+    "directory": "packages/react"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "node scripts/build.mjs && tsc -p tsconfig.build.json && node scripts/check-css.mjs",
     "dev": "node scripts/build.mjs --watch",
@@ -56,8 +76,30 @@
     "vitest": "3.2.7"
   },
   "size-limit": [
-    { "name": "Button", "path": "dist/Button/Button.js", "import": "{ Button }", "ignore": ["react", "react-dom"], "limit": "7 kB" },
-    { "name": "whole library (JS)", "path": "dist/index.js", "import": "*", "ignore": ["react", "react-dom"], "limit": "40 kB" },
-    { "name": "styles.css", "path": "dist/styles.css", "limit": "12 kB" }
+    {
+      "name": "Button",
+      "path": "dist/Button/Button.js",
+      "import": "{ Button }",
+      "ignore": [
+        "react",
+        "react-dom"
+      ],
+      "limit": "7 kB"
+    },
+    {
+      "name": "whole library (JS)",
+      "path": "dist/index.js",
+      "import": "*",
+      "ignore": [
+        "react",
+        "react-dom"
+      ],
+      "limit": "40 kB"
+    },
+    {
+      "name": "styles.css",
+      "path": "dist/styles.css",
+      "limit": "12 kB"
+    }
   ]
 }
