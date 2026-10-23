@@ -38,7 +38,7 @@ import {
 import { Doodle, PlopProvider, WordSticker } from "@plop-ui/react";
 import { surfaceNames, surfaces } from "@plop-ui/tokens";
 import type { ReactNode } from "react";
-import { ButtonHero, ButtonVariants, Checkboxes, IconButtons, Switches, TagFilters, TagStatuses, TimelineDemo } from "../_demos";
+import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Switches, TagFilters, TagStatuses, TimelineDemo } from "../_demos";
 
 /** Live demos for the generic component pages (app/docs/components/[slug]). */
 const DEMOS: Record<string, () => ReactNode> = {
@@ -59,6 +59,7 @@ const DEMOS: Record<string, () => ReactNode> = {
     <div className="stack" style={{ gap: 40, justifyItems: "center" }}>
       <ButtonHero />
       <ButtonVariants />
+      <ButtonBursts />
     </div>
   ),
   "icon-button": () => <IconButtons />,

@@ -22,6 +22,8 @@ import {
   Toast,
   toast,
   type ButtonVariant,
+  BURST_STYLES,
+  type BurstStyle,
 } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useSearchParams } from "next/navigation";
@@ -76,7 +78,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "boolean", name: "buddy", label: "Buddy", default: false },
       { kind: "boolean", name: "loading", label: "Loading", default: false },
       { kind: "boolean", name: "disabled", label: "Disabled", default: false },
-      { kind: "boolean", name: "burst", label: "Ink burst", default: true },
+      { kind: "select", name: "burst", label: "Burst", options: ["none", ...BURST_STYLES], default: "none" },
     ],
     render: (v) => (
       <Button
@@ -86,14 +88,14 @@ const ENTRIES: Record<string, Entry> = {
         buddy={b(v.buddy)}
         loading={b(v.loading)}
         disabled={b(v.disabled)}
-        burst={b(v.burst)}
+        burst={s(v.burst) === "none" ? false : (s(v.burst) as BurstStyle)}
         iconLeft={v.icon !== "none" ? ICONS[s(v.icon)] : undefined}
       >
         {s(v.label) || "Button"}
       </Button>
     ),
     code: (v) =>
-      `<Button${prop("variant", v.variant, "ink")}${prop("size", v.size, "md")}${prop("tilt", v.tilt)}${prop("buddy", v.buddy, false)}${prop("loading", v.loading, false)}${prop("disabled", v.disabled, false)}${prop("burst", v.burst, true)}${
+      `<Button${prop("variant", v.variant, "ink")}${prop("size", v.size, "md")}${prop("tilt", v.tilt)}${prop("buddy", v.buddy, false)}${prop("loading", v.loading, false)}${prop("disabled", v.disabled, false)}${prop("burst", v.burst, "none")}${
         v.icon !== "none" ? ` iconLeft={<${ICON_NAMES[s(v.icon)]} />}` : ""
       }>\n  ${s(v.label)}\n</Button>`,
   },

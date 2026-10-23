@@ -23,13 +23,16 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     title: "Button",
     group: "Actions",
     badges: ["Client component", AA, V01],
-    lede: "The hero sticker. Peels on hover, squishes on press, springs back with an ink burst. Add a buddy for the one action that matters most on a screen.",
+    lede: "The hero sticker. Peels on hover, squishes on press, springs back. Add a buddy for the one action that matters most on a screen, and a burst for the presses worth celebrating.",
     code: `import { Button, ButtonLink } from "@plop-ui/react";
 
 <Button variant="ink" size="lg" buddy>Send report</Button>
 <ButtonLink href="/start" size="lg" buddy="peek">Get started</ButtonLink> {/* buddy pops up on hover or focus */}
 <Button shadow="stripes">Crayon shadow</Button>   {/* or "solid", "outline", "none"; default "soft" */}
-<Button variant="tomato">Delete</Button>   {/* tomato shakes off a poof of dust, never confetti */}
+<Button variant="mint" burst>Mark resolved</Button>   {/* bursts are off until you ask: true picks confetti */}
+<Button variant="tomato" burst>Delete</Button>   {/* ...or a poof of dust and a head-shake on tomato */}
+<Button burst="stars">You did it</Button>   {/* celebrate: "confetti" | "stars" | "sparkle" | "hearts" */}
+<Button burst="zap">Try again</Button>   {/* went wrong (shakes too): "poof" | "zap" | "drops" */}
 
 <Button>Save changes</Button>
 <Button variant="periwinkle">Add note</Button>
@@ -287,12 +290,17 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     title: "Toast",
     group: "Feedback",
     badges: ["Client component", AA, V01],
-    lede: "Slaps onto the bottom of the screen like a stamp, then lifts off after a few seconds.",
+    lede: "Slaps onto the bottom of the screen like a stamp, then lifts off after a few seconds. The wash behind it takes its kind (red for an error, green for success), and it can celebrate or wince when it lands.",
     code: `import { toast } from "@plop-ui/react";
 
 toast.success("Report sent");
 toast.error("Couldn't send. Saved for later.");
 toast("Mobile 2 is 6 min away", { duration: 6000 });
+
+// A burst when it lands (off by default): true picks confetti for success,
+// a poof of dust and a shake for error, a sparkle for info. Or name a style.
+toast.success("All done!", { burst: true, buddy: "congrats" });
+toast.error("Couldn't send", { burst: "zap" });
 
 // Behind a live toast: a solid gradient wash (default), comic dots, or nothing.
 <PlopProvider toastBackdrop="solid" />   // "dots" | "none"`,

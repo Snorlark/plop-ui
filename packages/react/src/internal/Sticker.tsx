@@ -18,7 +18,7 @@ import {
 } from "react";
 import { BuddyArt, type BuddyMood } from "../Buddy/Buddy.js";
 import { useHaptics } from "../hooks/useHaptics.js";
-import { BURST_COLORS, type BurstStyle } from "../InkBurst/burst.js";
+import { BURST_COLORS, BURST_PRESETS, isFailBurst, type BurstStyle } from "../InkBurst/burstStyles.js";
 import { useInkBurst } from "../InkBurst/useInkBurst.js";
 import { useReducedMotion } from "../hooks/useReducedMotion.js";
 import { useSound } from "../hooks/useSound.js";
@@ -53,9 +53,11 @@ export interface StickerOwnProps {
   /** Screen reader text while loading. Default "Loading". */
   loadingLabel?: string;
   /**
-   * What flies out on click. `true` picks for the variant: confetti for most, a `"poof"` of dust
-   * (and a little head-shake) for `tomato`, the cancel/delete color. Or force `"confetti"` / `"poof"`,
-   * pass your own colors, or `false` for nothing. Skipped under reduced motion.
+   * What flies out on click. Off by default: turn it on for the presses worth celebrating (or regretting).
+   * `true` picks for the variant: `"confetti"` for most, a `"poof"` of dust for `tomato` (cancel/delete).
+   * Or name a style: `"confetti"`, `"stars"`, `"sparkle"`, `"hearts"` to celebrate; `"poof"`, `"zap"`,
+   * `"drops"` when something went wrong (those also shake the sticker). Or pass your own colors for
+   * confetti. Skipped under reduced motion.
    */
   burst?: boolean | BurstStyle | readonly string[];
   /**
@@ -69,11 +71,11 @@ export type StickerShadow = "soft" | "solid" | "stripes" | "outline" | "none";
 
 /** Resolves the `burst` prop to what actually flies out. */
 function burstFor(burst: StickerOwnProps["burst"], variant: StickerVariant): { colors: readonly string[]; style: BurstStyle } | null {
-  if (burst === false) return null;
-  const poof = burst === "poof" || (burst === true && variant === "tomato");
+  if (!burst) return null;
   if (Array.isArray(burst)) return { colors: burst, style: "confetti" };
-  if (poof) return { colors: BURST_COLORS.tomato, style: "poof" };
-  return { colors: BURST_COLORS[variant === "tomato" ? "all" : variant], style: "confetti" };
+  const style: BurstStyle = burst === true ? (variant === "tomato" ? "poof" : "confetti") : (burst as BurstStyle);
+  if (style === "confetti") return { colors: BURST_COLORS[variant === "tomato" ? "all" : variant], style };
+  return { colors: BURST_PRESETS[style], style };
 }
 
 interface StickerProps extends StickerOwnProps, Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
@@ -97,7 +99,7 @@ export function Sticker({
   seed,
   loading = false,
   loadingLabel = "Loading",
-  burst = true,
+  burst = false,
   round = false,
   buddy = false,
   buddyMood = "success",
@@ -167,7 +169,7 @@ export function Sticker({
     const b = burstFor(burst, variant);
     if (b) {
       inkBurst(event.currentTarget, b.colors, round ? 7 : 9, b.style);
-      if (b.style === "poof" && !reduced) {
+      if (isFailBurst(b.style) && !reduced) {
         setShake(true);
         later(() => setShake(false), SHAKE_MS);
       }
@@ -300,7 +302,7 @@ export function StickerLink({
   size = "md",
   tilt,
   seed,
-  burst = true,
+  burst = false,
   round = false,
   buddy = false,
   buddyMood = "success",

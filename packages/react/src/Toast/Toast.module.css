@@ -45,11 +45,15 @@
 .withBuddy:has([data-leaving]) { animation: lift 220ms ease-in forwards; }
 .withBuddy .toast[data-leaving] { animation: none; }
 
+/* A failure burst (toast({ burst })) shakes the toast's head. `translate` stacks on the tilt instead of replacing it. */
+.toast[data-shake] { animation: shake 420ms cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
 /*
  * What shows behind a toast while it's up (Toaster `backdrop`), fading out from under
  * the toast to the page. `dots`: a comic halftone screen (one dot grid, staggered into
- * the diagonal comic lattice) over a faint periwinkle wash. `solid`: just the wash.
- * `none`: nothing. Never blocks clicks.
+ * the diagonal comic lattice) over a faint wash. `solid`: just the wash. `none`: nothing.
+ * The wash takes the toast's kind: red for an error, green for success, periwinkle otherwise.
+ * Never blocks clicks.
  */
 .zone::before {
   content: "";
@@ -58,7 +62,7 @@
   height: min(240px, 36vh);
   z-index: -1;
   pointer-events: none;
-  --wash: linear-gradient(to top, color-mix(in srgb, var(--plop-periwinkle) 55%, transparent), transparent);
+  --wash: linear-gradient(to top, color-mix(in srgb, var(--tint, var(--plop-periwinkle)) 55%, transparent), transparent);
   background: var(--wash);
   -webkit-mask: radial-gradient(ellipse 58% 100% at 50% 100%, black 20%, transparent 75%);
           mask: radial-gradient(ellipse 58% 100% at 50% 100%, black 20%, transparent 75%);
@@ -73,6 +77,8 @@
     var(--wash);
 }
 .zone[data-backdrop="none"]::before { content: none; }
+.zone[data-kind="error"]::before { --tint: var(--plop-tomato); }
+.zone[data-kind="success"]::before { --tint: var(--plop-mint); }
 .zone:has(.toast)::before { opacity: 1; }
 .zone:has(.toast[data-leaving])::before { opacity: 0; transition-duration: 0.22s; }
 
@@ -88,6 +94,14 @@
   0% { transform: scale(1.5) rotate(-7deg); opacity: 0; }
   60% { transform: scale(0.94) rotate(1deg); opacity: 1; }
   100% { transform: none; opacity: 1; }
+}
+@keyframes shake {
+  0%, 100% { translate: 0 0; }
+  15% { translate: -7px 0; }
+  30% { translate: 6px 0; }
+  45% { translate: -5px 0; }
+  60% { translate: 4px 0; }
+  75% { translate: -2px 0; }
 }
 @keyframes lift {
   to { opacity: 0; transform: translateY(10px) rotate(-3deg); }

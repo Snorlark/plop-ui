@@ -1,4 +1,5 @@
 import type { BuddyMood } from "../Buddy/Buddy.js";
+import type { BurstStyle } from "../InkBurst/burstStyles.js";
 
 export type ToastKind = "info" | "success" | "error";
 
@@ -10,6 +11,8 @@ export interface ToastItem {
   duration: number;
   /** A character peeking over the toast, or none. */
   buddy?: BuddyMood;
+  /** What flies out when the toast lands, or nothing. */
+  burst?: BurstStyle;
 }
 
 type Listener = (items: readonly ToastItem[]) => void;
@@ -38,16 +41,26 @@ export interface ToastOptions {
   duration?: number;
   /** A character peeks over the toast: `true` picks one for the kind (Pip, Bix, Specs), or name a mood, e.g. `"congrats"`. */
   buddy?: boolean | BuddyMood;
+  /**
+   * Something flies out when the toast lands. Off by default. `true` picks for the kind: `"confetti"`
+   * for success, a `"poof"` of dust (and a shake) for error, a `"sparkle"` for info. Or name any burst
+   * style, e.g. `"stars"` or `"zap"`. Skipped under reduced motion.
+   */
+  burst?: boolean | BurstStyle;
 }
 
 /** The character that fits each kind of toast. */
 export const TOAST_BUDDY: Record<ToastKind, BuddyMood> = { success: "success", error: "error", info: "preview" };
 
+/** The burst that fits each kind of toast, for `burst: true`. */
+export const TOAST_BURST: Record<ToastKind, BurstStyle> = { success: "confetti", error: "poof", info: "sparkle" };
+
 function show(kind: ToastKind, text: string, options: ToastOptions = {}): number {
   const id = nextId++;
   // One stamp at a time, like the prototype: a new toast replaces the last.
   const buddy = options.buddy === true ? TOAST_BUDDY[kind] : options.buddy || undefined;
-  items = [{ id, text, kind, duration: options.duration ?? 4000, buddy }];
+  const burst = options.burst === true ? TOAST_BURST[kind] : options.burst || undefined;
+  items = [{ id, text, kind, duration: options.duration ?? 4000, buddy, burst }];
   emit();
   return id;
 }
@@ -56,7 +69,7 @@ function show(kind: ToastKind, text: string, options: ToastOptions = {}): number
  * Slaps a message onto the bottom of the screen like a stamp. Needs a
  * PlopProvider (it renders the toast zone, a polite live region).
  *
- * toast("Mobile 2 is 6 min away"); toast.success("Report sent"); toast.error("Couldn't send");
+ * toast("Mobile 2 is 6 min away"); toast.success("Report sent", { burst: true }); toast.error("Couldn't send", { burst: true });
  */
 export const toast = Object.assign((text: string, options?: ToastOptions) => show("info", text, options), {
   success: (text: string, options?: ToastOptions) => show("success", text, options),
