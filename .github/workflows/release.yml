@@ -1,6 +1,6 @@
 name: Release
 
-# Releases @plop-ui/tokens, @plop-ui/fonts and @plop-ui/react to npm (staged, with provenance).
+# Releases @plop-ui/tokens, @plop-ui/fonts and @plop-ui/react to npm (staged; with provenance while the repo is public).
 #
 # On every push to main, the Changesets action does one of two things:
 # - pending changesets in .changeset/: it opens (or updates) a "Version packages" PR that bumps versions and
@@ -24,7 +24,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write # push the version commit and tags
   pull-requests: write # open the "Version packages" PR
-  id-token: write # npm provenance
+  id-token: write # npm trusted publishing (OIDC) and provenance
 
 jobs:
   release:
@@ -48,3 +48,5 @@ jobs:
           commit: "chore(release): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # npm only accepts provenance from public repos, so it follows the repo's visibility.
+          NPM_PROVENANCE: ${{ !github.event.repository.private }}
