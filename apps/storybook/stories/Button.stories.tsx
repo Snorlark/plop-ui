@@ -46,14 +46,31 @@ export const Shadows: Story = {
   parameters: { docs: { description: { story: 'Set one sticker\'s `shadow`, or every sticker\'s with `<PlopProvider stickerShadow="solid">`.' } } },
 };
 
-export const DestructivePoof: Story = {
+export const Bursts: Story = {
   render: () => (
-    <div style={{ display: "flex", gap: 36 }}>
-      <Button variant="mint">Save (confetti)</Button>
-      <Button variant="tomato">Delete (poof)</Button>
+    <div style={{ display: "grid", gap: 28 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 30 }}>
+        <Button variant="mint" burst="confetti" seed="b1">Confetti</Button>
+        <Button variant="mustard" burst="stars" seed="b2">Stars</Button>
+        <Button variant="periwinkle" burst="sparkle" seed="b3">Sparkle</Button>
+        <Button variant="plain" burst="hearts" seed="b4">Hearts</Button>
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 30 }}>
+        <Button variant="tomato" burst="poof" seed="b5">Poof</Button>
+        <Button variant="tomato" burst="zap" seed="b6">Zap</Button>
+        <Button variant="plain" burst="drops" seed="b7">Drops</Button>
+        <Button seed="b8">No burst (default)</Button>
+      </div>
     </div>
   ),
-  parameters: { docs: { description: { story: "Tomato is the cancel/delete color, so it shakes its head and puffs dust instead of throwing confetti. Force either with `burst=\"poof\"` or `burst=\"confetti\"`." } } },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Bursts are off by default. `burst` turns one on: `true` picks for the variant (confetti, or a poof on tomato), or name a style. The first row celebrates; the second row is for things that went wrong, and those also shake the sticker.",
+      },
+    },
+  },
 };
 
 export const Variants: Story = {
