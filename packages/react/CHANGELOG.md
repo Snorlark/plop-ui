@@ -1,5 +1,11 @@
 # @plop-ui/react
 
+## 0.3.3
+
+### Patch Changes
+
+- b9f580f: Fix: in Firefox and Safari, clicking the face on a Switch's knob toggled it twice, so it seemed to do nothing. Clicks now go to the switch itself.
+
 ## 0.3.2
 
 ### Patch Changes
