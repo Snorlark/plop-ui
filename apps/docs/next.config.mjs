@@ -7,6 +7,8 @@ const nextConfig = {
   // The e2e tests build into their own folder so they never clobber a running `next dev`.
   distDir: process.env.NEXT_DIST_DIR || ".next",
   reactStrictMode: true,
+  // /kit was a one-page copy of every component; old links land on the component docs instead.
+  redirects: async () => [{ source: "/kit", destination: "/docs/components/button", permanent: true }],
 };
 
 const withMDX = createMDX({ options: { remarkPlugins: [remarkGfm] } });

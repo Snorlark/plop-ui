@@ -2,7 +2,7 @@
 
 /* Title and scene sit together in the middle of the screen. */
 .screen {
-  position: relative; min-height: calc(100dvh - var(--header-offset, 90px)); display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: clamp(8px, 3vh, 26px); padding: 28px clamp(12px, 3vw, 40px) 36px; overflow: hidden;
 }
 .pause { position: absolute; right: clamp(14px, 3vw, 36px); top: 16px; z-index: 3; }
@@ -13,7 +13,7 @@
 }
 
 /* The scene fills what's left of the screen and stands on its own ground line at the bottom. */
-.stage { position: relative; width: 100%; max-width: min(1400px, (100dvh - 330px) * 2.55); }
+.stage { position: relative; width: 100%; max-width: min(1400px, (100dvh - 240px) * 2.55); }
 .stage > svg { display: block; width: 100%; height: auto; overflow: visible; }
 
 /* The buddy is the 0: an invisible button over it, and its speech bubble. */
