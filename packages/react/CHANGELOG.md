@@ -1,5 +1,12 @@
 # @plop-ui/react
 
+## 0.3.2
+
+### Patch Changes
+
+- b73543f: Fix: in Firefox and Safari, pressing a sticker no longer loses keyboard focus or cancels its squish. The iOS haptics fallback is now used only on touch devices, and it hands focus straight back. Tooltips and search results no longer close when haptics tick.
+- 71c7283: StatusTimeline: when forced horizontal in a narrow box (a card on a phone), its labels get smaller so neighbouring steps never overlap.
+
 ## 0.3.1
 
 ### Patch Changes
