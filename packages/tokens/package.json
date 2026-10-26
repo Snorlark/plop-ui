@@ -1,13 +1,15 @@
 {
   "name": "@plop-ui/tokens",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Design tokens for PlopUI: colors, contrast roles, type, motion and 5 paper surfaces, as CSS variables and a typed object.",
   "license": "MIT",
   "author": "Lark Sigmuond Babao",
   "homepage": "https://plopui.com",
   "bugs": "https://github.com/Snorlark/plop-ui/issues",
   "type": "module",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -17,9 +19,18 @@
     },
     "./tokens.css": "./dist/tokens.css"
   },
-  "files": ["dist"],
-  "repository": { "type": "git", "url": "git+https://github.com/Snorlark/plop-ui.git", "directory": "packages/tokens" },
-  "publishConfig": { "access": "public", "provenance": true },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snorlark/plop-ui.git",
+    "directory": "packages/tokens"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node scripts/emit-css.mjs",
     "dev": "tsc -p tsconfig.build.json --watch",

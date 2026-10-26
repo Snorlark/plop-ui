@@ -1,5 +1,13 @@
 # @plop-ui/react
 
+## 0.2.1
+
+### Patch Changes
+
+- 8b94e11: New description, keywords and homepage (https://plopui.com): PlopUI is hand-drawn UI, imperfect on purpose. No code changes.
+- Updated dependencies [8b94e11]
+  - @plop-ui/tokens@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
