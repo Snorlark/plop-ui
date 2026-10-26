@@ -1,5 +1,6 @@
 /* Menu: a sticker trigger and a taped sheet of actions. Colors and motion from PlopUI tokens. */
-.root { position: relative; display: inline-block; }
+/* Never stretched by a grid or flex parent: the sheet hangs off the bottom of this box, so it has to hug the trigger. */
+.root { position: relative; display: inline-block; align-self: start; justify-self: start; }
 
 .trigger {
   display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px; cursor: pointer;
