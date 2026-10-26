@@ -41,7 +41,7 @@ export function luminance([r, g, b]: RGB): number {
 export function contrastRatio(a: string, b: string): number {
   const ca = parseColor(a);
   const cb = parseColor(b);
-  if (!ca || !cb) throw new Error(`Plop! can't measure contrast of "${a}" on "${b}"`);
+  if (!ca || !cb) throw new Error(`PlopUI can't measure contrast of "${a}" on "${b}"`);
   const la = luminance(ca);
   const lb = luminance(cb);
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);

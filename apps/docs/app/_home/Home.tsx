@@ -119,9 +119,9 @@ function Hero() {
           <HeroTitle />
         </div>
         <p className="home-lede">
-          Sticker buttons, washi-tape tags and status timelines for dispatch,
-          field service and ticketing. Accessible, server-rendered, and they
-          squish.
+          Wobbly sticker buttons, washi-tape tags and colors picked by
+          instinct, not strategy. They break the design rulebook, never the
+          accessibility one. And they squish.
         </p>
         <div className="home-hero__cta">
           <ButtonLink
@@ -278,28 +278,33 @@ function Letter() {
     <section className="home-letter">
       <div className="home-letter__head">
         <div className="home-letter__from">
-          <Avatar name="Rosa Santos" />
+          <Avatar name="Lark Babao" />
           <Kicker color="var(--plop-ink-soft)">From Lark &lt;3</Kicker>
         </div>
         <h2 className="home-h2 home-letter__title">
           Hey builder!
           <br />
-          <span>Your users are having a rough day.</span>
+          <span>Who said UI has to be perfect?</span>
         </h2>
       </div>
       <div className="home-letter__body">
         <p>
-          You build software for people on the line: a flooded street, a broken
-          printer, a rider who’s late. They tap fast and read faster.
+          Most interfaces look the same now: the same grid, the same radius,
+          the same safe palette. Clean, correct and forgettable.
         </p>
         <p>
-          So every button should answer when it’s pressed. Every word should
-          read on every color. And all of it should load quickly on a cheap
-          phone.
+          PlopUI goes the other way. Lines wobble, stickers sit a little
+          crooked, and the colors come from instinct, not strategy. Every
+          imperfection is on purpose, an experiment rather than a rule.
+        </p>
+        <p>
+          Break the visual rulebook all you like. The rules that keep the door
+          open, like contrast, keyboard and screen readers, stay put. They’re
+          what lets everyone join the fun.
         </p>
         <p className="home-letter__sign">
-          That’s what PlopUI is for. Hand-drawn on the outside, accessible and
-          dependable on the inside.
+          Creativity is the brain having fun. This kit is mine. Go make it
+          yours.
         </p>
       </div>
     </section>

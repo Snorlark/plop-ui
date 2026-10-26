@@ -1,7 +1,7 @@
 {
   "name": "plop-ui",
   "private": true,
-  "description": "Plop! — a hand-lettered sticker UI kit for real-time operations apps.",
+  "description": "PlopUI: hand-drawn React UI, imperfect on purpose.",
   "packageManager": "pnpm@11.24.0",
   "engines": {
     "node": ">=20"

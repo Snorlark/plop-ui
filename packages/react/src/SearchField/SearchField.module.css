@@ -1,4 +1,4 @@
-/* Search: a wobbly marker field with a taped results sheet, and the command palette. Colors and motion from Plop! tokens. */
+/* Search: a wobbly marker field with a taped results sheet, and the command palette. Colors and motion from PlopUI tokens. */
 .root { --sh: 54px; --sfs: 18px; --sicon: 22px; position: relative; width: 100%; max-width: 560px; }
 .sm { --sh: 42px; --sfs: 16px; --sicon: 18px; max-width: 320px; }
 .lg { --sh: 66px; --sfs: 21px; --sicon: 26px; max-width: 680px; }

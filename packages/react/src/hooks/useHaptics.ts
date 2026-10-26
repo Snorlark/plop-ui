@@ -15,7 +15,7 @@ let proxy: HTMLLabelElement | null = null;
 
 /**
  * iOS Safari has no Vibration API, but since iOS 18 toggling an
- * `<input type="checkbox" switch>` gives a system haptic tick. Plop! keeps
+ * `<input type="checkbox" switch>` gives a system haptic tick. PlopUI keeps
  * one hidden switch and clicks it as the fallback.
  */
 function iosSwitchProxy(): HTMLLabelElement | null {

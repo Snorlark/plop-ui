@@ -194,7 +194,7 @@ export interface BuddyProps {
 }
 
 /**
- * A Plop! character that stands for a state: Pip cheers success, Bix winces
+ * A PlopUI character that stands for a state: Pip cheers success, Bix winces
  * at errors, Snooze dozes on stale data, Confetti celebrates, Specs previews
  * and Hum thinks while loading. Pair it with words; it never carries the
  * message alone.

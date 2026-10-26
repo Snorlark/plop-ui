@@ -18,7 +18,7 @@ Only you can settle these. The client sign-off should be answered before the lau
 - [x] 🟡 **Docs domain.** `plopui.com` (bought at Spaceship, DNS points at Vercel, HTTPS on). `ui.plop.com` wasn't possible: `plop.com` belongs to someone else.
 - [ ] 🟡 Finish the domain switch: make `plopui.com` the primary domain in Vercel (with `www` redirecting to it), set `NEXT_PUBLIC_SITE_URL=https://plopui.com` for Production and redeploy, redirect `plop-ui.vercel.app` to it, and update the GitHub About website.
   Done when: https://plopui.com/sitemap.xml lists `plopui.com` URLs.
-- [ ] 🔴 **Client sign-off.** Does Quadsync or MEC need to approve Plop! before it's used in client work, or before it's announced publicly? (PRD open question)
+- [ ] 🔴 **Client sign-off.** Does Quadsync or MEC need to approve PlopUI before it's used in client work, or before it's announced publicly? (PRD open question)
   Done when: answered in writing, before the launch posts go out.
 - [ ] ⚪ **MapPanel engine** for v1.0: MapLibre or Leaflet, given the dispatch app works offline.
 
@@ -46,7 +46,7 @@ Only you can settle these. The client sign-off should be answered before the lau
 - [x] 🟡 Replace the placeholder npm and Changelog links in the footer (npm links go to the real packages; Changelog goes to `/changelog`).
 
 ### Dispatch demo (PRD: `apps/dispatch-demo`)
-- [x] 🟡 Scaffold a Next.js 15 app in `apps/dispatch-demo` that uses only Plop! components.
+- [x] 🟡 Scaffold a Next.js 15 app in `apps/dispatch-demo` that uses only PlopUI components.
 - [x] 🟡 Live incident queue fed by a Server-Sent Events Route Handler (`app/api/incidents/stream/route.ts`), mock incidents every few seconds.
 - [x] 🟡 "Send report" form with a Server Action, `useOptimistic` and `<Button loading>`.
 - [ ] 🟡 Deploy it: a second Vercel project from the same repo (root `apps/dispatch-demo`, build `cd ../.. && pnpm turbo run build --filter=@plop-ui/dispatch-demo`). Then add the "Dispatch demo" link to the footer and the README.
@@ -57,7 +57,7 @@ Only you can settle these. The client sign-off should be answered before the lau
 - [ ] 🟡 GitHub About: description, website, topics; a social preview image (`apps/docs/app/opengraph-image.png`); pin the repo on your profile.
 - [ ] 🟡 Demo video, 20–40 s: sticker presses, the toast buddy, the dispatch demo live, the header menus, the 404. Landscape plus a vertical cut.
 - [ ] 🟡 Posts: LinkedIn, X and Bluesky, r/reactjs (Showoff Saturday), Show HN, dev.to, Philippine dev groups, Instagram Reels. Product Hunt a week or two later. Only after the client sign-off above.
-- [ ] ⚪ A Claude Code skill (`skills/plop-ui/SKILL.md`) that teaches an AI to build with Plop!, pointing at `llms-full.txt`.
+- [ ] ⚪ A Claude Code skill (`skills/plop-ui/SKILL.md`) that teaches an AI to build with PlopUI, pointing at `llms-full.txt`.
 - [ ] ⚪ shadcn-style registry of "blocks" (incident queue, unit board) built from the dispatch demo.
 
 ### v0.3 ops pack (still to build)

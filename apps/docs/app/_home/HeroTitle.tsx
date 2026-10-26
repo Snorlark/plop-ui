@@ -44,7 +44,7 @@ function useSurfaceSwitch() {
 
 /** The first word of the headline is the surface: drawn by hand on paper, die-cut on the mat. */
 const WORD: Record<SiteSurface, string> = { poster: "Hand-drawn", mat: "Die-cut" };
-const REST = "UI for apps that can’t wait.";
+const REST = "UI, imperfect on purpose.";
 
 /**
  * The hero headline, with the site's light/dark switch built in: a round

@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 
 /**
  * Sketchpop, self-hosted from packages/fonts by next/font. Exposed as
- * --plop-sketchpop, which every Plop! font token reads before falling back
+ * --plop-sketchpop, which every PlopUI font token reads before falling back
  * to the plain "Sketchpop" family name.
  */
 export const sketchpop = localFont({

@@ -2,7 +2,7 @@ export const metadata = { title: "Using with Next.js", description: "Use PlopUI 
 
 # Using with Next.js
 
-<p className="lede">Plop! never imports from <code>next/*</code>, so it runs in any React app. It is built to work well with the App Router, Server Components and SSR.</p>
+<p className="lede">PlopUI never imports from <code>next/*</code>, so it runs in any React app. It is built to work well with the App Router, Server Components and SSR.</p>
 
 ## Server and client components
 
@@ -25,11 +25,11 @@ export default async function Incident({ params }) {
 
 ## Hydration-safe randomness
 
-`Math.random()` tilt would differ between the server and the browser and break hydration. Every tilt and wobble in Plop! comes from a seed: the `seed` prop if you pass one, otherwise React's `useId()`, which is the same on both sides.
+`Math.random()` tilt would differ between the server and the browser and break hydration. Every tilt and wobble in PlopUI comes from a seed: the `seed` prop if you pass one, otherwise React's `useId()`, which is the same on both sides.
 
 ## Fonts with next/font
 
-Self-host Sketchpop with `next/font/local` and expose it as `--plop-sketchpop`; every Plop! font token reads that variable first.
+Self-host Sketchpop with `next/font/local` and expose it as `--plop-sketchpop`; every PlopUI font token reads that variable first.
 
 ```ts
 // app/fonts.ts

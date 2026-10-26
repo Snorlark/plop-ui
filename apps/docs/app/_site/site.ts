@@ -9,4 +9,4 @@ export const SITE_URL = (
 ).replace(/\/$/, "");
 
 export const SITE_DESCRIPTION =
-  "PlopUI is a hand-drawn React UI component library for real-time ops apps: dispatch consoles, field service and ticketing. Accessible to WCAG AA and server-rendered with Next.js.";
+  "PlopUI is a hand-drawn React UI component library, imperfect on purpose: wobbly sticker buttons, washi-tape tags and a hand-lettered font, in colors picked by instinct. It breaks the visual rules, never the accessibility ones: WCAG AA and server-rendered with Next.js.";

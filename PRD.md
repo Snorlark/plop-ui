@@ -1,12 +1,12 @@
-# Plop! — PRD for a hand-lettered sticker UI library
+# PlopUI — PRD for a hand-lettered sticker UI library
 
 Oct 21, 2026 · @lark pogi · **Living document**: updated as the project moves. Day-to-day work is tracked in [TASKS.md](TASKS.md).
 
 ## Overview
 
-Plop! is an open-source React + TypeScript component library for real-time operations apps (dispatch, field service, ticketing), drawn in a hand-lettered, one-ink sticker style. v0.1 ships 6 components to npm, with Storybook and a Next.js docs site, in 6 weeks; v1.0 follows once the library powers a real dispatch app.
+PlopUI is an open-source React + TypeScript component library that is imperfect on purpose: hand-lettered, one-ink stickers that wobble, tilt and squish, in colors picked by instinct rather than strategy. (Repositioned Oct 26, 2026: it started as a kit for real-time operations apps; see [decision 0021](docs/decisions/0021-imperfect-on-purpose.md).) v0.1 ships 6 components to npm, with Storybook and a Next.js docs site, in 6 weeks; v1.0 follows once the library powers a real dispatch app.
 
-The visual reference is the Plop! v0.6 prototype: cobalt marker lettering on cream poster paper, die-cut sticker buttons, hatched shadows, boiling ink outlines, and tactile press feedback. This PRD turns that single HTML prototype into a real, installable package.
+The visual reference is the PlopUI v0.6 prototype: cobalt marker lettering on cream poster paper, die-cut sticker buttons, hatched shadows, boiling ink outlines, and tactile press feedback. This PRD turns that single HTML prototype into a real, installable package.
 
 **Problem.** Ops apps (incident queues, responder tracking, status timelines) get rebuilt from scratch for every client, and they usually look like generic admin templates. There is no component kit built around ops workflows, and none with a distinctive, human visual identity.
 
@@ -16,8 +16,8 @@ The visual reference is the Plop! v0.6 prototype: cobalt marker lettering on cre
 - Cover the ops workflows the author rebuilds most: buttons, status tags, timeline, dispatch queue, sync indicator.
 - Meet WCAG 2.2 AA: keyboard support, screen reader labels, contrast, reduced motion.
 - Keep the hand-drawn look consistent: every "imperfection" is seeded, so it never changes between renders.
-- Prove Plop! works in Next.js (App Router, Server Components, SSR) through the docs site and a dispatch demo app, both built with Next.js.
-- Use Plop! in at least one real app (the offline dispatch project) before v1.0.
+- Prove PlopUI works in Next.js (App Router, Server Components, SSR) through the docs site and a dispatch demo app, both built with Next.js.
+- Use PlopUI in at least one real app (the offline dispatch project) before v1.0.
 
 **Non-goals**
 
@@ -44,16 +44,16 @@ The visual reference is the Plop! v0.6 prototype: cobalt marker lettering on cre
 
 ## Audience and positioning
 
-Plop! is for small teams building operations software for government and business clients, starting with its author's own client work at Quadsync and MEC.
+PlopUI is for small teams building operations software for government and business clients, starting with its author's own client work at Quadsync and MEC.
 
-| Audience | What they need from Plop! |
+| Audience | What they need from PlopUI |
 | --- | --- |
 | The author (primary user) | Stop rebuilding dispatch UIs per client; ship faster with a consistent look |
 | Client teams (LGUs, police stations, field service firms) | Interfaces that feel friendly and calm for citizens and staff, not like admin templates |
 | Developers who install it | Typed components, good docs, accessible defaults, no fighting the styles |
 | Recruiters and hiring managers | A live, documented proof of design engineering and frontend depth |
 
-**Positioning line:** "Plop! is a hand-lettered UI kit for real-time operations apps. Press it like you mean it."
+**Positioning line:** "Hand-drawn UI, imperfect on purpose." It breaks the visual rulebook (grids, perfect radii, safe palettes), never the accessibility one.
 
 What makes it different is the combination: ops-specific components (dispatch queue, status timeline, sync indicator) plus a visual identity nobody else has. Either one alone is common; together they are memorable and clearly tied to the author's niche.
 
@@ -106,7 +106,7 @@ Each surface also defines its own `on` and `on-soft` text colors for light and d
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--plop-font-logo` | "Sketchpop" Black Italic (900) | The Plop! wordmark only: a die-cut sticker with a paper border, thin ink edge and drop shadow; never crayon-filtered |
+| `--plop-font-logo` | "Sketchpop" Black Italic (900) | The PlopUI wordmark only: a die-cut sticker with a paper border, thin ink edge and drop shadow; never crayon-filtered |
 | `--plop-font-letter` | "Sketchpop" Bold Italic (700); Black Italic (900) for section headings | Headings, buttons, tags, tabs; uppercase, `calt` on so repeated letters vary |
 | `--plop-font-body` | "Sketchpop" Regular upright (400); Patrick Hand as per-character fallback | Body, hints, inputs, lists; sentence case |
 | Type scale (px) | 13, 15, 17, 19, 24, 32, 44, 72 | Body defaults to 19 |
@@ -134,14 +134,14 @@ v0.1 is deliberately small: foundations plus 6 components, chosen because the of
 | --- | --- | --- | --- |
 | v0.1 | Tokens + 5 surfaces, `PlopProvider`, `Button`, `IconButton`, `Tag`, `Switch`, `Checkbox`, `StatusTimeline`, `useHaptics`, `useBoil` | Published to npm, Storybook live, all v0.1 tests and a11y checks green | Built and tested; **not published yet** |
 | v0.2 | `TextField`, `TextArea`, `RadioGroup`, `Tooltip`, `Toast`, `Callout`, `Avatar`, `Progress` | Used in the dispatch app's report form | Built and tested; waits for the dispatch app |
-| v0.3 (ops pack) | `DispatchQueue`, `SyncIndicator`, `UnitCard`, `TicketCard`, `Tabs`, `RoleGate` | Dispatch app console built only from Plop! | `UnitCard`, `TicketCard`, `Tabs` done; `DispatchQueue`, `SyncIndicator`, `RoleGate` to do |
+| v0.3 (ops pack) | `DispatchQueue`, `SyncIndicator`, `UnitCard`, `TicketCard`, `Tabs`, `RoleGate` | Dispatch app console built only from PlopUI | `UnitCard`, `TicketCard`, `Tabs` done; `DispatchQueue`, `SyncIndicator`, `RoleGate` to do |
 | v1.0 | `MapPanel` (MapLibre wrapper), dark mode audit, Figma file synced, docs site with case study | 30 days in production use, no open a11y bugs | Not started |
 
 Anything not in this table needs a written reason before it is added, so the project does not turn into an endless polishing loop.
 
 ## Component specs (v0.1)
 
-Every v0.1 component is a thin Plop! layer over an accessible primitive, takes a `seed` for its imperfections, and works in both client and server-rendered pages. Interactive ones ship with `"use client"`; static ones (`StatusTimeline`, and `Tag` without `onRemove`) render as Server Components.
+Every v0.1 component is a thin PlopUI layer over an accessible primitive, takes a `seed` for its imperfections, and works in both client and server-rendered pages. Interactive ones ship with `"use client"`; static ones (`StatusTimeline`, and `Tag` without `onRemove`) render as Server Components.
 
 | Component | Key props | States to support | Accessibility |
 | --- | --- | --- | --- |
@@ -170,7 +170,7 @@ Every v0.1 component is a thin Plop! layer over an accessible primitive, takes a
 
 ## Technical architecture
 
-Plop! is a pnpm + Turborepo monorepo: the library stays plain React + TypeScript so it runs in any React app, and two Next.js apps prove it works in the framework most clients use. The library never imports from `next/*`.
+PlopUI is a pnpm + Turborepo monorepo: the library stays plain React + TypeScript so it runs in any React app, and two Next.js apps prove it works in the framework most clients use. The library never imports from `next/*`.
 
 ```
 plop-ui/
@@ -180,7 +180,7 @@ plop-ui/
     react/           # @plop-ui/react: components, hooks, SVG filters
   apps/
     docs/            # Next.js App Router + MDX docs site (plopui.com)
-    dispatch-demo/   # Next.js demo: live incident queue built only from Plop!
+    dispatch-demo/   # Next.js demo: live incident queue built only from PlopUI
     storybook/       # component workshop, a11y and visual tests
   .changeset/        # versioning and changelog
   turbo.json
@@ -189,7 +189,7 @@ plop-ui/
 | Layer | Choice | Why |
 | --- | --- | --- |
 | Language | TypeScript, `strict: true` | Typed props are the library's API contract |
-| Components | React 19 + Radix primitives | Radix handles focus, ARIA and keyboard; Plop! adds the look |
+| Components | React 19 + Radix primitives | Radix handles focus, ARIA and keyboard; PlopUI adds the look |
 | Styling | CSS Modules + CSS variables from `tokens` | Zero runtime, safe in Server Components, easy to theme by surface |
 | Library build | esbuild (one module per file) + `tsc` for `.d.ts`; `"use client"` restored per interactive file | Keeps client boundaries and CSS Modules intact. tsup was the plan; see decision 0003 for why it changed |
 | Docs site | Next.js 15 App Router, MDX, `next/font`, generated props tables | Real-world proof of SSR, RSC and font loading |
@@ -201,9 +201,9 @@ plop-ui/
 **What Next.js adds, and what it teaches**
 
 - **Server and client boundaries.** Deciding which components need `"use client"` and keeping the rest as Server Components.
-- **Hydration-safe randomness.** `Math.random()` tilt would differ between server and browser and break hydration. Plop! derives every tilt and wobble from a `seed`, so both renders match.
+- **Hydration-safe randomness.** `Math.random()` tilt would differ between server and browser and break hydration. PlopUI derives every tilt and wobble from a `seed`, so both renders match.
 - **Theme without a flash.** The chosen surface is stored in a cookie and read on the server (the docs site does this on `/kit`), so the right paper renders on the first paint. The rest of the docs site is static, printed on poster paper.
-- **Fonts done right.** `next/font/local` self-hosts the Sketchpop woff2 files from `packages/fonts` and exposes them as CSS variables that Plop!'s tokens point to; Patrick Hand comes in through `next/font/google` only as the fallback.
+- **Fonts done right.** `next/font/local` self-hosts the Sketchpop woff2 files from `packages/fonts` and exposes them as CSS variables that PlopUI's tokens point to; Patrick Hand comes in through `next/font/google` only as the fallback.
 - **Real-time in one framework.** A Route Handler streams incident updates over Server-Sent Events; a Server Action handles the "Send report" form.
 - **Performance budget.** Lighthouse and Core Web Vitals checked on the docs site; the SVG filters must not push Interaction to Next Paint over 200 ms.
 
@@ -252,20 +252,20 @@ A pull request merges only when every gate below passes in CI (GitHub Actions); 
 
 ## Docs site, Storybook and releases
 
-The Next.js docs site is the public face of Plop!; Storybook is the workshop where components are built and tested.
+The Next.js docs site is the public face of PlopUI; Storybook is the workshop where components are built and tested.
 
 **Docs site (`apps/docs`, Next.js)**
 
 - One MDX page per component: live demo, props table generated from the TypeScript types, do and don't examples, accessibility notes.
 - A landing page (the "PlopUI docs website" design), a header search, and a **Playground** where every component's props, surface and theme can be changed live and the code copied.
 - A surface switcher on `/kit`, stored in a cookie so the server renders the right paper.
-- Pages: Getting started, Tokens, each component, Surfaces, "Using Plop! with Next.js", and a case study of the dispatch demo.
+- Pages: Getting started, Tokens, each component, Surfaces, "Using PlopUI with Next.js", and a case study of the dispatch demo.
 - Static where possible (`generateStaticParams`), so pages load fast and cost nothing to host.
 
 **Dispatch demo (`apps/dispatch-demo`, Next.js)**
 
 - A live incident queue fed by a Server-Sent Events Route Handler with mock incidents every few seconds.
-- A "Send report" form using a Server Action, `useOptimistic` and Plop!'s loading button.
+- A "Send report" form using a Server Action, `useOptimistic` and PlopUI's loading button.
 - Shows the whole kit working together and doubles as the portfolio screenshot.
 
 **Storybook (`apps/storybook`)**
@@ -293,7 +293,7 @@ Use Claude Code to build faster, but keep the decisions yours: you write the API
 **`CLAUDE.md` at the repo root**
 
 ```markdown
-# Plop!
+# PlopUI
 Hand-lettered sticker UI kit for real-time ops apps. Read PRD.md first.
 
 ## Rules
@@ -323,7 +323,7 @@ pnpm dev | pnpm test | pnpm lint | pnpm build | pnpm changeset
 
 ## Success metrics, risks and open questions
 
-Plop! succeeds if it saves real build time on client work and gives the author concrete stories for mid-level interviews.
+PlopUI succeeds if it saves real build time on client work and gives the author concrete stories for mid-level interviews.
 
 **Success metrics**
 
@@ -332,8 +332,8 @@ Plop! succeeds if it saves real build time on client work and gives the author c
 | v0.1 published to npm, docs and demo live | Done | Week 6 |
 | Accessibility violations (axe, serious or critical) | 0 | Every release |
 | Hydration warnings in docs and demo builds | 0 | Every release |
-| Client projects using Plop! | 1 | v1.0 |
-| Time to build a new dispatch screen vs. before Plop! | At least 40% faster | v1.0 |
+| Client projects using PlopUI | 1 | v1.0 |
+| Time to build a new dispatch screen vs. before PlopUI | At least 40% faster | v1.0 |
 | Written decision records for the case study | At least 8 | v1.0 |
 
 **Risks**
@@ -352,4 +352,4 @@ Plop! succeeds if it saves real build time on client work and gives the author c
 - [ ] MIT license, or keep source-available until v1.0? (packages say MIT for now; no LICENSE file yet)
 - [x] Where do the docs live: `plop-ui.vercel.app`, or a custom domain? Decided: `plopui.com`.
 - [ ] Should `MapPanel` use MapLibre or Leaflet given the dispatch app's offline needs?
-- [ ] Does Quadsync or MEC need sign-off before Plop! is used in client work?
+- [ ] Does Quadsync or MEC need sign-off before PlopUI is used in client work?

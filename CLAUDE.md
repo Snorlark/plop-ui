@@ -1,5 +1,5 @@
-# Plop!
-Hand-lettered sticker UI kit for real-time ops apps. Read PRD.md first.
+# PlopUI
+Hand-drawn React UI kit, imperfect on purpose: it breaks the visual rulebook, never the accessibility one. Read PRD.md first.
 
 ## Rules
 - packages/react must never import from next/*. Next.js lives only in apps/.

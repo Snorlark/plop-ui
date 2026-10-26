@@ -1,10 +1,10 @@
 {
   "name": "@plop-ui/react",
   "version": "0.2.0",
-  "description": "Plop! — a hand-lettered sticker UI kit for real-time operations apps. Press it like you mean it.",
+  "description": "PlopUI: hand-drawn React UI, imperfect on purpose. Wobbly stickers, washi tape and a hand-lettered font, accessible to WCAG AA.",
   "license": "MIT",
   "author": "Lark Sigmuond Babao",
-  "homepage": "https://github.com/Snorlark/plop-ui#readme",
+  "homepage": "https://plopui.com",
   "bugs": "https://github.com/Snorlark/plop-ui/issues",
   "type": "module",
   "sideEffects": [
@@ -27,10 +27,14 @@
     "ui",
     "components",
     "hand-drawn",
+    "sketch",
     "sticker",
-    "dispatch",
-    "operations",
-    "accessible"
+    "tactile",
+    "playful",
+    "whimsical",
+    "design-system",
+    "accessible",
+    "nextjs"
   ],
   "repository": {
     "type": "git",
