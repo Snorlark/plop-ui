@@ -1,1 +1,1 @@
-PlopUI: hand-drawn UI that feels good to press. The PlopUI logo on a torn sheet of paper on a green cutting mat, surrounded by PlopUI stickers: a to-do note, a button, a switch, avatars, a Saved toast, a sticker pack and pencils.
+PlopUI: hand-drawn UI, imperfect on purpose. The PlopUI logo on a torn sheet of paper on a green cutting mat, surrounded by PlopUI stickers: a to-do note, a Post sketch button, a switch, avatars, a Saved toast, a sticker pack and pencils.
