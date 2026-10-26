@@ -1,7 +1,7 @@
 /*
  * Turns the live lettering preview into a self-contained SVG: every letter
  * is placed exactly where the browser drew it, every color is resolved from
- * the Plop! tokens, and Sketchpop is embedded, so the file looks the same
+ * the PlopUI tokens, and Sketchpop is embedded, so the file looks the same
  * anywhere. HTML and PNG exports are built from that SVG.
  */
 

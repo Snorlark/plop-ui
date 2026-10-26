@@ -1,5 +1,5 @@
 /* The header's mega menus. Panels and the phone sheet are positioned against the sticky header bar
-   (.site-header), so nothing in between may be positioned. Colors from Plop! tokens. */
+   (.site-header), so nothing in between may be positioned. Colors from PlopUI tokens. */
 
 .root { display: flex; align-items: center; flex: 1 1 auto; min-width: 0; }
 .nav { flex: 1; min-width: 0; }

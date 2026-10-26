@@ -1,11 +1,11 @@
-# Contributing to Plop!
+# Contributing to PlopUI
 
-Thanks for helping. Plop! is small and opinionated, so this page tells you both how to work in the repo and what a finished change looks like.
+Thanks for helping. PlopUI is small and opinionated, so this page tells you both how to work in the repo and what a finished change looks like.
 
 ## Before you start
 
 - **Find something to do.** [TASKS.md](TASKS.md) is the tracker; 🔴 items matter most. For a new component or a larger change, open an issue first so we can agree on the shape before you build it.
-- **Read the product brief.** [PRD.md](PRD.md) explains who the kit is for (people running live dispatch and ops boards) and why it looks the way it does.
+- **Read the product brief.** [PRD.md](PRD.md) explains who the kit is for and why it looks the way it does: imperfect on purpose, accessible on principle.
 - **Read the rules.** [CLAUDE.md](CLAUDE.md) is short and every pull request is checked against it. The most important ones are repeated below.
 
 ## Set up
