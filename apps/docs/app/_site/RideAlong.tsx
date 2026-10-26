@@ -18,7 +18,7 @@ interface Stop {
 
 /** The five stops, in the order a newcomer should take them. */
 const STOPS: Record<Step, Stop> = {
-  what: { name: "What is Plop", title: "What is Plop UI?", text: "A sticker-pack UI kit for live ops apps. See why it's built this way.", href: "/#why", go: "Read why" },
+  what: { name: "What is PlopUI", title: "What is PlopUI?", text: "Hand-drawn UI, imperfect on purpose. See why it's built this way.", href: "/#why", go: "Read why" },
   install: { name: "Install", title: "Install it", text: "One command, then wrap your app in PlopProvider.", href: "/docs/getting-started", go: "Get set up" },
   components: { name: "Components", title: "Meet the components", text: "Buttons, tags, cards, timelines: every piece with live examples.", href: "/docs/components/button", go: "Browse them" },
   playground: { name: "Playground", title: "Play with it", text: "Stick components on a board, letter a word, copy the code.", href: "/playground", go: "Open it" },
@@ -324,7 +324,7 @@ export function RideAlong() {
           <div className={styles.hint}>
             <button type="button" className={styles.hintText} onClick={() => { dismissHint(); setOpen(true); }}>
               Not sure where to start?
-              <span>Take the five-stop tour</span>
+              <span className="vh"> Take the five-stop tour</span>
             </button>
             <button type="button" className={styles.hintClose} onClick={dismissHint} aria-label="Dismiss the tour hint">
               <CloseIcon />

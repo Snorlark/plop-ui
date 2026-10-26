@@ -17,8 +17,8 @@ export const Colors: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 22 }}>
       <Switch defaultChecked>Share live location</Switch>
-      <Switch color="ink" defaultChecked>Night mode for dispatch console</Switch>
-      <Switch color="tomato">Silence non-critical alerts</Switch>
+      <Switch color="ink" defaultChecked>Night mode for the sketchbook</Switch>
+      <Switch color="tomato">Mute comment pings</Switch>
     </div>
   ),
 };

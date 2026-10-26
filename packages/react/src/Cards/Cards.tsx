@@ -8,7 +8,7 @@ const tiltStyle = (tilt: number | undefined, style?: CSSProperties) =>
   (tilt === undefined ? style : { "--tilt": `${tilt}deg`, ...style }) as CSSProperties | undefined;
 
 export interface TicketCardProps extends Tilted, Omit<HTMLAttributes<HTMLElement>, "title"> {
-  /** Small line above the title, e.g. "Ticket #1042, 9:14 AM". */
+  /** Small line above the title, e.g. "Sketch #1042, 9:14 AM". */
   meta?: ReactNode;
   title: ReactNode;
   /** The tear-off stub, e.g. "Open". */
@@ -46,7 +46,7 @@ export interface UnitCardProps extends Tilted, HTMLAttributes<HTMLElement> {
   headingLevel?: 2 | 3 | 4;
 }
 
-/** A taped unit card for people and vehicles. Put `UnitCardRow`s inside for status and actions. */
+/** A taped unit card for people and projects. Put `UnitCardRow`s inside for status and actions. */
 export function UnitCard({ name, subtitle, avatar, children, tilt, headingLevel = 3, className, style, ...rest }: UnitCardProps) {
   const H = `h${headingLevel}` as const;
   return (
@@ -70,7 +70,7 @@ export function UnitCardRow({ children, className }: { children: ReactNode; clas
   return <div className={cx(styles.unitRow, className)}>{children}</div>;
 }
 
-/** A big lettered number with a unit: "6 min away". */
+/** A big lettered number with a unit: "6 min left". */
 export function Eta({ value, unit }: { value: ReactNode; unit: ReactNode }) {
   return (
     <span className={styles.eta}>
@@ -82,7 +82,7 @@ export function Eta({ value, unit }: { value: ReactNode; unit: ReactNode }) {
 
 export interface StickyNoteProps extends Tilted, HTMLAttributes<HTMLElement> {
   children: ReactNode;
-  /** Small line at the bottom, e.g. "Added by dispatcher Ana, 9:06 AM". */
+  /** Small line at the bottom, e.g. "Added by Ana, 9:06 AM". */
   footer?: ReactNode;
   /** Paper color of the note. Default `mustard`. */
   tone?: "mustard" | "pink" | "mint";

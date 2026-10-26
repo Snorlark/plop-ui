@@ -1,5 +1,6 @@
 import { BuddyPeek, WordSticker, type BuddyMood, type WordStickerTone } from "@plop-ui/react";
 import type { CSSProperties } from "react";
+import { Tape } from "./Doodles";
 import styles from "./WhyPlop.module.css";
 
 interface Reason {
@@ -72,7 +73,9 @@ export function WhyPlop() {
   return (
     <section id="why" className={styles.root} aria-labelledby="why-h">
       <div className={styles.head}>
-        <span className={styles.kicker}>Why PlopUI</span>
+        <Tape tone="tomato" tilt={-3}>
+          Why PlopUI
+        </Tape>
         <h2 id="why-h" className={styles.title}>
           Fun to look at.
           <br />

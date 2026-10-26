@@ -5,7 +5,7 @@ import { renderWithPlop } from "../../test/render";
 import { PlopProvider } from "../PlopProvider/PlopProvider";
 import { Tag } from "./Tag";
 
-function Filters({ initial = ["Barangay 3", "Last 24 hours", "Fire"] }: { initial?: string[] }) {
+function Filters({ initial = ["Doodles", "Last 24 hours", "Favorites"] }: { initial?: string[] }) {
   const [tags, setTags] = useState(initial);
   return (
     <div>
@@ -20,35 +20,35 @@ function Filters({ initial = ["Barangay 3", "Last 24 hours", "Fire"] }: { initia
 
 describe("Tag", () => {
   it("renders a static label with no buttons", () => {
-    render(<Tag status="en-route">En route</Tag>);
-    expect(screen.getByText("En route")).toBeInTheDocument();
+    render(<Tag status="en-route">In progress</Tag>);
+    expect(screen.getByText("In progress")).toBeInTheDocument();
     expect(screen.queryByRole("button")).toBeNull();
   });
 
   it("names the remove button after the label", () => {
-    renderWithPlop(<Filters initial={["Fire"]} />);
-    expect(screen.getByRole("button", { name: "Remove Fire" })).toBeInTheDocument();
+    renderWithPlop(<Filters initial={["Favorites"]} />);
+    expect(screen.getByRole("button", { name: "Remove Favorites" })).toBeInTheDocument();
   });
 
   it("accepts a custom remove label", () => {
     renderWithPlop(
-      <Tag onRemove={() => {}} removeLabel="Clear fire filter">
-        Fire
+      <Tag onRemove={() => {}} removeLabel="Clear favorites filter">
+        Favorites
       </Tag>,
     );
-    expect(screen.getByRole("button", { name: "Clear fire filter" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Clear favorites filter" })).toBeInTheDocument();
   });
 
   it("removes the tag and moves focus to the next one", async () => {
     renderWithPlop(<Filters />);
-    await userEvent.click(screen.getByRole("button", { name: "Remove Barangay 3" }));
-    expect(screen.queryByText("Barangay 3")).toBeNull();
+    await userEvent.click(screen.getByRole("button", { name: "Remove Doodles" }));
+    expect(screen.queryByText("Doodles")).toBeNull();
     expect(screen.getByRole("button", { name: "Remove Last 24 hours" })).toHaveFocus();
   });
 
   it("moves focus to the previous tag when the last one is removed", async () => {
     renderWithPlop(<Filters />);
-    await userEvent.click(screen.getByRole("button", { name: "Remove Fire" }));
+    await userEvent.click(screen.getByRole("button", { name: "Remove Favorites" }));
     expect(screen.getByRole("button", { name: "Remove Last 24 hours" })).toHaveFocus();
   });
 
@@ -56,13 +56,13 @@ describe("Tag", () => {
     vi.useFakeTimers();
     render(
       <PlopProvider reducedMotion="never">
-        <Filters initial={["Fire"]} />
+        <Filters initial={["Favorites"]} />
       </PlopProvider>,
     );
-    act(() => screen.getByRole("button", { name: "Remove Fire" }).click());
-    expect(screen.getByText("Fire").closest("[data-plop-tag]")).toHaveAttribute("data-removing");
+    act(() => screen.getByRole("button", { name: "Remove Favorites" }).click());
+    expect(screen.getByText("Favorites").closest("[data-plop-tag]")).toHaveAttribute("data-removing");
     act(() => vi.advanceTimersByTime(500));
-    expect(screen.queryByText("Fire")).toBeNull();
+    expect(screen.queryByText("Favorites")).toBeNull();
     vi.useRealTimers();
   });
 

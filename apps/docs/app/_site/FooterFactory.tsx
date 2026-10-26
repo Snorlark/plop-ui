@@ -17,9 +17,9 @@ function LeverIcon() {
 /** What the lever throws into the pack, in turn. */
 const KINDS = [
   { text: "Send", bg: "var(--plop-ink)", fg: "var(--plop-on-ink)" },
-  { text: "Critical", bg: "var(--plop-tomato)", fg: "var(--plop-on-ink)" },
+  { text: "Wild idea", bg: "var(--plop-tomato)", fg: "var(--plop-on-ink)" },
   { text: "Squish!", bg: "var(--plop-mustard)", fg: "var(--plop-ink-text)" },
-  { text: "Resolved", bg: "var(--plop-mint)", fg: "var(--plop-ink-text)" },
+  { text: "Shipped", bg: "var(--plop-mint)", fg: "var(--plop-ink-text)" },
   { text: "Peel me", bg: "var(--plop-bubblegum)", fg: "var(--plop-ink-text)" },
 ];
 

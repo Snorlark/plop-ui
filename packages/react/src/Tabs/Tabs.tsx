@@ -47,7 +47,7 @@ export function Tabs({ children, value, defaultValue = "", onValueChange, classN
 
 export interface TabListProps {
   children: ReactNode;
-  /** Accessible name of the tab list, e.g. "Incident queue". */
+  /** Accessible name of the tab list, e.g. "Your sketches". */
   label: string;
   className?: string;
 }

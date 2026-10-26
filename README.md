@@ -43,10 +43,10 @@ import { PlopProvider, Button, StatusTimeline, toast } from "@plop-ui/react";
 export function App() {
   return (
     <PlopProvider surface="poster">
-      <Button variant="ink" buddy onClick={() => toast.success("Report sent", { buddy: true })}>
-        Send report
+      <Button variant="ink" buddy onClick={() => toast.success("Sketch posted", { buddy: true })}>
+        Post sketch
       </Button>
-      <StatusTimeline steps={["Reported", "Dispatched", "En route", "Resolved"]} current={2} />
+      <StatusTimeline steps={["Sketched", "Inked", "Colored", "Shipped"]} current={2} />
     </PlopProvider>
   );
 }

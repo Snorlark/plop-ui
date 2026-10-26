@@ -70,7 +70,7 @@ const ENTRIES: Record<string, Entry> = {
   button: {
     label: "Button",
     controls: [
-      { kind: "text", name: "label", label: "Label", default: "Send report" },
+      { kind: "text", name: "label", label: "Label", default: "Post sketch" },
       { kind: "select", name: "variant", label: "Variant", options: VARIANTS, default: "ink" },
       { kind: "select", name: "size", label: "Size", options: SIZES, default: "md" },
       { kind: "select", name: "icon", label: "Icon", options: ["none", "pin", "phone", "bell"], default: "none" },
@@ -114,7 +114,7 @@ const ENTRIES: Record<string, Entry> = {
   tag: {
     label: "Tag",
     controls: [
-      { kind: "text", name: "label", label: "Label", default: "En route" },
+      { kind: "text", name: "label", label: "Label", default: "In progress" },
       { kind: "select", name: "status", label: "Status", options: ["none", "critical", "dispatched", "en-route", "resolved", "unassigned"], default: "en-route" },
       { kind: "select", name: "tone", label: "Tone (when no status)", options: ["periwinkle", "ink", "tomato", "mustard", "mint", "bubblegum"], default: "periwinkle" },
       { kind: "select", name: "pattern", label: "Pattern", options: ["stripes", "dots", "grid"], default: "stripes" },
@@ -153,7 +153,7 @@ const ENTRIES: Record<string, Entry> = {
   checkbox: {
     label: "Checkbox",
     controls: [
-      { kind: "text", name: "label", label: "Label", default: "Notify responders" },
+      { kind: "text", name: "label", label: "Label", default: "Notify my friends" },
       { kind: "boolean", name: "on", label: "Starts checked", default: true },
       { kind: "boolean", name: "indeterminate", label: "Indeterminate", default: false },
       { kind: "select", name: "tick", label: "Tick color", options: ["ink", "leaf", "tomato"], default: "ink" },
@@ -170,7 +170,7 @@ const ENTRIES: Record<string, Entry> = {
   "status-timeline": {
     label: "StatusTimeline",
     controls: [
-      { kind: "text", name: "steps", label: "Steps (comma separated)", default: "Reported, Dispatched, En route, Resolved" },
+      { kind: "text", name: "steps", label: "Steps (comma separated)", default: "Sketched, Inked, Colored, Shipped" },
       { kind: "number", name: "current", label: "Current step", default: 2, min: 0, max: 8, step: 1 },
       { kind: "select", name: "orientation", label: "Orientation", options: ["auto", "horizontal", "vertical"], default: "auto" },
     ],
@@ -187,8 +187,8 @@ const ENTRIES: Record<string, Entry> = {
     label: "Callout",
     controls: [
       { kind: "select", name: "tone", label: "Tone", options: ["info", "warn", "error", "success"], default: "warn" },
-      { kind: "text", name: "title", label: "Title", default: "Location is approximate" },
-      { kind: "text", name: "body", label: "Text", default: "Confirm a landmark before dispatching." },
+      { kind: "text", name: "title", label: "Title", default: "Not saved yet" },
+      { kind: "text", name: "body", label: "Text", default: "Save your sketch before you close the tab." },
       { kind: "boolean", name: "action", label: "With an action", default: false },
     ],
     render: (v) => (
@@ -204,7 +204,7 @@ const ENTRIES: Record<string, Entry> = {
   progress: {
     label: "Progress",
     controls: [
-      { kind: "text", name: "label", label: "Label", default: "Syncing offline reports" },
+      { kind: "text", name: "label", label: "Label", default: "Syncing offline sketches" },
       { kind: "number", name: "value", label: "Value", default: 4, min: 0, max: 10, step: 1 },
       { kind: "select", name: "tone", label: "Tone", options: ["ink", "mint", "tomato"], default: "ink" },
       { kind: "boolean", name: "solid", label: "Solid fill", default: false },
@@ -231,8 +231,8 @@ const ENTRIES: Record<string, Entry> = {
     label: "TextField",
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Location" },
-      { kind: "text", name: "placeholder", label: "Placeholder", default: "Street, barangay or landmark" },
-      { kind: "text", name: "hint", label: "Hint", default: "Responders read this on the way." },
+      { kind: "text", name: "placeholder", label: "Placeholder", default: "Untitled masterpiece" },
+      { kind: "text", name: "hint", label: "Hint", default: "Shown above your sketch." },
       { kind: "text", name: "error", label: "Error (empty for none)", default: "" },
       { kind: "boolean", name: "success", label: "Success tick", default: false },
     ],
@@ -248,7 +248,7 @@ const ENTRIES: Record<string, Entry> = {
     label: "Toast",
     controls: [
       { kind: "select", name: "kind", label: "Kind", options: ["success", "error", "info"], default: "success" },
-      { kind: "text", name: "text", label: "Text", default: "Report sent" },
+      { kind: "text", name: "text", label: "Text", default: "Sketch posted" },
     ],
     render: (v) => (
       <div className="stack" style={{ justifyItems: "center", gap: 30 }}>

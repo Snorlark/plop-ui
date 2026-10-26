@@ -69,7 +69,7 @@ function show(kind: ToastKind, text: string, options: ToastOptions = {}): number
  * Slaps a message onto the bottom of the screen like a stamp. Needs a
  * PlopProvider (it renders the toast zone, a polite live region).
  *
- * toast("Mobile 2 is 6 min away"); toast.success("Report sent", { burst: true }); toast.error("Couldn't send", { burst: true });
+ * toast("Rosa liked your sketch"); toast.success("Sketch posted", { burst: true }); toast.error("Couldn't post", { burst: true });
  */
 export const toast = Object.assign((text: string, options?: ToastOptions) => show("info", text, options), {
   success: (text: string, options?: ToastOptions) => show("success", text, options),
