@@ -80,7 +80,7 @@ test("Header menus: Enter opens one, Tab walks into it, Escape closes it and ret
   await expect(trigger).toBeFocused();
 });
 
-test("404: a 404 status under the site header; the buddy talks back and the buttons lead out", async ({ page }) => {
+test("404: a 404 status with no site header; the buddy talks back and the buttons lead out", async ({ page }) => {
   await page.goto("/playground");
   const response = await page.goto("/docs/buton");
   expect(response?.status()).toBe(404);
@@ -89,7 +89,7 @@ test("404: a 404 status under the site header; the buddy talks back and the butt
   const first = await say.textContent();
   await page.getByRole("button", { name: "Ask the buddy what happened" }).click();
   await expect(say).not.toHaveText(first ?? "");
-  await expect(page.getByRole("link", { name: "Browse components" })).toHaveAttribute("href", "/kit");
+  await expect(page.getByRole("link", { name: "Browse components" })).toHaveAttribute("href", "/docs/components/button");
   await page.getByRole("button", { name: "Go back" }).click();
   await expect(page).toHaveURL(/\/playground/);
 });

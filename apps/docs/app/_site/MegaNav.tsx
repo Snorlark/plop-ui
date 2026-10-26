@@ -1,6 +1,6 @@
 "use client";
 
-import { Buddy, CloseIcon, IconButton, MenuIcon, Tag, useHaptics, type BuddyMood } from "@plop-ui/react";
+import { Buddy, CloseIcon, IconButton, MenuIcon, Tag, useHaptics, useReducedMotion, type BuddyMood } from "@plop-ui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
@@ -98,6 +98,20 @@ export function MegaNav() {
   const [open, setOpen] = useState<MenuId | null>(null);
   const [sheet, setSheet] = useState(false);
   const [dir, setDir] = useState(0);
+  // The menu that just closed: it stays on screen for a moment while it rolls back up under the bar.
+  const [leaving, setLeaving] = useState<MenuId | null>(null);
+  const reduced = useReducedMotion();
+  // Set in the same render as the close (not in an effect), so the panel never blinks out and back in.
+  const [was, setWas] = useState<MenuId | null>(null);
+  if (open !== was) {
+    setWas(open);
+    setLeaving(!open && was && !reduced ? was : null);
+  }
+  useEffect(() => {
+    if (!leaving) return;
+    const t = window.setTimeout(() => setLeaving(null), 280);
+    return () => window.clearTimeout(t);
+  }, [leaving]);
   const root = useRef<HTMLDivElement>(null);
   const scrim = useRef<HTMLDivElement>(null);
   const timer = useRef<number | undefined>(undefined);
@@ -168,19 +182,48 @@ export function MegaNav() {
         <ul className={styles.triggers}>
           {MENUS.map((m) => (
             <li key={m.id} onPointerEnter={(e) => e.pointerType === "mouse" && later(m.id, open ? 40 : 90)}>
-              <button
-                type="button"
-                id={`${base}-${m.id}-t`}
-                className={styles.trigger}
-                aria-expanded={open === m.id}
-                aria-controls={`${base}-${m.id}`}
-                data-active={active === m.id ? "" : undefined}
-                onClick={() => show(open === m.id ? null : m.id)}
+              {m.href ? (
+                // The label goes to the section; the caret beside it opens the menu (keyboard and touch).
+                <span className={styles.split} data-open={open === m.id ? "" : undefined}>
+                  <Link href={m.href} className={styles.trigger} data-active={active === m.id ? "" : undefined} aria-current={path === m.href ? "page" : active === m.id ? "true" : undefined}>
+                    <span>{m.label}</span>
+                  </Link>
+                  <button
+                    type="button"
+                    id={`${base}-${m.id}-t`}
+                    className={styles.caret}
+                    aria-label={`${m.label} menu`}
+                    aria-expanded={open === m.id}
+                    aria-controls={`${base}-${m.id}`}
+                    onClick={() => show(open === m.id ? null : m.id)}
+                  >
+                    <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true">
+                      <path d="M1.5 1.8 C 3.5 3.6, 4.8 5.2, 6.1 6.4 C 7.6 4.9, 9 3.4, 10.6 1.5" />
+                    </svg>
+                  </button>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  id={`${base}-${m.id}-t`}
+                  className={styles.trigger}
+                  aria-expanded={open === m.id}
+                  aria-controls={`${base}-${m.id}`}
+                  data-active={active === m.id ? "" : undefined}
+                  onClick={() => show(open === m.id ? null : m.id)}
+                >
+                  <span>{m.label}</span>
+                </button>
+              )}
+              <div
+                id={`${base}-${m.id}`}
+                className={styles.panel}
+                hidden={open !== m.id && leaving !== m.id}
+                data-leaving={leaving === m.id ? "" : undefined}
+                data-fresh={open === m.id && dir === 0 ? "" : undefined}
+                style={{ "--dir": `${Math.sign(dir) * 18}px` } as CSSProperties}
               >
-                <span>{m.label}</span>
-              </button>
-              <div id={`${base}-${m.id}`} className={styles.panel} hidden={open !== m.id} style={{ "--dir": `${Math.sign(dir) * 18}px` } as CSSProperties}>
-                <div className={styles.panelIn}>{open === m.id && <Columns menu={m} onGo={close} />}</div>
+                <div className={styles.panelIn}>{(open === m.id || leaving === m.id) && <Columns menu={m} onGo={close} />}</div>
               </div>
             </li>
           ))}

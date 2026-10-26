@@ -36,7 +36,6 @@ export const DOC_NAV: NavSection[] = [
     group: "Tools",
     links: [
       { href: "/playground", label: "Playground", keywords: "try props live editor code" },
-      { href: "/kit", label: "Every piece on one page", keywords: "kit showcase prototype all" },
     ],
   },
 ];

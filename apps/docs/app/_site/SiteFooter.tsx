@@ -14,7 +14,7 @@ const COLUMNS: Array<[string, Array<[string, string]>]> = [
       ["Search & command palette", "/docs/components/search"],
       ["Avatar", "/docs/components/avatar"],
       ["Toast notifications", "/docs/components/toast"],
-      ["Every component", "/kit"],
+      ["Every component", "/docs/components/button"],
     ],
   ],
   [

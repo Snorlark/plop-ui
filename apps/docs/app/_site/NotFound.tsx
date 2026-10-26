@@ -78,7 +78,7 @@ export function NotFound({ scene }: { scene: ReactNode }) {
         <ButtonLink href="/" tilt={1}>
           Back to home
         </ButtonLink>
-        <ButtonLink href="/kit" variant="mustard" tilt={-1}>
+        <ButtonLink href="/docs/components/button" variant="mustard" tilt={-1}>
           Browse components
         </ButtonLink>
       </div>
