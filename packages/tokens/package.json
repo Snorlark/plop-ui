@@ -28,8 +28,7 @@
     "directory": "packages/tokens"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node scripts/emit-css.mjs",

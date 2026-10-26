@@ -25,7 +25,6 @@
     "directory": "packages/fonts"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }
