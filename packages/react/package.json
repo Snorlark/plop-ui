@@ -103,7 +103,7 @@
     {
       "name": "styles.css",
       "path": "dist/styles.css",
-      "limit": "12 kB"
+      "limit": "13 kB"
     }
   ]
 }

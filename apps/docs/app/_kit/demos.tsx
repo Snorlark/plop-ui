@@ -1,6 +1,7 @@
 "use client";
 
 import { BuddyDemo } from "./BuddyDemo";
+import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
 import {
   Avatar,
@@ -44,6 +45,8 @@ import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Swit
 const DEMOS: Record<string, () => ReactNode> = {
   buddy: () => <BuddyDemo />,
   search: () => <SearchDemo />,
+  select: () => <SelectDemo />,
+  menu: () => <MenuDemo />,
   "word-sticker": () => (
     <div className="row" style={{ gap: 36, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
       <WordSticker tone="mustard" size={64} tilt={-4}>Plop!</WordSticker>
