@@ -89,6 +89,8 @@ test("Header menus: Enter opens one, Tab walks into it, Escape closes it and ret
     await page.keyboard.press("Enter");
     await expect(trigger).toHaveAttribute("aria-expanded", "true", { timeout: 1000 });
   }).toPass();
+  // Tab only once the menu's links are on the page (on a busy runner they render a beat after the open).
+  await expect(page.getByRole("link", { name: "GitHub", exact: true }).first()).toBeVisible();
   // Safari's Tab skips links by default; Option+Tab is how keyboard users reach them there.
   await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab");
   await expect(page.getByRole("link", { name: "GitHub", exact: true }).first()).toBeFocused();
