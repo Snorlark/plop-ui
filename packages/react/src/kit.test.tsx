@@ -19,11 +19,11 @@ import { Tooltip } from "./Tooltip/Tooltip";
 
 describe("Lettering", () => {
   it("reads as plain text to screen readers and jitters the same way every time", () => {
-    const { container, rerender } = render(<Lettering>Send report</Lettering>);
+    const { container, rerender } = render(<Lettering>Post sketch</Lettering>);
     expect(container.querySelector('[aria-hidden="true"]')).not.toBeNull();
-    expect(screen.getByText("Send report")).toBeInTheDocument();
+    expect(screen.getByText("Post sketch")).toBeInTheDocument();
     const first = container.innerHTML;
-    rerender(<Lettering>Send report</Lettering>);
+    rerender(<Lettering>Post sketch</Lettering>);
     expect(container.innerHTML).toBe(first);
   });
 
@@ -33,8 +33,8 @@ describe("Lettering", () => {
   });
 
   it("gives a button a clean accessible name", () => {
-    renderWithPlop(<Button>Send report</Button>);
-    expect(screen.getByRole("button", { name: "Send report" })).toBeInTheDocument();
+    renderWithPlop(<Button>Post sketch</Button>);
+    expect(screen.getByRole("button", { name: "Post sketch" })).toBeInTheDocument();
   });
 });
 
@@ -58,13 +58,13 @@ describe("Toast", () => {
     vi.useFakeTimers();
     renderWithPlop(<span />);
     act(() => {
-      toast.success("Report sent", { duration: 1000 });
+      toast.success("Sketch posted", { duration: 1000 });
     });
     const zone = screen.getByRole("status");
     expect(zone).toHaveAttribute("aria-live", "polite");
-    expect(within(zone).getByText("Report sent")).toBeInTheDocument();
+    expect(within(zone).getByText("Sketch posted")).toBeInTheDocument();
     act(() => vi.advanceTimersByTime(1300));
-    expect(within(zone).queryByText("Report sent")).toBeNull();
+    expect(within(zone).queryByText("Sketch posted")).toBeNull();
     vi.useRealTimers();
   });
 
@@ -83,8 +83,8 @@ describe("Toast", () => {
   });
 
   it("renders a static toast", () => {
-    render(<Toast kind="error">Couldn't send</Toast>);
-    expect(screen.getByText("Couldn't send")).toBeInTheDocument();
+    render(<Toast kind="error">Couldn't post</Toast>);
+    expect(screen.getByText("Couldn't post")).toBeInTheDocument();
   });
 });
 
@@ -129,16 +129,16 @@ describe("Tooltip", () => {
 
 describe("TextField and TextArea", () => {
   it("labels the input and links the hint", () => {
-    render(<TextField label="Caller name" hint="Optional." />);
-    const input = screen.getByRole("textbox", { name: "Caller name" });
+    render(<TextField label="Artist name" hint="Optional." />);
+    const input = screen.getByRole("textbox", { name: "Artist name" });
     expect(input).toHaveAccessibleDescription("Optional.");
   });
 
   it("marks errors as invalid and describes how to fix them", () => {
-    render(<TextField label="Location" error="Add a street, barangay, or landmark." required />);
-    const input = screen.getByRole("textbox", { name: /Location/ });
+    render(<TextField label="Title" error="Give your sketch a title, even a silly one." required />);
+    const input = screen.getByRole("textbox", { name: /Title/ });
     expect(input).toHaveAttribute("aria-invalid", "true");
-    expect(input).toHaveAccessibleDescription("Add a street, barangay, or landmark.");
+    expect(input).toHaveAccessibleDescription("Give your sketch a title, even a silly one.");
     expect(input).toBeRequired();
   });
 
@@ -205,24 +205,24 @@ describe("Avatar", () => {
 describe("Cards", () => {
   it("renders a ticket with a heading and stub", () => {
     render(
-      <TicketCard meta="Ticket #1042, 9:14 AM" title="Printer jams" stub="Open">
+      <TicketCard meta="Sketch #1042, 9:14 AM" title="Cat in a teacup" stub="Open">
         Leo
       </TicketCard>,
     );
-    expect(screen.getByRole("heading", { name: "Printer jams" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Cat in a teacup" })).toBeInTheDocument();
     expect(screen.getByText("Open")).toBeInTheDocument();
   });
 
   it("renders a unit card with rows and an ETA", () => {
     render(
-      <UnitCard name="Mobile 2" subtitle="PO2 Jun Reyes" tilt={1}>
+      <UnitCard name="Jun Reyes" subtitle="Animator" tilt={1}>
         <UnitCardRow>
-          <Eta value={6} unit="min away" />
+          <Eta value={6} unit="min left" />
         </UnitCardRow>
       </UnitCard>,
     );
-    expect(screen.getByRole("heading", { name: "Mobile 2" })).toBeInTheDocument();
-    expect(screen.getByText("min away")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Jun Reyes" })).toBeInTheDocument();
+    expect(screen.getByText("min left")).toBeInTheDocument();
   });
 
   it("renders a sticky note", () => {
@@ -234,31 +234,31 @@ describe("Cards", () => {
 describe("Tabs", () => {
   const ui = (
     <Tabs defaultValue="active">
-      <TabList label="Incident queue">
+      <TabList label="Your sketches">
         <Tab value="active">Active</Tab>
-        <Tab value="resolved">Resolved</Tab>
+        <Tab value="resolved">Shipped</Tab>
         <Tab value="flagged">Flagged</Tab>
       </TabList>
       <TabPanel value="active">Three active</TabPanel>
-      <TabPanel value="resolved">Two resolved</TabPanel>
+      <TabPanel value="resolved">Two shipped</TabPanel>
       <TabPanel value="flagged">Nothing flagged</TabPanel>
     </Tabs>
   );
 
   it("links tabs to panels and shows the selected one", () => {
     renderWithPlop(ui);
-    expect(screen.getByRole("tablist", { name: "Incident queue" })).toBeInTheDocument();
+    expect(screen.getByRole("tablist", { name: "Your sketches" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Active" })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByRole("tabpanel", { name: "Active" })).toHaveTextContent("Three active");
-    expect(screen.queryByText("Two resolved")).not.toBeVisible();
+    expect(screen.queryByText("Two shipped")).not.toBeVisible();
   });
 
   it("moves with arrow keys, Home and End (roving tabindex)", async () => {
     renderWithPlop(ui);
     await userEvent.click(screen.getByRole("tab", { name: "Active" }));
     await userEvent.keyboard("{ArrowRight}");
-    expect(screen.getByRole("tab", { name: "Resolved" })).toHaveFocus();
-    expect(screen.getByRole("tab", { name: "Resolved" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Shipped" })).toHaveFocus();
+    expect(screen.getByRole("tab", { name: "Shipped" })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByRole("tab", { name: "Active" })).toHaveAttribute("tabindex", "-1");
     await userEvent.keyboard("{End}");
     expect(screen.getByRole("tab", { name: "Flagged" })).toHaveFocus();
@@ -278,8 +278,8 @@ describe("Tabs", () => {
 
 describe("Progress", () => {
   it("is a labeled progressbar with a readable value", () => {
-    render(<Progress label="Syncing offline reports" value={4} max={10} valueText="4 of 10" />);
-    const bar = screen.getByRole("progressbar", { name: "Syncing offline reports" });
+    render(<Progress label="Syncing offline sketches" value={4} max={10} valueText="4 of 10" />);
+    const bar = screen.getByRole("progressbar", { name: "Syncing offline sketches" });
     expect(bar).toHaveAttribute("aria-valuenow", "4");
     expect(bar).toHaveAttribute("aria-valuetext", "4 of 10");
   });
@@ -292,9 +292,9 @@ describe("Progress", () => {
 
 describe("Callout, Count, StatusDot, EmptyState, Sheet", () => {
   it("renders a callout with a heading, body and action", () => {
-    render(<Callout tone="error" title="Couldn't reach the station" action={<button type="button">Try again</button>} role="alert">Saved on this phone.</Callout>);
-    expect(screen.getByRole("alert")).toHaveTextContent("Saved on this phone.");
-    expect(screen.getByRole("heading", { name: "Couldn't reach the station" })).toBeInTheDocument();
+    render(<Callout tone="error" title="Couldn't reach the server" action={<button type="button">Try again</button>} role="alert">Saved on this device.</Callout>);
+    expect(screen.getByRole("alert")).toHaveTextContent("Saved on this device.");
+    expect(screen.getByRole("heading", { name: "Couldn't reach the server" })).toBeInTheDocument();
   });
 
   it("gives counts a meaningful name", () => {

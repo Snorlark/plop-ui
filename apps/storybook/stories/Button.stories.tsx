@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Idle: Story = {};
 
 export const Hero: Story = {
-  args: { children: "Send report", size: "lg", tilt: -3, buddy: true },
+  args: { children: "Post sketch", size: "lg", tilt: -3, buddy: true },
   parameters: { docs: { description: { story: "Add a buddy for the one action that matters most on a screen." } } },
 };
 
@@ -78,8 +78,8 @@ export const Variants: Story = {
     <div style={{ display: "flex", flexWrap: "wrap", gap: 36, alignItems: "center" }}>
       <Button variant="ink" seed="a">Save changes</Button>
       <Button variant="periwinkle" seed="b">Add note</Button>
-      <Button variant="mint" seed="c">Mark resolved</Button>
-      <Button variant="tomato" seed="d">Cancel dispatch</Button>
+      <Button variant="mint" seed="c">Mark as shipped</Button>
+      <Button variant="tomato" seed="d">Delete draft</Button>
       <Button variant="mustard" seed="e">Call back</Button>
       <Button variant="plain" seed="f">Skip for now</Button>
     </div>
@@ -89,8 +89,8 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 36, alignItems: "center" }}>
-      <Button size="sm" iconLeft={<PinIcon />}>Share pin</Button>
-      <Button size="md" iconLeft={<BellIcon />}>Page unit</Button>
+      <Button size="sm" iconLeft={<PinIcon />}>Pin to board</Button>
+      <Button size="md" iconLeft={<BellIcon />}>Ping a friend</Button>
       <Button size="lg" iconLeft={<PhoneIcon size={26} />}>Call</Button>
     </div>
   ),

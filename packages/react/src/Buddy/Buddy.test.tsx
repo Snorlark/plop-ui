@@ -29,12 +29,12 @@ describe("BuddyPeek", () => {
     renderWithPlop(
       <BuddyPeek mood="congrats">
         <button type="button" onClick={onClick}>
-          Close shift
+          Finish the zine
         </button>
       </BuddyPeek>,
     );
     await userEvent.tab();
-    const button = screen.getByRole("button", { name: "Close shift" });
+    const button = screen.getByRole("button", { name: "Finish the zine" });
     expect(button).toHaveFocus();
     await userEvent.keyboard("{Enter}");
     expect(onClick).toHaveBeenCalledOnce();
@@ -46,9 +46,9 @@ describe("attached to components", () => {
   it("Toast picks the character for its kind, or the one you name", () => {
     const { container, rerender } = renderWithPlop(<Toast kind="error" buddy>Couldn't send</Toast>);
     expect(container.querySelector('[data-mood="error"]')).not.toBeNull();
-    rerender(<Toast kind="success" buddy="congrats">Shift closed</Toast>);
+    rerender(<Toast kind="success" buddy="congrats">Zine finished</Toast>);
     expect(container.querySelector('[data-mood="congrats"]')).not.toBeNull();
-    expect(screen.getByText("Shift closed")).toBeInTheDocument();
+    expect(screen.getByText("Zine finished")).toBeInTheDocument();
   });
 
   it("toast() can bring a character along", () => {

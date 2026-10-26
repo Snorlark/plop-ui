@@ -10,7 +10,7 @@ export const BUDDY_CAST: Record<BuddyMood, { name: string; purpose: string }> = 
   success: { name: "Pip", purpose: "Cheers when something worked: saved, sent, copied." },
   error: { name: "Bix", purpose: "Winces when something failed and needs another try." },
   stale: { name: "Snooze", purpose: "Dozes off when data is out of date or still waiting." },
-  congrats: { name: "Confetti", purpose: "Throws a little party for milestones: shift done, all clear." },
+  congrats: { name: "Confetti", purpose: "Throws a little party for milestones: zine finished, all shipped." },
   preview: { name: "Specs", purpose: "Peeks at previews, drafts and things worth a look." },
   thinking: { name: "Hum", purpose: "Mulls it over while something loads or works." },
 };
@@ -182,7 +182,7 @@ export interface BuddyProps {
   /** `sm` 56px, `md` 84px, `lg` 120px wide. Default `md`. */
   size?: BuddySize;
   /**
-   * What the character is telling people, e.g. "Report sent". When set, it is
+   * What the character is telling people, e.g. "Sketch posted". When set, it is
    * announced as an image; leave it out when the words are already next to it
    * (the character is then decorative).
    */
@@ -222,7 +222,7 @@ export interface BuddyPeekProps {
   /** Which end of the top edge it peeks from. Default `start`. */
   side?: "start" | "end";
   size?: BuddySize;
-  /** Read out with the content, e.g. "Report sent". Usually leave it out: the content already says it. */
+  /** Read out with the content, e.g. "Sketch posted". Usually leave it out: the content already says it. */
   label?: string;
   className?: string;
 }

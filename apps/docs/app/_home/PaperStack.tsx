@@ -3,6 +3,7 @@
 import { Button, toast, useReducedMotion } from "@plop-ui/react";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { CopyCommand } from "./CopyCommand";
+import { Tape } from "./Doodles";
 import styles from "./PaperStack.module.css";
 
 const OUTLINE = "M22 30 C 22 22, 28 18, 38 18 L 124 17 C 134 17, 140 22, 140 30 L 141 62 C 141 71, 135 76, 125 76 L 37 77 C 27 77, 21 72, 21 63 Z";
@@ -200,9 +201,13 @@ export function PaperStack() {
       <div ref={stage} className={styles.track} style={{ "--n": SHEETS.length } as CSSProperties}>
         <div className={styles.stage}>
           <div className={styles.head}>
-            <span className={styles.kicker}>How it works</span>
+            <Tape tone="periwinkle" tilt={2}>
+              How it works
+            </Tape>
             <h2 id="stack-h" className={styles.title}>
-              How a piece is made
+              Drawn by hand.
+              <br />
+              <span>Shipped as code.</span>
             </h2>
           </div>
           <ol className={styles.stack}>

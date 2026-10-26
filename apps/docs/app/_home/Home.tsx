@@ -20,7 +20,7 @@ import { color, surfaceNames, surfaces } from "@plop-ui/tokens";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CopyCommand } from "./CopyCommand";
-import { Hand, Scribble } from "./Doodles";
+import { Hand, Scribble, Tape } from "./Doodles";
 import { PaperStack } from "./PaperStack";
 import { WhyPlop } from "./WhyPlop";
 import { HeroTitle } from "./HeroTitle";
@@ -80,7 +80,7 @@ const CROWD: string[][] = [0, 17, 31].map((offset) =>
   ),
 );
 
-/** "Press it!" — the handwritten red kicker above section titles. */
+/** The handwritten red kicker, now only for the letter's "From Lark". Section labels use <Tape>. */
 function Kicker({
   children,
   color: c = "var(--plop-tomato)",
@@ -114,14 +114,13 @@ function Hero() {
   return (
     <section className="home-hero">
       <div className="home-hero__copy">
-        <Kicker>Press it!</Kicker>
+        <Tape tone="mustard" tilt={-4}>Press it!</Tape>
         <div className="home-hero__title">
           <HeroTitle />
         </div>
         <p className="home-lede">
-          Wobbly sticker buttons, washi-tape tags and colors picked by
-          instinct, not strategy. They break the design rulebook, never the
-          accessibility one. And they squish.
+          Wobbly lines, colors by instinct. It breaks the design rulebook,
+          never the accessibility one.
         </p>
         <div className="home-hero__cta">
           <ButtonLink
@@ -197,11 +196,11 @@ function Hero() {
                   size="sm"
                   seed="pack-send"
                 >
-                  Send report
+                  Post sketch
                 </ButtonLink>
               </PackSticker>
               <PackSticker tilt={-4}>
-                <Tag status="critical">Critical</Tag>
+                <Tag tone="tomato">Wild idea</Tag>
               </PackSticker>
               <PackSticker tilt={-8}>
                 <Switch defaultChecked aria-label="Sample switch" />
@@ -210,7 +209,7 @@ function Hero() {
                 <IconButton
                   variant="mustard"
                   icon={<PlusIcon />}
-                  label="New incident"
+                  label="New sketch"
                 />
               </PackSticker>
               <PackSticker tilt={5}>
@@ -225,10 +224,10 @@ function Hero() {
                 <span className="pack-chip pack-chip--wide">
                   <StatusTimeline
                     className="pack-timeline"
-                    steps={["Called", "Sent", "On scene", "Done"]}
+                    steps={["Sketched", "Inked", "Colored", "Shipped"]}
                     current={2}
                     orientation="horizontal"
-                    label="Sample incident"
+                    label="Sample sketch"
                   />
                 </span>
               </PackSticker>
@@ -236,19 +235,19 @@ function Hero() {
                 <Avatar name="Mika Tan" status="busy" />
               </PackSticker>
               <PackSticker tilt={3}>
-                <Toast kind="success">Report sent</Toast>
+                <Toast kind="success">Sketch posted</Toast>
               </PackSticker>
               <PackSticker tilt={2}>
-                <Tag status="en-route">En route</Tag>
+                <Tag tone="mustard">In progress</Tag>
               </PackSticker>
               <PackSticker tilt={-5}>
                 <span className="pack-chip">
-                  <Eta value="6" unit="min" />
+                  <Eta value="6" unit="min left" />
                 </span>
               </PackSticker>
               <PackSticker tilt={4}>
                 <StickyNote tone="pink" tilt={0} className="pack-note">
-                  Gate is locked. Use the side door.
+                  Try the mint. It’s louder, in a good way.
                 </StickyNote>
               </PackSticker>
               <PackSticker tilt={-12}>
@@ -328,11 +327,14 @@ function Pieces() {
   return (
     <section className="home-pieces" id="pieces">
       <div className="home-center home-section-head">
-        <Kicker>What’s in the pack</Kicker>
-        <h2 className="home-h2">Every piece is a little paper object.</h2>
+        <Tape tone="periwinkle" tilt={2}>What’s in the pack</Tape>
+        <h2 className="home-h2">
+          Made of paper.
+          <br />
+          <span>Built like software.</span>
+        </h2>
         <p className="home-sub">
-          Polaroids, tickets, notebook pages. Rugged on the outside, readable
-          inside.
+          Polaroids, tickets and notebook pages, each one a real component.
         </p>
       </div>
       <div className="pieces">
@@ -361,7 +363,7 @@ function Pieces() {
               tilt={-3}
               seed="piece-send"
             >
-              Send report
+              Post sketch
             </ButtonLink>
           </div>
           <figcaption>
@@ -375,18 +377,18 @@ function Pieces() {
             <span className="piece-small">Piece no. 02</span>
             <h3 className="piece-title">Tag</h3>
             <p>
-              Status, as strips of washi tape. Removable ones peel off and fly
+              Labels, as strips of washi tape. Removable ones peel off and fly
               away.
             </p>
             <div className="piece-row">
-              <Tag status="critical" tilt={-3}>
-                Critical
+              <Tag tone="tomato" tilt={-3}>
+                Wild idea
               </Tag>
-              <Tag status="en-route" tilt={2}>
-                En route
+              <Tag tone="mustard" tilt={2}>
+                In progress
               </Tag>
-              <Tag status="resolved" tilt={-1}>
-                Resolved
+              <Tag tone="mint" tilt={-1}>
+                Shipped
               </Tag>
             </div>
           </div>
@@ -399,14 +401,14 @@ function Pieces() {
           <span className="piece-notebook__holes" aria-hidden="true" />
           <h3 className="piece-title">Status timeline</h3>
           <p>
-            Reported, dispatched, en route, resolved. The current step boils so
-            eyes find it.
+            Sketched, inked, colored, shipped. The current step boils so eyes
+            find it.
           </p>
           <StatusTimeline
-            steps={["Reported", "Dispatched", "En route", "Resolved"]}
+            steps={["Sketched", "Inked", "Colored", "Shipped"]}
             current={2}
             orientation="horizontal"
-            label="Sample incident"
+            label="Sample sketch"
           />
         </article>
 
@@ -427,7 +429,7 @@ function Pieces() {
           <div className="piece-row">
             <Switch aria-label="Try the switch (off)" />
             <Switch defaultChecked aria-label="Try the switch (on)" />
-            <Checkbox defaultChecked>Notify responders</Checkbox>
+            <Checkbox defaultChecked>Notify my friends</Checkbox>
           </div>
         </article>
 
@@ -503,22 +505,22 @@ const GRID: Array<{
     slug: "button",
     title: "Button",
     text: "Six colors, three sizes, loading, and a buddy for the one action that matters.",
-    preview: <span className="grid-fake-btn">Send report</span>,
+    preview: <span className="grid-fake-btn">Post sketch</span>,
   },
   {
     slug: "tag",
     title: "Tag",
-    text: "Status as strips of washi tape. Removable ones peel off and fly away.",
+    text: "Labels as strips of washi tape. Removable ones peel off and fly away.",
     preview: (
       <>
-        <Tag status="critical" tilt={-3}>
-          Critical
+        <Tag tone="tomato" tilt={-3}>
+          Wild idea
         </Tag>
-        <Tag status="en-route" tilt={2}>
-          En route
+        <Tag tone="mustard" tilt={2}>
+          In progress
         </Tag>
-        <Tag status="resolved" tilt={-1}>
-          Resolved
+        <Tag tone="mint" tilt={-1}>
+          Shipped
         </Tag>
       </>
     ),
@@ -537,14 +539,14 @@ const GRID: Array<{
   {
     slug: "status-timeline",
     title: "Status timeline",
-    text: "Reported, dispatched, en route, resolved. The current step boils.",
+    text: "Sketched, inked, colored, shipped. The current step boils.",
     preview: (
       <StatusTimeline
         className="grid-timeline"
-        steps={["Reported", "Sent", "En route", "Done"]}
+        steps={["Sketched", "Inked", "Colored", "Shipped"]}
         current={2}
         orientation="horizontal"
-        label="Sample incident"
+        label="Sample sketch"
       />
     ),
   },
@@ -553,7 +555,7 @@ const GRID: Array<{
     title: "Callout",
     text: "A strip torn off a pad, for what people must know before they act.",
     preview: (
-      <Callout tone="warn" title="Location is approximate" headingLevel={4} />
+      <Callout tone="warn" title="Not saved yet" headingLevel={4} />
     ),
   },
   {
@@ -569,8 +571,8 @@ const GRID: Array<{
   {
     slug: "cards",
     title: "Cards",
-    text: "A ticket stub, a taped unit card and a sticky note.",
-    preview: <span className="grid-fake-ticket">Ticket #1042</span>,
+    text: "A ticket stub, a taped card and a sticky note.",
+    preview: <span className="grid-fake-ticket">Sketch #1042</span>,
   },
   {
     slug: "tabs",
@@ -578,8 +580,8 @@ const GRID: Array<{
     text: "Index-card dividers. Arrow keys move between them.",
     preview: (
       <span className="grid-fake-tabs">
-        <i>Active</i>
-        <i>Resolved</i>
+        <i>Drafts</i>
+        <i>Shipped</i>
       </span>
     ),
   },
@@ -595,11 +597,15 @@ function ComponentsGrid() {
   return (
     <section className="home-components" id="components">
       <div className="home-center home-section-head">
-        <Kicker>The whole pack</Kicker>
-        <h2 className="home-h2">Thirty pieces, one ink.</h2>
+        <Tape tone="mint" tilt={-2}>The whole pack</Tape>
+        <h2 className="home-h2">
+          Thirty pieces.
+          <br />
+          <span>Zero rulers.</span>
+        </h2>
         <p className="home-sub">
-          Each one a thin hand-drawn layer over an accessible primitive. Try any
-          of them in the playground.
+          Drawn freehand over accessible elements. Try any of them in the
+          playground.
         </p>
       </div>
       <div className="grid-cards">
@@ -640,11 +646,15 @@ function Surfaces() {
   return (
     <section className="home-surfaces" id="surfaces">
       <div>
-        <Kicker>Surfaces</Kicker>
-        <h2 className="home-h2">Five papers, one ink.</h2>
+        <Tape tone="bubblegum" tilt={3}>Surfaces</Tape>
+        <h2 className="home-h2">
+          Five papers.
+          <br />
+          <span>Same wobble.</span>
+        </h2>
         <p className="home-sub">
-          Pick the paper your app sits on. Stickers stay the same; text colors
-          adjust so everything stays readable, in light and dark.
+          Pick the paper your app sits on. Text colors adjust so it all stays
+          readable, light or dark.
         </p>
         <ul className="home-surfaces__chips">
           {surfaceNames.map((s) => (
@@ -674,7 +684,7 @@ function Surfaces() {
             surface=<span className="tk-s">&quot;poster&quot;</span>&gt;
             {"\n      "}&lt;Button variant=
             <span className="tk-s">&quot;tomato&quot;</span> buddy&gt;
-            {"\n        "}Send report{"\n      "}&lt;/Button&gt;{"\n    "}
+            {"\n        "}Post sketch{"\n      "}&lt;/Button&gt;{"\n    "}
             &lt;/PlopProvider&gt;{"\n  "});{"\n"}
             {"}"}
           </code>

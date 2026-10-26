@@ -9,15 +9,15 @@ export const metadata = { title: "Using with Next.js", description: "Use PlopUI 
 Interactive components (`Button`, `IconButton`, `Switch`, `Checkbox`, `PlopProvider`) ship with `"use client"` in their own files. `StatusTimeline` and `Tag` without `onRemove` are Server Components, so they render with no client JavaScript.
 
 ```tsx
-// app/incidents/[id]/page.tsx: a Server Component
+// app/sketches/[id]/page.tsx: a Server Component
 import { StatusTimeline, Tag } from "@plop-ui/react";
 
-export default async function Incident({ params }) {
-  const incident = await getIncident((await params).id);
+export default async function Sketch({ params }) {
+  const sketch = await getSketch((await params).id);
   return (
     <>
-      <Tag status={incident.status}>{incident.statusLabel}</Tag>
-      <StatusTimeline steps={incident.steps} current={incident.step} />
+      <Tag tone={sketch.tone}>{sketch.statusLabel}</Tag>
+      <StatusTimeline steps={sketch.steps} current={sketch.step} />
     </>
   );
 }

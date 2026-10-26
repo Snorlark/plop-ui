@@ -58,12 +58,12 @@ const TONES = ["ink", "tomato", "mustard", "mint", "periwinkle", "bubblegum"];
 const BUTTON_TONES = ["ink", "tomato", "mustard", "mint", "periwinkle", "plain"];
 const WORD_TONES = ["mustard", "tomato", "mint", "bubblegum", "periwinkle", "ink"];
 const MOODS = Object.keys(BUDDY_CAST) as BuddyMood[];
-const STEPS = ["Reported", "Dispatched", "En route", "Resolved"];
+const STEPS = ["Sketched", "Inked", "Colored", "Shipped"];
 const ICONS: Record<string, { el: ReactNode; name: string; label: string }> = {
-  plus: { el: <PlusIcon />, name: "PlusIcon", label: "New incident" },
+  plus: { el: <PlusIcon />, name: "PlusIcon", label: "New sketch" },
   phone: { el: <PhoneIcon />, name: "PhoneIcon", label: "Call" },
-  pin: { el: <PinIcon />, name: "PinIcon", label: "Share pin" },
-  bell: { el: <BellIcon />, name: "BellIcon", label: "Page unit" },
+  pin: { el: <PinIcon />, name: "PinIcon", label: "Pin to board" },
+  bell: { el: <BellIcon />, name: "BellIcon", label: "Ping a friend" },
 };
 const str = (v: unknown) => String(v ?? "");
 const SHADOW: Field = { key: "shadow", type: "choice", label: "Shadow", options: [["soft", "Soft"], ["solid", "Solid"], ["stripes", "Stripes"], ["outline", "Outline"], ["none", "None"]] };
@@ -151,7 +151,7 @@ export const KINDS: Record<Kind, KindSpec> = {
     fields: [{ key: "step", type: "step", label: "Current step", min: 0, max: STEPS.length }],
     render: (p) => (
       <span className={`${styles.chip} ${styles.chipTimeline}`}>
-        <StatusTimeline steps={STEPS} current={Number(p.step)} orientation="horizontal" label="Incident" />
+        <StatusTimeline steps={STEPS} current={Number(p.step)} orientation="horizontal" label="Sketch" />
       </span>
     ),
     code: (p) => `<StatusTimeline\n  steps={${JSON.stringify(STEPS)}}\n  current={${p.step}}\n/>`,
@@ -239,7 +239,7 @@ export const SHELVES: Array<{ id: string; label: string; items: TrayEntry[] }> =
     id: "actions",
     label: "Actions",
     items: [
-      { kind: "button", props: { label: "Send report", variant: "ink", mood: "none" }, hint: "Button" },
+      { kind: "button", props: { label: "Post sketch", variant: "ink", mood: "none" }, hint: "Button" },
       { kind: "button", props: { label: "Retry", variant: "tomato", mood: "error" }, hint: "Button with Bix" },
       { kind: "icon", props: { icon: "plus", variant: "mustard" }, hint: "IconButton" },
       { kind: "switch", props: { label: "Live location", on: true }, hint: "Switch" },
@@ -250,10 +250,10 @@ export const SHELVES: Array<{ id: string; label: string; items: TrayEntry[] }> =
     id: "status",
     label: "Status",
     items: [
-      { kind: "tag", props: { label: "Critical", tone: "tomato" }, hint: "Tag" },
-      { kind: "tag", props: { label: "En route", tone: "mustard" }, hint: "Tag" },
+      { kind: "tag", props: { label: "Wild idea", tone: "tomato" }, hint: "Tag" },
+      { kind: "tag", props: { label: "In progress", tone: "mustard" }, hint: "Tag" },
       { kind: "timeline", props: { step: 2 }, hint: "StatusTimeline" },
-      { kind: "toast", props: { label: "Report sent", kind: "success", buddy: true }, hint: "Toast" },
+      { kind: "toast", props: { label: "Sketch posted", kind: "success", buddy: true }, hint: "Toast" },
       { kind: "count", props: { n: 3 }, hint: "Count" },
     ],
   },
