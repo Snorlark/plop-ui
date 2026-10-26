@@ -24,6 +24,19 @@ test("Switch: label click toggles it", async ({ page }) => {
   await expect(sw).toHaveAttribute("aria-checked", "true");
 });
 
+test("Switch: clicking the knob's face toggles it once (Firefox and Safari used to toggle twice)", async ({ page, isMobile }) => {
+  await page.goto("/docs/components/switch");
+  const sw = page.getByRole("switch", { name: /Night mode/ });
+  await expect(sw).toHaveAttribute("aria-checked", "false");
+  await sw.scrollIntoViewIfNeeded();
+  const face = sw.locator("svg");
+  const box = (await face.boundingBox())!;
+  // Phones get a tap, the way a finger would press it.
+  if (isMobile) await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+  else await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await expect(sw).toHaveAttribute("aria-checked", "true");
+});
+
 test("Docs: Preview/Code tabs switch with arrow keys", async ({ page }) => {
   await page.goto("/docs/components/progress");
   await page.getByRole("tab", { name: "Preview" }).focus();
@@ -76,6 +89,8 @@ test("Header menus: Enter opens one, Tab walks into it, Escape closes it and ret
     await page.keyboard.press("Enter");
     await expect(trigger).toHaveAttribute("aria-expanded", "true", { timeout: 1000 });
   }).toPass();
+  // Tab only once the menu's links are on the page (on a busy runner they render a beat after the open).
+  await expect(page.getByRole("link", { name: "GitHub", exact: true }).first()).toBeVisible();
   // Safari's Tab skips links by default; Option+Tab is how keyboard users reach them there.
   await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab");
   await expect(page.getByRole("link", { name: "GitHub", exact: true }).first()).toBeFocused();
