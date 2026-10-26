@@ -250,6 +250,8 @@ function SelectCore({
       <span className={styles.label} id={`${id}-label`}>
         <span>{label}</span>
       </span>
+      {/* The sheet hangs off this box, so it sits right under the trigger however tall the field gets (hint, error, a stretching grid). */}
+      <div className={styles.anchor}>
       <button
         ref={trigger}
         type="button"
@@ -365,6 +367,7 @@ function SelectCore({
           </ul>
         </div>
       )}
+      </div>
 
       {message && (
         // A div, not a <p>: page prose styles shouldn't resize the field's own message.
