@@ -6,6 +6,7 @@ import { Buddy } from "../Buddy/Buddy.js";
 import { useHaptics } from "../hooks/useHaptics.js";
 import { useSound } from "../hooks/useSound.js";
 import { cx } from "../internal/cx.js";
+import { Marked } from "../internal/Marked.js";
 import { Tag } from "../Tag/Tag.js";
 import type { TagTone } from "../Tag/types.js";
 import styles from "./SearchField.module.css";
@@ -87,19 +88,6 @@ function writeRecent(key: string, list: string[]) {
   } catch {
     // Storage blocked: no recent searches, that's all.
   }
-}
-
-/** Splits `text` around the first match of `q` so it can get a highlighter swipe. */
-function Marked({ text, q }: { text: string; q: string }) {
-  const i = q ? text.toLowerCase().indexOf(q.toLowerCase()) : -1;
-  if (i < 0) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, i)}
-      <mark>{text.slice(i, i + q.length)}</mark>
-      {text.slice(i + q.length)}
-    </>
-  );
 }
 
 function Lead({ lead }: { lead?: SearchLead }) {

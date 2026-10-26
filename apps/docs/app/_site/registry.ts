@@ -134,6 +134,42 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     dont: "Leave a group with nothing selected when one answer is the sensible default.",
     a11y: ["A <fieldset> and <legend> holding native radios.", "Arrow keys move between options, as with any radio group."],
   },
+  select: {
+    title: "Select & MultiSelect",
+    group: "Inputs",
+    badges: ["Client component", AA, "New"],
+    lede: "Pick one or pick many from a taped paper sheet. The trigger has the fields' wobbly marker outline and boils while open, picks get a tick that draws itself in, and in a MultiSelect every pick sticks onto the trigger as washi tape. Add a search box for long lists, like a people picker.",
+    code: `import { MultiSelect, Select } from "@plop-ui/react";
+
+<Select
+  label="Brush"
+  options={[
+    { value: "pencil", label: "Pencil", hint: "Light and scratchy", lead: { dot: "periwinkle" } },
+    { value: "marker", label: "Marker", hint: "Bold and a bit wobbly", lead: { dot: "mustard" } },
+  ]}
+  value={brush}
+  onValueChange={setBrush}
+/>
+
+// A people picker: searchable, grouped, with doodle faces
+<Select label="Collaborator" searchable searchLabel="Find a friend" options={friends} />
+// friends: [{ value: "rosa", label: "Rosa Santos", hint: "Illustrator", group: "Online", lead: { avatar: "Rosa Santos", status: "online" } }, …]
+
+<MultiSelect label="Tags" options={tags} value={picked} onValueChange={setPicked} />
+// tags: [{ value: "wild", label: "Wild idea", tone: "tomato" }, …]  each pick becomes a strip of tape
+
+<Select label="Paper" options={papers} error="Pick a paper before you post." />
+<Select label="Collaborator" options={[]} loading />`,
+    tables: [{ of: "Select" }, { of: "MultiSelect" }],
+    do: "Use it for 6 or more choices, or when space is tight. Turn on searchable once a list gets long enough to scroll.",
+    dont: "Hide 2 to 5 choices people should compare at a glance; a RadioGroup shows them all at once.",
+    a11y: [
+      "The trigger is a button with aria-haspopup=\"listbox\"; the sheet is a listbox of options with aria-selected, and aria-multiselectable in a MultiSelect.",
+      "Arrows move (disabled options are skipped), Home and End jump, a typed letter jumps, Enter or Space picks, Escape closes and puts focus back on the trigger, Tab closes.",
+      "Picked is never color alone: a tick, or a ticked box, draws in. Errors are read as the trigger's description.",
+      "With searchable on, a combobox at the top keeps focus while arrows move through the matches.",
+    ],
+  },
   "text-field": {
     title: "TextField",
     group: "Inputs",
@@ -329,6 +365,33 @@ toast.error("Couldn't post", { burst: "zap" });
     do: "Group results by kind and give each a lead (a face, a status dot, an icon) so people can scan without reading.",
     dont: "Hide the only way to reach a page inside the palette. It's a shortcut, not the map.",
     a11y: ["The input is a combobox: aria-expanded, aria-controls and aria-activedescendant follow the arrow keys.", "Enter opens the active (or first) result; Escape clears the text, then closes.", "The result count is announced in a polite live region; group headings are never focusable.", "The palette is a native <dialog>, so focus stays inside and Escape closes it."],
+  },
+  menu: {
+    title: "Menu",
+    group: "Actions",
+    badges: ["Client component", AA, "New"],
+    lede: "A sticker button that opens a short sheet of actions: hand-drawn icons, keycap hints, a dashed separator and one careful red item at the end. Use the round icon version at the end of a row.",
+    code: `import { EditIcon, CopyIcon, Menu, MoreIcon, TrashIcon } from "@plop-ui/react";
+
+<Menu
+  label="Sketch actions"
+  items={[
+    { label: "Rename", icon: <EditIcon />, keys: ["E"], onSelect: rename },
+    { label: "Duplicate", icon: <CopyIcon />, keys: ["Shift", "D"], onSelect: duplicate },
+    "separator",
+    { label: "Delete sketch", icon: <TrashIcon />, danger: true, onSelect: remove },
+  ]}
+/>
+
+<Menu label="More actions" icon={<MoreIcon />} align="end" items={items} />`,
+    tables: [{ of: "Menu" }],
+    do: "Keep it to actions on one thing, with the destructive one last and red.",
+    dont: "Use it for navigation or for picking a value; links belong in the page, values in a Select.",
+    a11y: [
+      "The trigger has aria-haspopup=\"menu\" and aria-expanded; items are role=\"menuitem\" buttons with roving focus.",
+      "Arrows move and wrap, Home and End jump, a letter jumps to the item that starts with it, Escape closes and returns focus to the trigger.",
+      "Keycaps are hints only and hidden from screen readers; the red item also buzzes differently on phones, so it never relies on color alone.",
+    ],
   },
   "word-sticker": {
     title: "WordSticker & Doodle",
