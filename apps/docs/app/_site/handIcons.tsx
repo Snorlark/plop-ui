@@ -16,3 +16,14 @@ export function PlayIcon() {
     </svg>
   );
 }
+
+/** Two slider knobs: the header's settings sticker. */
+export function SlidersIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path {...marker} d="M4 7.5 C 9 7.2, 15 7.8, 20 7.4 M4 16.6 C 9 16.9, 15 16.3, 20 16.7" />
+      <circle cx="9" cy="7.4" r="2.6" fill="var(--plop-paper)" stroke="currentColor" strokeWidth="2.6" />
+      <circle cx="15.5" cy="16.6" r="2.6" fill="var(--plop-paper)" stroke="currentColor" strokeWidth="2.6" />
+    </svg>
+  );
+}

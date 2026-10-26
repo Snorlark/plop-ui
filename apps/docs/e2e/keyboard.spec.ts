@@ -96,3 +96,24 @@ test("404: a 404 status with no site header; the buddy talks back and the button
   await page.getByRole("button", { name: "Go back" }).click();
   await expect(page).toHaveURL(/\/playground/);
 });
+
+test("Header settings: one sticker opens the toggles; the cutting mat switch is remembered; Escape closes", async ({ page }) => {
+  await page.goto("/docs/getting-started");
+  const html = page.locator("html");
+  await expect(html).toHaveAttribute("data-plop-surface", "poster");
+  const settings = page.getByRole("banner").getByRole("button", { name: "Settings" });
+  // Retry: a press that lands before hydration does nothing on a slow runner.
+  await expect(async () => {
+    await settings.click();
+    await expect(settings).toHaveAttribute("aria-expanded", "true", { timeout: 1500 });
+  }).toPass();
+  const group = page.getByRole("group", { name: "Site settings" });
+  await expect(group.getByRole("button")).toHaveCount(3);
+  await group.getByRole("button", { name: "Cutting mat" }).click();
+  await expect(html).toHaveAttribute("data-plop-surface", "mat");
+  await page.keyboard.press("Escape");
+  await expect(settings).toHaveAttribute("aria-expanded", "false");
+  await expect(settings).toBeFocused();
+  await page.reload();
+  await expect(html).toHaveAttribute("data-plop-surface", "mat");
+});

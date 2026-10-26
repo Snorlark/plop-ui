@@ -8,6 +8,7 @@ export function PropsTable({ of, inheritedFrom }: { of: Name; inheritedFrom?: st
   return (
     <>
       <div className="doc-table" tabIndex={0} role="region" aria-label={`${of} props`}>
+        {/* On phones the rows become stacked cards (site.css); data-label puts "Type:" and "Default:" in front of their values. */}
         <table>
           <thead>
             <tr>
@@ -24,8 +25,12 @@ export function PropsTable({ of, inheritedFrom }: { of: Name; inheritedFrom?: st
                   {p.name}
                   {p.required && <span className="req"> required</span>}
                 </td>
-                <td className="mono">{p.type}</td>
-                <td className="mono">{p.default ?? (p.required ? "—" : p.type === "boolean" ? "false" : "none")}</td>
+                <td className="mono" data-label="Type">
+                  {p.type}
+                </td>
+                <td className="mono" data-label="Default">
+                  {p.default ?? (p.required ? "—" : p.type === "boolean" ? "false" : "none")}
+                </td>
                 <td>{p.description || "—"}</td>
               </tr>
             ))}

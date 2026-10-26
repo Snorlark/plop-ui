@@ -250,13 +250,17 @@ export function MegaNav() {
       <div id={`${base}-sheet`} className={styles.sheet} hidden={!sheet}>
         {sheet && (
           <nav aria-label="Menu">
+            {/* A short accordion: one section open at a time (the one you're in, or Components), compact links. */}
             {MENUS.map((m) => (
-              <section key={m.id} className={styles.sheetSection} aria-labelledby={`${base}-${m.id}-h`}>
-                <h2 id={`${base}-${m.id}-h`} data-active={active === m.id ? "" : undefined}>
-                  {m.label}
-                </h2>
+              <details key={m.id} name={`${base}-sheet`} className={styles.sheetSection} open={(active ?? "components") === m.id}>
+                <summary data-active={active === m.id ? "" : undefined}>
+                  <span>{m.label}</span>
+                  <svg viewBox="0 0 12 8" width="14" height="10" aria-hidden="true">
+                    <path d="M1.5 1.8 C 3.5 3.6, 4.8 5.2, 6.1 6.4 C 7.6 4.9, 9 3.4, 10.6 1.5" />
+                  </svg>
+                </summary>
                 <Columns menu={m} onGo={close} />
-              </section>
+              </details>
             ))}
           </nav>
         )}

@@ -107,13 +107,25 @@
 
 /* Phones: a burger opens every menu as one scrolling sheet. */
 .burger { display: none; }
-.sheet { max-height: calc(100dvh - 150px); overflow-y: auto; padding: 10px 18px 30px; }
-.sheetSection { padding: 16px 0 22px; border-bottom: 2px solid var(--site-rule); }
+.sheet { max-height: calc(100dvh - 90px); overflow-y: auto; padding: 4px 18px 18px; }
+.sheetSection { border-bottom: 2px dashed var(--site-rule); }
 .sheetSection:last-child { border-bottom: 0; }
-.sheetSection > h2 { margin: 0 0 12px; font-style: italic; font-weight: 900; font-size: 30px; text-transform: uppercase; color: var(--site-ink); }
-.sheetSection > h2[data-active] { display: inline-block; padding: 0 4px; background: linear-gradient(transparent 50%, var(--plop-mustard) 50% 94%, transparent 94%); }
-.sheet .cols { grid-template-columns: 1fr; gap: 18px; }
-.sheet .cols > a { grid-column: auto; }
+.sheetSection > summary {
+  display: flex; align-items: center; justify-content: space-between; min-height: 52px; cursor: pointer; list-style: none;
+  font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; color: var(--site-ink);
+}
+.sheetSection > summary::-webkit-details-marker { display: none; }
+.sheetSection > summary > span { padding: 0 4px; }
+.sheetSection > summary[data-active] > span { background: linear-gradient(transparent 50%, var(--plop-mustard) 50% 94%, transparent 94%); }
+.sheetSection > summary svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; transition: transform .3s var(--plop-ease-spring); }
+.sheetSection[open] > summary svg { transform: rotate(180deg); }
+.sheetSection > summary:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 2px; border-radius: 8px; }
+/* Inside the phone sheet the menu's links are plain and compact; the featured card stays on desktop. */
+.sheet .cols { grid-template-columns: 1fr; gap: 10px; padding: 0 4px 16px; }
+.sheet .cols > a { display: none; }
+.sheet .col h2 { margin: 6px 0 4px; font-size: 13px; }
+.sheet .col a, .sheet .col[data-big] a { padding: 6px 0; font-family: var(--plop-font-body); font-style: normal; font-weight: 400; font-size: 18px; line-height: 1.3; color: var(--site-text); animation: none; }
+.sheet .col ul { gap: 0; }
 
 @media (max-width: 1100px) {
   .cols { grid-template-columns: 1.3fr 1fr 1fr; }

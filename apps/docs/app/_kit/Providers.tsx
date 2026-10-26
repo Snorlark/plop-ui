@@ -1,7 +1,8 @@
 "use client";
 
-import { PlopProvider, type PlopProviderProps } from "@plop-ui/react";
-import { createContext, useCallback, useContext, useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { PlopProvider, useHaptics, useReducedMotion, useSound, type PlopProviderProps } from "@plop-ui/react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 
 export type SiteSurface = "poster" | "mat";
 
@@ -119,4 +120,41 @@ export function useFeedback(): Feedback {
   const ctx = useContext(FeedbackContext);
   if (!ctx) throw new Error("useFeedback needs <Providers>");
   return ctx;
+}
+
+type ViewTransitionDocument = Document & { startViewTransition?: (update: () => void) => { finished: Promise<void> } };
+
+/**
+ * Switches paper ↔ cutting mat by tearing the old page off like a sheet from
+ * a notepad: it tugs, rips along a ragged top edge and falls away, showing
+ * the new surface underneath. A view transition that only moves the old
+ * snapshot (transform), so it stays on the compositor.
+ */
+export function useSurfaceSwitch() {
+  const { surface, setSurface } = useFeedback();
+  const reduced = useReducedMotion();
+  const haptics = useHaptics();
+  const sound = useSound();
+  const busy = useRef(false);
+
+  return useCallback(() => {
+    if (busy.current) return;
+    const next: SiteSurface = surface === "mat" ? "poster" : "mat";
+    haptics.tap();
+    sound("up");
+    const doc = document as ViewTransitionDocument;
+    if (reduced || typeof doc.startViewTransition !== "function") {
+      setSurface(next);
+      return;
+    }
+    busy.current = true;
+    const html = document.documentElement;
+    html.setAttribute("data-tear", "");
+    const vt = doc.startViewTransition(() => flushSync(() => setSurface(next)));
+    const done = () => {
+      html.removeAttribute("data-tear");
+      busy.current = false;
+    };
+    vt.finished.then(done, done);
+  }, [surface, setSurface, reduced, haptics, sound]);
 }
