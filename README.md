@@ -13,7 +13,7 @@
   <a href="https://plopui.com"><b>Docs</b></a> ·
   <a href="https://plopui.com/docs/getting-started">Getting started</a> ·
   <a href="https://plopui.com/playground">Playground</a> ·
-  <a href="https://plopui.com/kit">Every component</a> ·
+  <a href="https://plopui.com/docs/components/button">Every component</a> ·
   <a href="https://plopui.com/changelog">Changelog</a>
 </p>
 
@@ -60,8 +60,8 @@ Using Next.js? The library never imports `next/*`, and every interactive compone
 
 | Group | Pieces |
 | --- | --- |
-| **Actions** | `Button`, `ButtonLink`, `IconButton`, `Tooltip` |
-| **Inputs** | `TextField`, `TextArea`, `Switch`, `Checkbox`, `RadioGroup` / `Radio`, `SearchField` |
+| **Actions** | `Button`, `ButtonLink`, `IconButton`, `Menu`, `Tooltip` |
+| **Inputs** | `Select` (with a searchable people picker), `MultiSelect`, `TextField`, `TextArea`, `Switch`, `Checkbox`, `RadioGroup` / `Radio`, `SearchField` |
 | **Navigation** | `CommandPalette` (⌘K / Ctrl K), `Tabs` |
 | **Display** | `Tag`, `Avatar`, `AvatarStack`, `TicketCard`, `UnitCard`, `StickyNote`, `Count`, `StatusDot`, `EmptyState` |
 | **Feedback** | `StatusTimeline`, `Progress`, `Callout`, `Toast` / `toast()` |
@@ -104,14 +104,13 @@ It's live at **[plopui.com](https://plopui.com)** (or run it locally, see below)
 
 | Page | What it is |
 | --- | --- |
-| `/` | The landing page: why Plop, how a sticker is made, and every component |
+| `/` | The landing page: why PlopUI, how a sticker is made, and every component |
 | `/docs/getting-started` | Installation, the Next.js guide, surfaces, tokens, accessibility, hooks, and one page per component |
 | `/playground` | Three tools: a **Sticker board** to arrange real components and copy the code, a **Lettering** studio to make hand-lettered words and export them as React, HTML, SVG or PNG, and **Tweak a component** to change any prop live |
-| `/kit` | Every piece on one page |
 
 Press ⌘K / Ctrl K (or `/`) on any page to search every component and docs page.
 
-New here? The ticket stub in the bottom-right corner of every page opens the **Ride-along pass**: a five-stop tour (what Plop is, install, components, playground, GitHub) that stamps each stop as you reach it. Finish it and Holo Pip is yours.
+New here? The ticket stub in the bottom-right corner of every page opens the **Ride-along pass**: a five-stop tour (what PlopUI is, install, components, playground, GitHub) that stamps each stop as you reach it. Finish it and Holo Pip is yours.
 
 ## Run it locally
 
@@ -148,7 +147,7 @@ CONTRIBUTING.md   how to contribute, step by step
 packages/tokens   design tokens → CSS variables + typed object (source: src/tokens.ts)
 packages/fonts    Sketchpop woff2/ttf, the OFL license, font build tools
 packages/react    @plop-ui/react (esbuild, CSS Modules, per-file "use client")
-apps/docs         Next.js 15 site: landing, docs, playground, /kit
+apps/docs         Next.js 15 site: landing, docs, playground
 apps/dispatch-demo  Next.js 15 live incident queue built only from PlopUI (SSE + Server Action)
 apps/storybook    Storybook 8 workshop with the a11y addon
 docs/decisions    one short file per decision: what we chose and why
