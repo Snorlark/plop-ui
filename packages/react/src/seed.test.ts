@@ -2,8 +2,8 @@ import { hashString, seed, seededPick, seededTilt } from "./seed";
 
 describe("seed", () => {
   it("returns the same sequence for the same seed", () => {
-    const a = seed("Send report");
-    const b = seed("Send report");
+    const a = seed("Post sketch");
+    const b = seed("Post sketch");
     expect([a(), a(), a()]).toEqual([b(), b(), b()]);
   });
 

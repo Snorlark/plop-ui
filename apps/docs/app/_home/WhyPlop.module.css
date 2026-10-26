@@ -1,8 +1,6 @@
-/* "Why PlopUI": sticker cards that slap down as you scroll. Colors from Plop! tokens. */
+/* "Why PlopUI": sticker cards that slap down as you scroll. Colors from PlopUI tokens. */
 .root { max-width: 1160px; margin: 0 auto; padding: 70px 40px 110px; }
 .head { display: grid; justify-items: center; gap: 12px; margin-bottom: 70px; text-align: center; }
-.kicker { font-family: var(--plop-font-body); font-size: 24px; color: var(--plop-tomato); }
-[data-plop-surface="mat"] .kicker { color: var(--plop-mustard); }
 .title { margin: 0; font-style: italic; font-weight: 900; font-size: clamp(2.2rem, 5.4vw, 3.4rem); line-height: 1.02; color: var(--site-ink, var(--plop-ink)); filter: url(#plop-crayon); text-wrap: balance; }
 .title span { font-weight: 700; color: var(--site-text, var(--plop-ink-text)); }
 .lede { margin: 0; max-width: 46ch; font-size: 20px; color: var(--site-soft, var(--plop-ink-soft)); }

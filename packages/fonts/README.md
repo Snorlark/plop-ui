@@ -1,6 +1,6 @@
 # @plop-ui/fonts
 
-**Sketchpop**, the hand-drawn marker family Plop! is lettered in: Light (300), Regular (400), Bold (700) and Black (900), each italic and upright, as woff2. Each letter has 3 hand-drawn versions that rotate through the `calt` feature so repeats never look copy-pasted.
+**Sketchpop**, the hand-drawn marker family PlopUI is lettered in: Light (300), Regular (400), Bold (700) and Black (900), each italic and upright, as woff2. Each letter has 3 hand-drawn versions that rotate through the `calt` feature so repeats never look copy-pasted.
 
 ```css
 @import "@plop-ui/fonts/fonts.css";

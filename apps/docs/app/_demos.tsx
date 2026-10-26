@@ -30,7 +30,7 @@ export function HeroActions() {
   return (
     <div className="hero__actions">
       <Button size="lg" tilt={-3} buddy onClick={() => setSent(true)}>
-        {sent ? "Report sent!" : "Send report"}
+        {sent ? "Sketch posted!" : "Post sketch"}
       </Button>
       <Link href="/docs/getting-started" style={{ fontSize: 20 }}>
         Read the docs →
@@ -43,7 +43,7 @@ export function ButtonHero() {
   return (
     <div style={{ display: "grid", justifyItems: "center", padding: "40px 0 20px" }}>
       <Button size="lg" tilt={-3} buddy burst>
-        Send report
+        Post sketch
       </Button>
     </div>
   );
@@ -69,8 +69,8 @@ export function ButtonVariants() {
     <div className="row">
       <Button variant="ink" seed="v1">Save changes</Button>
       <Button variant="periwinkle" seed="v2">Add note</Button>
-      <Button variant="mint" seed="v3">Mark resolved</Button>
-      <Button variant="tomato" seed="v4">Cancel dispatch</Button>
+      <Button variant="mint" seed="v3">Mark as shipped</Button>
+      <Button variant="tomato" seed="v4">Delete draft</Button>
       <Button variant="mustard" seed="v5">Call back</Button>
       <Button variant="plain" seed="v6">Skip for now</Button>
       <Button variant="periwinkle" disabled seed="v7">Archived</Button>
@@ -81,9 +81,9 @@ export function ButtonVariants() {
 export function ButtonSizes() {
   return (
     <div className="row">
-      <Button size="sm" iconLeft={<PinIcon />}>Share pin</Button>
-      <Button iconLeft={<BellIcon />}>Page unit</Button>
-      <Button size="lg">Dispatch</Button>
+      <Button size="sm" iconLeft={<PinIcon />}>Pin to board</Button>
+      <Button iconLeft={<BellIcon />}>Ping a friend</Button>
+      <Button size="lg">Publish</Button>
     </div>
   );
 }
@@ -110,10 +110,10 @@ export function ButtonLoading() {
 export function IconButtons() {
   return (
     <div className="row">
-      <IconButton icon={<PlusIcon />} label="New incident" variant="mustard" tilt={6} />
+      <IconButton icon={<PlusIcon />} label="New sketch" variant="mustard" tilt={6} />
       <IconButton icon={<PhoneIcon />} label="Start SOS call" variant="tomato" tilt={-5} />
       <IconButton icon={<CloseIcon />} label="Close" variant="plain" size="sm" tilt={4} />
-      <IconButton icon={<BellIcon />} label="Page unit" size="lg" tilt={-2} />
+      <IconButton icon={<BellIcon />} label="Ping a friend" size="lg" tilt={-2} />
     </div>
   );
 }
@@ -121,11 +121,11 @@ export function IconButtons() {
 export function TagStatuses() {
   return (
     <div className="row">
-      <Tag status="critical">Critical</Tag>
-      <Tag status="dispatched">Dispatched</Tag>
-      <Tag status="en-route">En route</Tag>
-      <Tag status="resolved">Resolved</Tag>
-      <Tag status="unassigned">Unassigned</Tag>
+      <Tag status="critical">Wild idea</Tag>
+      <Tag status="dispatched">Inked</Tag>
+      <Tag status="en-route">In progress</Tag>
+      <Tag status="resolved">Shipped</Tag>
+      <Tag status="unassigned">Up for grabs</Tag>
       <Tag tone="bubblegum" pattern="dots">Dots</Tag>
       <Tag tone="mint" pattern="grid">Grid</Tag>
     </div>
@@ -134,9 +134,9 @@ export function TagStatuses() {
 
 export function TagFilters() {
   const initial: Array<[string, TagTone]> = [
-    ["Barangay 3", "bubblegum"],
+    ["Doodles", "bubblegum"],
     ["Last 24 hours", "periwinkle"],
-    ["Fire", "mint"],
+    ["Favorites", "mint"],
   ];
   const [tags, setTags] = useState(initial);
   return (
@@ -165,20 +165,20 @@ export function Switches() {
       <Switch checked={sharing} onCheckedChange={setSharing}>
         Share live location {sharing ? "(on)" : "(off)"}
       </Switch>
-      <Switch color="ink">Night mode for dispatch console</Switch>
-      <Switch color="tomato">Silence non-critical alerts</Switch>
+      <Switch color="ink">Night mode for the sketchbook</Switch>
+      <Switch color="tomato">Mute comment pings</Switch>
       <Switch disabled>Auto-assign (needs admin)</Switch>
     </div>
   );
 }
 
 export function Checkboxes() {
-  const people = ["Responders on shift", "Barangay captain", "Caller, by SMS"];
-  const [picked, setPicked] = useState<string[]>(["Responders on shift"]);
+  const people = ["Someone comments", "A friend remixes my sketch", "Weekly digest, by email"];
+  const [picked, setPicked] = useState<string[]>(["Someone comments"]);
   const all = picked.length === people.length;
   return (
     <fieldset style={{ border: 0, padding: 0, margin: 0, display: "grid", gap: 14 }}>
-      <legend style={{ fontStyle: "italic", fontWeight: 700, textTransform: "uppercase", marginBottom: 12 }}>Notify on dispatch</legend>
+      <legend style={{ fontStyle: "italic", fontWeight: 700, textTransform: "uppercase", marginBottom: 12 }}>Notify me when</legend>
       <Checkbox checked={all} indeterminate={!all && picked.length > 0} onCheckedChange={(c) => setPicked(c ? people : [])}>
         Everyone
       </Checkbox>
@@ -187,7 +187,7 @@ export function Checkboxes() {
           key={p}
           style={{ marginLeft: 32 }}
           checked={picked.includes(p)}
-          tickColor={p === "Caller, by SMS" ? "var(--plop-leaf)" : undefined}
+          tickColor={p === "Weekly digest, by email" ? "var(--plop-leaf)" : undefined}
           onCheckedChange={(c) => setPicked((cur) => (c ? [...cur, p] : cur.filter((x) => x !== p)))}
         >
           {p}
@@ -198,7 +198,7 @@ export function Checkboxes() {
   );
 }
 
-const steps = ["Reported", "Dispatched", "En route", "Resolved"];
+const steps = ["Sketched", "Inked", "Colored", "Shipped"];
 const times = ["9:02 AM", "9:04 AM", "9:05 AM", "9:17 AM"];
 
 export function TimelineDemo({ orientation = "auto" }: { orientation?: "auto" | "horizontal" | "vertical" }) {
@@ -209,7 +209,7 @@ export function TimelineDemo({ orientation = "auto" }: { orientation?: "auto" | 
         steps={steps}
         current={current}
         orientation={orientation}
-        label="Incident progress"
+        label="Sketch progress"
         times={steps.map((_, i) => (i < current ? times[i] : i === current ? (i === 2 ? "6 min away" : "Now") : "Waiting"))}
       />
       <div className="row" style={{ gap: 18 }}>

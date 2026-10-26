@@ -96,7 +96,7 @@ for (const [component, propsName] of Object.entries(COMPONENTS)) {
     const optional = (prop.flags & ts.SymbolFlags.Optional) !== 0;
     const t = checker.getNonNullableType(propType);
     let typeText = checker.typeToString(t, undefined, ts.TypeFormatFlags.NoTruncation);
-    // Plop!'s own aliases (TagTone, StickerVariant, ...) mean nothing to a reader: show their options.
+    // PlopUI's own aliases (TagTone, StickerVariant, ...) mean nothing to a reader: show their options.
     const alias = t.aliasSymbol?.declarations?.[0];
     if (alias && isOwn(alias) && t.isUnion()) typeText = t.types.map((x) => checker.typeToString(x)).join(" | ");
     typeText = typeText.replace(/import\("[^"]+"\)\./g, "").replace(REACT_NODE, "ReactNode");

@@ -67,8 +67,8 @@ export function SiteFooter() {
             <Wordmark size={96} />
           </Link>
           <p className={styles.tagline}>
-            Hand-drawn React UI components for real-time ops apps: dispatch consoles, field service and ticketing. Accessible to WCAG AA and
-            server-rendered with Next.js.
+            Hand-drawn React UI components, imperfect on purpose. They break the visual rulebook, never the accessibility one: WCAG AA
+            and server-rendered with Next.js.
           </p>
         </div>
         <nav className={styles.cols} aria-label="Footer">

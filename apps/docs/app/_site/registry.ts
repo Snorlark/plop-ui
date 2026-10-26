@@ -26,18 +26,18 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "The hero sticker. Peels on hover, squishes on press, springs back. Add a buddy for the one action that matters most on a screen, and a burst for the presses worth celebrating.",
     code: `import { Button, ButtonLink } from "@plop-ui/react";
 
-<Button variant="ink" size="lg" buddy>Send report</Button>
+<Button variant="ink" size="lg" buddy>Post sketch</Button>
 <ButtonLink href="/start" size="lg" buddy="peek">Get started</ButtonLink> {/* buddy pops up on hover or focus */}
 <Button shadow="stripes">Crayon shadow</Button>   {/* or "solid", "outline", "none"; default "soft" */}
-<Button variant="mint" burst>Mark resolved</Button>   {/* bursts are off until you ask: true picks confetti */}
+<Button variant="mint" burst>Mark as shipped</Button>   {/* bursts are off until you ask: true picks confetti */}
 <Button variant="tomato" burst>Delete</Button>   {/* ...or a poof of dust and a head-shake on tomato */}
 <Button burst="stars">You did it</Button>   {/* celebrate: "confetti" | "stars" | "sparkle" | "hearts" */}
 <Button burst="zap">Try again</Button>   {/* went wrong (shakes too): "poof" | "zap" | "drops" */}
 
 <Button>Save changes</Button>
 <Button variant="periwinkle">Add note</Button>
-<Button variant="mint">Mark resolved</Button>
-<Button variant="tomato" loading={cancelling}>Cancel dispatch</Button>
+<Button variant="mint">Mark as shipped</Button>
+<Button variant="tomato" loading={cancelling}>Delete draft</Button>
 <Button variant="plain">Skip for now</Button>
 
 // Navigates instead: same sticker, rendered as a link
@@ -62,7 +62,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "A round sticker with just an icon. The label is required, so it can never ship without a name.",
     code: `import { IconButton, PhoneIcon, PlusIcon } from "@plop-ui/react";
 
-<IconButton icon={<PlusIcon />} label="New incident" variant="mustard" />
+<IconButton icon={<PlusIcon />} label="New sketch" variant="mustard" />
 <IconButton icon={<PhoneIcon />} label="Start SOS call" variant="tomato" />
 
 // Hand-drawn icons in the same marker line:
@@ -111,7 +111,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     code: `import { Checkbox } from "@plop-ui/react";
 
 <Checkbox checked={all} indeterminate={some} onCheckedChange={toggleAll}>Everyone</Checkbox>
-<Checkbox tickColor="var(--plop-leaf)">Caller, by SMS</Checkbox>`,
+<Checkbox tickColor="var(--plop-leaf)">Weekly digest, by email</Checkbox>`,
     tables: [{ of: "Checkbox", inheritedFrom: "<input>" }],
     do: "Group related checkboxes in a fieldset with a legend.",
     dont: "Use a single checkbox for an on/off setting that applies immediately. That's a Switch.",
@@ -141,8 +141,8 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "Focus swipes a highlighter across the label and makes the outline boil. Errors switch to tomato ink and say how to fix it.",
     code: `import { TextField, TextArea } from "@plop-ui/react";
 
-<TextField label="Caller name" hint="Optional. Anonymous reports are fine." />
-<TextField label="Location" error="Add a street, barangay, or landmark so responders can find it." />
+<TextField label="Artist name" hint="Optional. Anonymous sketches are fine." />
+<TextField label="Title" error="Give your sketch a title, even a silly one." />
 <TextArea label="What happened?" placeholder="Write it like you'd say it on the phone." />`,
     tables: [
       { of: "TextField", inheritedFrom: "<input>" },
@@ -159,9 +159,9 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "Status labels are strips of washi tape. Removable tags peel off when you dismiss them.",
     code: `import { Tag } from "@plop-ui/react";
 
-<Tag status="critical">Critical</Tag>
-<Tag tone="mustard" pattern="dots">En route</Tag>
-<Tag onRemove={() => clear("brgy-3")}>Barangay 3</Tag>`,
+<Tag status="critical">Wild idea</Tag>
+<Tag tone="mustard" pattern="dots">In progress</Tag>
+<Tag onRemove={() => clear("doodles")}>Doodles</Tag>`,
     tables: [{ of: "Tag" }],
     do: "Write the status in the label. The color only repeats it.",
     dont: "Use tags as buttons. Removable tags have a separate × button for that.",
@@ -189,11 +189,11 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "Three paper objects for three jobs: a ticket stub for queue items, a taped unit card for people, a sticky note for quick context.",
     code: `import { TicketCard, UnitCard, UnitCardRow, StickyNote, Eta, Tag, Avatar } from "@plop-ui/react";
 
-<TicketCard meta="Ticket #1042, 9:14 AM" title="Printer jams" stub="Open">…</TicketCard>
-<UnitCard name="Mobile 2" subtitle="PO2 Jun Reyes" avatar={<Avatar name="Jun Reyes" />}>
-  <UnitCardRow><Tag status="en-route">En route</Tag><Eta value={6} unit="min away" /></UnitCardRow>
+<TicketCard meta="Sketch #1042, 9:14 AM" title="Cat in a teacup" stub="Open">…</TicketCard>
+<UnitCard name="Jun Reyes" subtitle="Animator" avatar={<Avatar name="Jun Reyes" />}>
+  <UnitCardRow><Tag status="en-route">In progress</Tag><Eta value={6} unit="min left" /></UnitCardRow>
 </UnitCard>
-<StickyNote footer="Added by Ana">Use the side entrance.</StickyNote>`,
+<StickyNote footer="Added by Ana">Try the mint on the button.</StickyNote>`,
     tables: [
       { of: "TicketCard", inheritedFrom: "<article>" },
       { of: "UnitCard", inheritedFrom: "<article>" },
@@ -211,9 +211,9 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     code: `import { Tabs, TabList, Tab, TabPanel, Count } from "@plop-ui/react";
 
 <Tabs defaultValue="active">
-  <TabList label="Incident queue">
+  <TabList label="Your sketches">
     <Tab value="active" badge={<Count label="3 active" size="sm">3</Count>}>Active</Tab>
-    <Tab value="resolved">Resolved</Tab>
+    <Tab value="resolved">Shipped</Tab>
   </TabList>
   <TabPanel value="active">…</TabPanel>
   <TabPanel value="resolved">…</TabPanel>
@@ -241,11 +241,11 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     title: "StatusTimeline",
     group: "Feedback",
     badges: ["Server Component", AA, V01],
-    lede: "Where an incident is right now. Done steps get a cobalt tick, the current step boils, the rest are pencilled in.",
+    lede: "Where a sketch is right now. Done steps get a cobalt tick, the current step boils, the rest are pencilled in.",
     code: `import { StatusTimeline } from "@plop-ui/react";
 
 <StatusTimeline
-  steps={["Reported", "Dispatched", "En route", "Resolved"]}
+  steps={["Sketched", "Inked", "Colored", "Shipped"]}
   times={["9:02 AM", "9:04 AM", "6 min away", "Waiting"]}
   current={2}
 />`,
@@ -261,7 +261,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "Filled with crayon hatching instead of a flat bar. The leading edge is a single heavier stroke.",
     code: `import { Progress } from "@plop-ui/react";
 
-<Progress label="Syncing offline reports" value={4} max={10} valueText="4 of 10" />
+<Progress label="Syncing offline sketches" value={4} max={10} valueText="4 of 10" />
 <Progress label="Response time target" value={92} valueText="92% used" tone="tomato" solid />`,
     tables: [{ of: "Progress" }],
     do: "Show the real count next to the bar: \"4 of 10\".",
@@ -275,11 +275,11 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "A strip torn off a pad. Use it for things people need to know before they act, not for decoration.",
     code: `import { Callout, Button } from "@plop-ui/react";
 
-<Callout tone="warn" title="Location is approximate">
-  Confirm a landmark before dispatching.
+<Callout tone="warn" title="Not saved yet">
+  Save your sketch before you close the tab.
 </Callout>
-<Callout tone="error" title="Couldn't reach the station" action={<Button size="sm" variant="plain">Try again</Button>}>
-  Your report is saved on this phone.
+<Callout tone="error" title="Couldn't reach the server" action={<Button size="sm" variant="plain">Try again</Button>}>
+  Your sketch is saved on this device.
 </Callout>`,
     tables: [{ of: "Callout" }],
     do: "Put the callout right before the action it's about.",
@@ -293,19 +293,19 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     lede: "Slaps onto the bottom of the screen like a stamp, then lifts off after a few seconds. The wash behind it takes its kind (red for an error, green for success), and it can celebrate or wince when it lands.",
     code: `import { toast } from "@plop-ui/react";
 
-toast.success("Report sent");
-toast.error("Couldn't send. Saved for later.");
-toast("Mobile 2 is 6 min away", { duration: 6000 });
+toast.success("Sketch posted");
+toast.error("Couldn't post. Saved for later.");
+toast("Rosa liked your sketch", { duration: 6000 });
 
 // A burst when it lands (off by default): true picks confetti for success,
 // a poof of dust and a shake for error, a sparkle for info. Or name a style.
 toast.success("All done!", { burst: true, buddy: "congrats" });
-toast.error("Couldn't send", { burst: "zap" });
+toast.error("Couldn't post", { burst: "zap" });
 
 // Behind a live toast: a solid gradient wash (default), comic dots, or nothing.
 <PlopProvider toastBackdrop="solid" />   // "dots" | "none"`,
     tables: [{ of: "Toast" }],
-    do: "Confirm something that already happened: \"Report sent\".",
+    do: "Confirm something that already happened: \"Sketch posted\".",
     dont: "Ask a question or hide a button in a toast. It disappears.",
     a11y: ["Shown in a polite live region (role=\"status\") rendered by PlopProvider.", "Stays 4 seconds by default; never the only place an important message appears."],
   },
@@ -317,9 +317,9 @@ toast.error("Couldn't send", { burst: "zap" });
     code: `import { CommandPalette, SearchField } from "@plop-ui/react";
 
 <SearchField
-  label="Search the dispatch board"
+  label="Search the sketchbook"
   shortcut="/"
-  groups={[incidents, units, people]}   // { id, label, items: [{ id, title, sub, meta, lead }] }
+  groups={[sketches, boards, people]}   // { id, label, items: [{ id, title, sub, meta, lead }] }
   recentKey="recent-searches"
   onSelect={(item) => open(item)}
 />
@@ -356,12 +356,12 @@ toast.error("Couldn't send", { burst: "zap" });
 
 // Peek over anything: the head ducks behind it, the hands grip the edge.
 <BuddyPeek mood="preview">
-  <TicketCard title="Flooded underpass" meta="#1042 · Draft" />
+  <TicketCard title="Cat in a teacup" meta="#1042 · Draft" />
 </BuddyPeek>
 
 // Built into Toast and Callout: true picks the character for the kind or tone.
 toast.success("Copied to clipboard", { buddy: true });   // Pip
-toast("All units checked in", { buddy: "congrats" });    // Confetti
+toast("Every page is filled", { buddy: "congrats" });    // Confetti
 <Callout tone="warn" title="Last update 12 min ago" buddy />  // Snooze
 
 // On a Button: pick who peeks over it.

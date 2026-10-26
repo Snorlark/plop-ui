@@ -1,9 +1,8 @@
-/* "How a piece is made": a pile of paper sheets tossed off one by one as you scroll. Colors from Plop! tokens. */
+/* "How a piece is made": a pile of paper sheets tossed off one by one as you scroll. Colors from PlopUI tokens. */
 .root { padding: 40px 0 60px; }
 .head { display: grid; justify-items: center; gap: 6px; padding-top: 7vh; text-align: center; }
-.kicker { font-family: var(--plop-font-body); font-size: 24px; color: var(--plop-tomato); }
-[data-plop-surface="mat"] .kicker { color: var(--plop-mustard); }
 .title { margin: 0; font-style: italic; font-weight: 900; font-size: clamp(2.1rem, 5vw, 3rem); line-height: 1.05; color: var(--site-ink, var(--plop-ink)); filter: url(#plop-crayon); }
+.title span { font-weight: 700; color: var(--site-text, var(--plop-ink-text)); }
 
 /* A tall track you scroll through; the stage sticks to the screen while the pile plays out. */
 .track { position: relative; height: calc(var(--n) * 75vh + 100vh); }

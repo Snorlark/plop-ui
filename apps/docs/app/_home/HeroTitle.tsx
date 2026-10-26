@@ -44,7 +44,8 @@ function useSurfaceSwitch() {
 
 /** The first word of the headline is the surface: drawn by hand on paper, die-cut on the mat. */
 const WORD: Record<SiteSurface, string> = { poster: "Hand-drawn", mat: "Die-cut" };
-const REST = "UI for apps that can’t wait.";
+/** The rest of the headline, one entry per line: the first rides along after the word. */
+const REST = ["UI,", "imperfect on purpose."] as const;
 
 /**
  * The hero headline, with the site's light/dark switch built in: a round
@@ -85,7 +86,7 @@ export function HeroTitle() {
   return (
     <h1 className="home-h1 hero-title" aria-labelledby={id}>
       <span id={id} className="vh">
-        {word} {REST}
+        {word} {REST.join(" ")}
       </span>
       <span className="hero-title__switch">
         <Tooltip content={mat ? "Back to paper" : "Lay it on the cutting mat"} side="bottom">
@@ -110,7 +111,11 @@ export function HeroTitle() {
       <span className="hero-title__text" aria-hidden="true">
         <span data-in={restIn || !armed ? "" : undefined}>
           <Lettering amp={3.4} writeOn={armed}>
-            {REST}
+            {REST[0]}
+          </Lettering>
+          <br />
+          <Lettering amp={3.4} writeOn={armed}>
+            {REST[1]}
           </Lettering>
         </span>
       </span>

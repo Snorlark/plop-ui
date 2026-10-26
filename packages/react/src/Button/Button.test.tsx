@@ -6,8 +6,8 @@ import { Button, ButtonLink } from "./Button";
 
 describe("Button", () => {
   it("is a native button that defaults to type=button", () => {
-    renderWithPlop(<Button>Send report</Button>);
-    const button = screen.getByRole("button", { name: "Send report" });
+    renderWithPlop(<Button>Post sketch</Button>);
+    const button = screen.getByRole("button", { name: "Post sketch" });
     expect(button.tagName).toBe("BUTTON");
     expect(button).toHaveAttribute("type", "button");
   });
@@ -102,8 +102,8 @@ describe("Button", () => {
 
   it("renders a buddy that cheers after a click", async () => {
     vi.useFakeTimers();
-    renderWithPlop(<Button buddy>Send report</Button>, { reducedMotion: "never" });
-    const button = screen.getByRole("button", { name: "Send report" });
+    renderWithPlop(<Button buddy>Post sketch</Button>, { reducedMotion: "never" });
+    const button = screen.getByRole("button", { name: "Post sketch" });
     fireEvent.click(button);
     expect(button).toHaveAttribute("data-happy");
     act(() => vi.advanceTimersByTime(1200));
@@ -171,9 +171,9 @@ describe("Button", () => {
   });
 
   it("renders an icon before the label", () => {
-    renderWithPlop(<Button iconLeft={<PinIcon data-testid="pin" />}>Share pin</Button>);
+    renderWithPlop(<Button iconLeft={<PinIcon data-testid="pin" />}>Pin to board</Button>);
     expect(screen.getByTestId("pin")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Share pin" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pin to board" })).toBeInTheDocument();
   });
 
   it("taps haptics on press when enabled", () => {

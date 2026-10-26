@@ -12,7 +12,7 @@ test("Button: Space and Enter both press it", async ({ page }) => {
 
 test("Tag: removing a filter moves focus to the next one", async ({ page }) => {
   await page.goto("/docs/components/tag");
-  await page.getByRole("button", { name: "Remove Barangay 3" }).click();
+  await page.getByRole("button", { name: "Remove Doodles" }).click();
   await expect(page.getByRole("button", { name: "Remove Last 24 hours" })).toBeFocused();
 });
 
@@ -20,7 +20,7 @@ test("Switch: label click toggles it", async ({ page }) => {
   await page.goto("/docs/components/switch");
   const sw = page.getByRole("switch", { name: /Night mode/ });
   await expect(sw).toHaveAttribute("aria-checked", "false");
-  await page.getByText("Night mode for dispatch console").click();
+  await page.getByText("Night mode for the sketchbook").click();
   await expect(sw).toHaveAttribute("aria-checked", "true");
 });
 
@@ -43,9 +43,9 @@ test("Search: typing filters pages and Enter opens the first match", async ({ pa
 
 test("Playground: changing a prop updates the preview and the code", async ({ page }) => {
   await page.goto("/playground?c=tag");
-  await page.getByRole("textbox", { name: "Label" }).fill("Flooded");
-  await expect(page.getByRole("region", { name: "Tag preview" })).toContainText("Flooded");
-  await expect(page.getByRole("region", { name: "Code" })).toContainText(">Flooded</Tag>");
+  await page.getByRole("textbox", { name: "Label" }).fill("Doodles");
+  await expect(page.getByRole("region", { name: "Tag preview" })).toContainText("Doodles");
+  await expect(page.getByRole("region", { name: "Code" })).toContainText(">Doodles</Tag>");
   await page.locator(".pg-toolbar").getByText("Kraft", { exact: true }).click();
   await expect(page.getByRole("radio", { name: "Kraft" })).toBeChecked();
   await expect(page.locator(".pg-stage")).toHaveAttribute("data-plop-surface", "kraft");
