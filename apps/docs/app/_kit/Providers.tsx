@@ -69,6 +69,19 @@ export function Providers({ children, ...props }: PlopProviderProps & { children
     if (typeof saved.sound === "boolean") setSoundState(saved.sound);
   }, []);
 
+  // Scrollbars stay hidden until something scrolls: mark the scrolling element for a moment (site.css shows its thumb).
+  useEffect(() => {
+    const timers = new WeakMap<Element, number>();
+    const onScroll = (e: Event) => {
+      const el = e.target instanceof Element ? e.target : document.documentElement;
+      el.setAttribute("data-scrolling", "");
+      window.clearTimeout(timers.get(el));
+      timers.set(el, window.setTimeout(() => el.removeAttribute("data-scrolling"), 900));
+    };
+    document.addEventListener("scroll", onScroll, { capture: true, passive: true });
+    return () => document.removeEventListener("scroll", onScroll, { capture: true });
+  }, []);
+
   const setSurface = useCallback((next: SiteSurface) => {
     document.documentElement.setAttribute("data-plop-surface", next);
     try {

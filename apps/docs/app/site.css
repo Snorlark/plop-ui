@@ -59,6 +59,22 @@
 
 .site > main, .site > .doc-shell { flex: 1 0 auto; }
 .vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/*
+ * Scrollbars in the site's ink: a 4px marker-blue thumb on a clear track (the sidebar, menus, code, lists).
+ * Invisible until that area scrolls (Providers marks it with data-scrolling for a moment) or the thumb is hovered.
+ * Chrome and Safari draw the ::-webkit-scrollbar version, which can be this thin; Chrome ignores it once
+ * scrollbar-width is set, so the standard properties are only for browsers without it (Firefox).
+ */
+@supports not selector(::-webkit-scrollbar) {
+  * { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  [data-scrolling] { scrollbar-color: color-mix(in srgb, var(--site-ink, var(--plop-ink)) 55%, transparent) transparent; }
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: 4px 3px 5px 3px; background-clip: padding-box; background-color: transparent; }
+[data-scrolling]::-webkit-scrollbar-thumb { background-color: color-mix(in srgb, var(--site-ink, var(--plop-ink)) 55%, transparent); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--site-ink, var(--plop-ink)); }
 .skip-link { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 16px; background: var(--plop-paper); color: var(--plop-ink); border: 2.5px solid var(--plop-ink); border-radius: 12px; }
 .skip-link:focus { top: 12px; }
 .wordmark { display: inline-flex; align-items: flex-end; padding: 5px 6px 3px; transform: rotate(-4deg); }
@@ -434,7 +450,9 @@ html[data-tear]::view-transition-old(root) {
 .doc-dodont > div > span:last-child { font-size: 18px; }
 .doc-dodont__do { background: var(--plop-mint); transform: rotate(-.6deg); }
 .doc-dodont__dont { background: var(--plop-bubblegum); transform: rotate(.6deg); }
-.doc-list { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; font-size: 18px; max-width: 64ch; color: var(--site-text); }
+/* Lists of notes (accessibility on component pages) use the column's full width; short lines left most of it empty. */
+.doc-list { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; font-size: 18px; color: var(--site-text); }
+.doc-main.content .doc-list li { max-width: none; }
 
 .doc-pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 40px !important; padding-top: 26px; border-top: 2.5px dashed var(--site-rule); }
 .doc-pager a { display: flex; flex-direction: column; gap: 2px; min-height: 44px; text-decoration: none; color: var(--site-text); }
