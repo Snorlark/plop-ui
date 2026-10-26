@@ -1,5 +1,11 @@
 # @plop-ui/react
 
+## 0.3.1
+
+### Patch Changes
+
+- 3cdcdce: Select's and Menu's sheets now open right under their button, even inside a grid or flex layout that stretches them, and below a Select that shows a hint or error.
+
 ## 0.3.0
 
 ### Minor Changes
