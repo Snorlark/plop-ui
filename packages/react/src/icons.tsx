@@ -241,3 +241,30 @@ export function SuccessIcon(props: IconProps) {
     </Icon>
   );
 }
+
+/** Three dots, for a "more actions" menu button. */
+export function MoreIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="5" cy="12" r="2.4" fill="currentColor" />
+      <circle cx="12" cy="12.5" r="2.4" fill="currentColor" />
+      <circle cx="19" cy="11.5" r="2.4" fill="currentColor" />
+    </Icon>
+  );
+}
+
+export function EditIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path {...stroke} strokeWidth={2.4} d="M4 20 L 5 15.5 L 16 4.5 L 19.5 8 L 8.5 19 Z M14 6.5 L 17.5 10" />
+    </Icon>
+  );
+}
+
+export function TrashIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path {...stroke} strokeWidth={2.4} d="M4 7 L 20 7 M9 7 L 9.5 4 L 14.5 4 L 15 7 M6 7 L 7 20 L 17 20 L 18 7 M10 11 L 10.3 16.5 M14 11 L 13.7 16.5" />
+    </Icon>
+  );
+}

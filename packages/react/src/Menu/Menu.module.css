@@ -1,0 +1,54 @@
+/* Menu: a sticker trigger and a taped sheet of actions. Colors and motion from PlopUI tokens. */
+.root { position: relative; display: inline-block; }
+
+.trigger {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px; cursor: pointer;
+  border: 3px solid var(--plop-ink-text); border-radius: 20px 14px 22px 13px / 14px 22px 13px 20px;
+  background: var(--plop-paper); color: var(--plop-ink); box-shadow: 0 0 0 6px var(--plop-paper), 5px 7px 0 6px var(--plop-shadow);
+  font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase;
+  transform: rotate(-1.5deg); transition: transform 0.35s var(--plop-ease-spring);
+}
+.trigger:hover { transform: rotate(-0.5deg) translateY(-2px); }
+.trigger:active { transform: rotate(-1.5deg) translateY(2px) scale(0.96); transition-duration: var(--plop-duration-squish); }
+.trigger:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 9px; }
+.trigger > svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.45s var(--plop-ease-spring); }
+.trigger[aria-expanded="true"] > svg { transform: rotate(180deg); }
+.round { width: 52px; height: 52px; padding: 0; justify-content: center; border-radius: 50% 46% 53% 48%; }
+.round > svg { width: 22px; height: 22px; transform: none !important; }
+
+.sheet {
+  position: absolute; left: 0; top: calc(100% + 16px); z-index: 30; width: 280px; padding: 12px 6px 6px;
+  background: var(--plop-paper); color: var(--plop-ink-text); border: 2.5px solid var(--plop-ink);
+  border-radius: 16px 12px 18px 13px / 13px 18px 12px 16px; box-shadow: 6px 9px 0 var(--plop-shadow);
+  transform-origin: 20% 0; animation: pop 0.34s var(--plop-ease-spring);
+}
+.end { left: auto; right: 0; transform-origin: 80% 0; }
+@keyframes pop { from { transform: translateY(-6px) rotate(-1.5deg) scale(0.96); opacity: 0; } }
+.sheet::before {
+  content: ""; position: absolute; top: -11px; left: 50%; width: 70px; height: 20px; margin-left: -35px; transform: rotate(-3deg);
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--plop-periwinkle) 90%, transparent) 0 7px, color-mix(in srgb, var(--plop-periwinkle) 60%, transparent) 7px 14px);
+}
+
+.item {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 6px 12px; border: 0;
+  border-radius: 12px 9px 13px 10px; background: none; color: var(--plop-ink-text); cursor: pointer; text-align: left;
+  font-family: var(--plop-font-body); font-size: 17px;
+}
+.item > svg { flex: none; width: 20px; height: 20px; color: var(--plop-ink); }
+.item:hover { background: color-mix(in srgb, var(--plop-periwinkle) 26%, var(--plop-paper)); }
+.item:focus { outline: none; background: color-mix(in srgb, var(--plop-periwinkle) 38%, var(--plop-paper)); }
+.item:focus-visible { outline: 2px dashed var(--plop-focus); outline-offset: -2px; }
+.item:disabled { opacity: 0.5; cursor: not-allowed; }
+.danger, .danger > svg { color: var(--plop-tomato-text); }
+.danger:hover, .danger:focus { background: color-mix(in srgb, var(--plop-bubblegum) 45%, var(--plop-paper)); }
+.keys { margin-left: auto; display: inline-flex; gap: 3px; }
+.keys kbd {
+  display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; border: 2px solid var(--plop-ink); border-bottom-width: 4px;
+  border-radius: 6px 5px 7px 5px; background: var(--plop-paper); font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 11px; color: var(--plop-ink-text);
+}
+.sep { height: 0; margin: 6px 8px; border-top: 2px dashed color-mix(in srgb, var(--plop-ink) 25%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *), .root:not([data-plop-motion="full"] *) * { animation: none !important; transition-duration: 0.01ms !important; }
+}
+[data-plop-motion="reduce"] .root, [data-plop-motion="reduce"] .root * { animation: none !important; transition-duration: 0.01ms !important; }

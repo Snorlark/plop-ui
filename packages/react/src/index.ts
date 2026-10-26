@@ -15,6 +15,8 @@ export { Tooltip, type TooltipProps } from "./Tooltip/Tooltip.js";
 export { SearchField, CommandPalette, useIsMac, type SearchFieldProps, type CommandPaletteProps, type SearchGroup, type SearchItem, type SearchLead } from "./SearchField/SearchField.js";
 export { TextField, TextArea, type TextFieldProps, type TextAreaProps } from "./TextField/TextField.js";
 export { RadioGroup, Radio, type RadioGroupProps, type RadioProps } from "./Radio/Radio.js";
+export { Select, MultiSelect, type SelectProps, type MultiSelectProps, type SelectOption, type SelectLead } from "./Select/Select.js";
+export { Menu, type MenuProps, type MenuItem } from "./Menu/Menu.js";
 export { Buddy, BuddyPeek, BUDDY_CAST, type BuddyProps, type BuddyPeekProps, type BuddyMood, type BuddySize } from "./Buddy/Buddy.js";
 export { Avatar, AvatarStack, type AvatarProps, type AvatarStackProps, type AvatarStatus } from "./Avatar/Avatar.js";
 export { TicketCard, UnitCard, UnitCardRow, StickyNote, Eta, type TicketCardProps, type UnitCardProps, type StickyNoteProps } from "./Cards/Cards.js";
@@ -61,4 +63,7 @@ export {
   WarnIcon,
   ErrorIcon,
   SuccessIcon,
+  MoreIcon,
+  EditIcon,
+  TrashIcon,
 } from "./icons.js";
