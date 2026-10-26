@@ -69,7 +69,7 @@ export function Search() {
   );
 
   const onSelect = async (item: SearchItem) => {
-    if (item.id === "browse") return router.push("/kit");
+    if (item.id === "browse") return router.push("/docs/components/button");
     if (item.id === "surface") return setSurface(surface === "mat" ? "poster" : "mat");
     if (item.id === "github") {
       stamp("github");

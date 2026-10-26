@@ -12,6 +12,8 @@ export type FeatureArt = "palette" | "wobble" | "holo" | "crew";
 export interface Menu {
   id: MenuId;
   label: string;
+  /** Where the trigger itself goes when pressed. Without one it only opens the menu. */
+  href?: string;
   cols: Array<{ title: string; big?: boolean; links: Array<[label: string, href: string]> }>;
   feature: { tape: string; tone: "bubblegum" | "periwinkle" | "mustard" | "mint"; title: string; text: string; href: string; art: FeatureArt };
 }
@@ -22,6 +24,7 @@ export const MENUS: Menu[] = [
   {
     id: "components",
     label: "Components",
+    href: "/docs/components/button",
     cols: [
       {
         title: "Explore components",
@@ -42,19 +45,20 @@ export const MENUS: Menu[] = [
   {
     id: "guides",
     label: "Guides",
+    href: "/docs/getting-started",
     cols: [
       { title: "Get going", big: true, links: [["Installation", "/docs/getting-started"], ["Using with Next.js", "/docs/nextjs"], ["Surfaces & themes", "/docs/surfaces"], ["Accessibility", "/docs/accessibility"]] },
       { title: "Design", links: [["Tokens & contrast", "/docs/tokens"], ["Hooks & onColor", "/docs/hooks"], ["Sheet & Heading", "/docs/components/sheet-heading"]] },
-      { title: "Reference", links: [["PlopProvider", "/docs/components/provider"], ["Every piece", "/kit"], ["Changelog", "/changelog"]] },
+      { title: "Reference", links: [["PlopProvider", "/docs/components/provider"], ["Changelog", "/changelog"]] },
     ],
     feature: { tape: "Guide", tone: "periwinkle", title: "Seeded wobble", text: "Why every sticker draws the same on the server and in the browser.", href: "/docs/nextjs", art: "wobble" },
   },
   {
     id: "playground",
     label: "Playground",
+    href: "/playground",
     cols: [
       { title: "Play", big: true, links: [["Sticker board", "/playground?tool=board"], ["Lettering studio", "/playground?tool=lettering"], ["Tweak the props", "/playground?tool=tweak"]] },
-      { title: "See it all", links: [["Every piece on one page", "/kit"]] },
     ],
     feature: { tape: "Ride-along", tone: "mustard", title: "Holo Pip", text: "Stamp all five Ride-along stops to unlock it.", href: "/playground", art: "holo" },
   },
@@ -71,7 +75,7 @@ export const MENUS: Menu[] = [
 
 /** Which menu the current page belongs to, so its trigger stays highlighted. */
 export function menuFor(path: string): MenuId | undefined {
-  if (path.startsWith("/docs/components") || path === "/kit") return "components";
+  if (path.startsWith("/docs/components")) return "components";
   if (path.startsWith("/docs")) return "guides";
   if (path.startsWith("/playground")) return "playground";
   if (path === "/changelog") return "community";

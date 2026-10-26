@@ -115,14 +115,14 @@ function StopLink({ href, className, children, ...rest }: { href: string; classN
  * Hands out stamps as people reach each stop, wherever they are on the site:
  * the "Why PlopUI" section on the home page, the install guide (or copying
  * the install command, see CopyCommand and Search), any component page or
- * /kit, the playground, and any link out to the GitHub repo.
+ * the playground, and any link out to the GitHub repo.
  */
 function useStampTracker() {
   const path = usePathname();
 
   useEffect(() => {
     if (path.startsWith("/docs/getting-started")) stamp("install");
-    else if (path.startsWith("/docs/components/") || path === "/kit") stamp("components");
+    else if (path.startsWith("/docs/components/")) stamp("components");
     else if (path.startsWith("/playground")) stamp("playground");
     if (path !== "/") return;
     const why = document.getElementById("why");

@@ -5,22 +5,44 @@
 .nav { flex: 1; min-width: 0; }
 .triggers { display: flex; justify-content: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
 
-/* A trigger: lettering with the highlighter swipe. Hover/open = light stroke, the section you're in = full. */
+/*
+ * A trigger: lettering with a highlighter swipe on hover or while its menu is open. The swipe draws on
+ * left to right and, when you leave, pulls back the way it came. The section you're in gets its own mark
+ * instead: a hand-drawn tomato underline, so "you are here" never looks like "you're pointing here".
+ */
 .trigger {
   display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 0; background: none; cursor: pointer;
   font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase;
-  color: var(--site-text);
+  color: var(--site-text); text-decoration: none;
 }
 .trigger > span {
-  padding: 0 4px; --hl: color-mix(in srgb, var(--plop-mustard) 55%, transparent);
-  background: linear-gradient(transparent 50%, var(--hl) 50% 94%, transparent 94%) no-repeat 0 0 / 0% 100%;
-  transition: background-size 0.35s var(--plop-ease-squish);
+  position: relative; padding: 0 4px;
+  background: linear-gradient(transparent 50%, color-mix(in srgb, var(--plop-mustard) 55%, transparent) 50% 94%, transparent 94%) no-repeat 0 0 / 0% 100%;
+  transition: background-size 0.3s cubic-bezier(0.5, 0, 0.75, 0);
 }
-.trigger:is(:hover, :focus-visible, [aria-expanded="true"]) { color: var(--site-ink); }
-.trigger:is(:hover, :focus-visible, [aria-expanded="true"]) > span { background-size: 100% 100%; }
+.trigger:is(:hover, :focus-visible, [aria-expanded="true"]), .split:is(:hover, [data-open]) .trigger { color: var(--site-ink); }
+.trigger:is(:hover, :focus-visible, [aria-expanded="true"]) > span, .split:is(:hover, [data-open]) .trigger > span {
+  background-size: 100% 100%; transition: background-size 0.35s var(--plop-ease-squish);
+}
 .trigger[data-active] { color: var(--site-ink); }
-.trigger[data-active] > span { --hl: var(--plop-mustard); background-size: 100% 100%; }
+.trigger[data-active] > span::after {
+  content: ""; position: absolute; left: -2px; right: -2px; bottom: -7px; height: 8px; background: var(--plop-tomato);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 C 25 2, 45 7, 70 4 S 105 3, 118 5' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 C 25 2, 45 7, 70 4 S 105 3, 118 5' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+}
+[data-plop-surface="mat"] .trigger[data-active] > span::after { background: var(--plop-mustard); }
 .trigger:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 2px; border-radius: 10px; }
+
+/* A trigger that is also a link: the label goes to the section, the caret opens the menu. */
+.split { display: inline-flex; align-items: center; }
+.split .trigger { padding-right: 2px; }
+.caret {
+  display: inline-grid; place-items: center; width: 26px; min-height: 44px; padding: 0; border: 0; background: none; cursor: pointer; color: var(--site-text);
+}
+.caret svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s var(--plop-ease-spring); }
+.caret[aria-expanded="true"] { color: var(--site-ink); }
+.caret[aria-expanded="true"] svg { transform: rotate(180deg); }
+.caret:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: -2px; border-radius: 8px; }
 
 /* One sheet under the bar, full width, printed on the page's own background (paper with grain, or the cutting mat),
    pinned like the page layer so the texture lines up. Text follows the surface: ink on paper, cream on the mat. */
@@ -32,6 +54,11 @@
 }
 .panel:not([hidden]) .cols { animation: swap 0.32s var(--plop-ease-squish); }
 @keyframes swap { from { opacity: 0; transform: translateX(var(--dir, 0)) translateY(-6px); } }
+/* Opening from nothing, the sheet unrolls down from the bar; closing, it rolls back up the way it came. */
+.panel[data-fresh] { animation: unroll 0.32s var(--plop-ease-squish); }
+.panel[data-leaving] { pointer-events: none; animation: roll-up 0.28s cubic-bezier(0.5, 0, 0.75, 0) forwards; }
+@keyframes unroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 -80px 0); } }
+@keyframes roll-up { from { clip-path: inset(0 0 -80px 0); } to { clip-path: inset(0 0 100% 0); opacity: 0.6; } }
 .panelIn { max-width: 1280px; margin: 0 auto; padding: 30px 40px 40px; }
 
 .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.25fr; gap: 28px 40px; align-items: start; }
@@ -98,7 +125,7 @@
   .root { flex: 0 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .panel:not([hidden]) .cols, .col a { animation: none; }
-  .trigger > span, .feature, .col[data-big] a, .scrim { transition: none; }
+  .panel:not([hidden]) .cols, .col a, .panel[data-fresh], .panel[data-leaving] { animation: none; }
+  .trigger > span, .split .trigger > span, .caret svg, .feature, .col[data-big] a, .scrim { transition: none !important; }
 }
 @media (max-width: 900px) { .root { order: 3; } }
