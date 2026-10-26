@@ -66,7 +66,7 @@ test("Ride-along pass: Enter opens it from the corner stub, Escape closes it and
   await expect(stub).toBeFocused();
 });
 
-test("Header menus: Enter opens one, Tab walks into it, Escape closes it and returns focus", async ({ page, isMobile }) => {
+test("Header menus: Enter opens one, Tab walks into it, Escape closes it and returns focus", async ({ page, isMobile, browserName }) => {
   test.skip(isMobile, "phones use the burger sheet");
   await page.goto("/docs/getting-started");
   const trigger = page.getByRole("button", { name: "Community" });
@@ -76,7 +76,8 @@ test("Header menus: Enter opens one, Tab walks into it, Escape closes it and ret
     await page.keyboard.press("Enter");
     await expect(trigger).toHaveAttribute("aria-expanded", "true", { timeout: 1000 });
   }).toPass();
-  await page.keyboard.press("Tab");
+  // Safari's Tab skips links by default; Option+Tab is how keyboard users reach them there.
+  await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab");
   await expect(page.getByRole("link", { name: "GitHub", exact: true }).first()).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(trigger).toHaveAttribute("aria-expanded", "false");

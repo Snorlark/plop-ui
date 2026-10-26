@@ -230,6 +230,8 @@ export function Sticker({
       onKeyUp={handleKeyUp}
       onBlur={(event) => {
         onBlur?.(event);
+        // The haptics switch takes focus for a moment and hands it back; that isn't letting go.
+        if ((event.relatedTarget as HTMLElement | null)?.hasAttribute?.("data-plop-haptic")) return;
         release();
       }}
     >

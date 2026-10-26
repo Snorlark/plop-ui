@@ -185,6 +185,27 @@ describe("Button", () => {
   });
 });
 
+describe("Button on a touch device without navigator.vibrate (iPhone, iPad)", () => {
+  beforeEach(() => {
+    Object.defineProperty(navigator, "maxTouchPoints", { value: 5, configurable: true });
+    Object.defineProperty(navigator, "vibrate", { value: undefined, configurable: true });
+  });
+  afterEach(() => Object.defineProperty(navigator, "maxTouchPoints", { value: 0, configurable: true }));
+
+  it("keeps focus and stays pressed while Space is held, though the haptics switch is clicked", async () => {
+    const user = userEvent.setup();
+    renderWithPlop(<Button>Post sketch</Button>);
+    const button = screen.getByRole("button", { name: "Post sketch" });
+    button.focus();
+    await user.keyboard("[Space>]");
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute("data-pressed", "");
+    expect(document.querySelector("[data-plop-haptic]")).not.toBeNull();
+    await user.keyboard("[/Space]");
+    expect(button).not.toHaveAttribute("data-pressed");
+  });
+});
+
 describe("ButtonLink", () => {
   it("is a link with the sticker look, pressed by pointer and Enter", () => {
     renderWithPlop(<ButtonLink href="/docs">Get started</ButtonLink>);

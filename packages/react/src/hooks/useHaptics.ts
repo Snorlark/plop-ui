@@ -28,6 +28,8 @@ function iosSwitchProxy(): HTMLLabelElement | null {
   input.type = "checkbox";
   input.setAttribute("switch", "");
   input.tabIndex = -1;
+  // Lets a control tell this switch's brief focus apart from a real blur.
+  input.setAttribute("data-plop-haptic", "");
   label.appendChild(input);
   document.body.appendChild(label);
   proxy = label;
@@ -40,7 +42,12 @@ function vibrate(pattern: Pattern) {
       navigator.vibrate(pattern as number | number[]);
       return;
     }
+    // Only touch devices (iPhone, iPad) get the switch trick: desktop Firefox and Safari have no haptics to give.
+    if (typeof navigator === "undefined" || !(navigator.maxTouchPoints > 0)) return;
+    const prev = document.activeElement;
     iosSwitchProxy()?.click();
+    // Clicking the label focuses the hidden switch: hand focus straight back to the control that was pressed.
+    if (prev instanceof HTMLElement && document.activeElement !== prev) prev.focus({ preventScroll: true });
   } catch {
     // Haptics are a nicety; never let them break a press.
   }
