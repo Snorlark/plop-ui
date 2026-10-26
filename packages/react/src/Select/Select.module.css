@@ -1,5 +1,6 @@
 /* Select & MultiSelect: a wobbly marker trigger and a taped paper sheet of options. Colors and motion from PlopUI tokens. */
-.root { --h: 54px; --fs: 18px; position: relative; width: 100%; max-width: 340px; }
+.root { --h: 54px; --fs: 18px; width: 100%; max-width: 340px; }
+.anchor { position: relative; }
 .sm { --h: 42px; --fs: 16px; max-width: 260px; }
 
 /* The label gets a highlighter swipe while the field is in use. */
