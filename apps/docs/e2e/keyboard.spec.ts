@@ -24,6 +24,19 @@ test("Switch: label click toggles it", async ({ page }) => {
   await expect(sw).toHaveAttribute("aria-checked", "true");
 });
 
+test("Switch: clicking the knob's face toggles it once (Firefox and Safari used to toggle twice)", async ({ page, isMobile }) => {
+  await page.goto("/docs/components/switch");
+  const sw = page.getByRole("switch", { name: /Night mode/ });
+  await expect(sw).toHaveAttribute("aria-checked", "false");
+  await sw.scrollIntoViewIfNeeded();
+  const face = sw.locator("svg");
+  const box = (await face.boundingBox())!;
+  // Phones get a tap, the way a finger would press it.
+  if (isMobile) await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+  else await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await expect(sw).toHaveAttribute("aria-checked", "true");
+});
+
 test("Docs: Preview/Code tabs switch with arrow keys", async ({ page }) => {
   await page.goto("/docs/components/progress");
   await page.getByRole("tab", { name: "Preview" }).focus();
