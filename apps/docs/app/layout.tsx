@@ -39,7 +39,7 @@ const JSON_LD = {
  * The site is printed on paper (poster) or laid on the cutting mat, picked by
  * the header toggle and remembered per device. Pages stay static: a tiny
  * script sets the surface on <html> before paint. Other surfaces and dark
- * mode live in the Playground and on /kit.
+ * mode live in the Playground.
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

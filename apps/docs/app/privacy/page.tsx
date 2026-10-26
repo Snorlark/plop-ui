@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 
 /** What the site keeps on the visitor's device. Keep this in step with the code when a new key is added. */
 const STORED: Array<[string, string]> = [
-  ["plop-surface, plop-theme (cookies)", "The paper and light or dark look you picked on /kit, so the page renders that way from the first paint."],
   ["plop-site-surface", "Paper or cutting mat, from the header toggle."],
   ["plop-feedback", "Whether haptics and sound are on."],
   ["plop-site-recent", "Your last five picks in search, offered as recent searches."],
