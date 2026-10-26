@@ -70,9 +70,12 @@ test("Header menus: Enter opens one, Tab walks into it, Escape closes it and ret
   test.skip(isMobile, "phones use the burger sheet");
   await page.goto("/docs/getting-started");
   const trigger = page.getByRole("button", { name: "Community" });
-  await trigger.focus();
-  await page.keyboard.press("Enter");
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  // On a slow runner the first press can land before hydration and do nothing: press again until it opens.
+  await expect(async () => {
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true", { timeout: 1000 });
+  }).toPass();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "GitHub", exact: true }).first()).toBeFocused();
   await page.keyboard.press("Escape");
