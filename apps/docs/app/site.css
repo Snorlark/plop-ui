@@ -94,15 +94,41 @@
 .site-header[data-hidden] { transform: translateY(-100%); }
 .site-header__in { width: 100%; max-width: 1280px; margin: 0 auto; padding: 18px 40px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
 html { scroll-padding-top: calc(var(--header-offset, 0px) + 24px); }
+/* In-page links (#why, #pieces, the down arrow, the docs' own anchors) glide instead of jumping. */
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 .doc-nav, .pg-picker { top: calc(var(--header-offset, 0px) + 20px) !important; transition: top .3s var(--plop-ease-squish); }
 .doc-nav { max-height: calc(100vh - var(--header-offset, 0px) - 40px) !important; }
 @media (prefers-reduced-motion: reduce) { .site-header, .doc-nav, .pg-picker { transition: none; } }
+/* Phones and tablets: one row. Logo, then a round search sticker (opens the palette), settings and the menu. */
 @media (max-width: 900px) {
-  .site-header__in > .feedback-toggles { order: 2; margin-left: auto; }
-  .site-header__in > .site-search { order: 4; flex: 1 1 100%; }
+  .site-header__in { flex-wrap: nowrap; column-gap: 10px; }
+  .site-header__in > .site-search { order: 2; flex: none; margin-left: auto; min-width: 0; width: 44px; height: 44px; padding: 0; justify-content: center; border-radius: 50% 46% 53% 48%; }
+  .site-header__in > .site-search :is(.site-search__text, .site-search__keys) { display: none; }
+  .site-search__lens { width: 20px; height: 20px; }
+  .site-header__in > .site-settings { order: 2; }
+}
+/* The smallest phones (320px, the first iPhone SE): tighter edges so the menu button still fits. */
+@media (max-width: 360px) {
+  .site-header__in { padding-left: 12px; padding-right: 12px; column-gap: 6px; }
 }
 .site-header__logo { display: inline-flex; text-decoration: none; border-radius: 10px; }
-.feedback-toggles { display: inline-flex; align-items: center; gap: 8px; }
+.site-settings { position: relative; display: inline-flex; }
+/* The settings sheet: three switches on a taped paper sheet under the sticker. */
+.site-settings__sheet {
+  position: absolute; right: -6px; top: calc(100% + 16px); z-index: 30; display: flex; gap: 14px; padding: 20px 16px 14px;
+  background: var(--plop-paper); color: var(--plop-ink-text); border: 2.5px solid var(--plop-ink);
+  border-radius: 16px 12px 18px 13px / 13px 18px 12px 16px; box-shadow: 6px 9px 0 var(--plop-shadow);
+  --plop-on: var(--plop-ink); --plop-on-soft: var(--plop-ink-soft);
+  transform-origin: 85% 0; animation: settings-pop .32s var(--plop-ease-spring);
+}
+.site-settings__sheet[hidden] { display: none; }
+.site-settings__sheet::before {
+  content: ""; position: absolute; top: -11px; right: 22px; width: 64px; height: 20px; transform: rotate(4deg);
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--plop-mustard) 90%, transparent) 0 7px, color-mix(in srgb, var(--plop-mustard) 60%, transparent) 7px 14px);
+}
+.site-settings__item { display: grid; justify-items: center; gap: 8px; min-width: 64px; font-family: var(--plop-font-body); font-size: 13px; line-height: 1.2; text-align: center; color: var(--plop-ink-soft); }
+@keyframes settings-pop { from { transform: translateY(-6px) rotate(1.5deg) scale(.96); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .site-settings__sheet { animation: none; } }
 .site-header__logo:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
 /* Every Plop UI logo is a sticker: hover lifts it off the page with a little peel tilt and a deeper
    shadow, a press squishes it flat, and letting go springs it back. Uses the individual
@@ -440,6 +466,16 @@ html[data-tear]::view-transition-old(root) {
 .doc-table tr:last-child td { border-bottom: 0; }
 .doc-table .mono { font-family: var(--plop-font-mono); font-size: 14px; }
 .doc-table .req { color: var(--plop-tomato-text); font-family: var(--plop-font-body); font-weight: 700; font-size: 13px; }
+/* Phones: each prop becomes a little card (name, type, default, what it does) instead of a table to scroll sideways. */
+@media (max-width: 640px) {
+  .doc-table table { min-width: 0; }
+  .doc-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .doc-table tr { display: grid; gap: 4px; padding: 12px 16px; border-bottom: 2px dashed rgba(40,72,216,.25); }
+  .doc-table tr:last-child { border-bottom: 0; }
+  .doc-table td { display: block; padding: 0; border: 0; }
+  .doc-table td:first-child { font-weight: 700; font-size: 15px; }
+  .doc-table td[data-label]::before { content: attr(data-label) ": "; font-family: var(--plop-font-body); font-size: 13px; color: var(--plop-ink-soft); }
+}
 
 .doc-dodont { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 26px; }
 .doc-dodont > div {
