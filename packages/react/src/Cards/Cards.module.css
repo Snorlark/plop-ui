@@ -53,7 +53,7 @@
 .stub::before { top: -13px; clip-path: inset(50% 0 0 0); }
 .stub::after { bottom: -13px; clip-path: inset(0 0 50% 0); }
 
-/* ---- Unit card: people and vehicles ---- */
+/* ---- Unit card: people and projects ---- */
 .unit {
   position: relative;
   display: grid;

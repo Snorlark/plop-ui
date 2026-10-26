@@ -3,7 +3,7 @@ import { cx } from "../internal/cx.js";
 import styles from "./Progress.module.css";
 
 export interface ProgressProps {
-  /** What is progressing, e.g. "Syncing offline reports". */
+  /** What is progressing, e.g. "Syncing offline sketches". */
   label: ReactNode;
   value: number;
   /** The value that means "done". Default 100. */

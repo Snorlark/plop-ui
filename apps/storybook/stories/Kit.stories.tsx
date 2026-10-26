@@ -44,11 +44,11 @@ export const TooltipStory: Story = {
       <Tooltip content="Priority sets who gets paged first.">
         <IconButton variant="plain" size="sm" icon={<InfoIcon size={22} />} label="What does priority do?" />
       </Tooltip>
-      <Tooltip content="GPS accuracy is ±200 m. Ask the caller for a landmark." open>
+      <Tooltip content="Autosave runs every 30 seconds. Save now to be sure." open>
         <Button size="sm" variant="mustard">Approx. location</Button>
       </Tooltip>
       <Tooltip content="Sends your live location for 30 minutes." side="right" open>
-        <Button size="sm" iconLeft={<PinIcon />}>Share pin</Button>
+        <Button size="sm" iconLeft={<PinIcon />}>Pin to board</Button>
       </Tooltip>
       <Tooltip content="Opens below, for triggers in a header." side="bottom" open>
         <Button size="sm" variant="plain">Bottom</Button>
@@ -60,8 +60,8 @@ export const TooltipStory: Story = {
 export const TextFields: Story = {
   render: () => (
     <Sheet style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 30 }}>
-      <TextField label="Caller name" placeholder="e.g. Maria Santos" hint="Optional. Anonymous reports are fine." />
-      <TextField label="Location" error="Add a street, barangay, or landmark so responders can find it." />
+      <TextField label="Artist name" placeholder="e.g. Maria Santos" hint="Optional. Anonymous sketches are fine." />
+      <TextField label="Title" error="Give your sketch a title, even a silly one." />
       <TextField label="Callback number" defaultValue="0917 555 0142" success hint="Looks good." />
       <TextField label="Disabled" disabled defaultValue="Read only" />
       <TextArea label="What happened?" placeholder="Write it like you’d say it on the phone." style={{ gridColumn: "1 / -1" }} />
@@ -96,22 +96,22 @@ export const Avatars: Story = {
 export const Cards: Story = {
   render: () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 36, alignItems: "start" }}>
-      <TicketCard meta="Ticket #1042, 9:14 AM" title="Printer on 3F jams on every second page" stub="Open">
+      <TicketCard meta="Sketch #1042, 9:14 AM" title="Cat in a teacup, take two" stub="Open">
         <Tag tone="mustard">Medium</Tag>
         <Avatar name="Leo Garcia" size="sm" /> Leo
       </TicketCard>
-      <UnitCard name="Mobile 2" subtitle="PO2 Jun Reyes, 2 riders" avatar={<Avatar name="Jun Reyes" status="online" />}>
+      <UnitCard name="Jun Reyes" subtitle="Animator, 2 boards open" avatar={<Avatar name="Jun Reyes" status="online" />}>
         <UnitCardRow>
-          <Tag status="en-route">En route</Tag>
-          <Eta value={6} unit="min away" />
+          <Tag status="en-route">In progress</Tag>
+          <Eta value={6} unit="min left" />
         </UnitCardRow>
         <UnitCardRow>
-          <Button size="sm" iconLeft={<PhoneIcon />}>Call unit</Button>
-          <Button size="sm" variant="plain" iconLeft={<PinIcon />}>Track</Button>
+          <Button size="sm" iconLeft={<PhoneIcon />}>Call Jun</Button>
+          <Button size="sm" variant="plain" iconLeft={<PinIcon />}>Follow</Button>
         </UnitCardRow>
       </UnitCard>
-      <StickyNote footer="Added by dispatcher Ana, 9:06 AM">Caller says the front gate is locked. Use the side entrance by the sari-sari store.</StickyNote>
-      <StickyNote tone="pink" footer="Shift note">Generator check at 6 PM.</StickyNote>
+      <StickyNote footer="Added by Ana, 9:06 AM">Try the mint on the button. It's louder, in a good way.</StickyNote>
+      <StickyNote tone="pink" footer="Studio note">Print run at 6 PM.</StickyNote>
     </div>
   ),
 };
@@ -120,15 +120,15 @@ export const TabsStory: Story = {
   name: "Tabs",
   render: () => (
     <Tabs defaultValue="active">
-      <TabList label="Incident queue">
+      <TabList label="Your sketches">
         <Tab value="active" badge={<Count label="3 active" size="sm">3</Count>}>Active</Tab>
-        <Tab value="resolved">Resolved</Tab>
+        <Tab value="resolved">Shipped</Tab>
         <Tab value="flagged">Flagged</Tab>
       </TabList>
-      <TabPanel value="active">Flooding, Purok 4 · Road accident, Maharlika Hwy · Noise complaint, Brgy. 3</TabPanel>
-      <TabPanel value="resolved">Lost child, town plaza · Power line down, Brgy. 7</TabPanel>
+      <TabPanel value="active">Cat in a teacup · Poster for the zine fair · Rosa’s comic, page 3</TabPanel>
+      <TabPanel value="resolved">Birthday card for Lola · Band logo, final</TabPanel>
       <TabPanel value="flagged">
-        <EmptyState>Nothing flagged. Flag an incident to follow up on it here.</EmptyState>
+        <EmptyState>Nothing flagged. Flag a sketch to come back to it here.</EmptyState>
       </TabPanel>
     </Tabs>
   ),
@@ -138,8 +138,8 @@ export const ProgressStory: Story = {
   name: "Progress",
   render: () => (
     <div style={{ display: "grid", gap: 28, maxWidth: 560 }}>
-      <Progress label="Syncing offline reports" value={4} max={10} valueText="4 of 10" />
-      <Progress label="Units available" value={7} max={9} valueText="7 of 9" tone="mint" />
+      <Progress label="Syncing offline sketches" value={4} max={10} valueText="4 of 10" />
+      <Progress label="Pages inked" value={7} max={9} valueText="7 of 9" tone="mint" />
       <Progress label="Response time target" value={92} valueText="92% used" tone="tomato" solid />
     </div>
   ),
@@ -148,12 +148,12 @@ export const ProgressStory: Story = {
 export const Callouts: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 18, maxWidth: 640 }}>
-      <Callout title="Two responders are near this pin">Mobile 2 and Mobile 5 are both within 2 km.</Callout>
-      <Callout tone="warn" title="Location is approximate">Confirm a landmark before dispatching.</Callout>
-      <Callout tone="error" title="Couldn’t reach the station" action={<Button size="sm" variant="plain">Try again</Button>}>
-        Your report is saved on this phone.
+      <Callout title="Two friends are on this board">Rosa and Jun are both sketching right now.</Callout>
+      <Callout tone="warn" title="Not saved yet">Save your sketch before you close the tab.</Callout>
+      <Callout tone="error" title="Couldn’t reach the server" action={<Button size="sm" variant="plain">Try again</Button>}>
+        Your sketch is saved on this device.
       </Callout>
-      <Callout tone="success" title="Report received">Reference number 24-1187.</Callout>
+      <Callout tone="success" title="Sketch received">Reference number 24-1187.</Callout>
     </div>
   ),
 };
@@ -162,14 +162,14 @@ export const Toasts: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 30 }}>
       <div style={{ display: "flex", gap: 26 }}>
-        <Toast kind="success">Report sent</Toast>
+        <Toast kind="success">Sketch posted</Toast>
         <Toast kind="error">Couldn’t send. Saved for later.</Toast>
-        <Toast>Mobile 2 is 6 min away</Toast>
+        <Toast>Rosa liked your sketch</Toast>
       </div>
       <div style={{ display: "flex", gap: 22 }}>
-        <Button size="sm" variant="mint" onClick={() => toast.success("Report sent")}>Show success</Button>
+        <Button size="sm" variant="mint" onClick={() => toast.success("Sketch posted")}>Show success</Button>
         <Button size="sm" variant="tomato" onClick={() => toast.error("Couldn’t send. Saved for later.")}>Show error</Button>
-        <Button size="sm" variant="plain" onClick={() => toast("Mobile 2 is 6 min away")}>Show info</Button>
+        <Button size="sm" variant="plain" onClick={() => toast("Rosa liked your sketch")}>Show info</Button>
       </div>
     </div>
   ),
@@ -181,7 +181,7 @@ export const ToastBursts: Story = {
     <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
       <Button size="sm" variant="mint" onClick={() => toast.success("Saved!", { burst: true, buddy: true })}>Success + confetti</Button>
       <Button size="sm" variant="mustard" onClick={() => toast.success("All done!", { burst: "stars", buddy: "congrats" })}>Success + stars</Button>
-      <Button size="sm" variant="tomato" onClick={() => toast.error("Couldn't send", { burst: true, buddy: true })}>Error + poof</Button>
+      <Button size="sm" variant="tomato" onClick={() => toast.error("Couldn't post", { burst: true, buddy: true })}>Error + poof</Button>
       <Button size="sm" variant="tomato" onClick={() => toast.error("Payment failed", { burst: "zap" })}>Error + zap</Button>
       <Button size="sm" variant="plain" onClick={() => toast("New version ready", { burst: true })}>Info + sparkle</Button>
     </div>
@@ -194,7 +194,7 @@ const backdropStory = (backdrop: "dots" | "solid" | "none"): Story => ({
   render: () => (
     <div style={{ display: "flex", gap: 22 }}>
       <Button size="sm" variant="mint" onClick={() => toast.success("Copied to clipboard!", { buddy: true })}>Show a toast</Button>
-      <Button size="sm" variant="plain" onClick={() => toast("Mobile 2 is 6 min away")}>Show one without a buddy</Button>
+      <Button size="sm" variant="plain" onClick={() => toast("Rosa liked your sketch")}>Show one without a buddy</Button>
     </div>
   ),
 });
@@ -217,9 +217,9 @@ export const Badges: Story = {
 export const Headings: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 30 }}>
-      <Heading level={1}>Dispatch</Heading>
+      <Heading level={1}>Sketchbook</Heading>
       <Heading level={2}>Status timeline</Heading>
-      <Heading level={3}>Notify on dispatch</Heading>
+      <Heading level={3}>Notify me when</Heading>
     </div>
   ),
 };

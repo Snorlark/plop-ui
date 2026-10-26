@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/assets/plop-logo.png" alt="Plop UI" width="420"></p>
 
-<p align="center"><strong>A hand-lettered sticker UI kit for real-time operations apps.</strong><br>Press it like you mean it.</p>
+<p align="center"><strong>Hand-drawn UI, imperfect on purpose.</strong><br>Press it like you mean it.</p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@plop-ui/react"><img src="https://img.shields.io/npm/v/@plop-ui/react?label=%40plop-ui%2Freact&color=2848D8" alt="npm version"></a>
@@ -17,7 +17,7 @@
   <a href="https://plopui.com/changelog">Changelog</a>
 </p>
 
-Plop! is an open-source React + TypeScript component library for dispatch, field service and ticketing apps. Everything is drawn in one cobalt marker on cream paper: die-cut sticker buttons, hatched shadows, boiling ink outlines, a cast of little characters, and press feedback you can feel (a squish, an ink burst, a buzz on your phone). Every "imperfection" is seeded, so it renders the same on the server and the client.
+PlopUI is an open-source React + TypeScript component library for people who'd rather have fun than follow the design rulebook. Lines wobble, stickers sit a little crooked, and the colors are picked by instinct, not strategy. It breaks the visual rules on purpose and keeps the ones that matter: every piece is accessible to WCAG AA. Everything is drawn in one cobalt marker on cream paper: die-cut sticker buttons, hatched shadows, boiling ink outlines, a cast of little characters, and press feedback you can feel (a squish, an ink burst, a buzz on your phone). Every "imperfection" is seeded, so it renders the same on the server and the client.
 
 The "o" in the logo is the capped buddy who peeks over the top of a `Button`. He is the kit's mascot, and his friends show up wherever the kit has something to tell you.
 
@@ -43,10 +43,10 @@ import { PlopProvider, Button, StatusTimeline, toast } from "@plop-ui/react";
 export function App() {
   return (
     <PlopProvider surface="poster">
-      <Button variant="ink" buddy onClick={() => toast.success("Report sent", { buddy: true })}>
-        Send report
+      <Button variant="ink" buddy onClick={() => toast.success("Sketch posted", { buddy: true })}>
+        Post sketch
       </Button>
-      <StatusTimeline steps={["Reported", "Dispatched", "En route", "Resolved"]} current={2} />
+      <StatusTimeline steps={["Sketched", "Inked", "Colored", "Shipped"]} current={2} />
     </PlopProvider>
   );
 }
@@ -149,7 +149,7 @@ packages/tokens   design tokens → CSS variables + typed object (source: src/to
 packages/fonts    Sketchpop woff2/ttf, the OFL license, font build tools
 packages/react    @plop-ui/react (esbuild, CSS Modules, per-file "use client")
 apps/docs         Next.js 15 site: landing, docs, playground, /kit
-apps/dispatch-demo  Next.js 15 live incident queue built only from Plop! (SSE + Server Action)
+apps/dispatch-demo  Next.js 15 live incident queue built only from PlopUI (SSE + Server Action)
 apps/storybook    Storybook 8 workshop with the a11y addon
 docs/decisions    one short file per decision: what we chose and why
 docs/prototype    the original v0.6 HTML prototype

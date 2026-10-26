@@ -88,14 +88,14 @@ const DEMOS: Record<string, () => ReactNode> = {
         <IconButton variant="plain" size="sm" icon={<InfoIcon size={22} />} label="What does priority do?" burst={false} />
       </Tooltip>
       <Tooltip content="Sends your live location for 30 minutes." side="right" open>
-        <Button size="sm" iconLeft={<PinIcon />}>Share pin</Button>
+        <Button size="sm" iconLeft={<PinIcon />}>Pin to board</Button>
       </Tooltip>
     </div>
   ),
   "text-field": () => (
     <div className="fields">
-      <TextField label="Caller name" placeholder="e.g. Maria Santos" hint="Optional. Anonymous reports are fine." />
-      <TextField label="Location" error="Add a street, barangay, or landmark so responders can find it." />
+      <TextField label="Artist name" placeholder="e.g. Maria Santos" hint="Optional. Anonymous sketches are fine." />
+      <TextField label="Title" error="Give your sketch a title, even a silly one." />
       <TextField label="Callback number" defaultValue="0917 555 0142" success hint="Looks good." />
       <TextArea className="field--wide" label="What happened?" placeholder="Write it like you’d say it on the phone." />
     </div>
@@ -118,60 +118,60 @@ const DEMOS: Record<string, () => ReactNode> = {
   ),
   cards: () => (
     <div className="kit-cards">
-      <TicketCard meta="Ticket #1042, 9:14 AM" title="Printer on 3F jams on every second page" stub="Open">
+      <TicketCard meta="Sketch #1042, 9:14 AM" title="Cat in a teacup, take two" stub="Open">
         <Tag tone="mustard" tilt={-2}>Medium</Tag>
       </TicketCard>
-      <UnitCard name="Mobile 2" subtitle="PO2 Jun Reyes, 2 riders" avatar={<Avatar name="Jun Reyes" status="online" />}>
+      <UnitCard name="Jun Reyes" subtitle="Animator, 2 boards open" avatar={<Avatar name="Jun Reyes" status="online" />}>
         <UnitCardRow>
-          <Tag status="en-route" tilt={-2}>En route</Tag>
-          <Eta value={6} unit="min away" />
+          <Tag status="en-route" tilt={-2}>In progress</Tag>
+          <Eta value={6} unit="min left" />
         </UnitCardRow>
         <UnitCardRow>
-          <Button size="sm" iconLeft={<PhoneIcon />}>Call unit</Button>
+          <Button size="sm" iconLeft={<PhoneIcon />}>Call Jun</Button>
         </UnitCardRow>
       </UnitCard>
-      <StickyNote footer="Added by dispatcher Ana, 9:06 AM">Caller says the front gate is locked. Use the side entrance.</StickyNote>
+      <StickyNote footer="Added by Ana, 9:06 AM">Try the mint on the button. It's louder, in a good way.</StickyNote>
     </div>
   ),
   tabs: () => (
     <Tabs defaultValue="active">
-      <TabList label="Incident queue">
+      <TabList label="Your sketches">
         <Tab value="active" badge={<Count label="3 active" size="sm">3</Count>}>Active</Tab>
-        <Tab value="resolved">Resolved</Tab>
+        <Tab value="resolved">Shipped</Tab>
         <Tab value="flagged">Flagged</Tab>
       </TabList>
-      <TabPanel value="active">Flooding, Purok 4 · Road accident, Maharlika Hwy · Noise complaint, Brgy. 3</TabPanel>
-      <TabPanel value="resolved">Lost child, town plaza · Power line down, Brgy. 7</TabPanel>
+      <TabPanel value="active">Cat in a teacup · Poster for the zine fair · Rosa’s comic, page 3</TabPanel>
+      <TabPanel value="resolved">Birthday card for Lola · Band logo, final</TabPanel>
       <TabPanel value="flagged">
-        <EmptyState>Nothing flagged. Flag an incident to follow up on it here.</EmptyState>
+        <EmptyState>Nothing flagged. Flag a sketch to come back to it here.</EmptyState>
       </TabPanel>
     </Tabs>
   ),
   progress: () => (
     <div className="stack" style={{ gap: 28, maxWidth: 560 }}>
-      <Progress label="Syncing offline reports" value={4} max={10} valueText="4 of 10" />
-      <Progress label="Units available" value={7} max={9} valueText="7 of 9" tone="mint" />
+      <Progress label="Syncing offline sketches" value={4} max={10} valueText="4 of 10" />
+      <Progress label="Pages inked" value={7} max={9} valueText="7 of 9" tone="mint" />
       <Progress label="Response time target" value={92} valueText="92% used" tone="tomato" solid />
     </div>
   ),
   callout: () => (
     <div className="stack" style={{ gap: 18 }}>
-      <Callout title="Two responders are near this pin">Mobile 2 and Mobile 5 are both within 2 km.</Callout>
-      <Callout tone="warn" title="Location is approximate">Confirm a landmark before dispatching.</Callout>
-      <Callout tone="error" title="Couldn’t reach the station">Your report is saved on this phone.</Callout>
-      <Callout tone="success" title="Report received">Reference number 24-1187.</Callout>
+      <Callout title="Two friends are on this board">Rosa and Jun are both sketching right now.</Callout>
+      <Callout tone="warn" title="Not saved yet">Save your sketch before you close the tab.</Callout>
+      <Callout tone="error" title="Couldn’t reach the server">Your sketch is saved on this device.</Callout>
+      <Callout tone="success" title="Sketch received">Reference number 24-1187.</Callout>
     </div>
   ),
   toast: () => (
     <div className="stack" style={{ gap: 30 }}>
       <div className="row">
-        <Toast kind="success">Report sent</Toast>
+        <Toast kind="success">Sketch posted</Toast>
         <Toast kind="error">Couldn’t send. Saved for later.</Toast>
       </div>
       <div className="row">
-        <Button size="sm" variant="mint" onClick={() => toast.success("Report sent")}>Show success</Button>
+        <Button size="sm" variant="mint" onClick={() => toast.success("Sketch posted")}>Show success</Button>
         <Button size="sm" variant="tomato" onClick={() => toast.error("Couldn’t send. Saved for later.")}>Show error</Button>
-        <Button size="sm" variant="plain" onClick={() => toast("Mobile 2 is 6 min away")}>Show info</Button>
+        <Button size="sm" variant="plain" onClick={() => toast("Rosa liked your sketch")}>Show info</Button>
       </div>
     </div>
   ),

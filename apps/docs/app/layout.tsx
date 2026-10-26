@@ -12,14 +12,14 @@ import { patrickHand, sketchpop } from "./fonts";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "PlopUI — hand-drawn UI for apps that can’t wait", template: "%s · PlopUI" },
+  title: { default: "PlopUI — hand-drawn UI, imperfect on purpose", template: "%s · PlopUI" },
   description: SITE_DESCRIPTION,
   applicationName: "PlopUI",
   authors: [{ name: "Lark Sigmuond Babao", url: GITHUB }],
-  keywords: ["React UI library", "React components", "hand-drawn UI", "Next.js", "accessible components", "dispatch app UI", "design system", "sticker UI"],
+  keywords: ["React UI library", "React components", "hand-drawn UI", "Next.js", "accessible components", "playful UI", "design system", "sticker UI"],
   // Shared previews on X, Slack, Discord, LinkedIn: the image is app/opengraph-image.png.
-  openGraph: { type: "website", siteName: "PlopUI", title: "PlopUI — hand-drawn UI for apps that can’t wait", description: SITE_DESCRIPTION },
-  twitter: { card: "summary_large_image", title: "PlopUI — hand-drawn UI for apps that can’t wait", description: SITE_DESCRIPTION },
+  openGraph: { type: "website", siteName: "PlopUI", title: "PlopUI — hand-drawn UI, imperfect on purpose", description: SITE_DESCRIPTION },
+  twitter: { card: "summary_large_image", title: "PlopUI — hand-drawn UI, imperfect on purpose", description: SITE_DESCRIPTION },
 };
 
 /** Tells search engines what PlopUI is (schema.org). */

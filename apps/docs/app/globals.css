@@ -1,4 +1,4 @@
-/* Docs site layout. Colors, fonts and motion come only from Plop! tokens. */
+/* Docs site layout. Colors, fonts and motion come only from PlopUI tokens. */
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-padding-top: 24px; }

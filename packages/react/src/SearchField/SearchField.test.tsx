@@ -8,11 +8,11 @@ const GROUPS: SearchGroup[] = [
     id: "people",
     label: "People",
     items: [
-      { id: "rosa", title: "Rosa Santos", sub: "Dispatcher", lead: { avatar: "Rosa Santos" } },
-      { id: "jun", title: "Jun Reyes", sub: "PO2, Mobile 2", lead: { avatar: "Jun Reyes" } },
+      { id: "rosa", title: "Rosa Santos", sub: "Illustrator", lead: { avatar: "Rosa Santos" } },
+      { id: "jun", title: "Jun Reyes", sub: "Animator", lead: { avatar: "Jun Reyes" } },
     ],
   },
-  { id: "units", label: "Units", items: [{ id: "m2", title: "Mobile 2", sub: "6 min away", meta: { label: "En route", tone: "mustard" } }] },
+  { id: "boards", label: "Boards", items: [{ id: "m2", title: "Animation reel", sub: "6 min left", meta: { label: "In progress", tone: "mustard" } }] },
 ];
 
 async function typeAndSettle(text: string) {
@@ -30,14 +30,14 @@ describe("SearchField", () => {
     await userEvent.tab();
     const box = screen.getByRole("combobox", { name: "Search the board" });
     expect(box).toHaveFocus();
-    await typeAndSettle("mobile");
+    await typeAndSettle("anim");
     expect(box).toHaveAttribute("aria-expanded", "true");
     const options = screen.getAllByRole("option");
-    expect(options).toHaveLength(2); // Jun Reyes (sub matches) and Mobile 2
+    expect(options).toHaveLength(2); // Jun Reyes (sub matches) and Animation reel
     await userEvent.keyboard("{ArrowDown}{ArrowDown}");
     expect(box).toHaveAttribute("aria-activedescendant", options[1]!.id);
     await userEvent.keyboard("{Enter}");
-    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "m2" }), expect.objectContaining({ id: "units" }));
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "m2" }), expect.objectContaining({ id: "boards" }));
   });
 
   it("announces the count, shows Hum when nothing matches, and Escape clears then closes", async () => {

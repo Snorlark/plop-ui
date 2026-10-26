@@ -1,5 +1,5 @@
 /**
- * Plop! design tokens — the single source of truth.
+ * PlopUI design tokens — the single source of truth.
  *
  * `scripts/emit-css.mjs` turns this object into `dist/tokens.css` (CSS
  * variables prefixed `--plop-`), so the typed JS values and the CSS can

@@ -6,8 +6,8 @@ import { Checkbox } from "./Checkbox";
 
 describe("Checkbox", () => {
   it("is a real checkbox input named by its label", () => {
-    renderWithPlop(<Checkbox>Responders on shift</Checkbox>);
-    const box = screen.getByRole("checkbox", { name: "Responders on shift" });
+    renderWithPlop(<Checkbox>Someone comments</Checkbox>);
+    const box = screen.getByRole("checkbox", { name: "Someone comments" });
     expect(box.tagName).toBe("INPUT");
     expect(box).toHaveAttribute("type", "checkbox");
   });
@@ -17,17 +17,17 @@ describe("Checkbox", () => {
     const onChange = vi.fn();
     renderWithPlop(
       <Checkbox onCheckedChange={onCheckedChange} onChange={onChange}>
-        Caller, by SMS
+        Weekly digest, by email
       </Checkbox>,
     );
-    await userEvent.click(screen.getByText("Caller, by SMS"));
+    await userEvent.click(screen.getByText("Weekly digest, by email"));
     expect(screen.getByRole("checkbox")).toBeChecked();
     expect(onCheckedChange).toHaveBeenCalledWith(true);
     expect(onChange).toHaveBeenCalled();
   });
 
   it("toggles with Space", async () => {
-    renderWithPlop(<Checkbox>Barangay captain</Checkbox>);
+    renderWithPlop(<Checkbox>A friend remixes my sketch</Checkbox>);
     await userEvent.tab();
     expect(screen.getByRole("checkbox")).toHaveFocus();
     await userEvent.keyboard(" ");
@@ -35,13 +35,13 @@ describe("Checkbox", () => {
   });
 
   it("supports the indeterminate state", () => {
-    const { rerender } = renderWithPlop(<Checkbox indeterminate>Some units</Checkbox>);
+    const { rerender } = renderWithPlop(<Checkbox indeterminate>Some friends</Checkbox>);
     const box = screen.getByRole("checkbox") as HTMLInputElement;
     expect(box.indeterminate).toBe(true);
     expect(box).toHaveAttribute("aria-checked", "mixed");
     rerender(
       <PlopProvider reducedMotion="always">
-        <Checkbox>Some units</Checkbox>
+        <Checkbox>Some friends</Checkbox>
       </PlopProvider>,
     );
     expect(box.indeterminate).toBe(false);

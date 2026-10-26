@@ -15,9 +15,9 @@ export type SearchLead = ReactNode | { avatar: string } | { dot: TagTone };
 export interface SearchItem {
   id: string;
   title: string;
-  /** A second line, e.g. "Brgy. 3, 2 min ago". */
+  /** A second line, e.g. "Doodles, 2 min ago". */
   sub?: string;
-  /** A washi-tape status on the right, e.g. `{ label: "Critical", tone: "tomato" }`. */
+  /** A washi-tape status on the right, e.g. `{ label: "Wild idea", tone: "tomato" }`. */
   meta?: { label: string; tone?: TagTone };
   /** What sits on the left: an icon, `{ avatar: "Rosa Santos" }` for a doodle face, or `{ dot: "mint" }`. */
   lead?: SearchLead;

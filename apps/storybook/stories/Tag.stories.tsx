@@ -5,7 +5,7 @@ import { useState } from "react";
 const meta = {
   title: "Display/Tag",
   component: Tag,
-  args: { children: "En route", tone: "mustard" },
+  args: { children: "In progress", tone: "mustard" },
   argTypes: {
     tone: { control: "inline-radio", options: ["ink", "tomato", "mustard", "mint", "periwinkle", "bubblegum"] },
     pattern: { control: "inline-radio", options: ["stripes", "dots", "grid"] },
@@ -20,11 +20,11 @@ export const Static: Story = {};
 export const Statuses: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 22, flexWrap: "wrap" }}>
-      <Tag status="critical">Critical</Tag>
-      <Tag status="dispatched">Dispatched</Tag>
-      <Tag status="en-route">En route</Tag>
-      <Tag status="resolved">Resolved</Tag>
-      <Tag status="unassigned">Unassigned</Tag>
+      <Tag status="critical">Wild idea</Tag>
+      <Tag status="dispatched">Inked</Tag>
+      <Tag status="en-route">In progress</Tag>
+      <Tag status="resolved">Shipped</Tag>
+      <Tag status="unassigned">Up for grabs</Tag>
     </div>
   ),
 };
@@ -40,7 +40,7 @@ export const Patterns: Story = {
 };
 
 function RemovableDemo() {
-    const [tags, setTags] = useState(["Barangay 3", "Last 24 hours", "Fire"]);
+    const [tags, setTags] = useState(["Doodles", "Last 24 hours", "Favorites"]);
     return (
       <div style={{ display: "flex", gap: 22, minHeight: 40 }}>
         {tags.length === 0 && <span>All filters cleared.</span>}

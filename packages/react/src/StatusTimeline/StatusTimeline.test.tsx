@@ -1,12 +1,12 @@
 import { render, screen, within } from "@testing-library/react";
 import { StatusTimeline } from "./StatusTimeline";
 
-const steps = ["Reported", "Dispatched", "En route", "Resolved"];
+const steps = ["Sketched", "Inked", "Colored", "Shipped"];
 
 describe("StatusTimeline", () => {
   it("is an ordered list with one item per step", () => {
-    render(<StatusTimeline steps={steps} current={2} label="Incident progress" />);
-    const list = screen.getByRole("list", { name: "Incident progress" });
+    render(<StatusTimeline steps={steps} current={2} label="Sketch progress" />);
+    const list = screen.getByRole("list", { name: "Sketch progress" });
     expect(list.tagName).toBe("OL");
     expect(within(list).getAllByRole("listitem")).toHaveLength(4);
   });
@@ -21,13 +21,13 @@ describe("StatusTimeline", () => {
   it("writes every status in text, not just color", () => {
     render(<StatusTimeline steps={steps} current={2} />);
     const items = screen.getAllByRole("listitem");
-    expect(items[0]).toHaveTextContent("Reported, done");
-    expect(items[2]).toHaveTextContent("En route, current step");
-    expect(items[3]).toHaveTextContent("Resolved, not started");
+    expect(items[0]).toHaveTextContent("Sketched, done");
+    expect(items[2]).toHaveTextContent("Colored, current step");
+    expect(items[3]).toHaveTextContent("Shipped, not started");
   });
 
   it("shows times from the times prop or the step objects", () => {
-    render(<StatusTimeline steps={[{ label: "Reported", time: "9:02 AM" }, "Dispatched"]} times={[undefined, "9:04 AM"]} current={1} />);
+    render(<StatusTimeline steps={[{ label: "Sketched", time: "9:02 AM" }, "Inked"]} times={[undefined, "9:04 AM"]} current={1} />);
     expect(screen.getByText("9:02 AM")).toBeInTheDocument();
     expect(screen.getByText("9:04 AM")).toBeInTheDocument();
   });

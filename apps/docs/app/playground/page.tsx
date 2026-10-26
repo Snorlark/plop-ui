@@ -6,7 +6,7 @@ import { PlaygroundTools } from "./PlaygroundTools";
 
 export const metadata: Metadata = {
   title: "Playground",
-  description: "Stick real Plop! components on a board, letter anything in Sketchpop, or tweak every prop, then copy the code or export an image.",
+  description: "Stick real PlopUI components on a board, letter anything in Sketchpop, or tweak every prop, then copy the code or export an image.",
 };
 
 export default function PlaygroundPage() {

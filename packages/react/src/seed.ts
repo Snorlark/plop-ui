@@ -1,5 +1,5 @@
 /**
- * Seeded randomness. Every "imperfection" (tilt, wobble, jitter) in Plop!
+ * Seeded randomness. Every "imperfection" (tilt, wobble, jitter) in PlopUI
  * comes from here, never Math.random(), so the server render and the
  * browser render produce the same values and hydration never mismatches.
  */
