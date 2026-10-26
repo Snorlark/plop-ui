@@ -450,7 +450,9 @@ html[data-tear]::view-transition-old(root) {
 .doc-dodont > div > span:last-child { font-size: 18px; }
 .doc-dodont__do { background: var(--plop-mint); transform: rotate(-.6deg); }
 .doc-dodont__dont { background: var(--plop-bubblegum); transform: rotate(.6deg); }
-.doc-list { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; font-size: 18px; max-width: 64ch; color: var(--site-text); }
+/* Lists of notes (accessibility on component pages) use the column's full width; short lines left most of it empty. */
+.doc-list { margin: 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; font-size: 18px; color: var(--site-text); }
+.doc-main.content .doc-list li { max-width: none; }
 
 .doc-pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 40px !important; padding-top: 26px; border-top: 2.5px dashed var(--site-rule); }
 .doc-pager a { display: flex; flex-direction: column; gap: 2px; min-height: 44px; text-decoration: none; color: var(--site-text); }
