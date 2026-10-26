@@ -287,7 +287,89 @@ html[data-tear]::view-transition-old(root) {
   position: relative; margin-top: 10px; padding: 34px 22px 30px; border-radius: 4px 4px 10px 12px; background: #fff;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px 30px;
 }
-.pack-sticker { display: inline-flex; filter: drop-shadow(0 3px 2px rgba(18,36,120,.12)); }
+/* A sticker in the pack: --dx/--dy move it when it's dragged out, --tilt is its own angle. */
+.pack-sticker {
+  position: relative; display: inline-flex; filter: drop-shadow(0 3px 2px rgba(18,36,120,.12));
+  transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(var(--tilt, 0deg));
+  transition: transform .45s var(--plop-ease-spring), filter .25s ease;
+}
+
+/* ---- Sealed: the pack wiggles when you hover it. Pull the perforated top strip to tear it, or press "Tear it open". ---- */
+.pack__tear {
+  cursor: grab; touch-action: none; user-select: none; z-index: 2;
+  /* --px/--py/--pr follow the pull; it peels up from its left corner and snaps back if let go early */
+  transform: translate(var(--px, 0px), var(--py, 0px)) rotate(var(--pr, 0deg)); transform-origin: 0 100%;
+  transition: transform .45s var(--plop-ease-spring);
+}
+.pack__tear[data-pulling] { cursor: grabbing; transition: none; filter: drop-shadow(0 10px 10px rgba(18,36,120,.2)); }
+.pack__tear::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 3px; border-bottom: 2.5px dashed color-mix(in srgb, var(--plop-ink) 45%, transparent); }
+.pack__tear-hint {
+  position: absolute; left: 18px; top: 50%; translate: 0 -50%; padding: 2px 8px; border-radius: 6px; pointer-events: none;
+  font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 12px; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--plop-ink-text); background: color-mix(in srgb, var(--plop-paper) 80%, transparent);
+}
+.pack__tear[data-ready] .pack__tear-hint, .pack__tear:hover .pack__tear-hint { background: var(--plop-mustard); }
+.pack[data-state="sealed"]:not(:has([data-pulling])):hover { animation: pack-wiggle .6s var(--plop-ease-spring); }
+/* The way in for a click or the keyboard, sitting on the strip. */
+.pack__open {
+  position: absolute; right: 14px; top: 9px; z-index: 3; min-height: 36px; padding: 0 14px; cursor: pointer; rotate: 2deg;
+  font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 12px; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--plop-on-fill-ink); background: var(--plop-ink); border: 0; border-radius: 12px 9px 13px 10px; box-shadow: 2px 3px 0 var(--plop-shadow);
+  transition: transform .3s var(--plop-ease-spring);
+}
+.pack__open:hover { transform: translateY(-2px) rotate(-2deg); }
+.pack__open:active { transform: scale(.95); }
+.pack__open:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
+.pack:has([data-pulling]) .pack__open { opacity: 0; pointer-events: none; }
+@keyframes pack-wiggle { 30% { transform: rotate(-2.6deg) translateY(-3px); } 60% { transform: rotate(.2deg); } }
+
+/* ---- Tearing: the strip rips off and flies away, the stickers jump loose. ---- */
+/* The rip starts from wherever the pull left the strip (or from rest, for the button). */
+.pack[data-state="tearing"] .pack__tear { animation: pack-tear .65s cubic-bezier(.55, 0, .7, .2) forwards; }
+@keyframes pack-tear {
+  0% { transform: translate(var(--px, 0px), var(--py, 0px)) rotate(var(--pr, 0deg)); }
+  30% { transform: translate(calc(var(--px, 0px) + 10px), calc(var(--py, 0px) - 14px)) rotate(calc(var(--pr, 0deg) - 6deg)); }
+  100% { transform: translate(calc(var(--px, 0px) + 80px), calc(var(--py, 0px) - 220px)) rotate(-34deg); opacity: 0; }
+}
+.pack[data-state="tearing"] .pack-sticker { animation: sticker-loose .5s var(--plop-ease-spring) both; animation-delay: calc(var(--i, 0) * 30ms + 220ms); }
+.pack__sheet > .pack-sticker:nth-child(odd) { --i: 1; } .pack__sheet > .pack-sticker:nth-child(3n) { --i: 3; } .pack__sheet > .pack-sticker:nth-child(4n) { --i: 5; }
+@keyframes sticker-loose { 40% { transform: translate(var(--dx, 0px), calc(var(--dy, 0px) - 12px)) rotate(calc(var(--tilt, 0deg) * -1)) scale(1.06); } }
+/* Under the strip while it's pulled: the ragged stub it leaves behind on the pack. */
+.pack__stub {
+  position: absolute; left: 0; right: 0; top: 38px; height: 16px; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.85) 0 2px, rgba(225,231,250,.55) 2px 5px); border-inline: 1.5px solid rgba(40,72,216,.22);
+  clip-path: polygon(0 40%, 4% 20%, 8% 45%, 13% 15%, 18% 40%, 24% 25%, 29% 50%, 35% 20%, 41% 45%, 47% 15%, 53% 40%, 59% 20%, 65% 45%, 71% 25%, 77% 50%, 83% 20%, 89% 45%, 95% 15%, 100% 35%, 100% 100%, 0 100%);
+}
+/* What's left of the strip: a ragged edge. */
+.pack__header--torn { height: 16px; clip-path: polygon(0 40%, 4% 20%, 8% 45%, 13% 15%, 18% 40%, 24% 25%, 29% 50%, 35% 20%, 41% 45%, 47% 15%, 53% 40%, 59% 20%, 65% 45%, 71% 25%, 77% 50%, 83% 20%, 89% 45%, 95% 15%, 100% 35%, 100% 100%, 0 100%); }
+
+/* ---- Open: every sticker is loose. Hover peels its corner up, drag carries it anywhere on the screen. ---- */
+.pack[data-state="open"] .pack-sticker { cursor: grab; touch-action: none; }
+.pack[data-state="open"] .pack-sticker::after {
+  content: ""; position: absolute; right: -6px; bottom: -6px; width: 26px; height: 26px; pointer-events: none;
+  /* the back of the sticker, curling up from the corner */
+  background: linear-gradient(135deg, transparent 49%, color-mix(in srgb, var(--plop-ink) 18%, var(--plop-paper)) 50%, var(--plop-paper) 75%);
+  border-radius: 0 0 10px 0; clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  transform: scale(0); transform-origin: 100% 100%; transition: transform .3s var(--plop-ease-spring);
+}
+.pack[data-state="open"] .pack-sticker:is(:hover, :focus-within) {
+  transform: translate(var(--dx, 0px), calc(var(--dy, 0px) - 5px)) rotate(calc(var(--tilt, 0deg) - 2deg));
+  filter: drop-shadow(3px 10px 6px rgba(18,36,120,.22));
+}
+.pack[data-state="open"] .pack-sticker:is(:hover, :focus-within)::after { transform: scale(1) rotate(-6deg); }
+.pack-sticker[data-dragging] { cursor: grabbing !important; transition: none; filter: drop-shadow(6px 18px 10px rgba(18,36,120,.28)) !important; }
+.pack-sticker[data-dragging]::after { transform: scale(1.15) rotate(-10deg) !important; }
+
+.pack__reseal {
+  position: absolute; right: 16px; top: -14px; z-index: 2; min-height: 40px; padding: 0 16px; cursor: pointer; rotate: 2deg;
+  font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 13px; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--plop-ink-text); background: var(--plop-paper); border: 2.5px solid var(--plop-ink); border-radius: 14px 10px 15px 11px; box-shadow: 3px 4px 0 var(--plop-shadow);
+}
+.pack__reseal:hover { background: var(--plop-mustard); }
+.pack__reseal:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .pack, .pack *, .pack-sticker { animation: none !important; transition: none !important; }
+}
 .pack-chip { display: inline-flex; align-items: center; padding: 9px 14px; background: #fff; border: 3px solid var(--plop-ink); border-radius: 14px 10px 15px 11px; box-shadow: 0 0 0 6px #fff, 0 0 0 7.5px rgba(40,72,216,.16); }
 .pack-chip--wide { padding: 10px 18px 6px; }
 .pack-chip .plop-checkbox, .pack-chip label { font-style: italic; font-weight: 700; text-transform: uppercase; font-size: 14px; letter-spacing: .04em; }

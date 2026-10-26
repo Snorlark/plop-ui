@@ -22,6 +22,7 @@ import type { ReactNode } from "react";
 import { CopyCommand } from "./CopyCommand";
 import { Hand, Scribble, Tape } from "./Doodles";
 import { PaperStack } from "./PaperStack";
+import { PackSticker, StickerPack } from "./StickerPack";
 import { WhyPlop } from "./WhyPlop";
 import { HeroTitle } from "./HeroTitle";
 
@@ -96,20 +97,6 @@ function Kicker({
   );
 }
 
-function PackSticker({
-  tilt,
-  children,
-}: {
-  tilt: number;
-  children: ReactNode;
-}) {
-  return (
-    <div className="pack-sticker" style={{ transform: `rotate(${tilt}deg)` }}>
-      {children}
-    </div>
-  );
-}
-
 function Hero() {
   return (
     <section className="home-hero">
@@ -170,11 +157,8 @@ function Hero() {
           </span>
         </div>
 
-        <div className="pack plop-paper">
-          <div className="pack__header" aria-hidden="true">
-            <span className="pack__hole" />
-          </div>
-          <div className="pack__body">
+        <StickerPack
+          cover={
             <div className="pack__cover">
               <span className="pack__cover-blobs" aria-hidden="true" />
               <Tag tone="mustard" tilt={-2}>
@@ -185,7 +169,8 @@ function Hero() {
                 Real components / Hand-drawn / Open source
               </span>
             </div>
-            <div className="pack__sheet">
+          }
+        >
               <PackSticker tilt={-6}>
                 <Avatar name="Rosa Santos" status="online" size="lg" />
               </PackSticker>
@@ -256,10 +241,7 @@ function Hero() {
               <PackSticker tilt={4}>
                 <Avatar name="Ana Cruz" status="online" />
               </PackSticker>
-            </div>
-            <span className="pack__shine" aria-hidden="true" />
-          </div>
-        </div>
+        </StickerPack>
         <Link
           href="#pieces"
           className="home-down"
