@@ -18,6 +18,11 @@ export default defineConfig({
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "phone", use: { ...devices["Pixel 7"] } },
+    // Other engines: Firefox, and WebKit for Safari on macOS and iPhone. `channel` only applies to Chromium.
+    // One retry in CI: Firefox shows a rare hydration mismatch (React #418, about 1 in 130 loads) that also happens on main; see TASKS.md.
+    { name: "firefox", use: { ...devices["Desktop Firefox"], channel: undefined }, retries: process.env.CI ? 1 : 0 },
+    { name: "safari", use: { ...devices["Desktop Safari"], channel: undefined } },
+    { name: "iphone", use: { ...devices["iPhone 14"], channel: undefined } },
   ],
   webServer: {
     command: `pnpm next start -p ${PORT}`,

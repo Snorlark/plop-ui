@@ -32,11 +32,16 @@ describe("useHaptics", () => {
     expect(result.current.enabled).toBe(false);
   });
 
-  it("falls back to the iOS switch proxy without the Vibration API", () => {
+  it("without the Vibration API, does nothing on desktop and uses the iOS switch proxy on touch devices", () => {
     Object.defineProperty(navigator, "vibrate", { value: undefined, configurable: true });
     const { result } = renderHook(() => useHaptics(), { wrapper: wrap() });
     result.current.tap();
+    // Desktop Firefox and Safari: no haptics, and nothing that could take focus.
+    expect(document.querySelector("input[switch]")).toBeNull();
+    Object.defineProperty(navigator, "maxTouchPoints", { value: 5, configurable: true });
+    result.current.tap();
     expect(document.querySelector("input[switch]")).not.toBeNull();
+    Object.defineProperty(navigator, "maxTouchPoints", { value: 0, configurable: true });
   });
 });
 
