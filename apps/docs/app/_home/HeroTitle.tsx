@@ -1,46 +1,8 @@
 "use client";
 
-import { CuttingMatIcon, IconButton, Lettering, PaperIcon, Tooltip, useHaptics, useReducedMotion, useSound } from "@plop-ui/react";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { flushSync } from "react-dom";
-import { useFeedback, type SiteSurface } from "../_kit/Providers";
-
-type ViewTransitionDocument = Document & { startViewTransition?: (update: () => void) => { finished: Promise<void> } };
-
-/**
- * Switches paper ↔ cutting mat by tearing the old page off like a sheet from
- * a notepad: it tugs, rips along a ragged top edge and falls away, showing
- * the new surface underneath. A view transition that only moves the old
- * snapshot (transform), so it stays on the compositor.
- */
-function useSurfaceSwitch() {
-  const { surface, setSurface } = useFeedback();
-  const reduced = useReducedMotion();
-  const haptics = useHaptics();
-  const sound = useSound();
-  const busy = useRef(false);
-
-  return useCallback(() => {
-    if (busy.current) return;
-    const next: SiteSurface = surface === "mat" ? "poster" : "mat";
-    haptics.tap();
-    sound("up");
-    const doc = document as ViewTransitionDocument;
-    if (reduced || typeof doc.startViewTransition !== "function") {
-      setSurface(next);
-      return;
-    }
-    busy.current = true;
-    const html = document.documentElement;
-    html.setAttribute("data-tear", "");
-    const vt = doc.startViewTransition(() => flushSync(() => setSurface(next)));
-    const done = () => {
-      html.removeAttribute("data-tear");
-      busy.current = false;
-    };
-    vt.finished.then(done, done);
-  }, [surface, setSurface, reduced, haptics, sound]);
-}
+import { CuttingMatIcon, IconButton, Lettering, PaperIcon, Tooltip, useReducedMotion } from "@plop-ui/react";
+import { useEffect, useId, useState } from "react";
+import { useFeedback, useSurfaceSwitch, type SiteSurface } from "../_kit/Providers";
 
 /** The first word of the headline is the surface: drawn by hand on paper, die-cut on the mat. */
 const WORD: Record<SiteSurface, string> = { poster: "Hand-drawn", mat: "Die-cut" };
