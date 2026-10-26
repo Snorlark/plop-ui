@@ -178,3 +178,11 @@
   animation: none !important;
   transition-duration: 0.01ms !important;
 }
+
+/* A timeline forced horizontal in a narrow box (a card on a phone): smaller labels, so neighbours never run into each other. */
+@container (max-width: 360px) {
+  .horizontal .label {
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+}
