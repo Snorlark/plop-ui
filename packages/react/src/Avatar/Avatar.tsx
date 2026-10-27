@@ -18,6 +18,7 @@ export interface AvatarProps {
   statusLabel?: string;
   /** Rotation in degrees. Default 0. */
   tilt?: number;
+  /** Extra class on the avatar. */
   className?: string;
 }
 
@@ -138,7 +139,9 @@ export interface AvatarStackProps {
   max?: number;
   /** Accessible name. Default "Rosa, Jun, Ana and 4 more". */
   label?: string;
+  /** Extra class on the stack. */
   className?: string;
+  /** Not rendered: the faces come from `names`. */
   children?: ReactNode;
 }
 

@@ -3,6 +3,7 @@ import { cx } from "../internal/cx.js";
 import styles from "./Sheet.module.css";
 
 export interface SheetProps extends HTMLAttributes<HTMLDivElement> {
+  /** What sits on the paper. */
   children?: ReactNode;
   /** Color of the two tape strips holding it down, or `none`. Default `mustard`. */
   tape?: "mustard" | "periwinkle" | "bubblegum" | "mint" | "none";

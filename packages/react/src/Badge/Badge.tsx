@@ -3,6 +3,7 @@ import { cx } from "../internal/cx.js";
 import styles from "./Badge.module.css";
 
 export interface CountProps {
+  /** The number shown. Screen readers hear `label` instead. */
   children: number | string;
   /** What the number means, read by screen readers: "3 unread". Required, because a bare number says nothing. */
   label: string;
@@ -10,6 +11,7 @@ export interface CountProps {
   tone?: "tomato" | "ink";
   /** `sm` fits inside tabs and buttons. Default `md`. */
   size?: "sm" | "md";
+  /** Extra class on the sticker. */
   className?: string;
 }
 
@@ -25,7 +27,9 @@ export function Count({ children, label, tone = "tomato", size = "md", className
 export interface StatusDotProps {
   /** The words are the status; the dot only repeats it. */
   children: ReactNode;
+  /** Sets the dot color: `online`, `busy` or `offline`. Default `online`. */
   tone?: "online" | "busy" | "offline";
+  /** Extra class on the wrapper around the dot and words. */
   className?: string;
 }
 

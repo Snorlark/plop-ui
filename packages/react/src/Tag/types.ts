@@ -22,6 +22,8 @@ export interface TagProps {
   onRemove?: () => void;
   /** Accessible name of the remove button. Default "Remove <label>". */
   removeLabel?: string;
+  /** Extra class on the tag. */
   className?: string;
+  /** Id of the tag element. */
   id?: string;
 }
