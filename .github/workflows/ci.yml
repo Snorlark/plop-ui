@@ -12,6 +12,8 @@ name: CI
 
 on:
   pull_request:
+    # Only PRs into main (a release): work merges into dev freely, without CI, to save Actions minutes.
+    branches: [main]
     # ready_for_review: a draft tests Chrome and Android only; marking it ready runs every browser.
     types: [opened, synchronize, reopened, ready_for_review]
   push:
