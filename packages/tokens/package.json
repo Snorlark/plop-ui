@@ -2,6 +2,7 @@
   "name": "@plop-ui/tokens",
   "version": "0.3.4",
   "description": "Design tokens for PlopUI: colors, contrast roles, type, motion and 5 paper surfaces, as CSS variables and a typed object.",
+  "keywords": ["plopui", "design-tokens", "css-variables", "design-system", "hand-drawn", "theme", "wcag", "accessible"],
   "license": "MIT",
   "author": "Lark Sigmuond Babao",
   "homepage": "https://plopui.com",
