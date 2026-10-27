@@ -96,6 +96,8 @@
 html { scroll-padding-top: calc(var(--header-offset, 0px) + 24px); }
 /* In-page links (#why, #pieces, the down arrow, the docs' own anchors) glide instead of jumping. */
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+/* A reload hides the page until it's back at the saved place (_site/scrollRestore.ts). */
+html[data-restoring] body { visibility: hidden; }
 .doc-nav, .pg-picker { top: calc(var(--header-offset, 0px) + 20px) !important; transition: top .3s var(--plop-ease-squish); }
 .doc-nav { max-height: calc(100vh - var(--header-offset, 0px) - 40px) !important; }
 @media (prefers-reduced-motion: reduce) { .site-header, .doc-nav, .pg-picker { transition: none; } }

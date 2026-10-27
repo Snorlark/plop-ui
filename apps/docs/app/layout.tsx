@@ -1,4 +1,5 @@
 import "@plop-ui/react/styles.css";
+import { SCROLL_SCRIPT } from "./_site/scrollRestore";
 import "./globals.css";
 import "./site.css";
 import type { Metadata } from "next";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         {/* Paper or cutting mat: applied before the first paint so a static page never flashes the wrong surface. */}
         <script dangerouslySetInnerHTML={{ __html: SURFACE_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: SCROLL_SCRIPT }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       </head>
       <body className="plop-surface">

@@ -19,7 +19,8 @@ test("a stretching grid or flex row doesn't blow sticker controls up", async ({ 
 
 /** Points inside a control at rest that fall outside it while hovered: a pointer resting there makes it shake. */
 async function loopPoints(page: Page, el: Locator) {
-  await el.evaluate((e) => e.scrollIntoView({ block: "center" }));
+  // Instant: under the site's smooth scrolling the page would still be moving while the points are measured.
+  await el.evaluate((e) => e.scrollIntoView({ block: "center", behavior: "instant" }));
   await page.mouse.move(1, 1);
   await page.waitForTimeout(400);
   const handle = await el.elementHandle();
