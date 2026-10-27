@@ -24,7 +24,9 @@ CI looks at which files a pull request changed and runs only what that change ne
 
 "Quick checks" means: build the libraries, then `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm size`.
 
-The browser tests run as five separate jobs side by side, one per browser. The website is built once and shared with all of them, and each job downloads only its own browser (cached between runs). A new push to the same pull request cancels the run still going.
+The browser tests run as three jobs side by side, one per browser engine: `e2e (chromium)` (Chrome and Android), `e2e (firefox)` and `e2e (webkit)` (Safari and iPhone). The website is built once and shared with all of them, and each job downloads only its own browser (cached between runs). A new push to the same pull request cancels the run still going.
+
+**Draft pull requests save minutes.** While a pull request is a draft, a change that would test all 5 browsers tests Chrome and Android only. Click **Ready for review** and CI runs again with every browser; that's the run that lets you merge (a draft can't be merged anyway).
 
 Other times CI runs:
 
