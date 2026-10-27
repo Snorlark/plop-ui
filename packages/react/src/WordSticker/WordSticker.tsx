@@ -26,7 +26,9 @@ export interface WordStickerProps {
   tilt?: number;
   /** How wobbly the letters are (max tilt per letter, in degrees). Default 2. Same words, same wobble. */
   jitter?: number;
+  /** Extra class on the sticker. */
   className?: string;
+  /** Inline styles on the sticker, applied over the ones `size`, `tone` and `tilt` set. */
   style?: CSSProperties;
 }
 

@@ -40,17 +40,22 @@ export interface SearchFieldProps {
   label: string;
   /** Hide the label visually (it stays for screen readers). Use it in tight headers. */
   hideLabel?: boolean;
+  /** Hint text in the empty box. Defaults to the label. */
   placeholder?: string;
   /** `sm` for headers, `md` (default), `lg` for a page about finding things. */
   size?: "sm" | "md" | "lg";
+  /** Controlled text in the box. */
   value?: string;
+  /** Uncontrolled initial text. Default `""`. */
   defaultValue?: string;
+  /** Called with the new text as you type, and with `""` when the box is cleared or a result is picked. */
   onValueChange?: (value: string) => void;
   /**
    * What can be found. Filtered as you type (title, sub, meta and keywords); pass `filter={false}`
    * if you filter yourself, e.g. on a server.
    */
   groups?: SearchGroup[];
+  /** Filter `groups` by the typed text and cap each at `limit`. `false` shows `groups` as given. Default `true`. */
   filter?: boolean;
   /** Shown when the box is empty and focused, e.g. quick actions. Recent searches come first. */
   emptyGroups?: SearchGroup[];
@@ -64,10 +69,11 @@ export interface SearchFieldProps {
   shortcut?: string;
   /** Max results per group. Default 4. */
   limit?: number;
+  /** Extra class on the outer wrapper. */
   className?: string;
-  /** @internal The command palette keeps its results sheet open inline. */
+  /** Keeps the results sheet open inline and the text after a pick; the command palette uses it. @internal */
   inline?: boolean;
-  /** @internal Focus the input as soon as it mounts (the palette does this when it opens). */
+  /** Focus the input as soon as it mounts (the palette does this when it opens). @internal */
   focusOnMount?: boolean;
 }
 
@@ -435,16 +441,21 @@ export function SearchField({
 export interface CommandPaletteProps {
   /** Controlled open state. Leave both out and the palette opens with the shortcut on its own. */
   open?: boolean;
+  /** Called with the new open state when the shortcut, Escape, the backdrop or a pick opens or closes it. */
   onOpenChange?: (open: boolean) => void;
   /** What can be found while typing. */
   groups: SearchGroup[];
   /** Shown before typing, e.g. quick actions. */
   emptyGroups?: SearchGroup[];
+  /** Called with the picked item and its group, after the palette closes. */
   onSelect: (item: SearchItem, group: SearchGroup) => void;
   /** Toggle with Cmd+K on a Mac, Ctrl+K elsewhere. Default true. */
   shortcut?: boolean;
+  /** Accessible name of the dialog and its search field. Default "Type a command or search". */
   label?: string;
+  /** Hint text in the empty box. Defaults to the label. */
   placeholder?: string;
+  /** Remember picks under this localStorage key and offer them as recent searches. */
   recentKey?: string;
 }
 

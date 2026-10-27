@@ -10,6 +10,7 @@ export interface LetteringProps {
   amp?: number;
   /** Letters start hidden and write on when `data-in` is set on this element (see Heading). */
   writeOn?: boolean;
+  /** Extra class on the wrapper span. Not applied when `children` isn't a string or number. */
   className?: string;
 }
 

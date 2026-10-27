@@ -23,11 +23,13 @@ export type MenuItem =
 export interface MenuProps {
   /** What the menu is for, e.g. "Sketch actions". The trigger's text, or its accessible name with `icon`. */
   label: string;
+  /** The actions, in order: `{ label, onSelect, icon?, keys?, danger?, disabled? }`, or `"separator"` for a rule between them. */
   items: MenuItem[];
   /** Makes the trigger a round icon sticker (e.g. `<MoreIcon />`); the label is then read, not shown. */
   icon?: ReactNode;
   /** Which edge the sheet lines up with. Default `start`; use `end` for a menu at the right of a row. */
   align?: "start" | "end";
+  /** Extra class on the wrapper around the trigger and sheet. */
   className?: string;
 }
 
