@@ -9,6 +9,11 @@ name: Release
 #   Staged versions go live only when a maintainer approves them on npmjs.com with 2FA.
 # It can also be started by hand from the Actions tab.
 #
+# GitHub doesn't run CI for PRs the bot opens, so after opening or updating the version PR this workflow starts
+# ci.yml on changeset-release/main itself (workflow_dispatch is allowed from GITHUB_TOKEN). That gives the PR its
+# required `ci` check; a version-bump-only PR just builds the site. Tests aren't run here: every change already
+# passed the `ci` gate on its PR (see docs/ci-cd.md).
+#
 # Needs: trusted publishing set up on npm for each package (owner Snorlark, repo plop-ui, workflow release.yml),
 # and Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests". No npm token.
 # The trusted publishers allow `npm stage publish` only (leave "Allow npm publish" unticked).
@@ -24,6 +29,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write # push the version commit and tags
   pull-requests: write # open the "Version packages" PR
+  actions: write # start CI on the version PR
   id-token: write # npm trusted publishing (OIDC) and provenance
 
 jobs:
@@ -39,8 +45,8 @@ jobs:
       # Trusted publishing (OIDC) needs npm 11.5.1 or newer; Node 22 ships npm 10.
       - run: npm install -g npm@11
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
-      - uses: changesets/action@v1
+      - id: changesets
+        uses: changesets/action@v1
         with:
           version: pnpm version-packages
           publish: pnpm release
@@ -50,3 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # npm only accepts provenance from public repos, so it follows the repo's visibility.
           NPM_PROVENANCE: ${{ !github.event.repository.private }}
+      - if: steps.changesets.outputs.hasChangesets == 'true'
+        run: gh workflow run ci.yml --ref changeset-release/main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
