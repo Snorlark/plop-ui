@@ -84,6 +84,8 @@ pnpm size
 pnpm --filter @plop-ui/docs test:e2e    # if you changed the docs site or a component's markup
 ```
 
+CI runs the right subset for your change on the pull request; [docs/ci-cd.md](docs/ci-cd.md) explains what runs when and how releases work.
+
 Then look at your change in the docs site on at least two surfaces (try Poster and Cutting mat), in light and dark, with reduced motion turned on in your OS, and with the keyboard only.
 
 ## Branches, commits and pull requests
