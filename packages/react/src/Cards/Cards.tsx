@@ -3,13 +3,17 @@ import { cx } from "../internal/cx.js";
 import { Lettering } from "../Lettering/Lettering.js";
 import styles from "./Cards.module.css";
 
-type Tilted = { /** Rotation in degrees. */ tilt?: number };
+type Tilted = {
+  /** Rotation in degrees. Leave it out for the card's own small tilt. */
+  tilt?: number;
+};
 const tiltStyle = (tilt: number | undefined, style?: CSSProperties) =>
   (tilt === undefined ? style : { "--tilt": `${tilt}deg`, ...style }) as CSSProperties | undefined;
 
 export interface TicketCardProps extends Tilted, Omit<HTMLAttributes<HTMLElement>, "title"> {
   /** Small line above the title, e.g. "Sketch #1042, 9:14 AM". */
   meta?: ReactNode;
+  /** The ticket's title, lettered in Sketchpop. */
   title: ReactNode;
   /** The tear-off stub, e.g. "Open". */
   stub?: ReactNode;
@@ -37,12 +41,15 @@ export function TicketCard({ meta, title, stub, children, tilt, headingLevel = 3
 }
 
 export interface UnitCardProps extends Tilted, HTMLAttributes<HTMLElement> {
+  /** The person's or project's name, lettered in Sketchpop. */
   name: ReactNode;
+  /** A small line under the name, e.g. a role. */
   subtitle?: ReactNode;
   /** Usually an <Avatar>. */
   avatar?: ReactNode;
   /** Rows: status and ETA, actions. */
   children?: ReactNode;
+  /** Heading level of the name. Default 3. */
   headingLevel?: 2 | 3 | 4;
 }
 
@@ -81,6 +88,7 @@ export function Eta({ value, unit }: { value: ReactNode; unit: ReactNode }) {
 }
 
 export interface StickyNoteProps extends Tilted, HTMLAttributes<HTMLElement> {
+  /** What the note says. */
   children: ReactNode;
   /** Small line at the bottom, e.g. "Added by Ana, 9:06 AM". */
   footer?: ReactNode;

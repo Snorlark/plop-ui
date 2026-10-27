@@ -94,10 +94,13 @@ function ToastView({ item }: { item: ToastItem }) {
 }
 
 export interface ToastProps {
+  /** The message, lettered in Sketchpop. */
   children: ReactNode;
+  /** Sets the color and icon: `info`, `success` or `error`. Default `info`. */
   kind?: ToastKind;
   /** A character peeks over the toast: `true` picks one for the kind, or name a mood. */
   buddy?: boolean | BuddyMood;
+  /** Extra class on the toast. */
   className?: string;
 }
 
