@@ -5,7 +5,8 @@ import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { getPass, getServerPass, subscribe } from "../_site/pass";
 import { useBoardHistory, type Board } from "./history";
-import { Choice, Slider, Swatches, Text } from "./controls";
+import { Inspector } from "./Inspector";
+import { Choice, Slider } from "./controls";
 import { boardCode, codeFor, describe, KINDS, REGULARS_SHELF, SHELVES, type Item, type TrayEntry } from "./stickers";
 import styles from "./tools.module.css";
 
@@ -308,6 +309,7 @@ export function StickerBoard() {
               <div
                 key={it.id}
                 data-sticker=""
+                data-id={it.id}
                 className={styles.item}
                 data-selected={it.id === selected ? "" : undefined}
                 style={{ left: `${it.x}%`, top: `${it.y}%`, zIndex: it.z, "--tilt": `${it.tilt}deg`, "--scale": it.scale } as CSSProperties}
@@ -323,51 +325,22 @@ export function StickerBoard() {
             ))}
           </div>
         </PlopProvider>
-      </section>
-
-      {/* 3. Inspector: only what fits the selection */}
-      <aside className={styles.inspector} aria-labelledby="insp-h">
-        {sel ? (
-          <>
-            <h2 id="insp-h" className={styles.panelTitle}>
-              {KINDS[sel.kind].name}
-            </h2>
-            {KINDS[sel.kind].fields.map((f) => {
-              const v = sel.props[f.key];
-              const set = (nv: string | number | boolean) => update(sel.id, (it) => ({ props: { ...it.props, [f.key]: nv } }));
-              if (f.type === "text") return <Text key={f.key} label={f.label} value={String(v ?? "")} onChange={set} />;
-              if (f.type === "swatch") return <Swatches key={f.key} label={f.label} value={String(v)} options={f.options} onChange={set} />;
-              if (f.type === "choice") return <Choice key={f.key} label={f.label} value={String(v)} options={f.options} onChange={set} />;
-              if (f.type === "step") return <Slider key={f.key} label={f.label} value={Number(v)} min={f.min} max={f.max} onChange={set} />;
-              return (
-                <Choice key={f.key} label={f.label} value={v ? "yes" : "no"} options={[["yes", "Yes"], ["no", "No"]]} onChange={(nv) => set(nv === "yes")} />
-              );
-            })}
-            <Slider label="Size" value={Math.round(sel.scale * 100)} min={50} max={180} step={5} unit="%" onChange={(v) => update(sel.id, { scale: v / 100 })} />
-            <Slider label="Tilt" value={sel.tilt} min={-20} max={20} step={0.5} unit="°" onChange={(v) => update(sel.id, { tilt: v })} />
-            <div className={styles.actions}>
-              <Button size="sm" variant="plain" onClick={() => toFront(sel.id)}>
-                To front
-              </Button>
-              <Button size="sm" variant="plain" onClick={() => add({ kind: sel.kind, props: sel.props, hint: "" }, clamp(sel.x + 6, 2, 98), clamp(sel.y + 6, 3, 97))}>
-                Copy sticker
-              </Button>
-              <Button size="sm" variant="tomato" onClick={() => remove(sel.id)}>
-                Peel off
-              </Button>
-            </div>
-            <CodeBlock title="Code" code={`import { ${KINDS[sel.kind].imports.join(", ")} } from "@plop-ui/react";\n\n${codeFor(sel)}`} what="Code" />
-          </>
-        ) : (
-          <>
-            <h2 id="insp-h" className={styles.panelTitle}>
-              Board
-            </h2>
-            <p className={styles.help}>Select a sticker to change its words, color, size and tilt.</p>
-            {items.length > 0 && <CodeBlock title="Whole board as a component" code={boardCode(items, paper, current.roundness)} what="Board code" />}
-          </>
+        {sel && (
+          <Inspector
+            item={sel}
+            area={board}
+            onChange={(patch) => update(sel.id, patch)}
+            onFront={() => toFront(sel.id)}
+            onDuplicate={() => add({ kind: sel.kind, props: sel.props, hint: "" }, clamp(sel.x + 6, 2, 98), clamp(sel.y + 6, 3, 97))}
+            onPeel={() => remove(sel.id)}
+            onClose={() => {
+              setSelected(null);
+              board.current?.focus();
+            }}
+            code={<CodeBlock title="Code" code={`import { ${KINDS[sel.kind].imports.join(", ")} } from "@plop-ui/react";\n\n${codeFor(sel)}`} what="Code" />}
+          />
         )}
-      </aside>
+      </section>
 
       {/* 4. Tray: pick a shelf, then a sticker */}
       <aside className={styles.tray} aria-labelledby="tray-h" data-tray="">

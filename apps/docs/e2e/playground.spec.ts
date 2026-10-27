@@ -107,19 +107,76 @@ test.describe("board-first layout", () => {
     expect(await sw.getAttribute("aria-checked")).toBe(before);
   });
 
-  test("the radius slider rounds the board and its code", async ({ page }) => {
+  test("the radius slider rounds the board and its code", async ({ page, context, browserName }) => {
+    test.skip(browserName !== "chromium", "reads the clipboard");
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await fresh(page);
     await page.getByRole("button", { name: "Add Button", exact: true }).click();
     await page.getByRole("slider", { name: /Radius/ }).fill("0");
     const btn = board(page).locator("[data-sticker] button").first();
     await expect.poll(() => btn.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
-    await board(page).focus();
-    await page.keyboard.press("Escape");
-    await expect(page.getByText(/roundness=\{0\}/).first()).toBeAttached();
+    await page.getByRole("button", { name: "Copy board code" }).click();
+    await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toMatch(/roundness=\{0\}/);
   });
 
   test("no Ride-along badge on the Playground", async ({ page }) => {
     await fresh(page);
     await expect(page.getByRole("button", { name: /New here\?/ })).toHaveCount(0);
+  });
+});
+
+test.describe("editor beside the sticker", () => {
+  test.skip(({ isMobile }) => isMobile, "sizes are set per test");
+  const editor = (page: Page) => page.getByRole("dialog", { name: /Button|Switch/ });
+
+  test("opens next to the selected sticker", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    const s = (await board(page).locator("[data-sticker]").first().boundingBox())!;
+    const e = (await editor(page).boundingBox())!;
+    const overlaps = s.x < e.x + e.width && e.x < s.x + s.width && s.y < e.y + e.height && e.y < s.y + s.height;
+    expect(overlaps).toBe(false);
+    const beside = Math.abs(e.x - (s.x + s.width)) <= 40 || Math.abs(e.x + e.width - s.x) <= 40;
+    expect(beside).toBe(true);
+    expect(e.x).toBeGreaterThanOrEqual(0);
+    expect(e.x + e.width).toBeLessThanOrEqual(1280);
+  });
+
+  test("stays inside the board near its edge", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    await board(page).focus();
+    for (let i = 0; i < 9; i++) await page.keyboard.press("Shift+ArrowRight");
+    for (let i = 0; i < 9; i++) await page.keyboard.press("Shift+ArrowDown");
+    const b = (await board(page).boundingBox())!;
+    const e = (await editor(page).boundingBox())!;
+    expect(e.x).toBeGreaterThanOrEqual(b.x - 1);
+    expect(e.y).toBeGreaterThanOrEqual(b.y - 1);
+    expect(e.x + e.width).toBeLessThanOrEqual(b.x + b.width + 1);
+    expect(e.y + e.height).toBeLessThanOrEqual(b.y + b.height + 1);
+  });
+
+  test("phones get a bottom sheet", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 740 });
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    const sheet = editor(page);
+    await expect(sheet).toBeVisible();
+    const e = (await sheet.boundingBox())!;
+    expect(e.y + e.height).toBeGreaterThan(740 - 4);
+    expect(e.width).toBeGreaterThan(375 - 40);
+  });
+
+  test("typing in the editor doesn't drive the board", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    const words = editor(page).getByLabel("Words");
+    await words.fill("Post it");
+    await words.press("Backspace");
+    await words.press("ControlOrMeta+z");
+    await expect.poll(() => count(page)).toBe(1);
+    await expect(board(page)).toContainText(/Post i/);
   });
 });
