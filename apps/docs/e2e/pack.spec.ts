@@ -1,7 +1,21 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-/** The middle of an element, where a person would grab it (tilted stickers' box corners are outside them). */
+/**
+ * The middle of an element, where a person would grab it (tilted stickers' box corners are outside them).
+ * Waits until it stops moving first: the tear strip springs back for a moment after a short pull, and a
+ * grab measured mid-spring lands on the page behind it.
+ */
 async function center(el: Locator) {
+  let last = "";
+  await expect
+    .poll(async () => {
+      const box = await el.boundingBox();
+      const now = JSON.stringify(box && [Math.round(box.x), Math.round(box.y)]);
+      const still = now === last;
+      last = now;
+      return still;
+    }, { intervals: [100] })
+    .toBe(true);
   const b = (await el.boundingBox())!;
   return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
 }

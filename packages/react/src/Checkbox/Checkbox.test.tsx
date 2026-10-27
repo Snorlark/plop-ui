@@ -38,7 +38,10 @@ describe("Checkbox", () => {
     const { rerender } = renderWithPlop(<Checkbox indeterminate>Some friends</Checkbox>);
     const box = screen.getByRole("checkbox") as HTMLInputElement;
     expect(box.indeterminate).toBe(true);
-    expect(box).toHaveAttribute("aria-checked", "mixed");
+    // The native state is what screen readers read as "mixed". An aria-checked="mixed" in the server
+    // HTML would contradict the input until the effect runs (axe: aria-conditional-attr).
+    expect(box).toBePartiallyChecked();
+    expect(box).not.toHaveAttribute("aria-checked");
     rerender(
       <PlopProvider reducedMotion="always">
         <Checkbox>Some friends</Checkbox>

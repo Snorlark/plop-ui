@@ -41,7 +41,6 @@ export function Checkbox({ ref, children, indeterminate = false, tickColor, clas
         type="checkbox"
         className={styles.input}
         disabled={disabled}
-        aria-checked={indeterminate ? "mixed" : undefined}
         onChange={(event) => {
           haptics.tap();
           sound(event.target.checked ? "up" : "down");
