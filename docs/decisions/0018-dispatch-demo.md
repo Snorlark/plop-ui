@@ -11,4 +11,4 @@
   - `useOptimistic` puts a "Sending…" ticket in the queue at once, and the loading button shows the wait.
   - Validation errors come back from the server and keep what was typed.
 - **Times:** formatted with one fixed time zone (Asia/Manila), so the server render and hydration match.
-- **Not done yet:** deployment, the footer link and a case study page (see TASKS.md).
+- **Not done yet:** deployment, the footer link and a case study page (tracked privately).

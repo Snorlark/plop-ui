@@ -10,6 +10,10 @@ async function blocking(page: Page) {
     .map((v) => `${v.id}: ${v.help} (${v.nodes.length}x) e.g. ${v.nodes[0]?.target.join(" ")}`);
 }
 
+// Check every element in its resting state. Scroll-driven entrances (the footer links fade in as they scroll into
+// view) leave below-the-fold text half transparent, and axe would grade that mid-fade frame instead of what people read.
+test.use({ reducedMotion: "reduce" });
+
 /** Zero serious or critical axe violations on every page of the site. */
 for (const path of PAGES) {
   test(`axe: ${path}`, async ({ page }) => {

@@ -15,3 +15,10 @@ next-env.d.ts
 apps/docs/app/_generated
 .next-e2e
 .superpowers/
+
+# Private working notes: kept on our machines, never in the public repo.
+PRD.md
+TASKS.md
+# Local tool output and agent workspaces.
+.playwright-mcp/
+.claude/

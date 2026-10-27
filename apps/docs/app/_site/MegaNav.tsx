@@ -181,7 +181,8 @@ export function MegaNav() {
       <nav aria-label="Main" className={styles.nav}>
         <ul className={styles.triggers}>
           {MENUS.map((m) => (
-            <li key={m.id} onPointerEnter={(e) => e.pointerType === "mouse" && later(m.id, open ? 40 : 90)}>
+            // Switching waits a beat too: a pointer crossing the bar to a far menu must not flash the ones it passes.
+            <li key={m.id} onPointerEnter={(e) => e.pointerType === "mouse" && later(m.id, open ? 130 : 90)}>
               {m.href ? (
                 // The label goes to the section; the caret beside it opens the menu (keyboard and touch).
                 <span className={styles.split} data-open={open === m.id ? "" : undefined}>
