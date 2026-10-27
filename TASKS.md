@@ -29,9 +29,16 @@ Where things stand (2026-10-26): `@plop-ui/react` 0.3.0, `@plop-ui/tokens` and `
 ### Fixes
 - [x] 🔴 **Phone layout.** Done: the Ride-along ticket shrinks to a round stamp on phones (it covered content), props tables stack into cards, narrow horizontal timelines get smaller labels, and the header fits one row with three toggles. Still to add: a phone-layout test.
 - [ ] 🔴 **Refresh bug.** **You:** write down the page, browser and what you see (a screen recording is best). Then fix it and add a test.
+<<<<<<< HEAD
 - [x] 🔴 **Header, Hick's law.** One Settings sticker opens a taped sheet with three switches (cutting mat / dark, haptics, sound) instead of three buttons in the bar. On phones the header is one row (logo, a round search sticker that opens the palette, settings, menu), down to 320px; the phone menu is a compact accordion. e2e test included.
 - [x] 🔴 **Install stress test.** Done 2026-10-26 against the real npm packages: Vite + React 19 with pnpm (strict), Next.js 16 with npm, Next.js 15 with pnpm. Types resolve, builds pass, no console errors or hydration warnings in Chromium, Firefox and WebKit, and a Server Component page ships no `StatusTimeline` code. Not tested: yarn, bun. Note: pnpm 11 waits 24 hours before installing a newly published version (`minimum-release-age`), so pnpm users get a release a day later.
 - [ ] ⚪ Automate the install stress test in CI on every release, and add yarn and bun.
+=======
+
+## 3. Next release 🟡
+
+- [ ] ⚪ **WebKit axe flake on CI.** Once, on CI's Linux runner, `axe: /playground` on the iPhone project reported footer color-contrast (20 nodes). It never reproduced in 60 isolated runs or a full local Linux WebKit run. Safari and iPhone retry once in CI until it's understood.
+>>>>>>> 71d2d14 (fix(e2e): stop the WebKit races that turned CI red)
 - [ ] 🟡 **Firefox hydration mismatch.** In production builds Firefox occasionally throws React error #418 (about 1 in 130 page loads, on random pages, already on `main`). React recovers on the client, so nothing visible breaks, but find the cause: something global (header, footer, Ride-along, layout script) renders differently on the server. Not reproducible on the dev server. CI retries the Firefox project once until then.
 
 ### Rebrand leftovers
