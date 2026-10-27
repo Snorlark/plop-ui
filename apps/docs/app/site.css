@@ -359,6 +359,8 @@ html[data-tear]::view-transition-old(root) {
   filter: drop-shadow(3px 10px 6px rgba(18,36,120,.22));
 }
 .pack[data-state="open"] .pack-sticker:is(:hover, :focus-within)::after { transform: scale(1) rotate(-6deg); }
+/* One curl per sticker: the pack draws its own, so a kit button inside keeps its corner flat. */
+.pack[data-state="open"] .pack-sticker * { --plop-peel: 0px !important; }
 /* While lifted, an invisible margin keeps the pointer on it: the lift and tilt move its edge out from under a
    pointer resting near a corner, which un-hovered it, dropped it back under the pointer, and shook. */
 .pack[data-state="open"] .pack-sticker:hover::before { content: ""; position: absolute; inset: -16px; z-index: -1; }

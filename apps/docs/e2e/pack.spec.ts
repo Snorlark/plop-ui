@@ -82,3 +82,17 @@ test("Sticker pack: pulling the top strip a little snaps back; pulling it far te
   }).toPass();
   await expect(pack).toHaveAttribute("data-state", "open");
 });
+
+test("Sticker pack: a hovered sticker curls one corner, not two", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover needs a mouse");
+  await page.goto("/");
+  await page.getByRole("button", { name: "Tear it open" }).click();
+  await expect(page.locator(".pack")).toHaveAttribute("data-state", "open", { timeout: 5000 });
+  const sticker = page.locator(".pack-sticker").filter({ has: page.getByRole("button", { name: "New sketch" }) }).first();
+  await sticker.scrollIntoViewIfNeeded();
+  await sticker.hover();
+  await page.waitForTimeout(500);
+  // The pack's own curl shows; the IconButton's built-in peel stays at 0.
+  const peel = await sticker.getByRole("button", { name: "New sketch" }).evaluate((el) => getComputedStyle(el).getPropertyValue("--plop-peel").trim());
+  expect(peel).toBe("0px");
+});
