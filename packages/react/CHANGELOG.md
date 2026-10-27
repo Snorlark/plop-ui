@@ -1,5 +1,12 @@
 # @plop-ui/react
 
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies [5e42264]
+  - @plop-ui/tokens@0.3.5
+
 ## 0.3.4
 
 ### Patch Changes
