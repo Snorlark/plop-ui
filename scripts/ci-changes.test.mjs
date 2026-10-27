@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { copyFileSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { classify, mdxTouchesDemo, samePackageJson } from "./ci-changes.mjs";
+import { browserJobs, classify, mdxTouchesDemo, samePackageJson } from "./ci-changes.mjs";
 
 const none = { demoMdx: new Set(), versionOnly: () => false };
 const pr = (files, extra = {}) =>
@@ -96,3 +96,14 @@ test("the CLI runs from a path with a space in it", () => {
   execFileSync(process.execPath, [copy, "--base", "HEAD"], { env: { ...process.env, GITHUB_OUTPUT: outFile, GITHUB_EVENT_NAME: "pull_request" } });
   assert.match(readFileSync(outFile, "utf8"), /^check=full$/m);
 });
+
+test("draft PR with a component change: Chrome + Android only", () =>
+  assert.deepEqual(pr(["packages/react/src/Select/Select.tsx"], { draft: true }).projects, ["desktop", "phone"]));
+test("draft PR keeps a lighter level as it is", () => assert.deepEqual(pr(["TASKS.md"], { draft: true }).projects, []));
+test("browser jobs: one per browser engine, its projects together", () =>
+  assert.deepEqual(browserJobs(["desktop", "phone", "firefox", "safari", "iphone"]), [
+    { name: "chromium", browser: "chromium", projects: ["desktop", "phone"] },
+    { name: "firefox", browser: "firefox", projects: ["firefox"] },
+    { name: "webkit", browser: "webkit", projects: ["safari", "iphone"] },
+  ]));
+test("browser jobs: none for no projects", () => assert.deepEqual(browserJobs([]), []));
