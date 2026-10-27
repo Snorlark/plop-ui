@@ -1,6 +1,6 @@
 "use client";
 
-import { Buddy, Button, PlopProvider, seededTilt, toast, useHaptics, useSound } from "@plop-ui/react";
+import { Buddy, Button, PlopProvider, seededTilt, Select, toast, useHaptics, useSound } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { getPass, getServerPass, subscribe } from "../_site/pass";
@@ -53,11 +53,33 @@ export function StickerBoard() {
   const [selected, setSelected] = useState<string | null>(null);
   const [shelf, setShelf] = useState(SHELVES[0]!.id);
   const board = useRef<HTMLDivElement>(null);
+  const tool = useRef<HTMLDivElement>(null);
   const counter = useRef(0);
   const haptics = useHaptics();
   const sound = useSound();
   const holo = useSyncExternalStore(subscribe, () => getPass().holo, () => getServerPass().holo);
   const shelves = holo ? [...SHELVES, REGULARS_SHELF] : SHELVES;
+
+  // The board takes the screen left below the tool's start, minus the toolbar and the tray, so all three fit
+  // without scrolling. Measured, because the toolbar and tray wrap differently on every width.
+  useEffect(() => {
+    const el = tool.current;
+    if (!el) return;
+    const bar = el.querySelector<HTMLElement>("[role=toolbar]");
+    const tray = el.querySelector<HTMLElement>("[data-tray]");
+    const place = () => {
+      el.style.setProperty("--tool-top", `${Math.round(el.getBoundingClientRect().top + window.scrollY)}px`);
+      el.style.setProperty("--tool-chrome", `${(bar?.offsetHeight ?? 0) + (tray?.offsetHeight ?? 0)}px`);
+    };
+    place();
+    const ro = new ResizeObserver(place);
+    [bar, tray].forEach((n) => n && ro.observe(n));
+    window.addEventListener("resize", place);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", place);
+    };
+  }, []);
 
   // Restore the last board on this device; save every change.
   const restored = useRef(false);
@@ -220,54 +242,42 @@ export function StickerBoard() {
   const shelfItems = (shelves.find((s) => s.id === shelf) ?? shelves[0]!).items;
 
   return (
-    <div className={styles.boardTool}>
-      {/* 1. Tray: pick a shelf, then a sticker */}
-      <aside className={styles.tray} aria-labelledby="tray-h">
-        <h2 id="tray-h" className={styles.panelTitle}>
-          Stickers
-        </h2>
-        <Choice label="Shelf" value={shelf} options={shelves.map((s) => [s.id, s.label])} onChange={setShelf} />
-        <div className={styles.trayGrid} role="list">
-          {shelfItems.map((entry, i) => (
-            <div role="listitem" key={`${shelf}-${i}`} className={styles.trayItem}>
-              {/* The preview is a real component, so it sits beside the add button rather than inside it. */}
-              <span className={styles.trayPreview} data-kind={entry.kind} aria-hidden="true" inert>
-                {KINDS[entry.kind].render(entry.props)}
-              </span>
-              <span className={styles.trayHint} aria-hidden="true">
-                {entry.hint}
-              </span>
-              <button
-                type="button"
-                className={styles.trayAdd}
-                aria-label={`Add ${entry.hint}`}
-                onPointerDown={trayDown(entry)}
-                onPointerMove={trayMove}
-                onPointerUp={trayUp}
-                onPointerCancel={() => {
-                  trayDrag.current = null;
-                  setGhost(null);
-                }}
-                onClick={() => {
-                  if (swallow.current) {
-                    swallow.current = false;
-                    return;
-                  }
-                  add(entry);
-                }}
-              />
-            </div>
-          ))}
+    <div ref={tool} className={styles.boardTool}>
+      {/* 1. Toolbar: undo first, then the paper and roundness, then taking the board away */}
+      <div className={styles.toolbar} role="toolbar" aria-label="Board tools">
+        <Button size="sm" variant="plain" onClick={undo} disabled={!history.canUndo}>
+          Undo
+        </Button>
+        <Button size="sm" variant="plain" onClick={redo} disabled={!history.canRedo}>
+          Redo
+        </Button>
+        <Select
+          className={styles.paperPick}
+          size="sm"
+          label={<span className="vh">Paper</span>}
+          placeholder="Paper"
+          options={surfaceNames.map((s) => ({ value: s, label: surfaces[s].label }))}
+          value={paper}
+          onValueChange={(v) => setPaper(v as SurfaceName)}
+        />
+        <div className={styles.toolbarSlider}>
+          <Slider label="Radius" value={current.roundness} min={0} max={2} step={0.1} unit="×" onChange={(v) => setBoard((b) => ({ ...b, roundness: v }))} />
         </div>
-        <p className={styles.help}>Tap to add, or drag onto the board.</p>
-      </aside>
+        <span className={styles.spacer} />
+        <Button size="sm" variant="mustard" aria-label="Copy board code" onClick={() => copy(boardCode(items, paper, current.roundness), "Board code")} disabled={!items.length}>
+          Copy
+        </Button>
+        <Button size="sm" variant="tomato" onClick={clear} disabled={!items.length}>
+          Clear
+        </Button>
+      </div>
 
       {/* 2. The board */}
       <section className={styles.boardCol} aria-labelledby="board-h">
         <h2 id="board-h" className="vh">
           Your board
         </h2>
-        <PlopProvider surface={paper} theme="light" toaster={false} className={styles.board}>
+        <PlopProvider surface={paper} theme="light" toaster={false} roundness={current.roundness} className={styles.board}>
           {/* A custom 2D widget: one tab stop, arrow keys move the selected sticker (see onBoardKey). */}
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
@@ -278,7 +288,7 @@ export function StickerBoard() {
             aria-roledescription="sticker board"
             // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
             tabIndex={0}
-            aria-label={`Sticker board, ${items.length} sticker${items.length === 1 ? "" : "s"}${sel ? `, ${describe(sel)} selected` : ""}. Arrow keys move, N picks the next sticker, Delete peels it off.`}
+            aria-label={`Sticker board, ${items.length} sticker${items.length === 1 ? "" : "s"}${sel ? `, ${describe(sel)} selected` : ""}. Arrow keys move, N picks the next sticker, Delete peels it off, Ctrl or Command Z undoes.`}
             onKeyDown={onBoardKey}
             onPointerDown={(e) => {
               if (e.target === e.currentTarget) setSelected(null);
@@ -290,7 +300,7 @@ export function StickerBoard() {
                 <p>
                   <strong>Your board is empty.</strong>
                   <br />
-                  Tap a sticker in the tray to stick it here.
+                  Tap a sticker below to stick it here.
                 </p>
               </div>
             )}
@@ -306,31 +316,13 @@ export function StickerBoard() {
                 onPointerUp={onItemUp}
                 onPointerCancel={() => (drag.current = null)}
                 onDragStart={(e) => e.preventDefault()}
-                onClickCapture={(e) => {
-                  if (swallow.current) {
-                    swallow.current = false;
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }
-                }}
               >
-                {KINDS[it.kind].render(it.props)}
+                {/* Stickers on the board are pictures of components: a click picks the sticker, Tab skips it. */}
+                <div inert>{KINDS[it.kind].render(it.props)}</div>
               </div>
             ))}
           </div>
         </PlopProvider>
-        <div className={styles.boardBar}>
-          <Button size="sm" variant="plain" onClick={undo} disabled={!history.canUndo}>
-            Undo
-          </Button>
-          <Button size="sm" variant="plain" onClick={redo} disabled={!history.canRedo}>
-            Redo
-          </Button>
-          <Button size="sm" variant="tomato" onClick={clear} disabled={!items.length}>
-            Clear
-          </Button>
-          <Choice label="Paper" value={paper} options={surfaceNames.map((s) => [s, surfaces[s].label])} onChange={(v) => setPaper(v as SurfaceName)} />
-        </div>
       </section>
 
       {/* 3. Inspector: only what fits the selection */}
@@ -372,13 +364,49 @@ export function StickerBoard() {
               Board
             </h2>
             <p className={styles.help}>Select a sticker to change its words, color, size and tilt.</p>
-            {items.length > 0 && (
-              <>
-                <CodeBlock title="Whole board as a component" code={boardCode(items, paper)} what="Board code" />
-              </>
-            )}
+            {items.length > 0 && <CodeBlock title="Whole board as a component" code={boardCode(items, paper, current.roundness)} what="Board code" />}
           </>
         )}
+      </aside>
+
+      {/* 4. Tray: pick a shelf, then a sticker */}
+      <aside className={styles.tray} aria-labelledby="tray-h" data-tray="">
+        <h2 id="tray-h" className="vh">
+          Stickers
+        </h2>
+        <Choice label="Shelf" value={shelf} options={shelves.map((s) => [s.id, s.label])} onChange={setShelf} />
+        <div className={styles.trayGrid} role="list">
+          {shelfItems.map((entry, i) => (
+            <div role="listitem" key={`${shelf}-${i}`} className={styles.trayItem}>
+              {/* The preview is a real component, so it sits beside the add button rather than inside it. */}
+              <span className={styles.trayPreview} data-kind={entry.kind} aria-hidden="true" inert>
+                {KINDS[entry.kind].render(entry.props)}
+              </span>
+              <span className={styles.trayHint} aria-hidden="true">
+                {entry.hint}
+              </span>
+              <button
+                type="button"
+                className={styles.trayAdd}
+                aria-label={`Add ${entry.hint}`}
+                onPointerDown={trayDown(entry)}
+                onPointerMove={trayMove}
+                onPointerUp={trayUp}
+                onPointerCancel={() => {
+                  trayDrag.current = null;
+                  setGhost(null);
+                }}
+                onClick={() => {
+                  if (swallow.current) {
+                    swallow.current = false;
+                    return;
+                  }
+                  add(entry);
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </aside>
 
       {ghost && (
@@ -389,6 +417,7 @@ export function StickerBoard() {
     </div>
   );
 }
+
 
 function CodeBlock({ title, code, what }: { title: string; code: string; what: string }) {
   return (

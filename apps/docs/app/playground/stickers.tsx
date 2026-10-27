@@ -297,7 +297,7 @@ export function codeFor(item: Item): string {
 }
 
 /** The whole board as one component: each sticker absolutely placed where it sits. */
-export function boardCode(items: Item[], paper: string): string {
+export function boardCode(items: Item[], paper: string, roundness = 1): string {
   const imports = new Set<string>(["PlopProvider"]);
   for (const it of items) {
     KINDS[it.kind].imports.forEach((i) => imports.add(i));
@@ -319,7 +319,7 @@ export function boardCode(items: Item[], paper: string): string {
 ${toastNote}
 export function MyBoard() {
   return (
-    <PlopProvider surface="${paper}" style={{ position: "relative", height: 520 }}>
+    <PlopProvider surface="${paper}"${roundness !== 1 ? ` roundness={${roundness}}` : ""} style={{ position: "relative", height: 520 }}>
 ${placed}
     </PlopProvider>
   );

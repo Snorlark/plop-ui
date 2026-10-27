@@ -69,3 +69,57 @@ test.describe("sticker board", () => {
     await expect(board(page)).toContainText("Old one");
   });
 });
+
+test.describe("board-first layout", () => {
+  test.skip(({ isMobile }) => isMobile, "sizes are set per test");
+
+  for (const [w, h] of [[1280, 720], [375, 740]] as const) {
+    test(`board and tray fit without scrolling at ${w}×${h}`, async ({ page }) => {
+      await page.setViewportSize({ width: w, height: h });
+      await fresh(page);
+      const b = (await board(page).boundingBox())!;
+      expect(b.y + b.height).toBeLessThanOrEqual(h);
+      expect(b.height).toBeGreaterThan(h * 0.3);
+      const tile = page.getByRole("button", { name: "Add Button", exact: true });
+      const t = (await tile.boundingBox())!;
+      expect(t.y + t.height).toBeLessThanOrEqual(h);
+    });
+  }
+
+  test("stickers on the board are not tab stops", async ({ page }) => {
+    await fresh(page);
+    for (const name of ["Add Button", "Add Switch", "Add Checkbox"]) await page.getByRole("button", { name, exact: true }).click();
+    await expect.poll(() => count(page)).toBe(3);
+    await board(page).focus();
+    await page.keyboard.press("Tab");
+    expect(await page.evaluate(() => !!document.activeElement?.closest("[role=application]"))).toBe(false);
+  });
+
+  test("clicking a sticker selects it instead of using it", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Switch", exact: true }).click();
+    await board(page).focus();
+    await page.keyboard.press("Escape");
+    const sw = board(page).getByRole("switch", { includeHidden: true });
+    const before = await sw.getAttribute("aria-checked");
+    await board(page).locator("[data-sticker]").first().click();
+    await expect(board(page)).toHaveAttribute("aria-label", /Switch.*selected/);
+    expect(await sw.getAttribute("aria-checked")).toBe(before);
+  });
+
+  test("the radius slider rounds the board and its code", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    await page.getByRole("slider", { name: /Radius/ }).fill("0");
+    const btn = board(page).locator("[data-sticker] button").first();
+    await expect.poll(() => btn.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
+    await board(page).focus();
+    await page.keyboard.press("Escape");
+    await expect(page.getByText(/roundness=\{0\}/).first()).toBeAttached();
+  });
+
+  test("no Ride-along badge on the Playground", async ({ page }) => {
+    await fresh(page);
+    await expect(page.getByRole("button", { name: /New here\?/ })).toHaveCount(0);
+  });
+});

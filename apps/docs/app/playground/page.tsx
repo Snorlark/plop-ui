@@ -14,8 +14,11 @@ export default function PlaygroundPage() {
     <div className="site site--docs">
       <SiteHeader />
       <main id="main" className="pg-page">
-        <h1 className="doc-h1">Playground</h1>
-        <p className="doc-lede">Play with the real components, then take your work away as code, HTML or an image.</p>
+        {/* One slim line, so the board gets the screen. */}
+        <div className="pg-head">
+          <h1 className="pg-h1">Playground</h1>
+          <p className="pg-lede">Play with the real components, then take your work away as code, HTML or an image.</p>
+        </div>
         <Suspense fallback={<p>Loading the playground…</p>}>
           <PlaygroundTools />
         </Suspense>

@@ -2,7 +2,7 @@
 
 import { Tab, TabList, TabPanel, Tabs } from "@plop-ui/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { LetteringStudio } from "./LetteringStudio";
 import { Playground } from "./Playground";
 import { StickerBoard } from "./StickerBoard";
@@ -10,17 +10,26 @@ import styles from "./tools.module.css";
 
 type Tool = "board" | "lettering" | "tweak";
 
-const TOOLS: Array<{ id: Tool; label: string; blurb: string }> = [
-  { id: "board", label: "Sticker board", blurb: "Stick real components on paper and copy the layout." },
-  { id: "lettering", label: "Lettering", blurb: "Type in Sketchpop, decorate it, export it." },
-  { id: "tweak", label: "Tweak a component", blurb: "Every prop of one component, on every paper." },
+const TOOLS: Array<{ id: Tool; label: string; short: string; blurb: string }> = [
+  { id: "board", label: "Sticker board", short: "Board", blurb: "Stick real components on paper and copy the layout." },
+  { id: "lettering", label: "Lettering", short: "Lettering", blurb: "Type in Sketchpop, decorate it, export it." },
+  { id: "tweak", label: "Tweak a component", short: "Tweak", blurb: "Every prop of one component, on every paper." },
 ];
 
 /**
  * Three tools, one at a time: fewer choices on screen means a faster first
  * step (Hick's law). The chosen tool lives in the address, so a link opens it.
  */
+const PHONE = "(max-width: 640px)";
+const onResize = (cb: () => void) => {
+  const mq = window.matchMedia(PHONE);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+
 export function PlaygroundTools() {
+  // Short tab names on phones keep the three tabs on one row (the server renders the long ones).
+  const narrow = useSyncExternalStore(onResize, () => window.matchMedia(PHONE).matches, () => false);
   const params = useSearchParams();
   const initial: Tool = params.get("tool") === "lettering" ? "lettering" : params.get("tool") === "tweak" || params.get("c") ? "tweak" : "board";
   const [tool, setTool] = useState<Tool>(initial);
@@ -37,13 +46,14 @@ export function PlaygroundTools() {
       <TabList label="Playground tools">
         {TOOLS.map((t) => (
           <Tab key={t.id} value={t.id}>
-            {t.label}
+            {narrow ? t.short : t.label}
           </Tab>
         ))}
       </TabList>
       {TOOLS.map((t) => (
         <TabPanel key={t.id} value={t.id} className={styles.toolPanel}>
-          <p className={styles.blurb}>{t.blurb}</p>
+          {/* The board explains itself with its toolbar; the other tools keep a one-line intro. */}
+          <p className={t.id === "board" ? "vh" : styles.blurb}>{t.blurb}</p>
           {tool === t.id && (t.id === "board" ? <StickerBoard /> : t.id === "lettering" ? <LetteringStudio /> : <Playground />)}
         </TabPanel>
       ))}
