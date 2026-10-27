@@ -77,14 +77,14 @@
 - [ ] **Step 1: Write failing e2e tests** in `playground.spec.ts` (desktop project; clear `localStorage` first):
   - `undo and redo an added sticker`: add "Button" from the tray, then `Control+z` on the board → 0 stickers (`aria-label` says "0 stickers"). Then `Control+Shift+z` → 1.
   - `one drag is one undo step`: add a sticker, drag it 120px, `Control+z` → back at its start position (compare `style.left`).
-  - `clear is undoable`: add 2 stickers, click "Clear", expect 0 and a toast with an "Undo" button. Click it → 2.
+  - `clear is undoable`: add 2 stickers, click "Clear", expect 0 and a toast "Board cleared. Undo brings it back." Click the toolbar's "Undo" → 2.
   - `an old saved board still loads`: seed `localStorage["plop-board-v1"] = {"paper":"kraft","items":[<one button item>]}`, reload, expect 1 sticker and paper Kraft.
 - [ ] **Step 2:** Run `pnpm --filter @plop-ui/docs exec playwright test e2e/playground.spec.ts --project=desktop`. Expected: FAIL.
 - [ ] **Step 3: Implement.**
   - `history.ts` keeps `past`, `present` and `future` arrays in a `useReducer`.
   - In `StickerBoard`, every add, edit, peel-off, paper change and clear commits. Drag moves use `{ commit: false }` and commit on pointer up.
   - Keyboard: `(e.metaKey || e.ctrlKey) && e.key === "z"` (shift → redo); also `Ctrl+Y`.
-  - Clear calls `toast.info("Board cleared", { action: { label: "Undo", onClick: undo } })`, or the kit's existing toast action API.
+  - Clear calls `toast.info("Board cleared. Undo brings it back.")`. The kit's toast has no action buttons, so the toolbar's Undo is the way back.
 - [ ] **Step 4:** Rerun. Expected: PASS.
 - [ ] **Step 5:** Commit `feat(playground): undo and redo on the sticker board`.
 
