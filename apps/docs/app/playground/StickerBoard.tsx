@@ -62,15 +62,14 @@ export function StickerBoard() {
   const holo = useSyncExternalStore(subscribe, () => getPass().holo, () => getServerPass().holo);
   const shelves = holo ? [...SHELVES, REGULARS_SHELF] : SHELVES;
 
-  // The board takes the screen left below the tool's start, minus the toolbar and the tray, so all three fit
-  // without scrolling. Measured, because the toolbar and tray wrap differently on every width.
+  // The board takes one screen minus the toolbar and the tray, so all three fit together once scrolled to
+  // the toolbar. Measured, because the toolbar and tray wrap differently on every width.
   useEffect(() => {
     const el = tool.current;
     if (!el) return;
     const bar = el.querySelector<HTMLElement>("[role=toolbar]");
     const tray = el.querySelector<HTMLElement>("[data-tray]");
     const place = () => {
-      el.style.setProperty("--tool-top", `${Math.round(el.getBoundingClientRect().top + window.scrollY)}px`);
       el.style.setProperty("--tool-chrome", `${(bar?.offsetHeight ?? 0) + (tray?.offsetHeight ?? 0)}px`);
     };
     place();

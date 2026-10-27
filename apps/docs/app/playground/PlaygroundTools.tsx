@@ -52,8 +52,7 @@ export function PlaygroundTools() {
       </TabList>
       {TOOLS.map((t) => (
         <TabPanel key={t.id} value={t.id} className={styles.toolPanel}>
-          {/* The board explains itself with its toolbar; the other tools keep a one-line intro. */}
-          <p className={t.id === "board" ? "vh" : styles.blurb}>{t.blurb}</p>
+          <p className={styles.blurb}>{t.blurb}</p>
           {tool === t.id && (t.id === "board" ? <StickerBoard /> : t.id === "lettering" ? <LetteringStudio /> : <Playground />)}
         </TabPanel>
       ))}

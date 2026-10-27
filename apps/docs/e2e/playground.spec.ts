@@ -74,9 +74,12 @@ test.describe("board-first layout", () => {
   test.skip(({ isMobile }) => isMobile, "sizes are set per test");
 
   for (const [w, h] of [[1280, 720], [375, 740]] as const) {
-    test(`board and tray fit without scrolling at ${w}×${h}`, async ({ page }) => {
+    test(`toolbar, board and tray fit one screen at ${w}×${h}`, async ({ page }) => {
       await page.setViewportSize({ width: w, height: h });
       await fresh(page);
+      // The page keeps its roomy title (Lark's call); scrolled to the toolbar, the whole tool fits.
+      await page.getByRole("toolbar", { name: "Board tools" }).evaluate((el) => el.scrollIntoView({ block: "start" }));
+      await page.waitForTimeout(300);
       const b = (await board(page).boundingBox())!;
       expect(b.y + b.height).toBeLessThanOrEqual(h);
       expect(b.height).toBeGreaterThan(h * 0.3);
@@ -152,8 +155,11 @@ test.describe("editor beside the sticker", () => {
     await board(page).focus();
     for (let i = 0; i < 9; i++) await page.keyboard.press("Shift+ArrowRight");
     for (let i = 0; i < 9; i++) await page.keyboard.press("Shift+ArrowDown");
-    const b = (await board(page).boundingBox())!;
-    const e = (await editor(page).boundingBox())!;
+    await page.waitForTimeout(600);
+    // Both boxes in one frame: focusing the board can start a smooth scroll.
+    const [b, e] = await page.evaluate(() =>
+      ["[role=application]", "[role=dialog]"].map((sel) => document.querySelector(sel)!.getBoundingClientRect().toJSON() as DOMRect),
+    );
     expect(e.x).toBeGreaterThanOrEqual(b.x - 1);
     expect(e.y).toBeGreaterThanOrEqual(b.y - 1);
     expect(e.x + e.width).toBeLessThanOrEqual(b.x + b.width + 1);
