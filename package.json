@@ -13,6 +13,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "size": "pnpm --filter @plop-ui/react size",
+    "test:ci": "node --test scripts/",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "turbo run build --filter=./packages/* && node scripts/publish.mjs"
