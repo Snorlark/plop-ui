@@ -12,6 +12,7 @@ import { BurstLayerContext, PlopContext, type ReducedMotionSetting } from "./con
 export type PlopTheme = "system" | "light" | "dark";
 
 export interface PlopProviderProps extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {
+  /** Your app, or the section that gets this surface and these settings. */
   children?: ReactNode;
   /** The paper everything sits on. Leave it out to keep the surrounding surface (a parent provider's, or the page's `data-plop-surface`; poster when there is none). */
   surface?: SurfaceName;

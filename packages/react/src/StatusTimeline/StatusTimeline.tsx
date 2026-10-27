@@ -23,7 +23,9 @@ export interface StatusTimelineProps {
   label?: string;
   /** Status words read by screen readers. */
   statusText?: { done: string; current: string; pending: string };
+  /** Extra class on the outer wrapper. */
   className?: string;
+  /** Id of the outer wrapper. */
   id?: string;
 }
 

@@ -42,7 +42,9 @@ export interface ButtonLinkProps
   extends Omit<StickerOwnProps, "loading" | "loadingLabel">,
     Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
   ref?: Ref<HTMLAnchorElement>;
+  /** Where the link goes. */
   href: string;
+  /** Short label; lettered in Sketchpop Bold Italic, uppercase. */
   children: ReactNode;
   /** Your router's link component, e.g. Next.js `Link`. Default `a`. */
   as?: ElementType;
@@ -50,6 +52,7 @@ export interface ButtonLinkProps
   buddy?: boolean | "peek";
   /** See Button. */
   buddyMood?: BuddyMood;
+  /** An icon drawn before the label. */
   iconLeft?: ReactNode;
 }
 

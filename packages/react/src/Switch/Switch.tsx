@@ -17,14 +17,21 @@ export interface SwitchProps {
   checked?: boolean;
   /** Uncontrolled initial state. */
   defaultChecked?: boolean;
+  /** Called with the new state when the switch is toggled. */
   onCheckedChange?: (checked: boolean) => void;
   /** Track color when on. Default `mint`. */
   color?: SwitchColor;
+  /** Greys out the switch and its label and blocks toggling. */
   disabled?: boolean;
+  /** Must be on before the form can submit. */
   required?: boolean;
+  /** Field name submitted with a form. */
   name?: string;
+  /** Value submitted with a form when on. Default `on`. */
   value?: string;
+  /** Id of the switch button, for an external `<label htmlFor>`. */
   id?: string;
+  /** Extra class on the label row that wraps the switch. */
   className?: string;
   /** Accessible name when there is no visible label. */
   "aria-label"?: string;
