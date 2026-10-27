@@ -180,3 +180,25 @@ test.describe("editor beside the sticker", () => {
     await expect(board(page)).toContainText(/Post i/);
   });
 });
+
+for (const [w, h] of [[1280, 720], [375, 740]] as const)
+test(`new stickers don't land on each other at ${w}×${h}`, async ({ page, isMobile }) => {
+  test.skip(isMobile, "sizes are set per test");
+  await page.setViewportSize({ width: w, height: h });
+  await fresh(page);
+  for (const name of ["Add Button", "Add Button with Bix", "Add IconButton", "Add Switch", "Add Checkbox"]) {
+    await page.getByRole("button", { name, exact: true }).click();
+    await board(page).focus();
+    await page.keyboard.press("Escape");
+  }
+  const boxes = await board(page).locator("[data-sticker] > *").evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON() as DOMRect));
+  expect(boxes).toHaveLength(5);
+  for (let i = 0; i < boxes.length; i++)
+    for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i]!, b = boxes[j]!;
+      const w = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+      const h = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+      const smaller = Math.min(a.width * a.height, b.width * b.height);
+      expect((w * h) / smaller, `stickers ${i} and ${j}`).toBeLessThanOrEqual(0.2);
+    }
+});

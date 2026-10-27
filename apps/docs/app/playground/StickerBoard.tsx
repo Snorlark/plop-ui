@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CS
 import { getPass, getServerPass, subscribe } from "../_site/pass";
 import { useBoardHistory, type Board } from "./history";
 import { Inspector } from "./Inspector";
+import { placeNew, type Spot } from "./place";
 import { Choice, Slider } from "./controls";
 import { boardCode, codeFor, describe, KINDS, REGULARS_SHELF, SHELVES, type Item, type TrayEntry } from "./stickers";
 import styles from "./tools.module.css";
@@ -109,16 +110,16 @@ export function StickerBoard() {
     [setItems],
   );
 
-  const add = (entry: TrayEntry, x?: number, y?: number) => {
+  const add = (entry: TrayEntry, x?: number, y?: number, size?: { width: number; height: number }) => {
     const n = ++counter.current;
     const id = `s${Date.now().toString(36)}${n}`;
-    // New stickers land in a loose spiral around the middle, so they don't stack exactly.
-    const angle = n * 2.4;
+    // A tapped sticker fans out from the middle to the first free spot (a dragged one lands where it's dropped).
+    const spot = x === undefined || y === undefined ? freeSpot(size) : { x, y };
     const item: Item = {
       id,
       kind: entry.kind,
-      x: x ?? 50 + Math.cos(angle) * Math.min(30, 6 + n * 3),
-      y: y ?? 50 + Math.sin(angle) * Math.min(32, 6 + n * 3),
+      x: spot.x,
+      y: spot.y,
       tilt: seededTilt(id, 7),
       scale: 1,
       z: Math.max(0, ...items.map((i) => i.z)) + 1,
@@ -128,6 +129,17 @@ export function StickerBoard() {
     setSelected(id);
     haptics.tap();
     sound("down");
+  };
+
+  /** The stickers already on the board, in % of it, and a guess at a new one's size (about a button). */
+  const freeSpot = (size = { width: 190, height: 80 }) => {
+    const area = board.current?.getBoundingClientRect();
+    if (!area?.width || !area.height) return { x: 50, y: 50 };
+    const taken: Spot[] = [...(board.current?.querySelectorAll<HTMLElement>("[data-sticker] > *") ?? [])].map((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: ((r.left + r.width / 2 - area.left) / area.width) * 100, y: ((r.top + r.height / 2 - area.top) / area.height) * 100, w: (r.width / area.width) * 100, h: (r.height / area.height) * 100 };
+    });
+    return placeNew(taken, Math.min(90, (size.width / area.width) * 100), Math.min(60, (size.height / area.height) * 100));
   };
 
   const remove = (id: string) => {
@@ -369,12 +381,12 @@ export function StickerBoard() {
                   trayDrag.current = null;
                   setGhost(null);
                 }}
-                onClick={() => {
+                onClick={(e) => {
                   if (swallow.current) {
                     swallow.current = false;
                     return;
                   }
-                  add(entry);
+                  add(entry, undefined, undefined, previewSize(e.currentTarget));
                 }}
               />
             </div>
@@ -391,6 +403,15 @@ export function StickerBoard() {
   );
 }
 
+
+/** A tray sticker's real size: its preview is scaled down, so undo the scale. */
+function previewSize(addButton: HTMLElement) {
+  const preview = addButton.parentElement?.querySelector<HTMLElement>("[data-kind]");
+  const inner = preview?.firstElementChild?.getBoundingClientRect();
+  if (!preview || !inner) return undefined;
+  const scale = new DOMMatrix(getComputedStyle(preview).transform).a || 1;
+  return { width: inner.width / scale, height: inner.height / scale };
+}
 
 function CodeBlock({ title, code, what }: { title: string; code: string; what: string }) {
   return (
