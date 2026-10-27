@@ -124,7 +124,8 @@
 }
 .trayItem:hover, .trayItem:focus-within { border-color: var(--plop-ink); transform: rotate(-2deg) scale(1.03); }
 .trayPreview { display: grid; place-items: center; width: 100%; height: 100%; transform: scale(0.6); pointer-events: none; }
-.trayPreview[data-kind="word"], .trayPreview[data-kind="timeline"], .trayPreview[data-kind="toast"] { transform: scale(0.4); }
+.trayPreview:is([data-kind="word"], [data-kind="timeline"], [data-kind="toast"], [data-kind="ticket"], [data-kind="unit"], [data-kind="textfield"],
+  [data-kind="textarea"], [data-kind="search"], [data-kind="select"], [data-kind="multiselect"], [data-kind="tabs"], [data-kind="radio"]) { transform: scale(0.4); }
 .trayHint { font-size: 12px; line-height: 1.2; color: var(--plop-ink-soft); text-align: center; white-space: nowrap; }
 .trayAdd { position: absolute; inset: 0; margin: 0; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: grab; touch-action: none; }
 .trayAdd:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: -4px; }
@@ -153,6 +154,8 @@
 .chip { display: inline-flex; align-items: center; padding: 9px 14px; background: var(--plop-paper); border: 3px solid var(--plop-ink); border-radius: 14px 10px 15px 11px; box-shadow: 0 0 0 6px var(--plop-paper); }
 .chipTimeline { width: 380px; padding: 10px 18px 6px; }
 .chipTimeline > * { width: 100%; }
+.chipField { width: 260px; display: block; }
+.card { width: 260px; }
 
 
 /* ---- lettering studio ---- */

@@ -202,3 +202,57 @@ test(`new stickers don't land on each other at ${w}×${h}`, async ({ page, isMob
       expect((w * h) / smaller, `stickers ${i} and ${j}`).toBeLessThanOrEqual(0.2);
     }
 });
+
+test.describe("every component", () => {
+  test.skip(({ isMobile }) => isMobile, "desktop board");
+  const SHELF: Record<string, string> = {
+    Tooltip: "Actions", Menu: "Actions",
+    StatusDot: "Status",
+    TicketCard: "Cards", UnitCard: "Cards", StickyNote: "Cards",
+    TextField: "Forms", TextArea: "Forms", SearchField: "Forms", RadioGroup: "Forms",
+    Select: "Pickers", MultiSelect: "Pickers", Tabs: "Pickers",
+    Heading: "Words & doodles",
+  };
+
+  test("every component can go on the board, with its code", async ({ page }) => {
+    await fresh(page);
+    let n = 0;
+    for (const [name, shelf] of Object.entries(SHELF)) {
+      await page.getByRole("radio", { name: shelf, exact: true }).check();
+      await page.getByRole("button", { name: `Add ${name}`, exact: true }).click();
+      await expect.poll(() => count(page)).toBe(++n);
+      const editor = page.getByRole("dialog", { name });
+      await editor.locator("summary", { hasText: "Code" }).click();
+      await expect(editor.locator("pre")).toContainText(`<${name}`);
+      await editor.getByRole("button", { name: "Done" }).click();
+    }
+  });
+
+  test("every visible word is editable", async ({ page }) => {
+    await fresh(page);
+    const cases: Array<[string, string, string, string]> = [
+      ["Actions", "IconButton", "Label", "Start a doodle"],
+      ["Status", "StatusTimeline", "Steps", "Draft, Done"],
+      ["Cards", "TicketCard", "Title", "Sketch #77"],
+      ["Pickers", "Select", "Label", "Pick a pen"],
+      ["Actions", "Menu", "Items", "Rename, Share"],
+    ];
+    for (const [shelf, name, field, text] of cases) {
+      await page.getByRole("radio", { name: shelf, exact: true }).check();
+      await page.getByRole("button", { name: `Add ${name}`, exact: true }).click();
+      const editor = page.getByRole("dialog", { name });
+      await editor.getByLabel(field, { exact: true }).fill(text);
+      const sticker = board(page).locator("[data-sticker]").last();
+      if (name === "IconButton") await expect(sticker.locator(`[aria-label="${text}"]`)).toHaveCount(1);
+      else if (name === "Menu") {
+        // A closed menu shows only its button; its items are checked in the code below.
+      }
+      else await expect(sticker).toContainText(text.split(",")[0]!);
+      if (name === "Menu") {
+        await editor.locator("summary", { hasText: "Code" }).click();
+        await expect(editor.locator("pre")).toContainText("Rename");
+      }
+      await editor.getByRole("button", { name: "Done" }).click();
+    }
+  });
+});
