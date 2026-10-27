@@ -179,7 +179,9 @@ test.describe("editor beside the sticker", () => {
     await words.press("Backspace");
     await words.press("ControlOrMeta+z");
     await expect.poll(() => count(page)).toBe(1);
-    await expect(board(page)).toContainText(/Post i/);
+    // The field's own undo differs per browser (WebKit undoes the whole fill); the board must show whatever it holds.
+    const value = await words.inputValue();
+    await expect(board(page).locator("[data-sticker]").first()).toContainText(value);
   });
 });
 
