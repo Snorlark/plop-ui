@@ -17,15 +17,21 @@ const RadioContext = createContext<GroupContext | null>(null);
 export interface RadioGroupProps {
   /** The question, shown as the fieldset's legend. */
   legend: ReactNode;
+  /** The `Radio` options. */
   children: ReactNode;
+  /** Controlled selected value. */
   value?: string;
+  /** Uncontrolled initial selected value. */
   defaultValue?: string;
+  /** Called with the chosen option's value. */
   onValueChange?: (value: string) => void;
   /** Form field name. Defaults to a generated one. */
   name?: string;
   /** Stack options vertically. Default true. */
   vertical?: boolean;
+  /** Disables every option in the group. */
   disabled?: boolean;
+  /** Extra class on the fieldset. */
   className?: string;
 }
 
@@ -49,10 +55,13 @@ export function RadioGroup({ legend, children, value, defaultValue, onValueChang
 }
 
 export interface RadioProps {
+  /** The value the group reports when this option is chosen. */
   value: string;
+  /** The option's label. */
   children: ReactNode;
   /** Color of the ink blob, as a CSS color or token variable. Default ink. */
   dotColor?: string;
+  /** Disables just this option. */
   disabled?: boolean;
 }
 

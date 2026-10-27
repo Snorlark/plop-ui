@@ -12,6 +12,7 @@ interface FieldOwnProps {
   error?: ReactNode;
   /** Shows a green tick when the value is good. */
   success?: boolean;
+  /** Extra class on the field wrapper (label, box and hint), not the input itself. */
   className?: string;
 }
 

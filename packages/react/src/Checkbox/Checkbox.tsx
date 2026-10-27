@@ -14,7 +14,9 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
   indeterminate?: boolean;
   /** Color of the tick, as a CSS color or token variable. Default ink. */
   tickColor?: string;
+  /** Called with the new checked state on toggle. */
   onCheckedChange?: (checked: boolean) => void;
+  /** The native change event of the input; fires before `onCheckedChange`. */
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 

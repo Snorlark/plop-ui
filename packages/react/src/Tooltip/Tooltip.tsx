@@ -20,6 +20,7 @@ export interface TooltipProps {
   side?: "top" | "right" | "bottom";
   /** Keep it open (for docs or onboarding). */
   open?: boolean;
+  /** Extra class on the wrapper around the trigger and bubble. */
   className?: string;
 }
 
