@@ -4,7 +4,8 @@
 // CLI: node scripts/ci-changes.mjs --base <git ref>
 // Prints the result and, on GitHub Actions, writes check / build_apps / site / e2e / projects to $GITHUB_OUTPUT.
 import { execFileSync } from "node:child_process";
-import { appendFileSync } from "node:fs";
+import { appendFileSync, realpathSync } from "node:fs";
+import { pathToFileURL } from "node:url";
 
 export const PROJECTS = { full: ["desktop", "phone", "firefox", "safari", "iphone"], light: ["desktop", "phone"], main: ["desktop"], none: [] };
 export const BROWSER = { desktop: "chromium", phone: "chromium", firefox: "firefox", safari: "webkit", iphone: "webkit" };
@@ -35,6 +36,18 @@ function level(path, status, demo) {
   if (path.startsWith("apps/storybook/") || path.startsWith("apps/dispatch-demo/")) return "apps";
   if (path.startsWith("docs/") || path === "LICENSE" || path.endsWith(".md")) return "notes";
   return "full";
+}
+
+/**
+ * True when a unified diff (with a few lines of context) of an .mdx page touches a live demo: a changed hunk
+ * that has an import or a JSX component on a changed or nearby line, so a prop edit inside a multi-line
+ * `<Select ... />` counts too.
+ */
+export function mdxTouchesDemo(diff) {
+  return diff
+    .split(/^@@.*$/m)
+    .slice(1)
+    .some((h) => /^[+-]/m.test(h) && /<[A-Z]|^[+-]?\s*import |\/>/m.test(h));
 }
 
 /** Same package.json once parsed, ignoring `version` and @plop-ui/* dependency versions (a release bump). */
@@ -84,7 +97,7 @@ function cli() {
   const demoMdx = new Set(
     files
       .filter((f) => f.path.endsWith(".mdx"))
-      .filter((f) => git("diff", "-U0", `${base}...HEAD`, "--", f.path).split("\n").some((l) => /^[+-](?![+-]{2})/.test(l) && /<[A-Z]|import /.test(l)))
+      .filter((f) => mdxTouchesDemo(git("diff", "-U3", `${base}...HEAD`, "--", f.path)))
       .map((f) => f.path),
   );
   const versionOnly = (path) => {
@@ -103,4 +116,5 @@ function cli() {
     );
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) cli();
+// Real path as a file URL: a plain `file://${path}` misses spaces, non-ASCII characters and symlinks, and the CLI would silently do nothing.
+if (import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) cli();

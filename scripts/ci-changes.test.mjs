@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { classify, samePackageJson } from "./ci-changes.mjs";
+import { execFileSync } from "node:child_process";
+import { copyFileSync, mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { classify, mdxTouchesDemo, samePackageJson } from "./ci-changes.mjs";
 
 const none = { demoMdx: new Set(), versionOnly: () => false };
 const pr = (files, extra = {}) =>
@@ -75,3 +79,20 @@ test("samePackageJson: a new dependency is not", () =>
 test("samePackageJson: a non-plop dependency version bump is not", () =>
   assert.ok(!samePackageJson(base, base.replace('"1.2.6"', '"1.2.7"'))));
 test("samePackageJson: unparsable JSON is not", () => assert.ok(!samePackageJson(base, "{ nope")));
+
+// A prop edit inside a multi-line demo has no `<Capital` on the changed line; the hunk's context does.
+const hunk = (lines) => ["diff --git a/x.mdx b/x.mdx", "--- a/x.mdx", "+++ b/x.mdx", "@@ -10,7 +10,7 @@", ...lines].join("\n");
+test("mdxTouchesDemo: a prop line inside a multi-line demo counts", () =>
+  assert.ok(mdxTouchesDemo(hunk(["  <Select", '    label="Brush"', '-    placeholder="Pick"', '+    placeholder="Pick one"', "  />"]))));
+test("mdxTouchesDemo: an import line counts", () => assert.ok(mdxTouchesDemo(hunk(['+import { Demo } from "./demo";']))));
+test("mdxTouchesDemo: plain text with no demo nearby does not", () =>
+  assert.ok(!mdxTouchesDemo(hunk(["Some words before.", "-Old sentence.", "+New sentence.", "Some words after."]))));
+
+test("the CLI runs from a path with a space in it", () => {
+  const dir = mkdtempSync(join(tmpdir(), "ci changes "));
+  const copy = join(dir, "ci-changes.mjs");
+  copyFileSync(new URL("./ci-changes.mjs", import.meta.url), copy);
+  const outFile = join(dir, "out.txt");
+  execFileSync(process.execPath, [copy, "--base", "HEAD"], { env: { ...process.env, GITHUB_OUTPUT: outFile, GITHUB_EVENT_NAME: "pull_request" } });
+  assert.match(readFileSync(outFile, "utf8"), /^check=full$/m);
+});

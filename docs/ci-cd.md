@@ -44,7 +44,7 @@ Every run ends with a job called **`ci`**. It is red if any job that needed to r
 4. **Bypass list:** leave it empty, so nobody, including you, can merge while `ci` is red. You no longer need a bypass for the bot's PR (see below).
 5. **Save changes.**
 
-Do this right before merging the pull request that introduces this CI. Until it's merged, the old `check` and `e2e` checks are still the ones that report, and after it's merged only `ci` reports.
+Do this while the pull request that introduces this CI is open, once its `ci` check is green. That pull request already runs the new CI, so it reports `ci` and per-browser checks such as `e2e (desktop)`, but never a check named plain `e2e`. Under the old rules it would wait forever. After it merges, update every other open pull request from `main` (**Update branch**), so it runs the new CI and reports `ci` too.
 
 ## From a pull request to npm
 
