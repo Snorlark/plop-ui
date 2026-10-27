@@ -1,5 +1,5 @@
 # PlopUI
-Hand-drawn React UI kit, imperfect on purpose: it breaks the visual rulebook, never the accessibility one. Read PRD.md first.
+Hand-drawn React UI kit, imperfect on purpose: it breaks the visual rulebook, never the accessibility one. Read PRD.md first when you have it (a private brief, not in the repo).
 
 ## Rules
 - packages/react must never import from next/*. Next.js lives only in apps/.

@@ -8,7 +8,9 @@ import styles from "./Callout.module.css";
 export type CalloutTone = "info" | "warn" | "error" | "success";
 
 export interface CalloutProps {
+  /** The headline, lettered in Sketchpop. */
   title: ReactNode;
+  /** Body text under the title. */
   children?: ReactNode;
   /** Sets the color and icon: info, warn, error or success. Default `info`. */
   tone?: CalloutTone;
@@ -22,6 +24,7 @@ export interface CalloutProps {
   buddy?: boolean | BuddyMood;
   /** `alert` for errors that need attention right away. Default: none (it is just content). */
   role?: "alert" | "status";
+  /** Extra class on the strip. */
   className?: string;
 }
 
