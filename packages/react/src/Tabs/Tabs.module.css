@@ -28,6 +28,8 @@
 .tab:nth-child(3) { --tc: var(--plop-bubblegum); --tr: -1deg; }
 .tab:nth-child(4) { --tc: var(--plop-mustard); --tr: 1.5deg; }
 .tab:hover { transform: translateY(3px) rotate(var(--tr, 0deg)); }
+/* While it moves on hover, an invisible margin keeps the pointer on it (else a pointer resting on the edge un-hovers it and it shakes). */
+.tab:hover::after { content: ""; position: absolute; inset: -8px; }
 .tab[aria-selected="true"] { background: var(--plop-paper); transform: translateY(2.5px); z-index: 2; }
 .tab:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
 .tab > span + span { margin-left: 6px; }

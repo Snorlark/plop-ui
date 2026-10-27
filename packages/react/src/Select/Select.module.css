@@ -5,7 +5,7 @@
 
 /* The label gets a highlighter swipe while the field is in use. */
 .label { display: inline-block; margin: 0 0 8px; font-family: var(--plop-font-body); font-size: 15px; color: var(--plop-on-soft); }
-.label > span { padding: 0 4px; background: linear-gradient(transparent 55%, var(--plop-mustard) 55% 92%, transparent 92%) no-repeat 0 0 / 0% 100%; transition: background-size 0.35s var(--plop-ease-squish); }
+.label > span { padding: 0 4px; background: linear-gradient(transparent 8%, var(--plop-mustard) 8% 92%, transparent 92%) no-repeat 0 0 / 0% 100%; transition: background-size 0.35s var(--plop-ease-squish); }
 .root:focus-within .label > span, .open .label > span { background-size: 100% 100%; color: var(--plop-on-fill-mustard); }
 
 .trigger {
@@ -17,6 +17,8 @@
 .trigger::before { content: ""; position: absolute; inset: 0; border-radius: inherit; border: 2.5px solid var(--plop-ink); pointer-events: none; transition: border-width 0.15s; }
 [data-plop-filters] .trigger::before { filter: url(#plop-wob1); }
 .trigger:hover:not(:disabled) { transform: rotate(-0.6deg) translateY(-1px); }
+/* While it moves on hover, an invisible margin keeps the pointer on it (else a pointer resting on the edge un-hovers it and it shakes). */
+.trigger:hover:not(:disabled)::after { content: ""; position: absolute; inset: -8px; }
 .open .trigger::before, .trigger:focus-visible::before { border-width: 3.5px; }
 [data-plop-filters] :is(.open .trigger, .trigger:focus-visible)::before { animation: boil 0.5s steps(1) infinite; }
 @keyframes boil { 0% { filter: url(#plop-wob1); } 33.33% { filter: url(#plop-wob2); } 66.66% { filter: url(#plop-wob3); } }

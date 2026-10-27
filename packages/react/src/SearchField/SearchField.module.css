@@ -6,8 +6,8 @@
 
 /* The label gets a highlighter swipe while the field has focus. */
 .label { display: inline-block; margin: 0 0 8px; font-family: var(--plop-font-body); font-size: 14px; color: var(--plop-ink-soft); }
-.label > span { padding: 0 4px; background: linear-gradient(transparent 55%, var(--plop-mustard) 55% 92%, transparent 92%) no-repeat 0 0 / 0% 100%; transition: background-size 0.35s var(--plop-ease-squish); }
-.root:focus-within .label > span { background-size: 100% 100%; }
+.label > span { padding: 0 4px; background: linear-gradient(transparent 8%, var(--plop-mustard) 8% 92%, transparent 92%) no-repeat 0 0 / 0% 100%; transition: background-size 0.35s var(--plop-ease-squish); }
+.root:focus-within .label > span { background-size: 100% 100%; color: var(--plop-on-fill-mustard); }
 
 .box {
   position: relative; display: flex; align-items: center; gap: 4px; height: var(--sh); padding: 0 8px 0 14px;

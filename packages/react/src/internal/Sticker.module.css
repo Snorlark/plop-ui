@@ -17,6 +17,9 @@
   --shadow-blur: 0px;
   position: relative;
   display: inline-grid;
+  /* Its own size, even in a stretching grid or flex parent (set a width to make it wider); alignment still applies. */
+  width: fit-content;
+  height: fit-content;
   margin: 0;
   padding: 0;
   border: 0;
@@ -182,6 +185,14 @@
     --y: -3px;
     --shadow-x: 7px;
     --shadow-y: 10px;
+  }
+
+  /* While lifted, an invisible margin keeps the pointer on it: the lift moved the edge out from under a pointer
+     resting there, which un-hovered it, dropped it back under the pointer, and shook. */
+  .root:not(:disabled):not([aria-busy="true"]):hover::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
   }
 
   [data-plop-filters] .root:not(:disabled):hover .ink,
