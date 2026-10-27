@@ -1,8 +1,17 @@
 {
   "name": "@plop-ui/fonts",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Sketchpop: the hand-drawn marker family behind PlopUI — Light, Regular, Bold and Black, italic and upright, as woff2.",
-  "keywords": ["plopui", "font", "sketchpop", "handwriting", "hand-drawn", "woff2", "marker", "ofl"],
+  "keywords": [
+    "plopui",
+    "font",
+    "sketchpop",
+    "handwriting",
+    "hand-drawn",
+    "woff2",
+    "marker",
+    "ofl"
+  ],
   "license": "OFL-1.1",
   "author": "Lark Sigmuond Babao",
   "homepage": "https://plopui.com",
