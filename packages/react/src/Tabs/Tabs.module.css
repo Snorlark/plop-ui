@@ -7,7 +7,7 @@
   padding: 10px 20px 14px;
   border: 2.5px solid var(--plop-ink);
   border-bottom: 0;
-  border-radius: 14px 18px 0 0;
+  border-radius: calc(14px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) 0 0;
   background: var(--tc);
   color: var(--plop-ink-text);
   font-family: var(--plop-font-letter);
@@ -38,7 +38,7 @@
   background: var(--plop-paper);
   color: var(--plop-ink-text);
   border: 2.5px solid var(--plop-ink);
-  border-radius: 6px 16px 14px 18px;
+  border-radius: calc(6px * var(--plop-roundness, 1)) calc(16px * var(--plop-roundness, 1)) calc(14px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1));
   box-shadow: 5px 7px 0 var(--plop-shadow);
 }
 .panel:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }

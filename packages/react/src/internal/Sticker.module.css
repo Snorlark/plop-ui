@@ -94,7 +94,7 @@
   content: "";
   position: absolute;
   inset: -4px -3px -2px -5px;
-  border-radius: 22px 16px 20px 15px / 16px 20px 15px 22px;
+  border-radius: calc(22px * var(--plop-roundness, 1)) calc(16px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(15px * var(--plop-roundness, 1)) / calc(16px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(15px * var(--plop-roundness, 1)) calc(22px * var(--plop-roundness, 1));
   border: 1.5px solid var(--plop-ink);
   opacity: 0.45;
   transform: rotate(0.8deg);
@@ -143,7 +143,7 @@
   height: var(--plop-peel);
   clip-path: polygon(0 0, 100% 0, 0 100%);
   background: linear-gradient(135deg, var(--plop-paper) 0%, var(--plop-paper-back) 70%);
-  border-radius: 3px;
+  border-radius: calc(3px * var(--plop-roundness, 1));
   filter: drop-shadow(1px 1px 0 var(--plop-shadow));
   pointer-events: none;
 }

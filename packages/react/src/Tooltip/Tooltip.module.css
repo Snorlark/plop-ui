@@ -11,7 +11,7 @@
   background: var(--plop-paper);
   color: var(--plop-ink-text);
   border: 2.5px solid var(--plop-ink);
-  border-radius: 16px 12px 18px 11px;
+  border-radius: calc(16px * var(--plop-roundness, 1)) calc(12px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(11px * var(--plop-roundness, 1));
   font-family: var(--plop-font-body);
   font-size: 17px;
   font-style: normal;
@@ -41,7 +41,7 @@
   border-right: 2.5px solid var(--plop-ink);
   border-bottom: 2.5px solid var(--plop-ink);
   transform: translateX(-50%) rotate(45deg) skew(10deg, 10deg);
-  border-radius: 0 0 4px 0;
+  border-radius: 0 0 calc(4px * var(--plop-roundness, 1)) 0;
 }
 .wrap:not([data-dismissed]):hover .tip,
 .wrap:not([data-dismissed]):has(:focus-visible) .tip,

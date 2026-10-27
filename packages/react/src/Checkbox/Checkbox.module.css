@@ -46,7 +46,7 @@
 .input:focus-visible + .box {
   outline: 2.5px dashed var(--plop-focus);
   outline-offset: 5px;
-  border-radius: 8px;
+  border-radius: calc(8px * var(--plop-roundness, 1));
 }
 
 .frame {

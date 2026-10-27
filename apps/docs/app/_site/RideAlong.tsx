@@ -172,6 +172,7 @@ export function RideAlong() {
   const pass = useSyncExternalStore(subscribe, getPass, getServerPass);
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const path = usePathname();
   const [fresh, setFresh] = useState<Step | null>(null);
   const [bump, setBump] = useState(false);
   const [hint, setHint] = useState(false);
@@ -232,6 +233,9 @@ export function RideAlong() {
   }, [open]);
 
   const close = () => setOpen(false);
+
+  // The Playground needs every corner of the screen for the board; stamps still count there.
+  if (path === "/playground" && !open) return null;
 
   return (
     <>

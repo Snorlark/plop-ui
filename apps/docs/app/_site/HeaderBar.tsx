@@ -32,6 +32,8 @@ export function HeaderBar({ children }: { children: ReactNode }) {
   useEffect(() => {
     const html = document.documentElement;
     html.style.setProperty("--header-offset", hidden ? "0px" : `${bar.current?.offsetHeight ?? 0}px`);
+    // Its full height, hidden or not: for layouts that must not jump as the header slides away.
+    html.style.setProperty("--header-height", `${bar.current?.offsetHeight ?? 0}px`);
   }, [hidden]);
 
   return (
