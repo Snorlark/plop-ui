@@ -4,6 +4,7 @@ import { Buddy, Button, PlopProvider, seededTilt, toast, useHaptics, useSound } 
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { getPass, getServerPass, subscribe } from "../_site/pass";
+import { useBoardHistory, type Board } from "./history";
 import { Choice, Slider, Swatches, Text } from "./controls";
 import { boardCode, codeFor, describe, KINDS, REGULARS_SHELF, SHELVES, type Item, type TrayEntry } from "./stickers";
 import styles from "./tools.module.css";
@@ -11,15 +12,15 @@ import styles from "./tools.module.css";
 const STORE = "plop-board-v1";
 const DRAG_AFTER = 6;
 
-interface Saved {
-  paper: SurfaceName;
-  items: Item[];
-}
+const EMPTY: Board = { paper: "poster", items: [], roundness: 1 };
 
-function load(): Saved | null {
+/** The last board on this device. Boards saved before roundness existed load with the default. */
+function load(): Board | null {
   try {
     const raw = localStorage.getItem(STORE);
-    return raw ? (JSON.parse(raw) as Saved) : null;
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as Partial<Board>;
+    return { ...EMPTY, ...saved, items: Array.isArray(saved.items) ? saved.items : [] };
   } catch {
     return null;
   }
@@ -40,8 +41,15 @@ async function copy(text: string, what: string) {
  * right only shows what fits the selected sticker, and its code.
  */
 export function StickerBoard() {
-  const [paper, setPaper] = useState<SurfaceName>("poster");
-  const [items, setItems] = useState<Item[]>([]);
+  const history = useBoardHistory(EMPTY);
+  const { board: current, set: setBoard, undo, redo } = history;
+  const { paper, items } = current;
+  const setItems = useCallback(
+    (next: Item[] | ((all: Item[]) => Item[]), commit = true) =>
+      setBoard((b) => ({ ...b, items: typeof next === "function" ? next(b.items) : next }), { commit }),
+    [setBoard],
+  );
+  const setPaper = (p: SurfaceName) => setBoard((b) => ({ ...b, paper: p }));
   const [selected, setSelected] = useState<string | null>(null);
   const [shelf, setShelf] = useState(SHELVES[0]!.id);
   const board = useRef<HTMLDivElement>(null);
@@ -56,25 +64,27 @@ export function StickerBoard() {
   useEffect(() => {
     const saved = load();
     if (saved) {
-      setPaper(saved.paper);
-      setItems(saved.items);
+      history.reset(saved);
       counter.current = saved.items.length;
     }
     restored.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- restore once, on mount
   }, []);
   useEffect(() => {
     if (!restored.current) return;
     try {
-      localStorage.setItem(STORE, JSON.stringify({ paper, items }));
+      localStorage.setItem(STORE, JSON.stringify(current));
     } catch {
       // Storage blocked: the board just lasts for this visit.
     }
-  }, [paper, items]);
+  }, [current]);
 
   const sel = items.find((i) => i.id === selected) ?? null;
-  const update = useCallback((id: string, patch: Partial<Item> | ((it: Item) => Partial<Item>)) => {
-    setItems((all) => all.map((it) => (it.id === id ? { ...it, ...(typeof patch === "function" ? patch(it) : patch) } : it)));
-  }, []);
+  const update = useCallback(
+    (id: string, patch: Partial<Item> | ((it: Item) => Partial<Item>), commit = true) =>
+      setItems((all) => all.map((it) => (it.id === id ? { ...it, ...(typeof patch === "function" ? patch(it) : patch) } : it)), commit),
+    [setItems],
+  );
 
   const add = (entry: TrayEntry, x?: number, y?: number) => {
     const n = ++counter.current;
@@ -103,6 +113,12 @@ export function StickerBoard() {
     sound("up");
   };
 
+  const clear = () => {
+    setItems([]);
+    setSelected(null);
+    toast("Board cleared. Undo brings it back.");
+  };
+
   const toFront = (id: string) => update(id, { z: Math.max(0, ...items.map((i) => i.z)) + 1 });
 
   /* ---- dragging stickers around the board ---- */
@@ -125,14 +141,17 @@ export function StickerBoard() {
       if (Math.hypot(dx, dy) < DRAG_AFTER) return;
       d.live = true;
       e.currentTarget.setPointerCapture(e.pointerId);
-      toFront(d.id);
+      // Part of the drag's single undo step.
+      update(d.id, { z: Math.max(0, ...items.map((i) => i.z)) + 1 }, false);
     }
-    update(d.id, { x: clamp(d.ox + (dx / rect.width) * 100, 2, 98), y: clamp(d.oy + (dy / rect.height) * 100, 3, 97) });
+    // Live while dragging; the whole drag becomes one undo step on release.
+    update(d.id, { x: clamp(d.ox + (dx / rect.width) * 100, 2, 98), y: clamp(d.oy + (dy / rect.height) * 100, 3, 97) }, false);
   };
   const onItemUp = (e: PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     drag.current = null;
     if (d?.live && d.pid === e.pointerId) {
+      history.commit();
       swallow.current = true;
       haptics.tap();
     }
@@ -169,7 +188,15 @@ export function StickerBoard() {
 
   /* ---- keyboard: the board is one tab stop; arrows move, Delete peels, N picks the next ---- */
   const onBoardKey = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget || !items.length) return;
+    if (e.target !== e.currentTarget) return;
+    const mod = e.metaKey || e.ctrlKey;
+    if (mod && (e.key === "z" || e.key === "Z" || e.key === "y")) {
+      e.preventDefault();
+      if (e.key === "y" || e.shiftKey) redo();
+      else undo();
+      return;
+    }
+    if (!items.length) return;
     const current = sel ?? items[items.length - 1]!;
     const step = e.shiftKey ? 5 : 1;
     const moves: Record<string, [number, number]> = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
@@ -270,6 +297,7 @@ export function StickerBoard() {
             {items.map((it) => (
               <div
                 key={it.id}
+                data-sticker=""
                 className={styles.item}
                 data-selected={it.id === selected ? "" : undefined}
                 style={{ left: `${it.x}%`, top: `${it.y}%`, zIndex: it.z, "--tilt": `${it.tilt}deg`, "--scale": it.scale } as CSSProperties}
@@ -292,6 +320,15 @@ export function StickerBoard() {
           </div>
         </PlopProvider>
         <div className={styles.boardBar}>
+          <Button size="sm" variant="plain" onClick={undo} disabled={!history.canUndo}>
+            Undo
+          </Button>
+          <Button size="sm" variant="plain" onClick={redo} disabled={!history.canRedo}>
+            Redo
+          </Button>
+          <Button size="sm" variant="tomato" onClick={clear} disabled={!items.length}>
+            Clear
+          </Button>
           <Choice label="Paper" value={paper} options={surfaceNames.map((s) => [s, surfaces[s].label])} onChange={(v) => setPaper(v as SurfaceName)} />
         </div>
       </section>
@@ -338,11 +375,6 @@ export function StickerBoard() {
             {items.length > 0 && (
               <>
                 <CodeBlock title="Whole board as a component" code={boardCode(items, paper)} what="Board code" />
-                <div className={styles.actions}>
-                  <Button size="sm" variant="tomato" onClick={() => setItems([])}>
-                    Clear board
-                  </Button>
-                </div>
               </>
             )}
           </>
