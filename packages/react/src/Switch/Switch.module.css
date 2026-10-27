@@ -24,7 +24,7 @@
   margin: 0 6px;
   padding: 0;
   border: 0;
-  border-radius: 21px 18px 20px 19px / 19px 20px 18px 21px;
+  border-radius: calc(21px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(19px * var(--plop-roundness, 1)) / calc(19px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(21px * var(--plop-roundness, 1));
   background: var(--plop-track);
   cursor: inherit;
   outline: none;

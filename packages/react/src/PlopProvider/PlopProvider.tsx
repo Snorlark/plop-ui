@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useMemo, useRef, type HTMLAttributes, type ReactNode } from "react";
+import { useContext, useMemo, useRef, type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
 import type { SurfaceName } from "@plop-ui/tokens";
 import { cx } from "../internal/cx.js";
 import burstStyles from "../InkBurst/InkBurst.module.css";
@@ -30,6 +30,8 @@ export interface PlopProviderProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   paint?: boolean;
   /** Render the toast zone that `toast()` shows messages in. Default `true`. */
   toaster?: boolean;
+  /** How round every corner is inside: `1` is the default look, `0` is square, `2` is very round. Circles stay circles. */
+  roundness?: number;
   /** What shows behind a toast: `solid` (a faint gradient wash), `dots` (a comic halftone screen) or `none`. Default `solid`. */
   toastBackdrop?: ToastBackdrop;
 }
@@ -53,7 +55,9 @@ export function PlopProvider({
   paint = true,
   toaster = true,
   toastBackdrop,
+  roundness,
   className,
+  style,
   ...rest
 }: PlopProviderProps) {
   const parent = useContext(PlopContext);
@@ -73,6 +77,8 @@ export function PlopProvider({
         data-plop-motion={motion === "always" ? "reduce" : motion === "never" ? "full" : undefined}
         data-plop-filters=""
         data-plop-shadow={stickerShadow}
+        data-plop-roundness={roundness === undefined ? undefined : ""}
+        style={roundness === undefined ? style : ({ ...style, "--plop-roundness": roundness } as CSSProperties)}
       >
         <PlopFilters />
         {children}

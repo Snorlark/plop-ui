@@ -8,7 +8,7 @@ const decl = (name, value) => `  --plop-${name}: ${value};`;
 const lines = [];
 const push = (...l) => lines.push(...l);
 
-const { color, onFill, font, fontWeight, fontSize, radius, stroke, hatch, motion, surfaces, surfacePattern } = tokens;
+const { color, onFill, font, fontWeight, fontSize, radius, roundness, stroke, hatch, motion, surfaces, surfacePattern } = tokens;
 
 push("/* @plop-ui/tokens — generated from src/tokens.ts. Do not edit by hand. */", "", ":root {");
 for (const [k, v] of Object.entries(color)) push(decl(kebab(k), v));
@@ -18,7 +18,10 @@ for (const k of ["tomato", "mustard", "bubblegum", "periwinkle", "mint"]) push(d
 for (const [k, v] of Object.entries(font)) push(decl(`font-${k}`, v));
 for (const [k, v] of Object.entries(fontWeight)) push(decl(`weight-${k}`, String(v)));
 for (const [k, v] of Object.entries(fontSize)) push(decl(`text-${k}`, `${v}px`));
-for (const [k, v] of Object.entries(radius)) push(decl(`radius-${k}`, v));
+// Every px length in a radius follows --plop-roundness, so one number makes the whole kit sharper or softer.
+push(decl("roundness", String(roundness)));
+const radiusDecls = Object.entries(radius).map(([k, v]) => decl(`radius-${k}`, v.replace(/(\d+(?:\.\d+)?)px/g, "calc($1px * var(--plop-roundness))")));
+push(...radiusDecls);
 push(decl("stroke", stroke.default), decl("stroke-sm", stroke.sm), decl("stroke-illustration", stroke.illustration));
 push(decl("hatch-offset-x", hatch.offsetX), decl("hatch-offset-y", hatch.offsetY));
 push(
@@ -29,6 +32,8 @@ push(
   decl("boil-interval", motion.boilInterval),
 );
 push("}", "");
+// A custom property resolves var() where it's declared, so a PlopProvider with its own roundness declares the radii again.
+push("[data-plop-roundness] {", ...radiusDecls, "}", "");
 
 const modeKeys = ["bg", "lineA", "lineB", "on", "onSoft", "focus", "hatch", "glow"];
 for (const [name, s] of Object.entries(surfaces)) {

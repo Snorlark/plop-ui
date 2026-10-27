@@ -12,7 +12,7 @@
 .box {
   position: relative; display: flex; align-items: center; gap: 4px; height: var(--sh); padding: 0 8px 0 14px;
   background: var(--plop-paper); color: var(--plop-ink-text);
-  border-radius: 26px 20px 28px 18px / 20px 28px 18px 26px; box-shadow: 3px 5px 0 var(--plop-shadow);
+  border-radius: calc(26px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(28px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) / calc(20px * var(--plop-roundness, 1)) calc(28px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(26px * var(--plop-roundness, 1)); box-shadow: 3px 5px 0 var(--plop-shadow);
 }
 /* the marker outline: wobbly, and it boils while focused */
 .box::before {
@@ -40,7 +40,7 @@
 .keys { flex: none; display: inline-flex; gap: 4px; margin-right: 4px; }
 .root kbd {
   display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border: 2px solid var(--plop-ink); border-bottom-width: 4px;
-  border-radius: 7px 6px 8px 6px; background: var(--plop-paper); font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 12px; line-height: 1; color: var(--plop-ink-text);
+  border-radius: calc(7px * var(--plop-roundness, 1)) calc(6px * var(--plop-roundness, 1)) calc(8px * var(--plop-roundness, 1)) calc(6px * var(--plop-roundness, 1)); background: var(--plop-paper); font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 12px; line-height: 1; color: var(--plop-ink-text);
 }
 .sm .keys { display: none; }
 
@@ -59,7 +59,7 @@
 .pop {
   position: absolute; left: -2px; right: -2px; top: calc(100% + 14px); z-index: 25; padding: 14px 8px 8px;
   background: var(--plop-paper); color: var(--plop-ink-text); border: 2.5px solid var(--plop-ink);
-  border-radius: 16px 12px 18px 13px / 13px 18px 12px 16px; box-shadow: 6px 9px 0 var(--plop-shadow);
+  border-radius: calc(16px * var(--plop-roundness, 1)) calc(12px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(13px * var(--plop-roundness, 1)) / calc(13px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(12px * var(--plop-roundness, 1)) calc(16px * var(--plop-roundness, 1)); box-shadow: 6px 9px 0 var(--plop-shadow);
   animation: popsheet 0.35s var(--plop-ease-spring);
 }
 .pop[hidden] { display: none; }
@@ -72,13 +72,13 @@
 .pop > .list { max-height: 330px; overflow-y: auto; }
 /* a 4px ink thumb that only shows while the list is hovered or scrolling: ::-webkit-scrollbar where it exists (Chrome ignores it once scrollbar-width is set), the standard properties elsewhere */
 .pop > .list::-webkit-scrollbar { width: 6px; }
-.pop > .list::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: 4px; background-clip: padding-box; background-color: transparent; }
+.pop > .list::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: calc(4px * var(--plop-roundness, 1)); background-clip: padding-box; background-color: transparent; }
 .pop > .list:is(:hover, [data-scrolling])::-webkit-scrollbar-thumb { background-color: color-mix(in srgb, var(--plop-ink) 55%, transparent); }
 @supports not selector(::-webkit-scrollbar) { .pop > .list { scrollbar-width: thin; scrollbar-color: transparent transparent; } .pop > .list:is(:hover, [data-scrolling]) { scrollbar-color: color-mix(in srgb, var(--plop-ink) 55%, transparent) transparent; } }
 .groupHead { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 4px; }
 .group { font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-size: 12px; color: var(--plop-ink-soft); }
 .clearRecent { min-height: 28px; padding: 0 6px; border: 0; background: none; color: var(--plop-ink); font: inherit; font-size: 14px; text-decoration: underline wavy; text-underline-offset: 4px; cursor: pointer; }
-.opt { position: relative; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 12px; border-radius: 12px 9px 13px 10px; cursor: pointer; }
+.opt { position: relative; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 6px 12px; border-radius: calc(12px * var(--plop-roundness, 1)) calc(9px * var(--plop-roundness, 1)) calc(13px * var(--plop-roundness, 1)) calc(10px * var(--plop-roundness, 1)); cursor: pointer; }
 .opt[aria-selected="true"] { background: color-mix(in srgb, var(--plop-periwinkle) 38%, var(--plop-paper)); }
 .opt[aria-selected="true"]::before { content: ""; position: absolute; left: -6px; top: 50%; width: 12px; height: 12px; margin-top: -6px; background: var(--plop-ink); clip-path: polygon(0 0, 100% 50%, 0 100%); }
 .lead { flex: none; display: grid; place-items: center; width: 38px; height: 38px; color: var(--plop-ink); }
@@ -87,7 +87,7 @@
 .main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
 .title { font-family: var(--plop-font-body); font-size: 17px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sub { font-family: var(--plop-font-body); font-size: 14px; color: var(--plop-ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.title mark, .sub mark { color: inherit; background: linear-gradient(transparent 45%, var(--plop-mustard) 45% 92%, transparent 92%); border-radius: 2px; padding: 0 1px; }
+.title mark, .sub mark { color: inherit; background: linear-gradient(transparent 45%, var(--plop-mustard) 45% 92%, transparent 92%); border-radius: calc(2px * var(--plop-roundness, 1)); padding: 0 1px; }
 .meta { flex: none; }
 .empty { display: flex; align-items: center; gap: 14px; padding: 10px 12px; }
 .empty p { margin: 0; font-family: var(--plop-font-body); font-size: 16px; line-height: 1.4; }
@@ -108,7 +108,7 @@
 @keyframes drop { from { transform: translateY(-14px) rotate(-1.5deg) scale(0.97); opacity: 0; } }
 .sheet {
   position: relative; padding: 20px 18px 12px; background: var(--plop-sheet); color: var(--plop-ink-text); border: 2.5px solid var(--plop-ink);
-  border-radius: 18px 14px 20px 15px / 15px 20px 14px 18px; box-shadow: 8px 12px 0 var(--plop-shadow-strong);
+  border-radius: calc(18px * var(--plop-roundness, 1)) calc(14px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(15px * var(--plop-roundness, 1)) / calc(15px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(14px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)); box-shadow: 8px 12px 0 var(--plop-shadow-strong);
 }
 .sheet::before, .sheet::after {
   content: ""; position: absolute; top: -12px; width: 92px; height: 24px;

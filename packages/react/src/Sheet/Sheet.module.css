@@ -4,7 +4,7 @@
   position: relative;
   padding: 44px 30px 40px;
   border: 2.5px solid var(--plop-ink);
-  border-radius: 14px 18px 11px 20px / 18px 12px 20px 14px;
+  border-radius: calc(14px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(11px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) / calc(18px * var(--plop-roundness, 1)) calc(12px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1)) calc(14px * var(--plop-roundness, 1));
   box-shadow: 7px 9px 0 var(--plop-shadow);
   transform: rotate(var(--tilt, 0deg));
 }

@@ -31,7 +31,7 @@
   height: 3px;
   /* Lines and text sit on the surface itself, so they use its "on" color (ink on paper, cream on dark). */
   background: var(--plop-on);
-  border-radius: 3px;
+  border-radius: calc(3px * var(--plop-roundness, 1));
   transform: rotate(var(--wobble, -1deg));
 }
 .step:first-child::before {
