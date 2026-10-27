@@ -12,6 +12,8 @@ name: CI
 
 on:
   pull_request:
+    # ready_for_review: a draft tests Chrome and Android only; marking it ready runs every browser.
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
   schedule:
@@ -42,6 +44,7 @@ jobs:
           node-version: 22
       - id: classify
         env:
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
           BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || (github.event_name == 'push' && 'HEAD~1' || 'origin/main') }}
         run: node scripts/ci-changes.mjs --base "$BASE"
 
@@ -108,6 +111,7 @@ jobs:
       fail-fast: false
       matrix:
         project: ${{ fromJSON(needs.changes.outputs.projects) }}
+    # One job per browser engine (chromium: desktop + phone, firefox, webkit: safari + iphone), so each installs once.
     name: e2e (${{ matrix.project.name }})
     steps:
       - uses: actions/checkout@v4
@@ -132,7 +136,7 @@ jobs:
         run: pnpm --filter @plop-ui/docs exec playwright install --with-deps ${{ matrix.project.browser }}
       - if: steps.browsers.outputs.cache-hit == 'true'
         run: pnpm --filter @plop-ui/docs exec playwright install-deps ${{ matrix.project.browser }}
-      - run: pnpm --filter @plop-ui/docs exec playwright test --project=${{ matrix.project.name }}
+      - run: pnpm --filter @plop-ui/docs exec playwright test --project=${{ join(matrix.project.projects, ' --project=') }}
         env:
           NEXT_DIST_DIR: .next-e2e
 

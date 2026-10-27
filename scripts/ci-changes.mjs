@@ -21,6 +21,18 @@ const RESULT = {
 };
 const out = (level, e2e = RESULT[level].e2e) => ({ ...RESULT[level], e2e, projects: PROJECTS[e2e] });
 
+/** One CI job per browser engine, running its projects together, so each browser is installed once. */
+export function browserJobs(projects) {
+  const jobs = [];
+  for (const name of projects) {
+    const browser = BROWSER[name];
+    const job = jobs.find((j) => j.browser === browser);
+    if (job) job.projects.push(name);
+    else jobs.push({ name: browser, browser, projects: [name] });
+  }
+  return jobs;
+}
+
 const isChangelog = (p) => /^\.changeset\/[^/]+\.md$/.test(p) || /^packages\/[^/]+\/CHANGELOG\.md$/.test(p);
 
 /** One path's level. `status` is git's A/M/D/R; `demo` is true when an .mdx change touches a live demo. */
@@ -66,8 +78,16 @@ export function samePackageJson(baseText, headText) {
   }
 }
 
-/** What to run. See the spec's tables; anything unclear, including an empty diff, runs everything. */
-export function classify({ event, branch, files, demoMdx, versionOnly }) {
+/**
+ * What to run. See the spec's tables; anything unclear, including an empty diff, runs everything.
+ * A draft PR tests Chrome and Android only; marking it ready for review runs every browser (saves Actions minutes).
+ */
+export function classify({ event, branch, files, demoMdx, versionOnly, draft = false }) {
+  const result = classifyFiles({ event, branch, files, demoMdx, versionOnly });
+  return draft && event === "pull_request" && result.e2e === "full" ? { ...result, e2e: "light", projects: PROJECTS.light } : result;
+}
+
+function classifyFiles({ event, branch, files, demoMdx, versionOnly }) {
   if (event === "push") return { ...out("full", "main") };
   if (event === "schedule" || (event === "workflow_dispatch" && branch === "main") || files.length === 0) return out("full");
 
@@ -107,12 +127,12 @@ function cli() {
       return false;
     }
   };
-  const result = classify({ event: process.env.GITHUB_EVENT_NAME ?? "pull_request", branch: process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || "", files, demoMdx, versionOnly });
+  const result = classify({ event: process.env.GITHUB_EVENT_NAME ?? "pull_request", branch: process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || "", files, demoMdx, versionOnly, draft: process.env.PR_DRAFT === "true" });
   console.log(JSON.stringify({ files: files.length, ...result }, null, 2));
   if (process.env.GITHUB_OUTPUT)
     appendFileSync(
       process.env.GITHUB_OUTPUT,
-      `check=${result.check}\nbuild_apps=${result.buildApps}\nsite=${result.site}\ne2e=${result.e2e}\nprojects=${JSON.stringify(result.projects.map((name) => ({ name, browser: BROWSER[name] })))}\n`,
+      `check=${result.check}\nbuild_apps=${result.buildApps}\nsite=${result.site}\ne2e=${result.e2e}\nprojects=${JSON.stringify(browserJobs(result.projects))}\n`,
     );
 }
 
