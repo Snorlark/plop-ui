@@ -112,9 +112,11 @@ test.describe("board-first layout", () => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await fresh(page);
     await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    // The rounded corners live on the sticker's paper layer, not on the <button> itself.
+    const paper = board(page).locator("[data-sticker] [class*=Sticker_paper]").first();
+    expect(await paper.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).not.toBe("0px");
     await page.getByRole("slider", { name: /Radius/ }).fill("0");
-    const btn = board(page).locator("[data-sticker] button").first();
-    await expect.poll(() => btn.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
+    await expect.poll(() => paper.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
     await page.getByRole("button", { name: "Copy board code" }).click();
     await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toMatch(/roundness=\{0\}/);
   });
@@ -254,5 +256,45 @@ test.describe("every component", () => {
       }
       await editor.getByRole("button", { name: "Done" }).click();
     }
+  });
+});
+
+test.describe("tweak a component", () => {
+  test.skip(({ isMobile }) => isMobile, "desktop layout");
+  const picker = (page: Page) => page.getByRole("navigation", { name: "Components" });
+
+  test("lists every component", async ({ page }) => {
+    await page.goto("/playground?tool=tweak");
+    for (const name of ["Button", "IconButton", "Tag", "Switch", "Checkbox", "StatusTimeline", "Callout", "Progress", "Avatar", "TextField", "Toast",
+      "Tooltip", "RadioGroup", "Tabs", "TicketCard", "UnitCard", "StickyNote", "Select", "MultiSelect", "Menu", "TextArea", "SearchField", "StatusDot", "Heading"])
+      await expect(picker(page).getByRole("button", { name, exact: true })).toHaveCount(1);
+  });
+
+  test("the preview stays in view while editing", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto("/playground?tool=tweak&c=button");
+    await page.getByRole("button", { name: /^Burst/ }).scrollIntoViewIfNeeded();
+    const p = (await page.getByRole("region", { name: "Button preview" }).boundingBox())!;
+    expect(p.y).toBeGreaterThanOrEqual(0);
+    expect(p.y + 40).toBeLessThanOrEqual(720);
+  });
+
+  test("Burst uses the kit's Select, no native select", async ({ page }) => {
+    await page.goto("/playground?tool=tweak&c=button");
+    await expect(page.getByRole("button", { name: /^Burst/ })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Props" }).locator("select")).toHaveCount(0);
+  });
+
+  test("radius rounds the preview and shows in the code", async ({ page }) => {
+    await page.goto("/playground?tool=tweak&c=button");
+    const paper = page.getByRole("region", { name: "Button preview" }).locator("[class*=Sticker_paper]").first();
+    expect(await paper.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).not.toBe("0px");
+    // Retry: a value set before hydration doesn't reach React on a slow first load.
+    await expect(async () => {
+      await page.getByRole("slider", { name: "Radius" }).fill("0");
+      await expect(page.locator(".pg-radius output")).toHaveText("0×", { timeout: 1000 });
+    }).toPass();
+    await expect.poll(() => paper.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
+    await expect(page.getByRole("region", { name: "Code" }).locator("pre")).toContainText("roundness={0}");
   });
 });
