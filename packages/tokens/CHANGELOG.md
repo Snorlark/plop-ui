@@ -1,5 +1,11 @@
 # @plop-ui/tokens
 
+## 0.3.5
+
+### Patch Changes
+
+- 5e42264: Fuller READMEs on npm for tokens and fonts (a picture, install, usage, what's inside, links) and search keywords for both.
+
 ## 0.3.4
 
 ### Patch Changes
