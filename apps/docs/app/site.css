@@ -605,8 +605,8 @@ html[data-tear]::view-transition-old(root) {
   display: flex; align-items: center; justify-content: center; min-height: 320px; padding: 80px 30px 50px; border: 2.5px solid var(--plop-ink);
   border-radius: 14px 18px 11px 20px / 18px 12px 20px 14px; box-shadow: 7px 9px 0 var(--plop-shadow);
 }
-/* The preview stays in view while you scroll through the props below it. */
-.pg-preview { position: sticky; top: 8px; z-index: 3; }
+/* The preview stays in view while you scroll the props, on screens big enough that it doesn't cover them. */
+@media (min-width: 861px) and (min-height: 700px) { .pg-preview { position: sticky; top: 8px; z-index: 3; } }
 .pg-radius { width: 180px; }
 .pg-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start; }
 .pg-controls, .pg-code { background: var(--plop-sheet); border: 2.5px solid var(--plop-ink); border-radius: 14px 10px 16px 11px; box-shadow: 5px 7px 0 var(--plop-shadow); padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 16px; }

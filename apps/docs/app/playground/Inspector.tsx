@@ -21,6 +21,7 @@ export function Inspector({
   onDuplicate,
   onPeel,
   onClose,
+  onCommit,
   code,
 }: {
   item: Item;
@@ -31,6 +32,8 @@ export function Inspector({
   onDuplicate: () => void;
   onPeel: () => void;
   onClose: () => void;
+  /** Records the live edits as one undo step. */
+  onCommit: () => void;
   code: ReactNode;
 }) {
   const panel = useRef<HTMLDivElement>(null);
@@ -81,6 +84,8 @@ export function Inspector({
       aria-labelledby={titleId}
       style={pos ? { left: pos.left, top: pos.top, maxHeight: pos.maxHeight } : { visibility: "hidden" }}
       onKeyDown={onKey}
+      onBlur={onCommit}
+      onPointerUp={onCommit}
     >
       <div className={styles.editorHead}>
         <h2 id={titleId} className={styles.panelTitle}>

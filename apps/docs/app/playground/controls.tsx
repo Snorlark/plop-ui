@@ -65,7 +65,7 @@ export function Slider({ label, value, min, max, step = 1, unit = "", onChange }
 }
 
 /** A plain text field in the kit's look (native input). */
-export function Text({ label, value, onChange, maxLength = 40 }: { label: string; value: string; onChange: (v: string) => void; maxLength?: number }) {
+export function Text({ label, value, onChange, maxLength = 120 }: { label: string; value: string; onChange: (v: string) => void; maxLength?: number }) {
   const id = useId();
   return (
     <div className={styles.field}>

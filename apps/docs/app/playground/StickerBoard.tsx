@@ -222,17 +222,24 @@ export function StickerBoard() {
     swallow.current = true;
   };
 
-  /* ---- keyboard: the board is one tab stop; arrows move, Delete peels, N picks the next ---- */
-  const onBoardKey = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    const mod = e.metaKey || e.ctrlKey;
-    if (mod && (e.key === "z" || e.key === "Z" || e.key === "y")) {
+  // Undo and redo anywhere on the page while the board tool is open (after Clear, focus is on <body>),
+  // except in a text field, where they belong to the text.
+  useEffect(() => {
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || !["z", "Z", "y"].includes(e.key)) return;
+      const t = e.target as HTMLElement | null;
+      if (t?.closest("input:not([type=range]):not([type=radio]):not([type=checkbox]), textarea, select, [contenteditable]")) return;
       e.preventDefault();
       if (e.key === "y" || e.shiftKey) redo();
       else undo();
-      return;
-    }
-    if (!items.length) return;
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [undo, redo]);
+
+  /* ---- keyboard: the board is one tab stop; arrows move, Delete peels, N picks the next ---- */
+  const onBoardKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget || !items.length) return;
     const current = sel ?? items[items.length - 1]!;
     const step = e.shiftKey ? 5 : 1;
     const moves: Record<string, [number, number]> = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
@@ -342,10 +349,15 @@ export function StickerBoard() {
           <Inspector
             item={sel}
             area={board}
-            onChange={(patch) => update(sel.id, patch)}
+            // Edits are live; leaving a field or letting go of a slider records them as one undo step.
+            onChange={(patch) => update(sel.id, patch, false)}
+            onCommit={history.commit}
             onFront={() => toFront(sel.id)}
             onDuplicate={() => add({ kind: sel.kind, props: sel.props, hint: "" }, clamp(sel.x + 6, 2, 98), clamp(sel.y + 6, 3, 97))}
-            onPeel={() => remove(sel.id)}
+            onPeel={() => {
+              remove(sel.id);
+              board.current?.focus();
+            }}
             onClose={() => {
               setSelected(null);
               board.current?.focus();

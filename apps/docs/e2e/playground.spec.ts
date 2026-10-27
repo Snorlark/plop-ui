@@ -157,9 +157,9 @@ test.describe("editor beside the sticker", () => {
     for (let i = 0; i < 9; i++) await page.keyboard.press("Shift+ArrowDown");
     await page.waitForTimeout(600);
     // Both boxes in one frame: focusing the board can start a smooth scroll.
-    const [b, e] = await page.evaluate(() =>
+    const [b, e] = (await page.evaluate(() =>
       ["[role=application]", "[role=dialog]"].map((sel) => document.querySelector(sel)!.getBoundingClientRect().toJSON() as DOMRect),
-    );
+    )) as [DOMRect, DOMRect];
     expect(e.x).toBeGreaterThanOrEqual(b.x - 1);
     expect(e.y).toBeGreaterThanOrEqual(b.y - 1);
     expect(e.x + e.width).toBeLessThanOrEqual(b.x + b.width + 1);
@@ -304,5 +304,66 @@ test.describe("tweak a component", () => {
     }).toPass();
     await expect.poll(() => paper.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
     await expect(page.getByRole("region", { name: "Code" }).locator("pre")).toContainText("roundness={0}");
+  });
+});
+
+test.describe("review fixes", () => {
+  test.skip(({ isMobile }) => isMobile, "sizes are set per test");
+
+  test("Ctrl/Cmd+Z works after Clear and after tapping the tray, without focusing the board", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    await page.getByRole("button", { name: "Add Switch", exact: true }).click();
+    await page.keyboard.press("ControlOrMeta+z");
+    await expect.poll(() => count(page)).toBe(1);
+    await page.getByRole("button", { name: "Clear", exact: true }).click();
+    await expect.poll(() => count(page)).toBe(0);
+    await page.keyboard.press("ControlOrMeta+z");
+    await expect.poll(() => count(page)).toBe(1);
+  });
+
+  test("typing a word is one undo step", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    const words = page.getByRole("dialog", { name: "Button" }).getByLabel("Words");
+    await words.fill("");
+    await words.pressSequentially("Hello");
+    await board(page).focus();
+    await page.keyboard.press("ControlOrMeta+z");
+    await expect(board(page).locator("[data-sticker]").first()).toContainText("Post sketch");
+    await expect.poll(() => count(page)).toBe(1);
+  });
+
+  test("Peel off returns focus to the board", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    await page.getByRole("dialog", { name: "Button" }).getByRole("button", { name: "Peel off" }).click();
+    await expect(board(page)).toBeFocused();
+  });
+
+  test("a list field takes more than 40 characters", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("radio", { name: "Status", exact: true }).check();
+    await page.getByRole("button", { name: "Add StatusTimeline", exact: true }).click();
+    const steps = page.getByRole("dialog", { name: "StatusTimeline" }).getByLabel("Steps");
+    await steps.fill("Sketched, Inked, Colored, Lettered, Shipped");
+    await expect(steps).toHaveValue("Sketched, Inked, Colored, Lettered, Shipped");
+  });
+
+  test("the phone editor sheet leaves the board visible", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    const e = (await page.getByRole("dialog", { name: "Button" }).boundingBox())!;
+    expect(e.height).toBeLessThanOrEqual(844 * 0.56);
+  });
+
+  test("on a phone the Tweak preview isn't pinned over the props", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/playground?tool=tweak&c=button");
+    // Pinned, its ~450px stage would cover the controls being edited (WCAG 2.4.11).
+    await expect.poll(() => page.locator(".pg-preview").evaluate((el) => getComputedStyle(el).position)).toBe("static");
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await expect.poll(() => page.locator(".pg-preview").evaluate((el) => getComputedStyle(el).position)).toBe("sticky");
   });
 });
