@@ -75,7 +75,9 @@ export function StickerBoard() {
     };
     place();
     const ro = new ResizeObserver(place);
-    [bar, tray].forEach((n) => n && ro.observe(n));
+    // The page itself too: fonts and the phone tab names change the height above the tool after the first measure.
+    [bar, tray, document.documentElement].forEach((n) => n && ro.observe(n));
+    void document.fonts?.ready.then(place);
     window.addEventListener("resize", place);
     return () => {
       ro.disconnect();

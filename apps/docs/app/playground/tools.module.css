@@ -88,7 +88,8 @@
 .boardTool { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .toolbar { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .toolbar .field, .toolbarSlider .field { margin: 0; }
-.paperPick { display: block; width: 150px; }
+/* Doubled class: beats the Select's own width whatever order the CSS loads in (it differs in production). */
+.toolbar .paperPick { display: block; width: 150px; }
 /* The toolbar says "Paper" through the hidden label only; collapse the label's row. */
 .paperPick > :first-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .toolbarSlider { width: 170px; }
@@ -142,12 +143,14 @@
 
 @media (max-width: 640px) {
   .toolbar { gap: 6px; }
-  .paperPick { width: 110px; }
+  .toolbar .paperPick { width: 110px; }
   .toolbarSlider { width: 100px; }
   .spacer { display: none; }
   .tools [role="tabpanel"] { padding-inline: 10px; }
   .editor { position: fixed; left: 0 !important; right: 0; top: auto !important; bottom: 0; width: auto; max-height: 55dvh; border-radius: 20px 20px 0 0; box-shadow: 0 -8px 0 var(--plop-shadow); }
   .trayItem { flex-basis: 108px; height: 80px; }
+  /* Small phones: a shorter floor, so the tray still fits under the board. */
+  .boardCol { height: max(200px, calc(100dvh - var(--tool-top, 220px) - var(--tool-chrome, 200px) - 40px)); }
 }
 
 /* Sticker backing for small inputs on the board, so they read as one piece. */
