@@ -21,10 +21,15 @@ const use = (part: string) => {
 const safe = (v: string) => v.replace(/[^\w-]/g, "_");
 
 export interface TabsProps {
+  /** A `TabList` of `Tab`s and a `TabPanel` for each. */
   children: ReactNode;
+  /** Controlled value of the selected tab. */
   value?: string;
+  /** Uncontrolled value of the tab selected first. */
   defaultValue?: string;
+  /** Called with the newly selected tab's value. */
   onValueChange?: (value: string) => void;
+  /** Extra class on the wrapper. */
   className?: string;
 }
 
@@ -46,9 +51,11 @@ export function Tabs({ children, value, defaultValue = "", onValueChange, classN
 }
 
 export interface TabListProps {
+  /** The `Tab`s. */
   children: ReactNode;
   /** Accessible name of the tab list, e.g. "Your sketches". */
   label: string;
+  /** Extra class on the tab list. */
   className?: string;
 }
 
@@ -77,10 +84,13 @@ function moveFocus(e: KeyboardEvent<HTMLButtonElement>) {
 }
 
 export interface TabProps {
+  /** Identifies the tab; matches the `value` of its `TabPanel`. */
   value: string;
+  /** The tab's label, lettered in Sketchpop. */
   children: ReactNode;
   /** A count badge after the label (e.g. a <Count>). */
   badge?: ReactNode;
+  /** Greys out the tab; it can't be picked and arrow keys skip it. */
   disabled?: boolean;
 }
 

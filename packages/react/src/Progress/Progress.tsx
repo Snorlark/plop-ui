@@ -5,6 +5,7 @@ import styles from "./Progress.module.css";
 export interface ProgressProps {
   /** What is progressing, e.g. "Syncing offline sketches". */
   label: ReactNode;
+  /** How far along, from 0 to `max`; values outside that range are clamped. */
   value: number;
   /** The value that means "done". Default 100. */
   max?: number;
@@ -14,6 +15,7 @@ export interface ProgressProps {
   tone?: "ink" | "mint" | "tomato";
   /** A solid bar instead of crayon hatching. */
   solid?: boolean;
+  /** Extra class on the wrapper around the label and bar. */
   className?: string;
 }
 

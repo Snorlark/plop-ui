@@ -14,6 +14,7 @@ export const DOODLE_PATHS: Record<DoodleKind, string> = {
 };
 
 export interface DoodleProps {
+  /** Which shape: `star`, `heart`, `sparkle` or `burst`. */
   kind: DoodleKind;
   /** Fill color. Default `tomato`. */
   tone?: DoodleTone;
@@ -21,7 +22,9 @@ export interface DoodleProps {
   size?: number;
   /** Rotation in degrees. Default 0. */
   tilt?: number;
+  /** Extra class on the svg. */
   className?: string;
+  /** Inline styles on the svg; a `transform` here replaces the one `tilt` sets. */
   style?: CSSProperties;
 }
 

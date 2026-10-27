@@ -30,6 +30,7 @@ export interface SelectOption {
 interface SelectBaseProps {
   /** The visible label. Required: every field needs a name. */
   label: ReactNode;
+  /** The choices, in order: `value`, `label`, and optional `hint`, `group`, `lead`, `tone`, `disabled`. */
   options: SelectOption[];
   /** Shown while nothing is picked. Default "Choose…". */
   placeholder?: string;
@@ -43,21 +44,29 @@ interface SelectBaseProps {
   hint?: ReactNode;
   /** An error that says how to fix it. Turns the outline tomato; it's read as the trigger's description. */
   error?: ReactNode;
+  /** Greys out the trigger so the list can't be opened. */
   disabled?: boolean;
   /** Hop dots instead of the chevron, and the trigger waits (aria-busy) until options arrive. */
   loading?: boolean;
+  /** Extra class on the field wrapper. */
   className?: string;
 }
 
 export interface SelectProps extends SelectBaseProps {
+  /** Controlled picked value; `null` means nothing is picked. */
   value?: string | null;
+  /** Uncontrolled initial value. Default `null` (nothing picked). */
   defaultValue?: string | null;
+  /** Called with the picked option's value. */
   onValueChange?: (value: string) => void;
 }
 
 export interface MultiSelectProps extends SelectBaseProps {
+  /** Controlled picked values. */
   value?: string[];
+  /** Uncontrolled initial values. Default `[]`. */
   defaultValue?: string[];
+  /** Called with the full new list of picked values each time one is added or removed. */
   onValueChange?: (value: string[]) => void;
 }
 

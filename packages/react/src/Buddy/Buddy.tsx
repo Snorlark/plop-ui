@@ -189,7 +189,9 @@ export interface BuddyProps {
   label?: string;
   /** Show two hands gripping the bottom edge (for peeking over things). Default false. */
   hands?: boolean;
+  /** Extra class on the character's wrapper. */
   className?: string;
+  /** Inline styles on the character's wrapper. */
   style?: CSSProperties;
 }
 
@@ -216,14 +218,17 @@ export function Buddy({ mood, size = "md", label, hands = false, className, styl
 }
 
 export interface BuddyPeekProps {
+  /** Which character peeks over the edge. */
   mood: BuddyMood;
   /** The thing the character peeks over: a toast, a card, a callout, a button. */
   children: ReactNode;
   /** Which end of the top edge it peeks from. Default `start`. */
   side?: "start" | "end";
+  /** `sm` 56px, `md` 84px, `lg` 120px wide. Default `sm`. */
   size?: BuddySize;
   /** Read out with the content, e.g. "Sketch posted". Usually leave it out: the content already says it. */
   label?: string;
+  /** Extra class on the wrapper around the character and the content. */
   className?: string;
 }
 
