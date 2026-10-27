@@ -140,8 +140,6 @@ pnpm --filter @plop-ui/docs test:e2e    # Playwright: hydration, axe on every pa
 ## Repo map
 
 ```
-PRD.md            what we're building and why (with a status table)
-TASKS.md          what to do next
 CLAUDE.md         the rules the codebase follows
 CONTRIBUTING.md   how to contribute, step by step
 packages/tokens   design tokens → CSS variables + typed object (source: src/tokens.ts)

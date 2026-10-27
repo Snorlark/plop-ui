@@ -4,8 +4,8 @@ Thanks for helping. PlopUI is small and opinionated, so this page tells you both
 
 ## Before you start
 
-- **Find something to do.** [TASKS.md](TASKS.md) is the tracker; 🔴 items matter most. For a new component or a larger change, open an issue first so we can agree on the shape before you build it.
-- **Read the product brief.** [PRD.md](PRD.md) explains who the kit is for and why it looks the way it does: imperfect on purpose, accessible on principle.
+- **Find something to do.** Look through the open issues. For a new component or a larger change, open an issue first so we can agree on the shape before you build it.
+- **Know the idea.** PlopUI is imperfect on purpose and accessible on principle: it breaks the visual rulebook, never the accessibility one. [docs/decisions/](docs/decisions/) explains why things look the way they do.
 - **Read the rules.** [CLAUDE.md](CLAUDE.md) is short and every pull request is checked against it. The most important ones are repeated below.
 
 ## Set up
@@ -92,7 +92,7 @@ Then look at your change in the docs site on at least two surfaces (try Poster a
 
 - Branch from `main` with a prefix: `feat/…` for something new, `fix/…` for a bug, `docs/…` for docs only. Example: `feat/stamp`.
 - Keep commits focused, one change each. Write the subject as what the commit does ("Add Stamp component", "Fix Start over button stretching").
-- In the pull request, say what changed and why, link the issue or TASKS.md item, and add a screenshot or short clip for anything visual.
+- In the pull request, say what changed and why, link the issue, and add a screenshot or short clip for anything visual.
 - One topic per pull request. A bug fix you found along the way gets its own branch.
 
 ## Reporting a bug
