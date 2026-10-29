@@ -224,7 +224,8 @@ test.describe("every component", () => {
     Heading: "Words & doodles",
   };
 
-  test("every component can go on the board, with its code", async ({ page }) => {
+  test("every component can go on the board, with its code", async ({ page, browserName }) => {
+    test.slow(browserName === "webkit", "loops over many stickers: about 30s in WebKit on a Linux runner");
     await fresh(page);
     let n = 0;
     for (const [name, shelf] of Object.entries(SHELF)) {
@@ -238,7 +239,8 @@ test.describe("every component", () => {
     }
   });
 
-  test("every visible word is editable", async ({ page }) => {
+  test("every visible word is editable", async ({ page, browserName }) => {
+    test.slow(browserName === "webkit", "loops over many stickers: about 30s in WebKit on a Linux runner");
     await fresh(page);
     const cases: Array<[string, string, string, string]> = [
       ["Actions", "IconButton", "Label", "Start a doodle"],
