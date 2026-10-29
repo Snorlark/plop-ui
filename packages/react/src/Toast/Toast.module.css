@@ -20,7 +20,7 @@
   background: var(--tb);
   color: var(--tt);
   border: 3px solid var(--plop-ink);
-  border-radius: 16px 11px 18px 12px;
+  border-radius: calc(16px * var(--plop-roundness, 1)) calc(11px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(12px * var(--plop-roundness, 1));
   /* A die-cut paper edge and a flat printed shadow, like every sticker: that's what lifts it off the page. */
   box-shadow: 0 0 0 5px var(--plop-paper), 4px 6px 0 5px var(--plop-shadow);
   font-family: var(--plop-font-letter);

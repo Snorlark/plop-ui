@@ -1,25 +1,28 @@
 "use client";
 
-import { Buddy, Button, PlopProvider, seededTilt, toast, useHaptics, useSound } from "@plop-ui/react";
+import { Buddy, Button, PlopProvider, seededTilt, Select, toast, useHaptics, useSound } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { getPass, getServerPass, subscribe } from "../_site/pass";
-import { Choice, Slider, Swatches, Text } from "./controls";
+import { useBoardHistory, type Board } from "./history";
+import { Inspector } from "./Inspector";
+import { placeNew, type Spot } from "./place";
+import { Choice, Slider } from "./controls";
 import { boardCode, codeFor, describe, KINDS, REGULARS_SHELF, SHELVES, type Item, type TrayEntry } from "./stickers";
 import styles from "./tools.module.css";
 
 const STORE = "plop-board-v1";
 const DRAG_AFTER = 6;
 
-interface Saved {
-  paper: SurfaceName;
-  items: Item[];
-}
+const EMPTY: Board = { paper: "poster", items: [], roundness: 1 };
 
-function load(): Saved | null {
+/** The last board on this device. Boards saved before roundness existed load with the default. */
+function load(): Board | null {
   try {
     const raw = localStorage.getItem(STORE);
-    return raw ? (JSON.parse(raw) as Saved) : null;
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as Partial<Board>;
+    return { ...EMPTY, ...saved, items: Array.isArray(saved.items) ? saved.items : [] };
   } catch {
     return null;
   }
@@ -40,52 +43,84 @@ async function copy(text: string, what: string) {
  * right only shows what fits the selected sticker, and its code.
  */
 export function StickerBoard() {
-  const [paper, setPaper] = useState<SurfaceName>("poster");
-  const [items, setItems] = useState<Item[]>([]);
+  const history = useBoardHistory(EMPTY);
+  const { board: current, set: setBoard, undo, redo } = history;
+  const { paper, items } = current;
+  const setItems = useCallback(
+    (next: Item[] | ((all: Item[]) => Item[]), commit = true) =>
+      setBoard((b) => ({ ...b, items: typeof next === "function" ? next(b.items) : next }), { commit }),
+    [setBoard],
+  );
+  const setPaper = (p: SurfaceName) => setBoard((b) => ({ ...b, paper: p }));
   const [selected, setSelected] = useState<string | null>(null);
   const [shelf, setShelf] = useState(SHELVES[0]!.id);
   const board = useRef<HTMLDivElement>(null);
+  const tool = useRef<HTMLDivElement>(null);
   const counter = useRef(0);
   const haptics = useHaptics();
   const sound = useSound();
   const holo = useSyncExternalStore(subscribe, () => getPass().holo, () => getServerPass().holo);
   const shelves = holo ? [...SHELVES, REGULARS_SHELF] : SHELVES;
 
+  // The board takes one screen minus the toolbar and the tray, so all three fit together once scrolled to
+  // the toolbar. Measured, because the toolbar and tray wrap differently on every width.
+  useEffect(() => {
+    const el = tool.current;
+    if (!el) return;
+    const bar = el.querySelector<HTMLElement>("[role=toolbar]");
+    const tray = el.querySelector<HTMLElement>("[data-tray]");
+    const place = () => {
+      el.style.setProperty("--tool-chrome", `${(bar?.offsetHeight ?? 0) + (tray?.offsetHeight ?? 0)}px`);
+    };
+    place();
+    const ro = new ResizeObserver(place);
+    // The page itself too: fonts and the phone tab names change the height above the tool after the first measure.
+    [bar, tray, document.documentElement].forEach((n) => n && ro.observe(n));
+    void document.fonts?.ready.then(place);
+    window.addEventListener("resize", place);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", place);
+    };
+  }, []);
+
   // Restore the last board on this device; save every change.
   const restored = useRef(false);
   useEffect(() => {
     const saved = load();
     if (saved) {
-      setPaper(saved.paper);
-      setItems(saved.items);
+      history.reset(saved);
       counter.current = saved.items.length;
     }
     restored.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- restore once, on mount
   }, []);
   useEffect(() => {
     if (!restored.current) return;
     try {
-      localStorage.setItem(STORE, JSON.stringify({ paper, items }));
+      localStorage.setItem(STORE, JSON.stringify(current));
     } catch {
       // Storage blocked: the board just lasts for this visit.
     }
-  }, [paper, items]);
+  }, [current]);
 
   const sel = items.find((i) => i.id === selected) ?? null;
-  const update = useCallback((id: string, patch: Partial<Item> | ((it: Item) => Partial<Item>)) => {
-    setItems((all) => all.map((it) => (it.id === id ? { ...it, ...(typeof patch === "function" ? patch(it) : patch) } : it)));
-  }, []);
+  const update = useCallback(
+    (id: string, patch: Partial<Item> | ((it: Item) => Partial<Item>), commit = true) =>
+      setItems((all) => all.map((it) => (it.id === id ? { ...it, ...(typeof patch === "function" ? patch(it) : patch) } : it)), commit),
+    [setItems],
+  );
 
-  const add = (entry: TrayEntry, x?: number, y?: number) => {
+  const add = (entry: TrayEntry, x?: number, y?: number, size?: { width: number; height: number }) => {
     const n = ++counter.current;
     const id = `s${Date.now().toString(36)}${n}`;
-    // New stickers land in a loose spiral around the middle, so they don't stack exactly.
-    const angle = n * 2.4;
+    // A tapped sticker fans out from the middle to the first free spot (a dragged one lands where it's dropped).
+    const spot = x === undefined || y === undefined ? freeSpot(size) : { x, y };
     const item: Item = {
       id,
       kind: entry.kind,
-      x: x ?? 50 + Math.cos(angle) * Math.min(30, 6 + n * 3),
-      y: y ?? 50 + Math.sin(angle) * Math.min(32, 6 + n * 3),
+      x: spot.x,
+      y: spot.y,
       tilt: seededTilt(id, 7),
       scale: 1,
       z: Math.max(0, ...items.map((i) => i.z)) + 1,
@@ -97,10 +132,27 @@ export function StickerBoard() {
     sound("down");
   };
 
+  /** The stickers already on the board, in % of it, and a guess at a new one's size (about a button). */
+  const freeSpot = (size = { width: 190, height: 80 }) => {
+    const area = board.current?.getBoundingClientRect();
+    if (!area?.width || !area.height) return { x: 50, y: 50 };
+    const taken: Spot[] = [...(board.current?.querySelectorAll<HTMLElement>("[data-sticker] > *") ?? [])].map((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: ((r.left + r.width / 2 - area.left) / area.width) * 100, y: ((r.top + r.height / 2 - area.top) / area.height) * 100, w: (r.width / area.width) * 100, h: (r.height / area.height) * 100 };
+    });
+    return placeNew(taken, Math.min(90, (size.width / area.width) * 100), Math.min(60, (size.height / area.height) * 100));
+  };
+
   const remove = (id: string) => {
     setItems((all) => all.filter((i) => i.id !== id));
     setSelected(null);
     sound("up");
+  };
+
+  const clear = () => {
+    setItems([]);
+    setSelected(null);
+    toast("Board cleared. Undo brings it back.");
   };
 
   const toFront = (id: string) => update(id, { z: Math.max(0, ...items.map((i) => i.z)) + 1 });
@@ -125,14 +177,17 @@ export function StickerBoard() {
       if (Math.hypot(dx, dy) < DRAG_AFTER) return;
       d.live = true;
       e.currentTarget.setPointerCapture(e.pointerId);
-      toFront(d.id);
+      // Part of the drag's single undo step.
+      update(d.id, { z: Math.max(0, ...items.map((i) => i.z)) + 1 }, false);
     }
-    update(d.id, { x: clamp(d.ox + (dx / rect.width) * 100, 2, 98), y: clamp(d.oy + (dy / rect.height) * 100, 3, 97) });
+    // Live while dragging; the whole drag becomes one undo step on release.
+    update(d.id, { x: clamp(d.ox + (dx / rect.width) * 100, 2, 98), y: clamp(d.oy + (dy / rect.height) * 100, 3, 97) }, false);
   };
   const onItemUp = (e: PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     drag.current = null;
     if (d?.live && d.pid === e.pointerId) {
+      history.commit();
       swallow.current = true;
       haptics.tap();
     }
@@ -167,6 +222,21 @@ export function StickerBoard() {
     swallow.current = true;
   };
 
+  // Undo and redo anywhere on the page while the board tool is open (after Clear, focus is on <body>),
+  // except in a text field, where they belong to the text.
+  useEffect(() => {
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || !["z", "Z", "y"].includes(e.key)) return;
+      const t = e.target as HTMLElement | null;
+      if (t?.closest("input:not([type=range]):not([type=radio]):not([type=checkbox]), textarea, select, [contenteditable]")) return;
+      e.preventDefault();
+      if (e.key === "y" || e.shiftKey) redo();
+      else undo();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [undo, redo]);
+
   /* ---- keyboard: the board is one tab stop; arrows move, Delete peels, N picks the next ---- */
   const onBoardKey = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget || !items.length) return;
@@ -193,10 +263,113 @@ export function StickerBoard() {
   const shelfItems = (shelves.find((s) => s.id === shelf) ?? shelves[0]!).items;
 
   return (
-    <div className={styles.boardTool}>
-      {/* 1. Tray: pick a shelf, then a sticker */}
-      <aside className={styles.tray} aria-labelledby="tray-h">
-        <h2 id="tray-h" className={styles.panelTitle}>
+    <div ref={tool} className={styles.boardTool}>
+      {/* 1. Toolbar: undo first, then the paper and roundness, then taking the board away */}
+      <div className={styles.toolbar} role="toolbar" aria-label="Board tools">
+        <Button size="sm" variant="plain" onClick={undo} disabled={!history.canUndo}>
+          Undo
+        </Button>
+        <Button size="sm" variant="plain" onClick={redo} disabled={!history.canRedo}>
+          Redo
+        </Button>
+        <Select
+          className={styles.paperPick}
+          size="sm"
+          label={<span className="vh">Paper</span>}
+          placeholder="Paper"
+          options={surfaceNames.map((s) => ({ value: s, label: surfaces[s].label }))}
+          value={paper}
+          onValueChange={(v) => setPaper(v as SurfaceName)}
+        />
+        <div className={styles.toolbarSlider}>
+          <Slider label="Radius" value={current.roundness} min={0} max={2} step={0.1} unit="×" onChange={(v) => setBoard((b) => ({ ...b, roundness: v }))} />
+        </div>
+        <span className={styles.spacer} />
+        <Button size="sm" variant="mustard" aria-label="Copy board code" onClick={() => copy(boardCode(items, paper, current.roundness), "Board code")} disabled={!items.length}>
+          Copy
+        </Button>
+        <Button size="sm" variant="tomato" onClick={clear} disabled={!items.length}>
+          Clear
+        </Button>
+      </div>
+
+      {/* 2. The board */}
+      <section className={styles.boardCol} aria-labelledby="board-h">
+        <h2 id="board-h" className="vh">
+          Your board
+        </h2>
+        <PlopProvider surface={paper} theme="light" toaster={false} roundness={current.roundness} className={styles.board}>
+          {/* A custom 2D widget: one tab stop, arrow keys move the selected sticker (see onBoardKey). */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+          <div
+            ref={board}
+            className={styles.boardArea}
+            // A 2D surface with its own arrow-key moves: an application region, announced as a sticker board.
+            role="application"
+            aria-roledescription="sticker board"
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+            tabIndex={0}
+            aria-label={`Sticker board, ${items.length} sticker${items.length === 1 ? "" : "s"}${sel ? `, ${describe(sel)} selected` : ""}. Arrow keys move, N picks the next sticker, Delete peels it off, Ctrl or Command Z undoes.`}
+            onKeyDown={onBoardKey}
+            onPointerDown={(e) => {
+              if (e.target === e.currentTarget) setSelected(null);
+            }}
+          >
+            {!items.length && (
+              <div className={styles.empty}>
+                <Buddy mood="preview" size="lg" />
+                <p>
+                  <strong>Your board is empty.</strong>
+                  <br />
+                  Tap a sticker below to stick it here.
+                </p>
+              </div>
+            )}
+            {items.map((it) => (
+              <div
+                key={it.id}
+                data-sticker=""
+                data-id={it.id}
+                className={styles.item}
+                data-selected={it.id === selected ? "" : undefined}
+                style={{ left: `${it.x}%`, top: `${it.y}%`, zIndex: it.z, "--tilt": `${it.tilt}deg`, "--scale": it.scale } as CSSProperties}
+                onPointerDown={onItemDown(it)}
+                onPointerMove={onItemMove}
+                onPointerUp={onItemUp}
+                onPointerCancel={() => (drag.current = null)}
+                onDragStart={(e) => e.preventDefault()}
+              >
+                {/* Stickers on the board are pictures of components: a click picks the sticker, Tab skips it. */}
+                <div inert>{KINDS[it.kind].render(it.props)}</div>
+              </div>
+            ))}
+          </div>
+        </PlopProvider>
+        {sel && (
+          <Inspector
+            item={sel}
+            area={board}
+            // Edits are live; leaving a field or letting go of a slider records them as one undo step.
+            onChange={(patch) => update(sel.id, patch, false)}
+            onCommit={history.commit}
+            onFront={() => toFront(sel.id)}
+            onDuplicate={() => add({ kind: sel.kind, props: sel.props, hint: "" }, clamp(sel.x + 6, 2, 98), clamp(sel.y + 6, 3, 97))}
+            onPeel={() => {
+              remove(sel.id);
+              board.current?.focus();
+            }}
+            onClose={() => {
+              setSelected(null);
+              board.current?.focus();
+            }}
+            code={<CodeBlock title="Code" code={`import { ${KINDS[sel.kind].imports.join(", ")} } from "@plop-ui/react";\n\n${codeFor(sel)}`} what="Code" />}
+          />
+        )}
+      </section>
+
+      {/* 4. Tray: pick a shelf, then a sticker */}
+      <aside className={styles.tray} aria-labelledby="tray-h" data-tray="">
+        <h2 id="tray-h" className="vh">
           Stickers
         </h2>
         <Choice label="Shelf" value={shelf} options={shelves.map((s) => [s.id, s.label])} onChange={setShelf} />
@@ -221,132 +394,17 @@ export function StickerBoard() {
                   trayDrag.current = null;
                   setGhost(null);
                 }}
-                onClick={() => {
+                onClick={(e) => {
                   if (swallow.current) {
                     swallow.current = false;
                     return;
                   }
-                  add(entry);
+                  add(entry, undefined, undefined, previewSize(e.currentTarget));
                 }}
               />
             </div>
           ))}
         </div>
-        <p className={styles.help}>Tap to add, or drag onto the board.</p>
-      </aside>
-
-      {/* 2. The board */}
-      <section className={styles.boardCol} aria-labelledby="board-h">
-        <h2 id="board-h" className="vh">
-          Your board
-        </h2>
-        <PlopProvider surface={paper} theme="light" toaster={false} className={styles.board}>
-          {/* A custom 2D widget: one tab stop, arrow keys move the selected sticker (see onBoardKey). */}
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-          <div
-            ref={board}
-            className={styles.boardArea}
-            // A 2D surface with its own arrow-key moves: an application region, announced as a sticker board.
-            role="application"
-            aria-roledescription="sticker board"
-            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-            tabIndex={0}
-            aria-label={`Sticker board, ${items.length} sticker${items.length === 1 ? "" : "s"}${sel ? `, ${describe(sel)} selected` : ""}. Arrow keys move, N picks the next sticker, Delete peels it off.`}
-            onKeyDown={onBoardKey}
-            onPointerDown={(e) => {
-              if (e.target === e.currentTarget) setSelected(null);
-            }}
-          >
-            {!items.length && (
-              <div className={styles.empty}>
-                <Buddy mood="preview" size="lg" />
-                <p>
-                  <strong>Your board is empty.</strong>
-                  <br />
-                  Tap a sticker in the tray to stick it here.
-                </p>
-              </div>
-            )}
-            {items.map((it) => (
-              <div
-                key={it.id}
-                className={styles.item}
-                data-selected={it.id === selected ? "" : undefined}
-                style={{ left: `${it.x}%`, top: `${it.y}%`, zIndex: it.z, "--tilt": `${it.tilt}deg`, "--scale": it.scale } as CSSProperties}
-                onPointerDown={onItemDown(it)}
-                onPointerMove={onItemMove}
-                onPointerUp={onItemUp}
-                onPointerCancel={() => (drag.current = null)}
-                onDragStart={(e) => e.preventDefault()}
-                onClickCapture={(e) => {
-                  if (swallow.current) {
-                    swallow.current = false;
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }
-                }}
-              >
-                {KINDS[it.kind].render(it.props)}
-              </div>
-            ))}
-          </div>
-        </PlopProvider>
-        <div className={styles.boardBar}>
-          <Choice label="Paper" value={paper} options={surfaceNames.map((s) => [s, surfaces[s].label])} onChange={(v) => setPaper(v as SurfaceName)} />
-        </div>
-      </section>
-
-      {/* 3. Inspector: only what fits the selection */}
-      <aside className={styles.inspector} aria-labelledby="insp-h">
-        {sel ? (
-          <>
-            <h2 id="insp-h" className={styles.panelTitle}>
-              {KINDS[sel.kind].name}
-            </h2>
-            {KINDS[sel.kind].fields.map((f) => {
-              const v = sel.props[f.key];
-              const set = (nv: string | number | boolean) => update(sel.id, (it) => ({ props: { ...it.props, [f.key]: nv } }));
-              if (f.type === "text") return <Text key={f.key} label={f.label} value={String(v ?? "")} onChange={set} />;
-              if (f.type === "swatch") return <Swatches key={f.key} label={f.label} value={String(v)} options={f.options} onChange={set} />;
-              if (f.type === "choice") return <Choice key={f.key} label={f.label} value={String(v)} options={f.options} onChange={set} />;
-              if (f.type === "step") return <Slider key={f.key} label={f.label} value={Number(v)} min={f.min} max={f.max} onChange={set} />;
-              return (
-                <Choice key={f.key} label={f.label} value={v ? "yes" : "no"} options={[["yes", "Yes"], ["no", "No"]]} onChange={(nv) => set(nv === "yes")} />
-              );
-            })}
-            <Slider label="Size" value={Math.round(sel.scale * 100)} min={50} max={180} step={5} unit="%" onChange={(v) => update(sel.id, { scale: v / 100 })} />
-            <Slider label="Tilt" value={sel.tilt} min={-20} max={20} step={0.5} unit="°" onChange={(v) => update(sel.id, { tilt: v })} />
-            <div className={styles.actions}>
-              <Button size="sm" variant="plain" onClick={() => toFront(sel.id)}>
-                To front
-              </Button>
-              <Button size="sm" variant="plain" onClick={() => add({ kind: sel.kind, props: sel.props, hint: "" }, clamp(sel.x + 6, 2, 98), clamp(sel.y + 6, 3, 97))}>
-                Copy sticker
-              </Button>
-              <Button size="sm" variant="tomato" onClick={() => remove(sel.id)}>
-                Peel off
-              </Button>
-            </div>
-            <CodeBlock title="Code" code={`import { ${KINDS[sel.kind].imports.join(", ")} } from "@plop-ui/react";\n\n${codeFor(sel)}`} what="Code" />
-          </>
-        ) : (
-          <>
-            <h2 id="insp-h" className={styles.panelTitle}>
-              Board
-            </h2>
-            <p className={styles.help}>Select a sticker to change its words, color, size and tilt.</p>
-            {items.length > 0 && (
-              <>
-                <CodeBlock title="Whole board as a component" code={boardCode(items, paper)} what="Board code" />
-                <div className={styles.actions}>
-                  <Button size="sm" variant="tomato" onClick={() => setItems([])}>
-                    Clear board
-                  </Button>
-                </div>
-              </>
-            )}
-          </>
-        )}
       </aside>
 
       {ghost && (
@@ -356,6 +414,16 @@ export function StickerBoard() {
       )}
     </div>
   );
+}
+
+
+/** A tray sticker's real size: its preview is scaled down, so undo the scale. */
+function previewSize(addButton: HTMLElement) {
+  const preview = addButton.parentElement?.querySelector<HTMLElement>("[data-kind]");
+  const inner = preview?.firstElementChild?.getBoundingClientRect();
+  if (!preview || !inner) return undefined;
+  const scale = new DOMMatrix(getComputedStyle(preview).transform).a || 1;
+  return { width: inner.width / scale, height: inner.height / scale };
 }
 
 function CodeBlock({ title, code, what }: { title: string; code: string; what: string }) {

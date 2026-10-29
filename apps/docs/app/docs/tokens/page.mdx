@@ -92,3 +92,18 @@ Type scale (px): {Object.values(fontSize).join(", ")}. Body defaults to {fontSiz
 | `--plop-ease-spring` | `cubic-bezier(.28, 1.75, .5, 1)`, 500ms |
 | `--plop-ease-squish` | `cubic-bezier(.2, .9, .3, 1)`, 80ms |
 | `--plop-boil-interval` | 140ms between the 3 wobble filters |
+| `--plop-roundness` | `1`: multiplies every corner (`0` square, `2` very round) |
+
+### Roundness
+
+One number makes the whole kit sharper or softer. Every radius token and every component corner is multiplied by `--plop-roundness`; circles (avatars, radio dots, switch knobs) stay circles. Set it in CSS for the whole page, or on a `PlopProvider` for one part of it:
+
+```tsx
+<PlopProvider roundness={0.5}>{/* a crisper corner of the app */}</PlopProvider>
+```
+
+```css
+:root { --plop-roundness: 1.4; }
+```
+
+Try it on the Playground's Radius slider.

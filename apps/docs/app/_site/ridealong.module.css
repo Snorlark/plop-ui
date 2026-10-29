@@ -73,7 +73,8 @@
   display: grid; align-content: center; min-height: 24px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-align: left;
   font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: 12px; color: var(--plop-ink);
 }
-.hintText:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* The site's hand-drawn link underline, not the browser's straight one. */
+.hintText:hover { text-decoration: underline wavy; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
 .hintText:focus-visible, .hintClose:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; border-radius: 6px; }
 .hintClose { display: grid; place-items: center; width: 24px; height: 24px; flex: none; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--plop-ink-soft); cursor: pointer; }
 .hintClose:hover { background: color-mix(in srgb, var(--plop-ink) 10%, transparent); }

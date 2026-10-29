@@ -48,6 +48,13 @@ Every run ends with a job called **`ci`**. It is red if any job that needed to r
 
 Do this while the pull request that introduces this CI is open, once its `ci` check is green. That pull request already runs the new CI, so it reports `ci` and per-browser checks such as `e2e (desktop)`, but never a check named plain `e2e`. Under the old rules it would wait forever. After it merges, update every other open pull request from `main` (**Update branch**), so it runs the new CI and reports `ci` too.
 
+## Branches: dev and main
+
+- **`dev`** is where work lands. Push to it, or merge feature branches into it, from any machine; no CI runs, so it costs no Actions minutes. Vercel builds a preview of every push.
+- **`main`** is production (plopui.com). Open a pull request from `dev` into `main` when you want to release: that's when the full CI runs, and `ci` must be green to merge.
+
+Feature branches start from `dev` (`git switch -c feat/x origin/dev`).
+
 ## From a pull request to npm
 
 1. **Open a pull request** into `main`. CI starts on its own.

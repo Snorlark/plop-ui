@@ -4,12 +4,15 @@
 
 .trigger {
   display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px; cursor: pointer;
-  border: 3px solid var(--plop-ink-text); border-radius: 20px 14px 22px 13px / 14px 22px 13px 20px;
+  border: 3px solid var(--plop-ink-text); border-radius: calc(20px * var(--plop-roundness, 1)) calc(14px * var(--plop-roundness, 1)) calc(22px * var(--plop-roundness, 1)) calc(13px * var(--plop-roundness, 1)) / calc(14px * var(--plop-roundness, 1)) calc(22px * var(--plop-roundness, 1)) calc(13px * var(--plop-roundness, 1)) calc(20px * var(--plop-roundness, 1));
   background: var(--plop-paper); color: var(--plop-ink); box-shadow: 0 0 0 6px var(--plop-paper), 5px 7px 0 6px var(--plop-shadow);
   font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase;
   transform: rotate(-1.5deg); transition: transform 0.35s var(--plop-ease-spring);
 }
 .trigger:hover { transform: rotate(-0.5deg) translateY(-2px); }
+/* While it moves on hover, an invisible margin keeps the pointer on it (else a pointer resting on the edge un-hovers it and it shakes). */
+.trigger { position: relative; }
+.trigger:hover::after { content: ""; position: absolute; inset: -8px; }
 .trigger:active { transform: rotate(-1.5deg) translateY(2px) scale(0.96); transition-duration: var(--plop-duration-squish); }
 .trigger:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 9px; }
 .trigger > svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.45s var(--plop-ease-spring); }
@@ -20,7 +23,7 @@
 .sheet {
   position: absolute; left: 0; top: calc(100% + 16px); z-index: 30; width: 280px; padding: 12px 6px 6px;
   background: var(--plop-paper); color: var(--plop-ink-text); border: 2.5px solid var(--plop-ink);
-  border-radius: 16px 12px 18px 13px / 13px 18px 12px 16px; box-shadow: 6px 9px 0 var(--plop-shadow);
+  border-radius: calc(16px * var(--plop-roundness, 1)) calc(12px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(13px * var(--plop-roundness, 1)) / calc(13px * var(--plop-roundness, 1)) calc(18px * var(--plop-roundness, 1)) calc(12px * var(--plop-roundness, 1)) calc(16px * var(--plop-roundness, 1)); box-shadow: 6px 9px 0 var(--plop-shadow);
   transform-origin: 20% 0; animation: pop 0.34s var(--plop-ease-spring);
 }
 .end { left: auto; right: 0; transform-origin: 80% 0; }
@@ -32,7 +35,7 @@
 
 .item {
   display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 6px 12px; border: 0;
-  border-radius: 12px 9px 13px 10px; background: none; color: var(--plop-ink-text); cursor: pointer; text-align: left;
+  border-radius: calc(12px * var(--plop-roundness, 1)) calc(9px * var(--plop-roundness, 1)) calc(13px * var(--plop-roundness, 1)) calc(10px * var(--plop-roundness, 1)); background: none; color: var(--plop-ink-text); cursor: pointer; text-align: left;
   font-family: var(--plop-font-body); font-size: 17px;
 }
 .item > svg { flex: none; width: 20px; height: 20px; color: var(--plop-ink); }
@@ -45,7 +48,7 @@
 .keys { margin-left: auto; display: inline-flex; gap: 3px; }
 .keys kbd {
   display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; border: 2px solid var(--plop-ink); border-bottom-width: 4px;
-  border-radius: 6px 5px 7px 5px; background: var(--plop-paper); font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 11px; color: var(--plop-ink-text);
+  border-radius: calc(6px * var(--plop-roundness, 1)) calc(5px * var(--plop-roundness, 1)) calc(7px * var(--plop-roundness, 1)) calc(5px * var(--plop-roundness, 1)); background: var(--plop-paper); font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 11px; color: var(--plop-ink-text);
 }
 .sep { height: 0; margin: 6px 8px; border-top: 2px dashed color-mix(in srgb, var(--plop-ink) 25%, transparent); }
 

@@ -106,6 +106,12 @@ export const radius = {
   cut: "34px 26px 36px 24px / 26px 36px 24px 34px",
 } as const;
 
+/**
+ * How round every corner is: each radius's lengths are multiplied by it (CSS `--plop-roundness`).
+ * `1` is the default look, `0` is square, `2` is very round. Percent radii (blobs) and circles don't change.
+ */
+export const roundness = 1;
+
 export const stroke = {
   default: "3px",
   sm: "2.5px",
@@ -229,6 +235,7 @@ export const tokens = {
   fontWeight,
   fontSize,
   radius,
+  roundness,
   stroke,
   hatch,
   motion,
