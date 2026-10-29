@@ -1,6 +1,6 @@
 {
   "name": "@plop-ui/tokens",
-  "version": "0.3.5",
+  "version": "0.4.0",
   "description": "Design tokens for PlopUI: colors, contrast roles, type, motion and 5 paper surfaces, as CSS variables and a typed object.",
   "keywords": [
     "plopui",

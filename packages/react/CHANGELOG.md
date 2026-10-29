@@ -1,5 +1,24 @@
 # @plop-ui/react
 
+## 0.4.0
+
+### Minor Changes
+
+- 1b87d02: Roundness: one number that makes every corner sharper or softer. Set `--plop-roundness` in CSS (default `1`, `0` is square, `2` is very round) or `<PlopProvider roundness={0.5}>` for one part of the page. The radius tokens and every component corner follow it; circles stay circles. At `1` nothing changes.
+
+### Patch Changes
+
+- 2ca8cff: Checkbox: the indeterminate state comes only from the native `indeterminate` property, which screen readers announce as "mixed". The extra `aria-checked="mixed"` is gone: in server-rendered HTML it contradicted the input until hydration.
+- bbe0808: Ruled TextArea draws thin notebook lines in Firefox instead of thick bands.
+- 56e4b48: Real-app fixes from a stress test:
+
+  - Button, ButtonLink and IconButton keep their own size inside a stretching grid or flex parent (a `display: grid; min-height: 100vh` page made them giant). Give one a width to make it wider.
+  - Buttons, the Select and Menu triggers and tabs no longer shake when the pointer rests near their edge while they lift on hover.
+  - A focused Select, SearchField or TextField label stays readable in dark mode: the highlight now sits behind the whole word, with matching ink.
+
+- Updated dependencies [1b87d02]
+  - @plop-ui/tokens@0.4.0
+
 ## 0.3.6
 
 ### Patch Changes
