@@ -53,3 +53,32 @@ test("hovering near a control's edge never makes it shake", async ({ page, isMob
   expect(await loopPoints(page, s.getByRole("button", { name: /^Brush/ })), "Select").toBe(0);
   expect(await loopPoints(page, s.getByRole("tab", { name: "Ink" })), "Tab").toBe(0);
 });
+
+/** Share of rows, down a column of the element's screenshot, that differ from the column's most common color. */
+async function inkedRows(page: Page, el: Locator, at: number) {
+  const png = (await el.screenshot()).toString("base64");
+  return page.evaluate(async ({ png, at }) => {
+    const img = new Image();
+    img.src = `data:image/png;base64,${png}`;
+    await img.decode();
+    const c = document.createElement("canvas");
+    c.width = img.width;
+    c.height = img.height;
+    const ctx = c.getContext("2d")!;
+    ctx.drawImage(img, 0, 0);
+    const x = Math.round(img.width * at);
+    const rows: string[] = [];
+    for (let y = 0; y < img.height; y++) rows.push(ctx.getImageData(x, y, 1, 1).data.slice(0, 3).join());
+    const counts = new Map<string, number>();
+    for (const r of rows) counts.set(r, (counts.get(r) ?? 0) + 1);
+    return 1 - Math.max(...counts.values()) / rows.length;
+  }, { png, at });
+}
+
+test("a ruled TextArea draws thin lines, not thick bands (Firefox)", async ({ page }) => {
+  await page.goto("/docs/components/text-field");
+  const area = page.getByRole("textbox", { name: "What happened?" });
+  await area.evaluate((e) => e.scrollIntoView({ block: "center", behavior: "instant" }));
+  // 1px lines every 28px plus the borders: well under a fifth of the rows.
+  expect(await inkedRows(page, area, 0.6)).toBeLessThan(0.2);
+});

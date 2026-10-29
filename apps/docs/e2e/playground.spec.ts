@@ -367,3 +367,27 @@ test.describe("review fixes", () => {
     await expect.poll(() => page.locator(".pg-preview").evaluate((el) => getComputedStyle(el).position)).toBe("sticky");
   });
 });
+
+test("slider thumbs are ink in every engine, not the browser's gray or white", async ({ page }) => {
+  await fresh(page);
+  const slider = page.getByRole("slider", { name: /Radius/ });
+  await slider.fill("0");
+  const png = (await slider.screenshot()).toString("base64");
+  // Ink pixels in the left fifth, where the thumb sits at the minimum (no filled track there).
+  const inked = await page.evaluate(async (png) => {
+    const [r, g, b] = getComputedStyle(document.body).getPropertyValue("--plop-ink").trim().match(/\w\w/g)!.map((h) => parseInt(h, 16));
+    const img = new Image();
+    img.src = `data:image/png;base64,${png}`;
+    await img.decode();
+    const c = document.createElement("canvas");
+    c.width = img.width;
+    c.height = img.height;
+    const ctx = c.getContext("2d")!;
+    ctx.drawImage(img, 0, 0);
+    const d = ctx.getImageData(0, 0, Math.ceil(img.width / 5), img.height).data;
+    let n = 0;
+    for (let i = 0; i < d.length; i += 4) if (Math.abs(d[i] - r) + Math.abs(d[i + 1] - g) + Math.abs(d[i + 2] - b) < 60) n++;
+    return n;
+  }, png);
+  expect(inked).toBeGreaterThan(40);
+});

@@ -53,7 +53,8 @@
   color: var(--site-text); border-bottom: 2.5px solid var(--site-ink); box-shadow: 0 30px 40px -30px var(--plop-shadow-strong);
 }
 .panel:not([hidden]) .cols { animation: swap 0.32s var(--plop-ease-squish); }
-@keyframes swap { from { opacity: 0; transform: translateX(var(--dir, 0)) translateY(-6px); } }
+/* Switching menus only slides the links over: fading them out and back in read as a flicker. */
+@keyframes swap { from { transform: translateX(var(--dir, 0)) translateY(-6px); } }
 /* Opening from nothing, the sheet unrolls down from the bar; closing, it rolls back up the way it came. */
 .panel[data-fresh] { animation: unroll 0.32s var(--plop-ease-squish); }
 .panel[data-leaving] { pointer-events: none; animation: roll-up 0.28s cubic-bezier(0.5, 0, 0.75, 0) forwards; }
@@ -66,8 +67,9 @@
 .col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .col a {
   display: inline-block; padding: 3px 0; font-size: 17px; color: var(--site-text); text-decoration: none;
-  animation: link-in 0.34s var(--plop-ease-squish) both; animation-delay: calc(var(--i, 0) * 30ms + 60ms);
 }
+/* Links drop in one by one only when the sheet unrolls from nothing. */
+.panel[data-fresh] .col a { animation: link-in 0.34s var(--plop-ease-squish) both; animation-delay: calc(var(--i, 0) * 30ms + 60ms); }
 .col[data-big] a { font-style: italic; font-weight: 900; font-size: 28px; line-height: 1.15; color: var(--site-ink); transition: transform 0.3s var(--plop-ease-spring); }
 .col a:hover { text-decoration: underline wavy; text-decoration-thickness: 2px; text-underline-offset: 5px; }
 .col[data-big] a:hover { text-decoration: none; transform: rotate(-1.5deg) translateX(3px); }
@@ -137,7 +139,7 @@
   .root { flex: 0 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .panel:not([hidden]) .cols, .col a, .panel[data-fresh], .panel[data-leaving] { animation: none; }
+  .panel:not([hidden]) .cols, .panel[data-fresh] .col a, .panel[data-fresh], .panel[data-leaving] { animation: none; }
   .trigger > span, .split .trigger > span, .caret svg, .feature, .col[data-big] a, .scrim { transition: none !important; }
 }
 @media (max-width: 900px) { .root { order: 3; } }
