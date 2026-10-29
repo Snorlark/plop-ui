@@ -621,6 +621,13 @@ html[data-tear]::view-transition-old(root) {
 .pg-range > span, .pg-select > span { font-style: italic; font-weight: 700; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--plop-ink); }
 .pg-range output { font-family: var(--plop-font-mono); font-style: normal; color: var(--plop-ink-soft); margin-left: 6px; }
 .pg-range input { accent-color: var(--plop-ink); width: 100%; }
+/* accent-color only tints the track in Firefox and Safari (thumb stays gray or white): draw track and thumb ourselves. */
+input[type="range"] { appearance: none; -webkit-appearance: none; height: 24px; background: transparent; cursor: pointer; }
+input[type="range"]::-webkit-slider-runnable-track { height: 6px; border-radius: 4px; background: color-mix(in srgb, var(--plop-ink) 22%, var(--plop-paper)); }
+input[type="range"]::-moz-range-track { height: 6px; border-radius: 4px; background: color-mix(in srgb, var(--plop-ink) 22%, var(--plop-paper)); }
+input[type="range"]::-moz-range-progress { height: 6px; border-radius: 4px; background: var(--plop-ink); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; box-sizing: border-box; width: 20px; height: 20px; margin-top: -7px; border-radius: 50%; border: 3px solid var(--plop-paper); background: var(--plop-ink); box-shadow: 0 0 0 1.5px var(--plop-ink); }
+input[type="range"]::-moz-range-thumb { box-sizing: border-box; width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--plop-paper); background: var(--plop-ink); box-shadow: 0 0 0 1.5px var(--plop-ink); }
 .pg-range input:focus-visible, .pg-select select:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 4px; }
 .pg-code__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .pg-code pre { margin: 0; padding: 16px 18px; overflow-x: auto; background: var(--plop-paper); border: 2px dashed rgba(40,72,216,.35); border-radius: 10px; font-family: var(--plop-font-mono); font-size: 14px; line-height: 1.7; color: var(--plop-ink-text); white-space: pre; }
