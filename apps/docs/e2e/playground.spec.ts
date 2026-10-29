@@ -393,3 +393,10 @@ test("slider thumbs are ink in every engine, not the browser's gray or white", a
   }, png);
   expect(inked).toBeGreaterThan(40);
 });
+
+test("the toolbar's radius slider has a usable track on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 740 });
+  await fresh(page);
+  const track = (await page.getByRole("slider", { name: /Radius/ }).boundingBox())!;
+  expect(track.width).toBeGreaterThanOrEqual(64);
+});
