@@ -386,7 +386,7 @@ test("slider thumbs are ink in every engine, not the browser's gray or white", a
     ctx.drawImage(img, 0, 0);
     const d = ctx.getImageData(0, 0, Math.ceil(img.width / 5), img.height).data;
     let n = 0;
-    for (let i = 0; i < d.length; i += 4) if (Math.abs(d[i] - r) + Math.abs(d[i + 1] - g) + Math.abs(d[i + 2] - b) < 60) n++;
+    for (let i = 0; i < d.length; i += 4) if (Math.abs(d[i]! - r!) + Math.abs(d[i + 1]! - g!) + Math.abs(d[i + 2]! - b!) < 60) n++;
     return n;
   }, png);
   expect(inked).toBeGreaterThan(40);
