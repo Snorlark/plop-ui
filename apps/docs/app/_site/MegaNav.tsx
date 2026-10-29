@@ -124,6 +124,8 @@ export function MegaNav() {
   const show = (id: MenuId | null) => {
     window.clearTimeout(timer.current);
     const cur = current.current;
+    // Already open (the pointer came back into its sheet): replaying the unroll would clip the sheet out from under it.
+    if (id === cur) return;
     // Switching menus slides the new sheet in from the side it sits on.
     setDir(cur && id ? MENUS.findIndex((m) => m.id === id) - MENUS.findIndex((m) => m.id === cur) : 0);
     if (id && id !== cur) haptics.tap();
