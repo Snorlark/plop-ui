@@ -144,7 +144,7 @@
 @media (max-width: 640px) {
   .toolbar { gap: 6px; }
   .toolbar .paperPick { width: 110px; }
-  .toolbarSlider { width: 100px; }
+  .toolbarSlider { width: 140px; }
   .spacer { display: none; }
   .tools [role="tabpanel"] { padding-inline: 10px; }
   .editor { position: fixed; left: 0 !important; right: 0; top: auto !important; bottom: 0; width: auto; max-height: 55dvh; border-radius: 20px 20px 0 0; box-shadow: 0 -8px 0 var(--plop-shadow); }
