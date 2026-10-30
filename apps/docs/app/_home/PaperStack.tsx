@@ -197,7 +197,7 @@ export function PaperStack() {
   }, [reduced]);
 
   return (
-    <section className={styles.root} aria-labelledby="stack-h" data-static={reduced ? "" : undefined}>
+    <section className={styles.root} data-pausable aria-labelledby="stack-h" data-static={reduced ? "" : undefined}>
       <div ref={stage} className={styles.track} style={{ "--n": SHEETS.length } as CSSProperties}>
         <div className={styles.stage}>
           <div className={styles.head}>

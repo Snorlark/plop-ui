@@ -1,6 +1,8 @@
 /* Playground tools: sticker board, lettering studio. Colors from PlopUI tokens only. */
 
 .tools { margin-top: 26px; }
+/* Holds the tools' height while they load, so the footer doesn't jump up and back. */
+.fallback { margin-top: 26px; min-height: 820px; }
 .toolPanel { padding-top: 6px; }
 .blurb { margin: 0 0 18px; font-size: 18px; color: var(--plop-ink-soft); }
 

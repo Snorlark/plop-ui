@@ -12,15 +12,29 @@ export function HeaderBar({ children }: { children: ReactNode }) {
   const bar = useRef<HTMLElement>(null);
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Measured by a ResizeObserver, so the scroll handler never forces a layout to read it.
+  const height = useRef(0);
+
+  useEffect(() => {
+    const el = bar.current;
+    if (!el) return;
+    height.current = el.offsetHeight;
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      height.current = el.offsetHeight;
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     let last = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      const height = bar.current?.offsetHeight ?? 0;
+      const h = height.current;
       const menuOpen = document.documentElement.hasAttribute("data-menu-open");
       setScrolled(y > 4);
-      if (y < height || menuOpen || y < last - 4) setHidden(false);
+      if (y < h || menuOpen || y < last - 4) setHidden(false);
       else if (y > last + 4) setHidden(true);
       last = y;
     };

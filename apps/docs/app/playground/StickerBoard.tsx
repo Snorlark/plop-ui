@@ -12,6 +12,14 @@ import { boardCode, codeFor, describe, KINDS, REGULARS_SHELF, SHELVES, type Item
 import styles from "./tools.module.css";
 
 const STORE = "plop-board-v1";
+
+function save(board: unknown) {
+  try {
+    localStorage.setItem(STORE, JSON.stringify(board));
+  } catch {
+    // Storage blocked: the board just lasts for this visit.
+  }
+}
 const DRAG_AFTER = 6;
 
 const EMPTY: Board = { paper: "poster", items: [], roundness: 1 };
@@ -86,6 +94,7 @@ export function StickerBoard() {
 
   // Restore the last board on this device; save every change.
   const restored = useRef(false);
+  const drag = useRef<{ id: string; pid: number; sx: number; sy: number; ox: number; oy: number; live: boolean; rect: DOMRect | null } | null>(null);
   useEffect(() => {
     const saved = load();
     if (saved) {
@@ -96,12 +105,9 @@ export function StickerBoard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- restore once, on mount
   }, []);
   useEffect(() => {
-    if (!restored.current) return;
-    try {
-      localStorage.setItem(STORE, JSON.stringify(current));
-    } catch {
-      // Storage blocked: the board just lasts for this visit.
-    }
+    // A drag saves once, when it ends (onItemUp), not on every pointer move.
+    if (!restored.current || drag.current?.live) return;
+    save(current);
   }, [current]);
 
   const sel = items.find((i) => i.id === selected) ?? null;
@@ -158,18 +164,18 @@ export function StickerBoard() {
   const toFront = (id: string) => update(id, { z: Math.max(0, ...items.map((i) => i.z)) + 1 });
 
   /* ---- dragging stickers around the board ---- */
-  const drag = useRef<{ id: string; pid: number; sx: number; sy: number; ox: number; oy: number; live: boolean } | null>(null);
   const swallow = useRef(false);
 
   const onItemDown = (it: Item) => (e: PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
     swallow.current = false;
     setSelected(it.id);
-    drag.current = { id: it.id, pid: e.pointerId, sx: e.clientX, sy: e.clientY, ox: it.x, oy: it.y, live: false };
+    // The board's box is measured once per drag, not on every move.
+    drag.current = { id: it.id, pid: e.pointerId, sx: e.clientX, sy: e.clientY, ox: it.x, oy: it.y, live: false, rect: board.current?.getBoundingClientRect() ?? null };
   };
   const onItemMove = (e: PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
-    const rect = board.current?.getBoundingClientRect();
+    const rect = d?.rect;
     if (!d || d.pid !== e.pointerId || !rect) return;
     const dx = e.clientX - d.sx;
     const dy = e.clientY - d.sy;
@@ -188,6 +194,7 @@ export function StickerBoard() {
     drag.current = null;
     if (d?.live && d.pid === e.pointerId) {
       history.commit();
+      save(current);
       swallow.current = true;
       haptics.tap();
     }
