@@ -122,7 +122,9 @@ export function useFeedback(): Feedback {
   return ctx;
 }
 
-type ViewTransitionDocument = Document & { startViewTransition?: (update: () => void) => { finished: Promise<void> } };
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => { finished: Promise<void>; skipTransition: () => void };
+};
 
 /**
  * Switches paper ↔ cutting mat by tearing the old page off like a sheet from
@@ -150,8 +152,22 @@ export function useSurfaceSwitch() {
     busy.current = true;
     const html = document.documentElement;
     html.setAttribute("data-tear", "");
-    const vt = doc.startViewTransition(() => flushSync(() => setSurface(next)));
+    let swapped = false;
+    const swap = () => {
+      if (swapped) return;
+      swapped = true;
+      flushSync(() => setSurface(next));
+    };
+    const vt = doc.startViewTransition(swap);
+    // WebKit sometimes stalls a transition before its snapshot and never runs the swap (seen on CI):
+    // after a second, skip the tear and swap anyway, so the switch always works.
+    const stall = window.setTimeout(() => {
+      if (swapped) return;
+      vt.skipTransition();
+      swap();
+    }, 1000);
     const done = () => {
+      window.clearTimeout(stall);
       html.removeAttribute("data-tear");
       busy.current = false;
     };
