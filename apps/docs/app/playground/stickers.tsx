@@ -41,6 +41,7 @@ import {
 } from "@plop-ui/react";
 import type { ReactNode } from "react";
 import { HoloPip } from "../_site/RideAlong";
+import { jsxAttr, jsString, jsxText } from "./code";
 import styles from "./tools.module.css";
 
 /*
@@ -90,14 +91,13 @@ const iconLabel = (p: Props) => str(p.label) || ICONS[str(p.icon)]?.label || "Ac
 const SHADOW: Field = { key: "shadow", type: "choice", label: "Shadow", options: [["soft", "Soft"], ["solid", "Solid"], ["stripes", "Stripes"], ["outline", "Outline"], ["none", "None"]] };
 const shadowOf = (p: Props) => (str(p.shadow) || "soft") as "soft";
 const shadowCode = (p: Props) => (shadowOf(p) !== "soft" ? ` shadow="${shadowOf(p)}"` : "");
-const jsx = (v: unknown) => str(v).replace(/[{}<>"]/g, "");
 /** "Ink pen, Watercolor" → ["Ink pen", "Watercolor"]: every list on the board is typed as words with commas. */
 const list = (v: unknown, fallback: string[]) => {
   const items = str(v).split(",").map((x) => x.trim()).filter(Boolean);
   return items.length ? items : fallback;
 };
 const opts = (items: string[]) => items.map((label) => ({ value: label.toLowerCase().replace(/\s+/g, "-"), label }));
-const optsCode = (items: string[]) => `[${items.map((l) => `{ value: "${opts([l])[0]!.value}", label: "${jsx(l)}" }`).join(", ")}]`;
+const optsCode = (items: string[]) => `[${items.map((l) => `{ value: ${jsString(opts([l])[0]!.value)}, label: ${jsString(l)} }`).join(", ")}]`;
 const BRUSHES = ["Ink pen", "Watercolor", "Charcoal"];
 
 interface KindSpec {
@@ -123,7 +123,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         {str(p.label) || "Button"}
       </Button>
     ),
-    code: (p) => `<Button variant="${p.variant}"${shadowCode(p)}${p.mood !== "none" ? ` buddy buddyMood="${p.mood}"` : ""}>${jsx(p.label)}</Button>`,
+    code: (p) => `<Button variant="${p.variant}"${shadowCode(p)}${p.mood !== "none" ? ` buddy buddyMood="${p.mood}"` : ""}>${jsxText(p.label)}</Button>`,
   },
   icon: {
     name: "IconButton",
@@ -135,7 +135,7 @@ export const KINDS: Record<Kind, KindSpec> = {
       SHADOW,
     ],
     render: (p) => <IconButton variant={str(p.variant) as "ink"} shadow={shadowOf(p)} icon={ICONS[str(p.icon)]?.el} label={iconLabel(p)} />,
-    code: (p) => `<IconButton variant="${p.variant}"${shadowCode(p)} icon={<${ICONS[str(p.icon)]?.name} />} label="${jsx(iconLabel(p))}" />`,
+    code: (p) => `<IconButton variant="${p.variant}"${shadowCode(p)} icon={<${ICONS[str(p.icon)]?.name} />} label=${jsxAttr(iconLabel(p))} />`,
   },
   switch: {
     name: "Switch",
@@ -149,7 +149,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         {str(p.label) || "Switch"}
       </Switch>
     ),
-    code: (p) => `<Switch${p.on ? " defaultChecked" : ""}>${jsx(p.label)}</Switch>`,
+    code: (p) => `<Switch${p.on ? " defaultChecked" : ""}>${jsxText(p.label)}</Switch>`,
   },
   checkbox: {
     name: "Checkbox",
@@ -163,7 +163,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         <Checkbox defaultChecked={!!p.on}>{str(p.label) || "Checkbox"}</Checkbox>
       </span>
     ),
-    code: (p) => `<Checkbox${p.on ? " defaultChecked" : ""}>${jsx(p.label)}</Checkbox>`,
+    code: (p) => `<Checkbox${p.on ? " defaultChecked" : ""}>${jsxText(p.label)}</Checkbox>`,
   },
   tag: {
     name: "Tag",
@@ -173,7 +173,7 @@ export const KINDS: Record<Kind, KindSpec> = {
       { key: "tone", type: "swatch", label: "Tape", options: TONES },
     ],
     render: (p) => <Tag tone={str(p.tone) as "ink"}>{str(p.label) || "Tag"}</Tag>,
-    code: (p) => `<Tag tone="${p.tone}">${jsx(p.label)}</Tag>`,
+    code: (p) => `<Tag tone="${p.tone}">${jsxText(p.label)}</Tag>`,
   },
   timeline: {
     name: "StatusTimeline",
@@ -202,7 +202,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         {str(p.label) || "Toast"}
       </Toast>
     ),
-    code: (p) => `toast${p.kind === "info" ? "" : `.${p.kind}`}("${jsx(p.label)}"${p.buddy ? ", { buddy: true }" : ""});`,
+    code: (p) => `toast${p.kind === "info" ? "" : `.${p.kind}`}(${jsString(p.label)}${p.buddy ? ", { buddy: true }" : ""});`,
   },
   count: {
     name: "Count",
@@ -219,7 +219,7 @@ export const KINDS: Record<Kind, KindSpec> = {
       { key: "status", type: "choice", label: "Status", options: [["none", "None"], ["online", "Online"], ["busy", "Busy"], ["offline", "Offline"]] },
     ],
     render: (p) => <Avatar name={str(p.name) || "You"} size="lg" status={p.status === "none" ? undefined : (str(p.status) as "online")} />,
-    code: (p) => `<Avatar name="${jsx(p.name)}"${p.status !== "none" ? ` status="${p.status}"` : ""} size="lg" />`,
+    code: (p) => `<Avatar name=${jsxAttr(p.name)}${p.status !== "none" ? ` status="${p.status}"` : ""} size="lg" />`,
   },
   buddy: {
     name: "Buddy",
@@ -236,7 +236,7 @@ export const KINDS: Record<Kind, KindSpec> = {
       { key: "tone", type: "swatch", label: "Fill", options: WORD_TONES },
     ],
     render: (p) => <WordSticker tone={str(p.tone) as "mustard"}>{str(p.label) || "Plop!"}</WordSticker>,
-    code: (p) => `<WordSticker tone="${p.tone}">${jsx(p.label)}</WordSticker>`,
+    code: (p) => `<WordSticker tone="${p.tone}">${jsxText(p.label)}</WordSticker>`,
   },
   doodle: {
     name: "Doodle",
@@ -263,7 +263,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         </Button>
       </Tooltip>
     ),
-    code: (p) => `<Tooltip content="${jsx(p.tip)}">\n  <Button size="sm" variant="plain">${jsx(p.label)}</Button>\n</Tooltip>`,
+    code: (p) => `<Tooltip content=${jsxAttr(p.tip)}>\n  <Button size="sm" variant="plain">${jsxText(p.label)}</Button>\n</Tooltip>`,
   },
   menu: {
     name: "Menu",
@@ -274,7 +274,7 @@ export const KINDS: Record<Kind, KindSpec> = {
     ],
     render: (p) => <Menu label={str(p.label) || "More"} items={list(p.items, ["Rename", "Duplicate"]).map((label) => ({ label, onSelect: () => {} }))} />,
     code: (p) =>
-      `<Menu\n  label="${jsx(p.label)}"\n  items={[\n${list(p.items, ["Rename"]).map((l) => `    { label: "${jsx(l)}", onSelect: () => {} },`).join("\n")}\n  ]}\n/>`,
+      `<Menu\n  label=${jsxAttr(p.label)}\n  items={[\n${list(p.items, ["Rename"]).map((l) => `    { label: ${jsString(l)}, onSelect: () => {} },`).join("\n")}\n  ]}\n/>`,
   },
   dot: {
     name: "StatusDot",
@@ -288,7 +288,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         <StatusDot tone={str(p.tone) as "online"}>{str(p.label) || "Online"}</StatusDot>
       </span>
     ),
-    code: (p) => `<StatusDot tone="${p.tone}">${jsx(p.label)}</StatusDot>`,
+    code: (p) => `<StatusDot tone="${p.tone}">${jsxText(p.label)}</StatusDot>`,
   },
   ticket: {
     name: "TicketCard",
@@ -303,7 +303,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         {str(p.body)}
       </TicketCard>
     ),
-    code: (p) => `<TicketCard title="${jsx(p.title)}"${p.meta ? ` meta="${jsx(p.meta)}"` : ""}>\n  ${jsx(p.body)}\n</TicketCard>`,
+    code: (p) => `<TicketCard title=${jsxAttr(p.title)}${p.meta ? ` meta=${jsxAttr(p.meta)}` : ""}>\n  ${jsxText(p.body)}\n</TicketCard>`,
   },
   unit: {
     name: "UnitCard",
@@ -313,7 +313,7 @@ export const KINDS: Record<Kind, KindSpec> = {
       { key: "subtitle", type: "text", label: "Subtitle" },
     ],
     render: (p) => <UnitCard className={styles.card} name={str(p.name) || "Rosa"} subtitle={str(p.subtitle) || undefined} avatar={<Avatar name={str(p.name) || "Rosa"} size="md" />} />,
-    code: (p) => `<UnitCard name="${jsx(p.name)}"${p.subtitle ? ` subtitle="${jsx(p.subtitle)}"` : ""} avatar={<Avatar name="${jsx(p.name)}" size="md" />} />`,
+    code: (p) => `<UnitCard name=${jsxAttr(p.name)}${p.subtitle ? ` subtitle=${jsxAttr(p.subtitle)}` : ""} avatar={<Avatar name=${jsxAttr(p.name)} size="md" />} />`,
   },
   note: {
     name: "StickyNote",
@@ -323,7 +323,7 @@ export const KINDS: Record<Kind, KindSpec> = {
       { key: "tone", type: "choice", label: "Paper", options: [["mustard", "Mustard"], ["mint", "Mint"], ["pink", "Pink"]] },
     ],
     render: (p) => <StickyNote tone={str(p.tone) as "mint"}>{str(p.text) || "Note"}</StickyNote>,
-    code: (p) => `<StickyNote tone="${p.tone}">${jsx(p.text)}</StickyNote>`,
+    code: (p) => `<StickyNote tone="${p.tone}">${jsxText(p.text)}</StickyNote>`,
   },
   textfield: {
     name: "TextField",
@@ -337,7 +337,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         <TextField label={str(p.label) || "Title"} placeholder={str(p.placeholder)} />
       </span>
     ),
-    code: (p) => `<TextField label="${jsx(p.label)}" placeholder="${jsx(p.placeholder)}" />`,
+    code: (p) => `<TextField label=${jsxAttr(p.label)} placeholder=${jsxAttr(p.placeholder)} />`,
   },
   textarea: {
     name: "TextArea",
@@ -351,7 +351,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         <TextArea label={str(p.label) || "Notes"} placeholder={str(p.placeholder)} rows={3} ruled />
       </span>
     ),
-    code: (p) => `<TextArea label="${jsx(p.label)}" placeholder="${jsx(p.placeholder)}" rows={3} ruled />`,
+    code: (p) => `<TextArea label=${jsxAttr(p.label)} placeholder=${jsxAttr(p.placeholder)} rows={3} ruled />`,
   },
   search: {
     name: "SearchField",
@@ -365,7 +365,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         <SearchField label={str(p.label) || "Search"} placeholder={str(p.placeholder)} />
       </span>
     ),
-    code: (p) => `<SearchField label="${jsx(p.label)}" placeholder="${jsx(p.placeholder)}" />`,
+    code: (p) => `<SearchField label=${jsxAttr(p.label)} placeholder=${jsxAttr(p.placeholder)} />`,
   },
   radio: {
     name: "RadioGroup",
@@ -390,7 +390,7 @@ export const KINDS: Record<Kind, KindSpec> = {
     },
     code: (p) => {
       const items = list(p.options, ["Ink", "Paint"]);
-      return `<RadioGroup legend="${jsx(p.legend)}" defaultValue="${jsx(items[0])}">\n${items.map((o) => `  <Radio value="${jsx(o)}">${jsx(o)}</Radio>`).join("\n")}\n</RadioGroup>`;
+      return `<RadioGroup legend=${jsxAttr(p.legend)} defaultValue=${jsxAttr(items[0])}>\n${items.map((o) => `  <Radio value=${jsxAttr(o)}>${jsxText(o)}</Radio>`).join("\n")}\n</RadioGroup>`;
     },
   },
   select: {
@@ -406,7 +406,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         <Select label={str(p.label) || "Pick"} placeholder={str(p.placeholder) || undefined} options={opts(list(p.options, BRUSHES))} />
       </span>
     ),
-    code: (p) => `<Select\n  label="${jsx(p.label)}"\n  placeholder="${jsx(p.placeholder)}"\n  options={${optsCode(list(p.options, BRUSHES))}}\n/>`,
+    code: (p) => `<Select\n  label=${jsxAttr(p.label)}\n  placeholder=${jsxAttr(p.placeholder)}\n  options={${optsCode(list(p.options, BRUSHES))}}\n/>`,
   },
   multiselect: {
     name: "MultiSelect",
@@ -421,7 +421,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         <MultiSelect label={str(p.label) || "Pick some"} placeholder={str(p.placeholder) || undefined} options={opts(list(p.options, BRUSHES))} />
       </span>
     ),
-    code: (p) => `<MultiSelect\n  label="${jsx(p.label)}"\n  placeholder="${jsx(p.placeholder)}"\n  options={${optsCode(list(p.options, BRUSHES))}}\n/>`,
+    code: (p) => `<MultiSelect\n  label=${jsxAttr(p.label)}\n  placeholder=${jsxAttr(p.placeholder)}\n  options={${optsCode(list(p.options, BRUSHES))}}\n/>`,
   },
   tabs: {
     name: "Tabs",
@@ -450,7 +450,7 @@ export const KINDS: Record<Kind, KindSpec> = {
     },
     code: (p) => {
       const labels = list(p.labels, ["Sketch", "Ink", "Color"]);
-      return `<Tabs defaultValue="${jsx(labels[0])}">\n  <TabList label="Sketch views">\n${labels.map((l) => `    <Tab value="${jsx(l)}">${jsx(l)}</Tab>`).join("\n")}\n  </TabList>\n${labels.map((l) => `  <TabPanel value="${jsx(l)}">…</TabPanel>`).join("\n")}\n</Tabs>`;
+      return `<Tabs defaultValue=${jsxAttr(labels[0])}>\n  <TabList label="Sketch views">\n${labels.map((l) => `    <Tab value=${jsxAttr(l)}>${jsxText(l)}</Tab>`).join("\n")}\n  </TabList>\n${labels.map((l) => `  <TabPanel value=${jsxAttr(l)}>…</TabPanel>`).join("\n")}\n</Tabs>`;
     },
   },
   heading: {
@@ -462,7 +462,7 @@ export const KINDS: Record<Kind, KindSpec> = {
         {str(p.text) || "Sketchbook"}
       </Heading>
     ),
-    code: (p) => `<Heading level={2} scribble>${jsx(p.text)}</Heading>`,
+    code: (p) => `<Heading level={2} scribble>${jsxText(p.text)}</Heading>`,
   },
   holo: {
     name: "Holo Pip",

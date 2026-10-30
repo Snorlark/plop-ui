@@ -42,6 +42,7 @@ import {
 } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useSearchParams } from "next/navigation";
+import { jsxAttr, jsString, jsxText } from "./code";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 /* ---------------------------------------------------------------- controls */
@@ -78,7 +79,7 @@ function prop(name: string, value: Value | undefined, def?: Value) {
   if (value === true) return ` ${name}`;
   if (value === false) return ` ${name}={false}`;
   if (typeof value === "number") return ` ${name}={${value}}`;
-  return ` ${name}="${value}"`;
+  return ` ${name}=${jsxAttr(value)}`;
 }
 
 const ENTRIES: Record<string, Entry> = {
@@ -112,7 +113,7 @@ const ENTRIES: Record<string, Entry> = {
     code: (v) =>
       `<Button${prop("variant", v.variant, "ink")}${prop("size", v.size, "md")}${prop("tilt", v.tilt)}${prop("buddy", v.buddy, false)}${prop("loading", v.loading, false)}${prop("disabled", v.disabled, false)}${prop("burst", v.burst, "none")}${
         v.icon !== "none" ? ` iconLeft={<${ICON_NAMES[s(v.icon)]} />}` : ""
-      }>\n  ${s(v.label)}\n</Button>`,
+      }>\n  ${jsxText(v.label)}\n</Button>`,
   },
   "icon-button": {
     label: "IconButton",
@@ -124,7 +125,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "number", name: "tilt", label: "Tilt", default: -5, min: -10, max: 10, step: 0.5 },
     ],
     render: (v) => <IconButton icon={ICONS[s(v.icon)]} label={s(v.label) || "Icon button"} variant={s(v.variant) as ButtonVariant} size={s(v.size) as "sm"} tilt={n(v.tilt)} />,
-    code: (v) => `<IconButton icon={<${ICON_NAMES[s(v.icon)]} />} label="${s(v.label)}"${prop("variant", v.variant, "ink")}${prop("size", v.size, "md")}${prop("tilt", v.tilt)} />`,
+    code: (v) => `<IconButton icon={<${ICON_NAMES[s(v.icon)]} />} label=${jsxAttr(v.label)}${prop("variant", v.variant, "ink")}${prop("size", v.size, "md")}${prop("tilt", v.tilt)} />`,
   },
   tag: {
     label: "Tag",
@@ -148,7 +149,7 @@ const ENTRIES: Record<string, Entry> = {
       </Tag>
     ),
     code: (v) =>
-      `<Tag${v.status === "none" ? prop("tone", v.tone, "periwinkle") : prop("status", v.status)}${prop("pattern", v.pattern, "stripes")}${prop("tilt", v.tilt)}${b(v.removable) ? " onRemove={() => remove()}" : ""}>${s(v.label)}</Tag>`,
+      `<Tag${v.status === "none" ? prop("tone", v.tone, "periwinkle") : prop("status", v.status)}${prop("pattern", v.pattern, "stripes")}${prop("tilt", v.tilt)}${b(v.removable) ? " onRemove={() => remove()}" : ""}>${jsxText(v.label)}</Tag>`,
   },
   switch: {
     label: "Switch",
@@ -163,7 +164,7 @@ const ENTRIES: Record<string, Entry> = {
         {s(v.label)}
       </Switch>
     ),
-    code: (v) => `<Switch${prop("defaultChecked", v.on, false)}${prop("color", v.color, "mint")}${prop("disabled", v.disabled, false)}>\n  ${s(v.label)}\n</Switch>`,
+    code: (v) => `<Switch${prop("defaultChecked", v.on, false)}${prop("color", v.color, "mint")}${prop("disabled", v.disabled, false)}>\n  ${jsxText(v.label)}\n</Switch>`,
   },
   checkbox: {
     label: "Checkbox",
@@ -180,7 +181,7 @@ const ENTRIES: Record<string, Entry> = {
       </Checkbox>
     ),
     code: (v) =>
-      `<Checkbox${prop("defaultChecked", v.on, false)}${prop("indeterminate", v.indeterminate, false)}${v.tick === "ink" ? "" : ` tickColor="var(--plop-${s(v.tick)})"`}${prop("disabled", v.disabled, false)}>\n  ${s(v.label)}\n</Checkbox>`,
+      `<Checkbox${prop("defaultChecked", v.on, false)}${prop("indeterminate", v.indeterminate, false)}${v.tick === "ink" ? "" : ` tickColor="var(--plop-${s(v.tick)})"`}${prop("disabled", v.disabled, false)}>\n  ${jsxText(v.label)}\n</Checkbox>`,
   },
   "status-timeline": {
     label: "StatusTimeline",
@@ -194,7 +195,7 @@ const ENTRIES: Record<string, Entry> = {
       return <StatusTimeline steps={steps.length ? steps : ["Step"]} current={n(v.current)} orientation={s(v.orientation) as "auto"} label="Preview progress" />;
     },
     code: (v) => {
-      const steps = s(v.steps).split(",").map((x) => `"${x.trim()}"`).filter((x) => x !== '""');
+      const steps = s(v.steps).split(",").map((x) => jsString(x.trim())).filter((x) => x !== '""');
       return `<StatusTimeline\n  steps={[${steps.join(", ")}]}\n  current={${n(v.current)}}${v.orientation !== "auto" ? `\n  orientation="${s(v.orientation)}"` : ""}\n/>`;
     },
   },
@@ -214,7 +215,7 @@ const ENTRIES: Record<string, Entry> = {
       </div>
     ),
     code: (v) =>
-      `<Callout${prop("tone", v.tone, "info")} title="${s(v.title)}"${b(v.action) ? ' action={<Button size="sm" variant="plain">Try again</Button>}' : ""}>\n  ${s(v.body)}\n</Callout>`,
+      `<Callout${prop("tone", v.tone, "info")} title=${jsxAttr(v.title)}${b(v.action) ? ' action={<Button size="sm" variant="plain">Try again</Button>}' : ""}>\n  ${jsxText(v.body)}\n</Callout>`,
   },
   progress: {
     label: "Progress",
@@ -229,7 +230,7 @@ const ENTRIES: Record<string, Entry> = {
         <Progress label={s(v.label)} value={n(v.value)} max={10} valueText={`${n(v.value)} of 10`} tone={s(v.tone) as "ink"} solid={b(v.solid)} />
       </div>
     ),
-    code: (v) => `<Progress label="${s(v.label)}" value={${n(v.value)}} max={10} valueText="${n(v.value)} of 10"${prop("tone", v.tone, "ink")}${prop("solid", v.solid, false)} />`,
+    code: (v) => `<Progress label=${jsxAttr(v.label)} value={${n(v.value)}} max={10} valueText="${n(v.value)} of 10"${prop("tone", v.tone, "ink")}${prop("solid", v.solid, false)} />`,
   },
   avatar: {
     label: "Avatar",
@@ -240,7 +241,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "number", name: "tilt", label: "Tilt", default: -4, min: -12, max: 12, step: 1 },
     ],
     render: (v) => <Avatar name={s(v.name) || "Someone"} size={s(v.size) as "xl"} status={v.status === "none" ? undefined : (s(v.status) as "online")} tilt={n(v.tilt)} />,
-    code: (v) => `<Avatar name="${s(v.name)}"${prop("size", v.size, "md")}${v.status === "none" ? "" : prop("status", v.status)}${prop("tilt", v.tilt, 0)} />`,
+    code: (v) => `<Avatar name=${jsxAttr(v.name)}${prop("size", v.size, "md")}${v.status === "none" ? "" : prop("status", v.status)}${prop("tilt", v.tilt, 0)} />`,
   },
   "text-field": {
     label: "TextField",
@@ -257,7 +258,7 @@ const ENTRIES: Record<string, Entry> = {
       </div>
     ),
     code: (v) =>
-      `<TextField\n  label="${s(v.label)}"${v.placeholder ? `\n  placeholder="${s(v.placeholder)}"` : ""}${v.hint ? `\n  hint="${s(v.hint)}"` : ""}${v.error ? `\n  error="${s(v.error)}"` : ""}${b(v.success) ? "\n  success" : ""}\n/>`,
+      `<TextField\n  label=${jsxAttr(v.label)}${v.placeholder ? `\n  placeholder=${jsxAttr(v.placeholder)}` : ""}${v.hint ? `\n  hint=${jsxAttr(v.hint)}` : ""}${v.error ? `\n  error=${jsxAttr(v.error)}` : ""}${b(v.success) ? "\n  success" : ""}\n/>`,
   },
   toast: {
     label: "Toast",
@@ -273,7 +274,7 @@ const ENTRIES: Record<string, Entry> = {
         </Button>
       </div>
     ),
-    code: (v) => (v.kind === "info" ? `toast("${s(v.text)}");` : `toast.${s(v.kind)}("${s(v.text)}");`),
+    code: (v) => (v.kind === "info" ? `toast(${jsString(v.text)});` : `toast.${s(v.kind)}(${jsString(v.text)});`),
   },
   tooltip: {
     label: "Tooltip",
@@ -287,7 +288,7 @@ const ENTRIES: Record<string, Entry> = {
         <Button size="sm" variant="plain">{s(v.label) || "Hover me"}</Button>
       </Tooltip>
     ),
-    code: (v) => `<Tooltip content="${s(v.content)}"${prop("side", v.side, "top")}>\n  <Button size="sm" variant="plain">${s(v.label)}</Button>\n</Tooltip>`,
+    code: (v) => `<Tooltip content=${jsxAttr(v.content)}${prop("side", v.side, "top")}>\n  <Button size="sm" variant="plain">${jsxText(v.label)}</Button>\n</Tooltip>`,
   },
   "radio-group": {
     label: "RadioGroup",
@@ -304,7 +305,7 @@ const ENTRIES: Record<string, Entry> = {
         </RadioGroup>
       );
     },
-    code: (v) => `<RadioGroup legend="${s(v.legend)}" defaultValue="${items(v.options)[0]}"${b(v.vertical) ? "" : " vertical={false}"}>\n${items(v.options).map((x) => `  <Radio value="${x}">${x}</Radio>`).join("\n")}\n</RadioGroup>`,
+    code: (v) => `<RadioGroup legend=${jsxAttr(v.legend)} defaultValue=${jsxAttr(items(v.options)[0])}${b(v.vertical) ? "" : " vertical={false}"}>\n${items(v.options).map((x) => `  <Radio value=${jsxAttr(x)}>${jsxText(x)}</Radio>`).join("\n")}\n</RadioGroup>`,
   },
   tabs: {
     label: "Tabs",
@@ -318,7 +319,7 @@ const ENTRIES: Record<string, Entry> = {
         </Tabs>
       );
     },
-    code: (v) => `<Tabs defaultValue="${items(v.labels)[0]}">\n  <TabList label="Sketch views">\n${items(v.labels).map((x) => `    <Tab value="${x}">${x}</Tab>`).join("\n")}\n  </TabList>\n${items(v.labels).map((x) => `  <TabPanel value="${x}">…</TabPanel>`).join("\n")}\n</Tabs>`,
+    code: (v) => `<Tabs defaultValue=${jsxAttr(items(v.labels)[0])}>\n  <TabList label="Sketch views">\n${items(v.labels).map((x) => `    <Tab value=${jsxAttr(x)}>${jsxText(x)}</Tab>`).join("\n")}\n  </TabList>\n${items(v.labels).map((x) => `  <TabPanel value=${jsxAttr(x)}>…</TabPanel>`).join("\n")}\n</Tabs>`,
   },
   "ticket-card": {
     label: "TicketCard",
@@ -329,7 +330,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "number", name: "tilt", label: "Tilt", default: -1, min: -6, max: 6, step: 0.5 },
     ],
     render: (v) => <TicketCard title={s(v.title)} meta={s(v.meta) || undefined} tilt={n(v.tilt)} style={{ width: "min(340px, 100%)" }}>{s(v.body)}</TicketCard>,
-    code: (v) => `<TicketCard title="${s(v.title)}"${v.meta ? ` meta="${s(v.meta)}"` : ""}${prop("tilt", v.tilt, -1)}>\n  ${s(v.body)}\n</TicketCard>`,
+    code: (v) => `<TicketCard title=${jsxAttr(v.title)}${v.meta ? ` meta=${jsxAttr(v.meta)}` : ""}${prop("tilt", v.tilt, -1)}>\n  ${jsxText(v.body)}\n</TicketCard>`,
   },
   "unit-card": {
     label: "UnitCard",
@@ -338,7 +339,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "text", name: "subtitle", label: "Subtitle", default: "Inker" },
     ],
     render: (v) => <UnitCard name={s(v.name)} subtitle={s(v.subtitle) || undefined} avatar={<Avatar name={s(v.name) || "Rosa"} size="md" />} style={{ width: "min(340px, 100%)" }} />,
-    code: (v) => `<UnitCard name="${s(v.name)}"${v.subtitle ? ` subtitle="${s(v.subtitle)}"` : ""} avatar={<Avatar name="${s(v.name)}" size="md" />} />`,
+    code: (v) => `<UnitCard name=${jsxAttr(v.name)}${v.subtitle ? ` subtitle=${jsxAttr(v.subtitle)}` : ""} avatar={<Avatar name=${jsxAttr(v.name)} size="md" />} />`,
   },
   "sticky-note": {
     label: "StickyNote",
@@ -347,7 +348,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "select", name: "tone", label: "Paper", options: ["mustard", "mint", "pink"], default: "mustard" },
     ],
     render: (v) => <StickyNote tone={s(v.tone) as "mint"}>{s(v.text)}</StickyNote>,
-    code: (v) => `<StickyNote tone="${s(v.tone)}">${s(v.text)}</StickyNote>`,
+    code: (v) => `<StickyNote tone="${s(v.tone)}">${jsxText(v.text)}</StickyNote>`,
   },
   select: {
     label: "Select",
@@ -362,7 +363,7 @@ const ENTRIES: Record<string, Entry> = {
         <Select label={s(v.label) || "Pick"} placeholder={s(v.placeholder) || undefined} searchable={b(v.searchable)} options={toOptions(items(v.options))} />
       </div>
     ),
-    code: (v) => `<Select\n  label="${s(v.label)}"\n  placeholder="${s(v.placeholder)}"${b(v.searchable) ? "\n  searchable" : ""}\n  options={${optionsCode(items(v.options))}}\n/>`,
+    code: (v) => `<Select\n  label=${jsxAttr(v.label)}\n  placeholder=${jsxAttr(v.placeholder)}${b(v.searchable) ? "\n  searchable" : ""}\n  options={${optionsCode(items(v.options))}}\n/>`,
   },
   "multi-select": {
     label: "MultiSelect",
@@ -376,7 +377,7 @@ const ENTRIES: Record<string, Entry> = {
         <MultiSelect label={s(v.label) || "Pick"} placeholder={s(v.placeholder) || undefined} options={toOptions(items(v.options))} />
       </div>
     ),
-    code: (v) => `<MultiSelect\n  label="${s(v.label)}"\n  placeholder="${s(v.placeholder)}"\n  options={${optionsCode(items(v.options))}}\n/>`,
+    code: (v) => `<MultiSelect\n  label=${jsxAttr(v.label)}\n  placeholder=${jsxAttr(v.placeholder)}\n  options={${optionsCode(items(v.options))}}\n/>`,
   },
   menu: {
     label: "Menu",
@@ -385,7 +386,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "text", name: "items", label: "Items (comma separated)", default: "Rename, Duplicate, Delete" },
     ],
     render: (v) => <Menu label={s(v.label) || "More"} items={items(v.items).map((label) => ({ label, onSelect: () => toast(`${label}!`) }))} />,
-    code: (v) => `<Menu\n  label="${s(v.label)}"\n  items={[\n${items(v.items).map((x) => `    { label: "${x}", onSelect: () => {} },`).join("\n")}\n  ]}\n/>`,
+    code: (v) => `<Menu\n  label=${jsxAttr(v.label)}\n  items={[\n${items(v.items).map((x) => `    { label: ${jsString(x)}, onSelect: () => {} },`).join("\n")}\n  ]}\n/>`,
   },
   "text-area": {
     label: "TextArea",
@@ -399,7 +400,7 @@ const ENTRIES: Record<string, Entry> = {
         <TextArea label={s(v.label) || "Notes"} placeholder={s(v.placeholder)} ruled={b(v.ruled)} rows={4} />
       </div>
     ),
-    code: (v) => `<TextArea label="${s(v.label)}" placeholder="${s(v.placeholder)}"${b(v.ruled) ? " ruled" : ""} rows={4} />`,
+    code: (v) => `<TextArea label=${jsxAttr(v.label)} placeholder=${jsxAttr(v.placeholder)}${b(v.ruled) ? " ruled" : ""} rows={4} />`,
   },
   "search-field": {
     label: "SearchField",
@@ -412,7 +413,7 @@ const ENTRIES: Record<string, Entry> = {
         <SearchField label={s(v.label) || "Search"} placeholder={s(v.placeholder)} />
       </div>
     ),
-    code: (v) => `<SearchField label="${s(v.label)}" placeholder="${s(v.placeholder)}" />`,
+    code: (v) => `<SearchField label=${jsxAttr(v.label)} placeholder=${jsxAttr(v.placeholder)} />`,
   },
   "status-dot": {
     label: "StatusDot",
@@ -421,7 +422,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "select", name: "tone", label: "Status", options: ["online", "busy", "offline"], default: "online" },
     ],
     render: (v) => <StatusDot tone={s(v.tone) as "online"}>{s(v.label)}</StatusDot>,
-    code: (v) => `<StatusDot tone="${s(v.tone)}">${s(v.label)}</StatusDot>`,
+    code: (v) => `<StatusDot tone="${s(v.tone)}">${jsxText(v.label)}</StatusDot>`,
   },
   heading: {
     label: "Heading",
@@ -431,7 +432,7 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "boolean", name: "scribble", label: "Scribble underline", default: true },
     ],
     render: (v) => <Heading level={Number(v.level) as 2} scribble={b(v.scribble)}>{s(v.text)}</Heading>,
-    code: (v) => `<Heading level={${s(v.level)}}${b(v.scribble) ? " scribble" : ""}>${s(v.text)}</Heading>`,
+    code: (v) => `<Heading level={${s(v.level)}}${b(v.scribble) ? " scribble" : ""}>${jsxText(v.text)}</Heading>`,
   },
 };
 
@@ -468,7 +469,7 @@ const items = (v: Value | undefined) => {
   return list.length ? list : ["One", "Two"];
 };
 const toOptions = (list: string[]) => list.map((label) => ({ value: label.toLowerCase().replace(/\s+/g, "-"), label }));
-const optionsCode = (list: string[]) => `[${toOptions(list).map((o) => `{ value: "${o.value}", label: "${o.label}" }`).join(", ")}]`;
+const optionsCode = (list: string[]) => `[${toOptions(list).map((o) => `{ value: ${jsString(o.value)}, label: ${jsString(o.label)} }`).join(", ")}]`;
 
 const defaults = (entry: Entry): Values => Object.fromEntries(entry.controls.map((c) => [c.name, c.default]));
 
