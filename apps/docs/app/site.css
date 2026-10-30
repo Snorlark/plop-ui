@@ -87,9 +87,11 @@
   position: sticky; top: 0; z-index: 30; width: 100%; background: transparent;
   transition: transform .3s var(--plop-ease-squish), background-color .2s ease;
 }
+/* Stuck at the top-left of the screen, so the texture lines up with the pinned page texture
+   without background-attachment: fixed (which repaints the header on every scroll frame). */
 .site-header[data-scrolled] {
   background-color: var(--site-bg); background-image: var(--site-texture);
-  background-size: var(--site-texture-size); background-position: var(--site-texture-position); background-attachment: fixed;
+  background-size: var(--site-texture-size); background-position: var(--site-texture-position);
 }
 .site-header[data-hidden] { transform: translateY(-100%); }
 .site-header__in { width: 100%; max-width: 1280px; margin: 0 auto; padding: 18px 40px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
@@ -203,6 +205,9 @@ html[data-restoring] body { visibility: hidden; }
 .home-hero__copy .home-h1 { font-size: clamp(2.2rem, 6.4vw, 4.4rem); line-height: 1.02; color: var(--site-ink); }
 /* The headline with the paper / cutting-mat switch built in: a round sticker before the first word, which takes its own color. */
 .home-hero__title { position: relative; }
+/* Around 400–480px Sketchpop wraps the headline one line deeper than the fallback font;
+   hold that line open so the buttons below don't jump when the font arrives. */
+@media (max-width: 479px) { .home-hero__copy .home-h1 { min-height: 4.9lh; } }
 .hero-title {
   margin: 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: var(--plop-weight-heading);
   font-synthesis: none; text-transform: uppercase; letter-spacing: .03em; -webkit-text-stroke: 1.5px currentColor; text-wrap: balance;

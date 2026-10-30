@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { SiteFooter } from "../_site/SiteFooter";
 import { SiteHeader } from "../_site/SiteHeader";
 import { PlaygroundTools } from "./PlaygroundTools";
+import styles from "./tools.module.css";
 
 export const metadata: Metadata = {
   title: "Playground",
@@ -16,7 +17,7 @@ export default function PlaygroundPage() {
       <main id="main" className="pg-page">
         <h1 className="doc-h1">Playground</h1>
         <p className="doc-lede">Play with the real components, then take your work away as code, HTML or an image.</p>
-        <Suspense fallback={<p>Loading the playground…</p>}>
+        <Suspense fallback={<p className={styles.fallback}>Loading the playground…</p>}>
           <PlaygroundTools />
         </Suspense>
       </main>
