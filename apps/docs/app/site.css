@@ -263,6 +263,9 @@ html[data-tear]::view-transition-old(root) {
 .home-crowd__row { display: flex; justify-content: center; margin-bottom: -22px; }
 .home-crowd__row:last-of-type { margin-bottom: 0; }
 .home-crowd__face { flex: none; margin: 0 -6px; }
+/* 44 faces a row cover a wide screen plus the 320px drift each way; smaller screens skip the ones they'd never show. */
+@media (max-width: 1100px) { .home-crowd__face:nth-child(n + 39) { display: none; } }
+@media (max-width: 760px) { .home-crowd__face:nth-child(n + 25) { display: none; } }
 .home-crowd__hand { position: absolute; bottom: 120px; }
 .home-crowd__hand--l { left: 8%; transform: rotate(-14deg); }
 .home-crowd__hand--r { right: 8%; transform: scaleX(-1) rotate(-14deg); }
