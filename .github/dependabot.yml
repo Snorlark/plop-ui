@@ -9,5 +9,9 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+    ignore:
+      # v2 renames every input and output release.yml uses and moves to Changesets v3; upgrade it by hand.
+      - dependency-name: changesets/action
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "chore(ci)"
