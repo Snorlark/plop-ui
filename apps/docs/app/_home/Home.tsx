@@ -99,7 +99,7 @@ function Kicker({
 
 function Hero() {
   return (
-    <section className="home-hero">
+    <section data-pausable className="home-hero">
       <div className="home-hero__copy">
         <Tape tone="mustard" tilt={-4}>Press it!</Tape>
         <div className="home-hero__title">
@@ -256,7 +256,7 @@ function Hero() {
 
 function Letter() {
   return (
-    <section className="home-letter">
+    <section data-pausable className="home-letter">
       <div className="home-letter__head">
         <div className="home-letter__from">
           <Avatar name="Lark Babao" />
@@ -307,7 +307,7 @@ function Pieces() {
   );
   const failures = ratios.filter(([, r]) => r < 4.5).length;
   return (
-    <section className="home-pieces" id="pieces">
+    <section data-pausable className="home-pieces" id="pieces">
       <div className="home-center home-section-head">
         <Tape tone="periwinkle" tilt={2}>What’s in the pack</Tape>
         <h2 className="home-h2">
@@ -577,7 +577,7 @@ const GRID: Array<{
 
 function ComponentsGrid() {
   return (
-    <section className="home-components" id="components">
+    <section data-pausable className="home-components" id="components">
       <div className="home-center home-section-head">
         <Tape tone="mint" tilt={-2}>The whole pack</Tape>
         <h2 className="home-h2">
@@ -626,7 +626,7 @@ const CHIP_BG: Record<string, string> = {
 
 function Surfaces() {
   return (
-    <section className="home-surfaces" id="surfaces">
+    <section data-pausable className="home-surfaces" id="surfaces">
       <div>
         <Tape tone="bubblegum" tilt={3}>Surfaces</Tape>
         <h2 className="home-h2">
