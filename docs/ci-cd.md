@@ -18,7 +18,7 @@ CI looks at which files a pull request changed and runs only what that change ne
 | CI files, scripts, the lockfile, `turbo.json`, the e2e tests | full | **all 5** | TBD (measured) |
 | Storybook or the dispatch demo only | full, plus those apps' builds | none | TBD (measured) |
 | A changeset or a CHANGELOG (the `/changelog` page reads them) | none | none, but the site is built | TBD (measured) |
-| Notes only: `TASKS.md`, READMEs, `docs/`, `LICENSE` | `pnpm changeset status` only | none | TBD (measured) |
+| Notes only: Markdown files, `docs/`, `LICENSE` | `pnpm changeset status` only | none | TBD (measured) |
 | The bot's "version packages" PR (versions and changelogs only) | none | none, but the site is built | TBD (measured) |
 | Anything else | full | **all 5** | TBD (measured) |
 
@@ -78,7 +78,7 @@ pnpm users get a new version about 24 hours after you approve it: pnpm 11 waits 
 ## When something fails
 
 - **A browser job is red:** open it, expand the failed step, read the first error. Click **Re-run failed jobs** only if it looks unrelated to your change (a timeout, a network error).
-- **Firefox failed once, then passed on retry:** expected. Firefox rarely throws a hydration error (React #418, about 1 in 130 page loads), so the Firefox job retries once. It's tracked in `TASKS.md`.
+- **Firefox failed once, then passed on retry:** expected. Firefox rarely throws a hydration error (React #418, about 1 in 130 page loads), so the Firefox job retries once. It's tracked in [issue #63](https://github.com/Snorlark/plop-ui/issues/63).
 - **`ci` is red but every job is green:** a job was cancelled (usually a newer push replaced it). Re-run, or push again.
 - **The bot's PR has no `ci` check:** open Actions → CI → **Run workflow**, pick the branch `changeset-release/main`, run it.
 - **Release fails with `ENEEDAUTH` for a package:** that package's trusted publisher on npm expired or is missing. On npmjs.com: the package → Settings → **Trusted Publisher** must show `Snorlark/plop-ui`, `release.yml`, permission **npm stage publish**, status **Valid**. Fix it, then re-run the Release workflow. Don't approve react until tokens' new version is live.
