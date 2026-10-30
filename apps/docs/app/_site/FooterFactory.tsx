@@ -4,6 +4,7 @@ import { IconButton, Tooltip, useReducedMotion } from "@plop-ui/react";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import styles from "./footer.module.css";
 import { marker, PauseIcon, PlayIcon } from "./handIcons";
+import { useInView } from "./useInView";
 
 function LeverIcon() {
   return (
@@ -44,11 +45,13 @@ export function FooterFactory({ children }: { children: ReactNode }) {
     setPaused(reduced);
   }, [reduced]);
 
+  // Plays only while on screen and the tab is visible; the pause button still wins.
+  const live = useInView(scene);
   useEffect(() => {
     const svg = scene.current?.querySelector("svg");
-    if (paused) svg?.pauseAnimations();
+    if (paused || !live) svg?.pauseAnimations();
     else svg?.unpauseAnimations();
-  }, [paused]);
+  }, [paused, live]);
 
   const plop = () => {
         setCount((c) => c + 1);

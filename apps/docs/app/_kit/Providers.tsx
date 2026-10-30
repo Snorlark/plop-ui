@@ -1,7 +1,7 @@
 "use client";
 
 import { PlopProvider, useHaptics, useReducedMotion, useSound, type PlopProviderProps } from "@plop-ui/react";
-import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 
 export type SiteSurface = "poster" | "mat";
@@ -75,7 +75,8 @@ export function Providers({ children, ...props }: PlopProviderProps & { children
     const timers = new WeakMap<Element, number>();
     const onScroll = (e: Event) => {
       const el = e.target instanceof Element ? e.target : document.documentElement;
-      el.setAttribute("data-scrolling", "");
+      // Only the first scroll event touches the DOM; the rest just push the timer back.
+      if (!el.hasAttribute("data-scrolling")) el.setAttribute("data-scrolling", "");
       window.clearTimeout(timers.get(el));
       timers.set(el, window.setTimeout(() => el.removeAttribute("data-scrolling"), 900));
     };
@@ -107,8 +108,10 @@ export function Providers({ children, ...props }: PlopProviderProps & { children
     [haptics],
   );
 
+  const value = useMemo(() => ({ haptics, sound, setHaptics, setSound, surface, setSurface }), [haptics, sound, setHaptics, setSound, surface, setSurface]);
+
   return (
-    <FeedbackContext.Provider value={{ haptics, sound, setHaptics, setSound, surface, setSurface }}>
+    <FeedbackContext.Provider value={value}>
       <PlopProvider {...props} haptics={haptics} sound={sound}>
         {children}
       </PlopProvider>

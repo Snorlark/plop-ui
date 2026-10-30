@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { PauseIcon, PlayIcon } from "./handIcons";
 import styles from "./notFound.module.css";
+import { useInView } from "./useInView";
 
 const LINES = ["Uh oh. Wrong page?", "Still drawing this one.", "Jun, lower the 4!", "Ink’s not dry yet.", "Try a button below?", "I’m the 0. Hi!"];
 
@@ -28,11 +29,13 @@ export function NotFound({ scene }: { scene: ReactNode }) {
     if (reduced) svg.setCurrentTime(2.6);
     setPaused(reduced);
   }, [reduced]);
+  // Plays only while on screen and the tab is visible; the pause button still wins.
+  const live = useInView(stage);
   useEffect(() => {
     const svg = stage.current?.querySelector("svg");
-    if (paused) svg?.pauseAnimations();
+    if (paused || !live) svg?.pauseAnimations();
     else svg?.unpauseAnimations();
-  }, [paused]);
+  }, [paused, live]);
 
   return (
     <main id="main" className={styles.screen} data-not-found="">

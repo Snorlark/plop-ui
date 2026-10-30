@@ -1,12 +1,15 @@
 "use client";
 
 import { Tab, TabList, TabPanel, Tabs } from "@plop-ui/react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { LetteringStudio } from "./LetteringStudio";
-import { Playground } from "./Playground";
 import { StickerBoard } from "./StickerBoard";
 import styles from "./tools.module.css";
+
+// Only the board opens by default; the other two tools download when picked.
+const LetteringStudio = dynamic(() => import("./LetteringStudio").then((m) => m.LetteringStudio));
+const Playground = dynamic(() => import("./Playground").then((m) => m.Playground));
 
 type Tool = "board" | "lettering" | "tweak";
 

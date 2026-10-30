@@ -10,6 +10,7 @@ import { SITE_DESCRIPTION, SITE_URL } from "./_site/site";
 import { RideAlong } from "./_site/RideAlong";
 import { SiteFilters } from "./_site/Wordmark";
 import { patrickHand, sketchpop } from "./fonts";
+import { OffscreenPause } from "./_site/OffscreenPause";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers theme="light" paint={false}>
           {children}
           <RideAlong />
+          <OffscreenPause />
         </Providers>
       </body>
     </html>
