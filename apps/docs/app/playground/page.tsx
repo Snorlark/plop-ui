@@ -4,6 +4,7 @@ import { SiteFooter } from "../_site/SiteFooter";
 import { SiteHeader } from "../_site/SiteHeader";
 import { PlaygroundTools } from "./PlaygroundTools";
 import styles from "./tools.module.css";
+import "./playground.css";
 
 export const metadata: Metadata = {
   title: "Playground",

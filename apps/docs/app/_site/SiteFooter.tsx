@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styles from "./footer.module.css";
-import { FACTORY_SCENE } from "./footerScene";
+import { LazyScene } from "./LazyScene";
 import { FooterFactory } from "./FooterFactory";
 import { GITHUB } from "./nav";
 import { Wordmark } from "./Wordmark";
@@ -88,7 +88,7 @@ export function SiteFooter() {
       </div>
 
       <FooterFactory>
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 1440 380" preserveAspectRatio="xMidYMax slice" width="100%" height="100%" dangerouslySetInnerHTML={{ __html: FACTORY_SCENE }} />
+        <LazyScene src="/scenes/factory.svg" viewBox="0 0 1440 380" preserveAspectRatio="xMidYMax slice" />
       </FooterFactory>
 
       <p className={styles.legal}>

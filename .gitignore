@@ -22,3 +22,6 @@ TASKS.md
 # Local tool output and agent workspaces.
 .playwright-mcp/
 .claude/
+
+# Lighthouse CI reports (apps/docs/lighthouserc.json)
+.lighthouseci/

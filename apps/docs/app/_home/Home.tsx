@@ -22,66 +22,13 @@ import { color, surfaceNames, surfaces } from "@plop-ui/tokens";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { CopyCommand } from "./CopyCommand";
-import { Hand, Scribble, Tape } from "./Doodles";
+import { Crowd } from "./Crowd";
+import { Scribble, Tape } from "./Doodles";
 import { PaperStack } from "./PaperStack";
 import { PackSticker, StickerPack } from "./StickerPack";
 import { WhyPlop } from "./WhyPlop";
 import { HeroTitle } from "./HeroTitle";
-
-const CROWD_NAMES = [
-  "Mara Dela Cruz",
-  "Hannah Co",
-  "Lia Torres",
-  "Kiko Bautista",
-  "Joy Mendoza",
-  "Sol Javier",
-  "Migs Aquino",
-  "Ivy Navarro",
-  "Andi Flores",
-  "Rina Uy",
-  "Noel Bernal",
-  "Pat Santiago",
-  "Celine Tan",
-  "Tala Ramos",
-  "Rosa Santos",
-  "Tess Mercado",
-  "Pia Santos",
-  "Bea Soriano",
-  "Maya Cortez",
-  "Enzo Lopez",
-  "Dom Salazar",
-  "Luis Ong",
-  "Gab Reyes",
-  "Jun Reyes",
-  "Fritz Manalo",
-  "Raf Castillo",
-  "Elle Garcia",
-  "Nico Valdez",
-  "Olive Yap",
-  "Gelo Pascual",
-  "Jessa Lim",
-  "Leo Garcia",
-  "Mika Tan",
-  "Dante Uy",
-  "Iggy Sison",
-  "Quinn Ramos",
-  "Sam Villanueva",
-  "Carla Dizon",
-  "Kat Robles",
-  "Ana Cruz",
-  "Ben Ocampo",
-  "Bong Ramos",
-  "Paolo Lim",
-  "Toto Cruz",
-];
-
-/** Three rows wide enough to run edge to edge on a big screen (with room to drift); each row starts at a different name. */
-const CROWD: string[][] = [0, 17, 31].map((offset) =>
-  Array.from(
-    { length: 44 },
-    (_, i) => CROWD_NAMES[(offset + i) % CROWD_NAMES.length] as string,
-  ),
-);
+import "./home.css";
 
 /** The handwritten red kicker, now only for the letter's "From Lark". Section labels use <Tape>. */
 function Kicker({
@@ -126,38 +73,7 @@ function Hero() {
       </div>
 
       <div className="home-stage">
-        <div
-          className="home-crowd"
-          aria-hidden="true"
-          data-plop-motion="reduce"
-        >
-          {CROWD.map((row, r) => (
-            <div className="home-crowd__row" key={r}>
-              {row.map((name, i) => (
-                <span
-                  key={`${name}-${i}`}
-                  className="home-crowd__face"
-                  style={{
-                    transform: `translateY(${((i * 7 + r * 5) % 13) - 6}px)`,
-                    ["--col" as string]: i + r * 2,
-                  }}
-                >
-                  <Avatar
-                    name={name}
-                    size={i % 3 === 0 ? "xl" : "lg"}
-                    tilt={((i * 5 + r * 3) % 11) - 5}
-                  />
-                </span>
-              ))}
-            </div>
-          ))}
-          <span className="home-crowd__hand home-crowd__hand--l">
-            <Hand />
-          </span>
-          <span className="home-crowd__hand home-crowd__hand--r">
-            <Hand />
-          </span>
-        </div>
+        <Crowd />
 
         <StickerPack
           cover={
