@@ -5,8 +5,8 @@ import { seed as seeded, type Seed } from "../seed.js";
 import styles from "./ink.module.css";
 
 /*
- * The ink loop on its own, so Button's loading state doesn't pull in every Spinner kind
- * (the scribble flipbook, the sticker, Hum). Spinner builds its other kinds on these pieces.
+ * The ink loop and the hopping dots on their own, so a loading Button, Select or SearchField doesn't pull
+ * in every Spinner kind (the scribble flipbook, the sticker, Hum). Spinner builds on these pieces.
  */
 
 /** The boil: the same line redrawn this many times, swapped like frames of a flipbook. */
@@ -70,6 +70,21 @@ export function InkArt({ seed }: { seed: Seed }) {
   );
 }
 
+/** The dots kind's drawing: three slightly different ink blobs that hop and squash. */
+export function DotsArt({ seed }: { seed: Seed }) {
+  const rnd = seeded(`${seed}:dots`);
+  return (
+    <span className={styles.hops}>
+      {[0, 1, 2].map((i) => (
+        <span key={i} className={styles.dot} style={{ "--i": i, "--d": (0.92 + rnd() * 0.22).toFixed(2) } as CSSProperties}>
+          <i className={styles.blob} style={{ borderRadius: `${48 + Math.round(rnd() * 8)}% ${44 + Math.round(rnd() * 8)}% ${50 + Math.round(rnd() * 8)}% ${44 + Math.round(rnd() * 8)}%` }} />
+          <i className={styles.shadow} />
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /** The decorative wrapper every kind sits in, with the three still dots shown under reduced motion. */
 export function MarkFrame({ kind, className, style, children }: { kind: string; className?: string; style?: CSSProperties; children: ReactNode }) {
   return (
@@ -81,6 +96,16 @@ export function MarkFrame({ kind, className, style, children }: { kind: string; 
         <i />
       </span>
     </span>
+  );
+}
+
+/** Just the hopping dots, decorative. What a busy Select or SearchField shows. */
+export function DotsMark({ seed, className, style }: { seed?: Seed; className?: string; style?: CSSProperties }) {
+  const s = useSeed(seed);
+  return (
+    <MarkFrame kind="dots" className={className} style={style}>
+      <DotsArt seed={s} />
+    </MarkFrame>
   );
 }
 

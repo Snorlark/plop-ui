@@ -8,37 +8,13 @@
 .label { font-family: var(--plop-font-body); font-size: 0.95em; color: inherit; }
 .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* ---- dots: three ink blobs that hop, stretch on the way up and squash when they land ---- */
-.hops { display: inline-flex; align-items: flex-end; gap: calc(var(--s) * 0.1); height: var(--s); }
-.dot { position: relative; display: block; width: calc(var(--s) * 0.34); height: 100%; }
-.blob {
+/* The dots kind lives in ink.module.css (Select and SearchField use it without the rest of Spinner). */
+.flip .ground {
   position: absolute;
-  left: 50%;
-  bottom: 14%;
-  width: calc(var(--s) * 0.3 * var(--d, 1));
-  aspect-ratio: 1;
-  margin-left: calc(var(--s) * -0.15 * var(--d, 1));
-  background: currentColor;
-  transform-origin: 50% 100%;
-  animation: hop 0.84s infinite;
-  animation-delay: calc(var(--i) * 0.13s);
-}
-.dot .ground, .flip .ground {
-  position: absolute;
-  left: 8%;
-  right: 8%;
   bottom: 0;
-  height: 10%;
   border-radius: 50%;
   background: currentColor;
   opacity: 0.2;
-}
-@keyframes hop {
-  0% { transform: translateY(0) scale(1.3, 0.72); animation-timing-function: var(--plop-ease-spring); }
-  14% { transform: translateY(0) scale(1, 1); animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
-  44% { transform: translateY(-110%) scale(0.86, 1.16); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
-  68% { transform: translateY(0) scale(1.3, 0.72); animation-timing-function: var(--plop-ease-spring); }
-  82%, 100% { transform: translateY(0) scale(1, 1); }
 }
 @keyframes shrink {
   0%, 14%, 68%, 100% { transform: scaleX(1); opacity: 0.22; }
@@ -85,15 +61,12 @@
 }
 
 /* ---- reduced motion: hold the drawing still (the ink loop and the three fading dots live in ink.module.css) ---- */
-@keyframes fade { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
-  :is(.blob, .ground, .penStrip, .coin, .hum):not([data-plop-motion="full"] *) { animation: none; }
+  :is(.ground, .penStrip, .coin, .hum):not([data-plop-motion="full"] *) { animation: none; }
   .penStrip:not([data-plop-motion="full"] *) { transform: translateX(calc(-100% * 13 / 21)); }
-  .blob:not([data-plop-motion="full"] *) { animation: fade 1.2s ease-in-out infinite; animation-delay: calc(var(--i) * 0.2s); }
 }
-[data-plop-motion="reduce"] :is(.blob, .ground, .penStrip, .coin, .hum) { animation: none; }
+[data-plop-motion="reduce"] :is(.ground, .penStrip, .coin, .hum) { animation: none; }
 [data-plop-motion="reduce"] .penStrip { transform: translateX(calc(-100% * 13 / 21)); }
-[data-plop-motion="reduce"] .blob { animation: fade 1.2s ease-in-out infinite; animation-delay: calc(var(--i) * 0.2s); }
 
 /* `delay`: stay invisible a moment, so quick loads never flash a spinner. */
 .delayed > * { animation: appear 0.18s ease-out var(--sp-delay) both; }
