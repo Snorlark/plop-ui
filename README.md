@@ -17,7 +17,7 @@
   <a href="https://plopui.com/changelog">Changelog</a>
 </p>
 
-PlopUI is an open-source React + TypeScript component library for people who'd rather have fun than follow the design rulebook. Lines wobble, stickers sit a little crooked, and the colors are picked by instinct, not strategy. It breaks the visual rules on purpose and keeps the ones that matter: every piece is accessible to WCAG AA. Everything is drawn in one cobalt marker on cream paper: die-cut sticker buttons, hatched shadows, boiling ink outlines, a cast of little characters, and press feedback you can feel (a squish, an ink burst, a buzz on your phone). Every "imperfection" is seeded, so it renders the same on the server and the client.
+PlopUI (also written Plop UI or plop-ui) is an open-source React + TypeScript component library for people who'd rather have fun than follow the design rulebook. Lines wobble, stickers sit a little crooked, and the colors are picked by instinct, not strategy. It breaks the visual rules on purpose and keeps the ones that matter: every piece is accessible to WCAG AA. Everything is drawn in one cobalt marker on cream paper: die-cut sticker buttons, hatched shadows, boiling ink outlines, a cast of little characters, and press feedback you can feel (a squish, an ink burst, a buzz on your phone). Every "imperfection" is seeded, so it renders the same on the server and the client.
 
 The "o" in the logo is the capped buddy who peeks over the top of a `Button`. He is the kit's mascot, and his friends show up wherever the kit has something to tell you.
 

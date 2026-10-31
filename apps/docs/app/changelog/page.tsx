@@ -5,11 +5,13 @@ import { pendingNotes, releases, PACKAGES, type Pkg } from "../_site/changelog";
 import { GITHUB } from "../_site/nav";
 import { SiteFooter } from "../_site/SiteFooter";
 import { SiteHeader } from "../_site/SiteHeader";
+import { pageMeta } from "../_site/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Changelog",
   description: "What's new in PlopUI: every release of @plop-ui/react, @plop-ui/tokens and @plop-ui/fonts, plus what's coming in the next one.",
-};
+  path: "/changelog",
+});
 
 const TONE: Record<Pkg, TagTone> = { react: "periwinkle", tokens: "mustard", fonts: "bubblegum" };
 

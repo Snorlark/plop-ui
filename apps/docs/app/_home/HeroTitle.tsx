@@ -47,8 +47,9 @@ export function HeroTitle() {
 
   return (
     <h1 className="home-h1 hero-title" aria-labelledby={id}>
+      {/* The brand leads the heading's text, so search engines and screen readers both hear "PlopUI" first; the logo above shows it. */}
       <span id={id} className="vh">
-        {word} {REST.join(" ")}
+        PlopUI: {word} {REST.join(" ")}
       </span>
       <span className="hero-title__switch">
         <Tooltip content={mat ? "Back to paper" : "Lay it on the cutting mat"} side="bottom">

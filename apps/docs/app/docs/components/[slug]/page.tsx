@@ -6,14 +6,18 @@ import { PropsTable } from "../../../_components/PropsTable";
 import { LoadingShowcase } from "../../../_kit/LoadingShowcase";
 import { ExampleTabs } from "../../../_site/ExampleTabs";
 import { COMPONENT_DOCS } from "../../../_site/registry";
+import { pageMeta } from "../../../_site/meta";
 
 export function generateStaticParams() {
   return Object.keys(COMPONENT_DOCS).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const doc = COMPONENT_DOCS[(await params).slug];
-  return { title: doc?.title ?? "Component", description: doc?.lede };
+  const slug = (await params).slug;
+  const doc = COMPONENT_DOCS[slug];
+  if (!doc) return { title: "Component" };
+  // "Button: hand-drawn React component · PlopUI": people search "react <component> component".
+  return pageMeta({ title: `${doc.title}: hand-drawn React component`, description: doc.lede, path: `/docs/components/${slug}` });
 }
 
 const BADGE_TONES = ["periwinkle", "mint", "mustard"] as const;

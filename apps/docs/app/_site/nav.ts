@@ -19,6 +19,7 @@ export const DOC_NAV: NavSection[] = [
   {
     group: "Getting started",
     links: [
+      { href: "/docs/what-is-plopui", label: "What is PlopUI?", keywords: "about overview plop ui plop-ui compare alternatives hand-drawn rough.js free license" },
       { href: "/docs/getting-started", label: "Installation", keywords: "install npm pnpm setup provider" },
       { href: "/docs/nextjs", label: "Using with Next.js", keywords: "server components ssr hydration next/font cookie" },
       { href: "/docs/surfaces", label: "Surfaces", keywords: "poster mat notebook kraft riso paper theme dark" },
