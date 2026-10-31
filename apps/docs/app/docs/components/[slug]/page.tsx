@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PropsTable } from "../../../_components/PropsTable";
+import { LoadingShowcase } from "../../../_kit/LoadingShowcase";
 import { ExampleTabs } from "../../../_site/ExampleTabs";
 import { COMPONENT_DOCS } from "../../../_site/registry";
 
@@ -33,22 +34,32 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
         ))}
       </div>
 
-      <ExampleTabs slug={slug} code={doc.code} />
+      {slug === "loading" ? <LoadingShowcase /> : <ExampleTabs slug={slug} code={doc.code} />}
       <p className="doc-try">
-        Change every prop live in the <Link href={`/playground?c=${slug}`}>playground</Link>.
+        Change every prop live in the <Link href={`/playground?c=${slug === "loading" ? "spinner" : slug}`}>playground</Link>.
       </p>
 
       <h2 className="doc-h2">Props</h2>
-      {doc.tables.map((t) => (
-        <section key={t.of} className="doc-props">
-          {doc.tables.length > 1 && (
-            <h3 className="doc-h3">
-              <code>{t.of}</code>
-            </h3>
-          )}
-          <PropsTable of={t.of} inheritedFrom={t.inheritedFrom} />
-        </section>
-      ))}
+      {doc.tables.length > 3
+        ? // Pages covering many components (Loading) fold each table away, so the page stays short.
+          doc.tables.map((t) => (
+            <details key={t.of} className="doc-props doc-props--fold">
+              <summary>
+                <code>{t.of}</code>
+              </summary>
+              <PropsTable of={t.of} inheritedFrom={t.inheritedFrom} />
+            </details>
+          ))
+        : doc.tables.map((t) => (
+            <section key={t.of} className="doc-props">
+              {doc.tables.length > 1 && (
+                <h3 className="doc-h3">
+                  <code>{t.of}</code>
+                </h3>
+              )}
+              <PropsTable of={t.of} inheritedFrom={t.inheritedFrom} />
+            </section>
+          ))}
 
       <h2 className="doc-h2">Use it well</h2>
       <div className="doc-dodont">

@@ -20,8 +20,10 @@ export { Menu, type MenuProps, type MenuItem } from "./Menu/Menu.js";
 export { Buddy, BuddyPeek, BUDDY_CAST, type BuddyProps, type BuddyPeekProps, type BuddyMood, type BuddySize } from "./Buddy/Buddy.js";
 export { Avatar, AvatarStack, type AvatarProps, type AvatarStackProps, type AvatarStatus } from "./Avatar/Avatar.js";
 export { TicketCard, UnitCard, UnitCardRow, StickyNote, Eta, type TicketCardProps, type UnitCardProps, type StickyNoteProps } from "./Cards/Cards.js";
-export { Tabs, TabList, Tab, TabPanel, type TabsProps, type TabListProps, type TabProps } from "./Tabs/Tabs.js";
+export { Tabs, TabList, Tab, TabPanel, type TabsProps, type TabListProps, type TabProps, type TabPanelProps } from "./Tabs/Tabs.js";
 export { Progress, type ProgressProps } from "./Progress/Progress.js";
+export { ProgressRing, type ProgressRingProps } from "./Progress/ProgressRing.js";
+export { Skeleton, SkeletonText, type SkeletonProps, type SkeletonTextProps, type SkeletonShape } from "./Skeleton/Skeleton.js";
 export { Callout, type CalloutProps, type CalloutTone } from "./Callout/Callout.js";
 export { Count, StatusDot, EmptyState, type CountProps, type StatusDotProps } from "./Badge/Badge.js";
 export { Toast, Toaster, type ToastProps, type ToasterProps, type ToastBackdrop } from "./Toast/Toaster.js";
@@ -30,6 +32,8 @@ export { Sheet, type SheetProps } from "./Sheet/Sheet.js";
 export { Heading, type HeadingProps } from "./Heading/Heading.js";
 export { Lettering, type LetteringProps } from "./Lettering/Lettering.js";
 export { WordSticker, type WordStickerProps, type WordStickerTone } from "./WordSticker/WordSticker.js";
+export { Spinner, SpinnerMark, type SpinnerProps, type SpinnerKind, type SpinnerSize } from "./Spinner/Spinner.js";
+export { Loader, type LoaderProps } from "./Spinner/Loader.js";
 export { Doodle, DOODLE_PATHS, type DoodleProps, type DoodleKind, type DoodleTone } from "./Doodle/Doodle.js";
 export { useInkBurst } from "./InkBurst/useInkBurst.js";
 export { BURST_COLORS, BURST_PRESETS, BURST_STYLES, type BurstStyle } from "./InkBurst/burstStyles.js";
@@ -37,6 +41,7 @@ export { BURST_COLORS, BURST_PRESETS, BURST_STYLES, type BurstStyle } from "./In
 export { useHaptics, HAPTIC_PATTERNS, type Haptics } from "./hooks/useHaptics.js";
 export { useBoil, type UseBoilOptions } from "./hooks/useBoil.js";
 export { useReducedMotion } from "./hooks/useReducedMotion.js";
+export { useDelayedLoading, type UseDelayedLoadingOptions } from "./hooks/useDelayedLoading.js";
 export { useSound } from "./hooks/useSound.js";
 
 export { onColor, contrastRatio, parseColor, luminance, DEEP_INK, CREAM, type OnColorResult } from "./contrast.js";

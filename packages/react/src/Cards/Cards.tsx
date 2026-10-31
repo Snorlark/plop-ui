@@ -1,6 +1,7 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 import { Lettering } from "../Lettering/Lettering.js";
+import { Skeleton } from "../Skeleton/Skeleton.js";
 import styles from "./Cards.module.css";
 
 type Tilted = {
@@ -15,6 +16,8 @@ export interface TicketCardProps extends Tilted, Omit<HTMLAttributes<HTMLElement
   meta?: ReactNode;
   /** The ticket's title, lettered in Sketchpop. */
   title: ReactNode;
+  /** Still on its way: the same card with paper scraps for the words, `aria-busy` and read out as "Loading". */
+  loading?: boolean;
   /** The tear-off stub, e.g. "Open". */
   stub?: ReactNode;
   /** Tags, assignee and so on. */
@@ -24,8 +27,25 @@ export interface TicketCardProps extends Tilted, Omit<HTMLAttributes<HTMLElement
 }
 
 /** A ticket stub for queue items: the title, a meta line, and a tear-off stub with the state. */
-export function TicketCard({ meta, title, stub, children, tilt, headingLevel = 3, className, style, ...rest }: TicketCardProps) {
+export function TicketCard({ meta, title, stub, children, tilt, headingLevel = 3, loading = false, className, style, ...rest }: TicketCardProps) {
   const H = `h${headingLevel}` as const;
+  if (loading) {
+    return (
+      <article {...rest} className={cx(styles.ticket, className)} style={tiltStyle(tilt, style)} aria-busy="true">
+        <div className={styles.ticketMain}>
+          <Skeleton width="38%" height={12} />
+          <H className={styles.ticketTitle}>
+            <span className={styles.vh}>Loading</span>
+            <Skeleton shape="title" width="72%" />
+          </H>
+          <div className={styles.ticketMeta}>
+            <Skeleton shape="pill" />
+          </div>
+        </div>
+        <div className={styles.stub} aria-hidden="true" />
+      </article>
+    );
+  }
   return (
     <article {...rest} className={cx(styles.ticket, className)} style={tiltStyle(tilt, style)}>
       <div className={styles.ticketMain}>
@@ -43,6 +63,8 @@ export function TicketCard({ meta, title, stub, children, tilt, headingLevel = 3
 export interface UnitCardProps extends Tilted, HTMLAttributes<HTMLElement> {
   /** The person's or project's name, lettered in Sketchpop. */
   name: ReactNode;
+  /** Still on its way: a loading avatar and paper scraps for the words, `aria-busy` and read out as "Loading". */
+  loading?: boolean;
   /** A small line under the name, e.g. a role. */
   subtitle?: ReactNode;
   /** Usually an <Avatar>. */
@@ -54,8 +76,25 @@ export interface UnitCardProps extends Tilted, HTMLAttributes<HTMLElement> {
 }
 
 /** A taped unit card for people and projects. Put `UnitCardRow`s inside for status and actions. */
-export function UnitCard({ name, subtitle, avatar, children, tilt, headingLevel = 3, className, style, ...rest }: UnitCardProps) {
+export function UnitCard({ name, subtitle, avatar, children, tilt, headingLevel = 3, loading = false, className, style, ...rest }: UnitCardProps) {
   const H = `h${headingLevel}` as const;
+  if (loading) {
+    return (
+      <article {...rest} className={cx(styles.unit, className)} style={tiltStyle(tilt, style)} aria-busy="true">
+        <div className={styles.unitTop}>
+          <Skeleton shape="circle" width={52} height={52} />
+          <div className={styles.loadingLines}>
+            <H className={styles.unitName}>
+              <span className={styles.vh}>Loading</span>
+              <Skeleton shape="title" width="70%" />
+            </H>
+            <Skeleton width="45%" height={12} />
+          </div>
+        </div>
+        <Skeleton width="100%" height={12} />
+      </article>
+    );
+  }
   return (
     <article {...rest} className={cx(styles.unit, className)} style={tiltStyle(tilt, style)}>
       <div className={styles.unitTop}>

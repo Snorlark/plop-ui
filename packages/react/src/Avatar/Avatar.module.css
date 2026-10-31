@@ -17,6 +17,8 @@
 .root > svg { width: 100%; height: 100%; overflow: visible; }
 [data-plop-filters] .root > svg { filter: url(#plop-wob1); }
 .photo { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+/* Loading: the same footprint, a paper scrap instead of a face. */
+.loading { background: var(--plop-paper); border-style: dashed; border-color: color-mix(in srgb, var(--plop-ink) 45%, transparent); box-shadow: none; overflow: hidden; }
 .sm { --as: 36px; }
 .lg { --as: 76px; }
 .xl { --as: 86px; }

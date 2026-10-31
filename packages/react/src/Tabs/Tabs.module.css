@@ -50,3 +50,5 @@
   .tab:not([data-plop-motion="full"] *) { transition-duration: 0.01ms; }
 }
 [data-plop-motion="reduce"] .tab { transition-duration: 0.01ms; }
+
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

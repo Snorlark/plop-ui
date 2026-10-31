@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import { Avatar } from "../Avatar/Avatar.js";
 import { Buddy } from "../Buddy/Buddy.js";
 import { useHaptics } from "../hooks/useHaptics.js";
@@ -9,6 +9,7 @@ import { cx } from "../internal/cx.js";
 import { Marked } from "../internal/Marked.js";
 import { Tag } from "../Tag/Tag.js";
 import type { TagTone } from "../Tag/types.js";
+import { SpinnerMark } from "../Spinner/Spinner.js";
 import styles from "./SearchField.module.css";
 
 export type SearchLead = ReactNode | { avatar: string } | { dot: TagTone };
@@ -317,11 +318,7 @@ export function SearchField({
           </span>
         )}
         {busy && text ? (
-          <span className={styles.dots} aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
+          <SpinnerMark kind="dots" className={styles.dots} style={{ "--sp-size": "18px" } as CSSProperties} />
         ) : (
           text && (
             <button

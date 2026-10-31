@@ -17,6 +17,15 @@ function Links() {
                 <Link href={l.href} aria-current={path === l.href ? "page" : undefined}>
                   {l.label}
                 </Link>
+                {l.sub && (
+                  <ul className="doc-nav__sub">
+                    {l.sub.map((x) => (
+                      <li key={x.href}>
+                        <Link href={x.href}>{x.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>

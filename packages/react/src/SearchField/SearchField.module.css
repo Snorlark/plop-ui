@@ -49,11 +49,7 @@
 .clear:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 2px; }
 .clear svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; }
 
-.dots { flex: none; display: inline-flex; gap: 4px; margin-right: 8px; color: var(--plop-ink); }
-.dots i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: hop 0.7s var(--plop-ease-squish) infinite; }
-.dots i:nth-child(2) { animation-delay: 0.12s; }
-.dots i:nth-child(3) { animation-delay: 0.24s; }
-@keyframes hop { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+.dots { margin-right: 8px; color: var(--plop-ink); }
 
 /* the results sheet, taped under the field */
 .pop {

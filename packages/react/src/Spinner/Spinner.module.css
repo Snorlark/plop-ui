@@ -1,0 +1,100 @@
+/*
+ * Hand-drawn loading. Lines draw in currentColor; fills and motion from PlopUI tokens.
+ * Performance: every looping animation here is a transform or opacity on an HTML box (or a whole <svg>),
+ * so the compositor runs it and the main thread does no style, layout or paint work per frame.
+ * Never animate stroke-dash*, SVG children or filters in this file.
+ */
+.root { display: inline-flex; align-items: center; gap: 0.55em; vertical-align: middle; }
+.label { font-family: var(--plop-font-body); font-size: 0.95em; color: inherit; }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---- dots: three ink blobs that hop, stretch on the way up and squash when they land ---- */
+.hops { display: inline-flex; align-items: flex-end; gap: calc(var(--s) * 0.1); height: var(--s); }
+.dot { position: relative; display: block; width: calc(var(--s) * 0.34); height: 100%; }
+.blob {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  width: calc(var(--s) * 0.3 * var(--d, 1));
+  aspect-ratio: 1;
+  margin-left: calc(var(--s) * -0.15 * var(--d, 1));
+  background: currentColor;
+  transform-origin: 50% 100%;
+  animation: hop 0.84s infinite;
+  animation-delay: calc(var(--i) * 0.13s);
+}
+.dot .ground, .flip .ground {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 0;
+  height: 10%;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.2;
+}
+@keyframes hop {
+  0% { transform: translateY(0) scale(1.3, 0.72); animation-timing-function: var(--plop-ease-spring); }
+  14% { transform: translateY(0) scale(1, 1); animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
+  44% { transform: translateY(-110%) scale(0.86, 1.16); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  68% { transform: translateY(0) scale(1.3, 0.72); animation-timing-function: var(--plop-ease-spring); }
+  82%, 100% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes shrink {
+  0%, 14%, 68%, 100% { transform: scaleX(1); opacity: 0.22; }
+  44% { transform: scaleX(0.45); opacity: 0.08; }
+}
+
+/* ---- scribble: a pen writes a line of loops, then it's rubbed out from the start ---- */
+/* A stop-motion flipbook: 21 drawings on one strip, stepped through a window at about 10 frames a second. */
+.pen { position: relative; display: block; width: calc(var(--s) * 1.7); height: calc(var(--s) * 1.06); overflow: hidden; }
+.penStrip { display: flex; width: calc(100% * 21); height: 100%; animation: flipbook 2.1s steps(21, end) infinite; }
+.penStrip svg { flex: none; width: calc(100% / 21); height: 100%; }
+.penStrip path { fill: none; stroke: currentColor; stroke-width: 4.4; stroke-linecap: round; stroke-linejoin: round; }
+.tip { fill: currentColor; }
+@keyframes flipbook { to { transform: translateX(-100%); } }
+
+/* ---- sticker: a die-cut star flipped like a coin; paper back, squash on landing ---- */
+.flip { position: relative; display: block; width: var(--s); height: var(--s); perspective: calc(var(--s) * 4); rotate: var(--tilt, 0deg); }
+.coin { position: absolute; inset: 0 0 16%; transform-style: preserve-3d; animation: flip 1.6s infinite; }
+.face { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.back { transform: rotateY(180deg); }
+/* A drawn offset shadow, not a filter: filters inside a 3D flip re-raster every frame. */
+.drop { fill: var(--plop-shadow); stroke: var(--plop-shadow); stroke-width: 18; stroke-linejoin: round; }
+.cut { fill: var(--plop-paper); stroke: var(--plop-paper); stroke-width: 18; stroke-linejoin: round; }
+.shape { fill: var(--fill, var(--plop-mustard)); stroke: var(--plop-ink); stroke-width: 6; stroke-linejoin: round; }
+.shine { fill: none; stroke: var(--plop-paper); stroke-width: 5; stroke-linecap: round; opacity: 0.85; }
+.flip .ground { left: 18%; right: 18%; height: 9%; animation: shrink 1.6s infinite; }
+@keyframes flip {
+  0% { transform: translateY(0) rotateY(0deg) scale(1.16, 0.84); animation-timing-function: var(--plop-ease-spring); }
+  14% { transform: translateY(0) rotateY(0deg) scale(1, 1); animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
+  44% { transform: translateY(-30%) rotateY(180deg) scale(1, 1); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  68% { transform: translateY(0) rotateY(360deg) scale(1.16, 0.84); animation-timing-function: var(--plop-ease-spring); }
+  82%, 100% { transform: translateY(0) rotateY(360deg) scale(1, 1); }
+}
+
+/* ---- buddy: Hum rocks back and forth, thinking it over ---- */
+.hum { display: block; width: calc(var(--s) * 1.5); transform-origin: 50% 100%; animation: mull 1.8s ease-in-out infinite; }
+.hum svg { width: 100%; height: auto; }
+/* Hum's own thought-bubble pulse animates SVG children (main-thread work); the rocking is enough here. */
+.hum svg * { animation: none; }
+@keyframes mull {
+  0%, 100% { transform: rotate(-6deg); }
+  45% { transform: rotate(5deg) translateY(-4%); }
+  55% { transform: rotate(5deg) translateY(-4%) scale(1.03, 0.97); }
+}
+
+/* ---- reduced motion: hold the drawing still (the ink loop and the three fading dots live in ink.module.css) ---- */
+@keyframes fade { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  :is(.blob, .ground, .penStrip, .coin, .hum):not([data-plop-motion="full"] *) { animation: none; }
+  .penStrip:not([data-plop-motion="full"] *) { transform: translateX(calc(-100% * 13 / 21)); }
+  .blob:not([data-plop-motion="full"] *) { animation: fade 1.2s ease-in-out infinite; animation-delay: calc(var(--i) * 0.2s); }
+}
+[data-plop-motion="reduce"] :is(.blob, .ground, .penStrip, .coin, .hum) { animation: none; }
+[data-plop-motion="reduce"] .penStrip { transform: translateX(calc(-100% * 13 / 21)); }
+[data-plop-motion="reduce"] .blob { animation: fade 1.2s ease-in-out infinite; animation-delay: calc(var(--i) * 0.2s); }
+
+/* `delay`: stay invisible a moment, so quick loads never flash a spinner. */
+.delayed > * { animation: appear 0.18s ease-out var(--sp-delay) both; }
+@keyframes appear { from { opacity: 0; } }

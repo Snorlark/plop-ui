@@ -87,11 +87,7 @@
 .boxTick { stroke-width: 3.6; stroke-dasharray: 34; stroke-dashoffset: 34; transition: stroke-dashoffset 0.28s var(--plop-ease-squish); }
 .opt[aria-selected="true"] .boxTick { stroke-dashoffset: 0; }
 
-.dots { flex: none; display: inline-flex; gap: 4px; color: var(--plop-ink); }
-.dots i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: hop 0.7s var(--plop-ease-squish) infinite; }
-.dots i:nth-child(2) { animation-delay: 0.12s; }
-.dots i:nth-child(3) { animation-delay: 0.24s; }
-@keyframes hop { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+.dots { color: var(--plop-ink); }
 
 .msg { display: flex; line-height: 1.4; gap: 6px; align-items: flex-start; margin: 8px 0 0; font-family: var(--plop-font-body); font-size: 14px; color: var(--plop-on-soft); }
 .msg svg { flex: none; width: 18px; height: 18px; }

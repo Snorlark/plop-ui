@@ -1,0 +1,34 @@
+/* A marker ring that fills from the top. Colors and motion from PlopUI tokens. */
+.root { position: relative; display: inline-grid; place-items: center; width: var(--rs, 88px); height: var(--rs, 88px); flex: none; }
+.root svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.track, .fill, .tick { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+/* The pencil guideline under the ink: dotted and faint. */
+.track { stroke: var(--plop-on, var(--plop-ink)); stroke-width: 3.4; stroke-dasharray: 0.5 6; opacity: 0.4; }
+.fill { stroke: var(--rc); stroke-width: 9; stroke-dasharray: 100 100; transition: stroke-dashoffset 0.6s var(--plop-ease-spring); }
+[data-plop-filters] .fill { filter: url(#plop-wob1); }
+.tick { stroke: var(--rc); stroke-width: 7; stroke-dasharray: 1 1; stroke-dashoffset: 1; opacity: 0; }
+.value {
+  position: relative;
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-heading);
+  font-size: calc(var(--rs, 88px) * 0.22);
+  line-height: 1;
+  color: var(--plop-on, var(--plop-ink));
+  transition: opacity 0.2s, transform 0.3s var(--plop-ease-spring);
+}
+/* Done: the number steps aside and a tick is drawn in, once. */
+.done .value { opacity: 0; transform: scale(0.6); }
+.done .tick { opacity: 1; animation: draw 0.45s 0.15s var(--plop-ease-squish) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.ink { --rc: var(--plop-ink); }
+.mint { --rc: var(--plop-leaf); }
+.tomato { --rc: var(--plop-tomato); }
+
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *) :is(.fill, .value) { transition-duration: 0.01ms; }
+  .done:not([data-plop-motion="full"] *) .tick { animation: none; stroke-dashoffset: 0; }
+}
+[data-plop-motion="reduce"] .root :is(.fill, .value) { transition-duration: 0.01ms; }
+[data-plop-motion="reduce"] .done .tick { animation: none; stroke-dashoffset: 0; }
