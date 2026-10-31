@@ -1,4 +1,4 @@
-/* Styles for the docs pages' live demos (Buddy, the Loading page, the page-loader dialog) and the docs sidebar's sub-links. Imported only where it's used, so other pages don't download or wait on it (#67). */
+/* Styles for the docs pages' live demos (Buddy, the Loading page, the page-loader dialog). Imported only where it's used, so other pages don't download or wait on it (#67). */
 
 /* ---------- Buddy docs demo ---------- */
 .buddy-cast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 20px; margin: 0; padding: 0; list-style: none; }
@@ -63,9 +63,6 @@
   .load-actions { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .load-land { animation: none; } }
-/* Sections of a page under its sidebar link (the Loading page). */
-.doc-nav .doc-nav__sub { margin: 2px 0 6px 12px; padding-left: 10px; border-left: 2px dashed color-mix(in srgb, var(--plop-ink) 30%, transparent); gap: 0; }
-.doc-nav .doc-nav__sub a { font-size: 14px; padding-top: 2px; padding-bottom: 2px; }
 .doc-props--fold { margin-bottom: 8px; }
 .doc-props--fold > summary { width: fit-content; padding: 8px 16px; cursor: pointer; border: 2px solid var(--plop-ink); border-radius: 12px 9px 13px 10px; background: var(--plop-paper); color: var(--plop-ink-text); font-size: 15px; }
 .doc-props--fold > summary:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }

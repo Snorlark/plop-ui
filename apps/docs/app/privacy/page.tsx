@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { GITHUB } from "../_site/nav";
 import { SiteFooter } from "../_site/SiteFooter";
 import { SiteHeader } from "../_site/SiteHeader";
+import { pageMeta } from "../_site/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Privacy",
   description: "PlopUI's docs site has no accounts, no analytics and no tracking. Here's the little it keeps on your device, and why.",
-};
+  path: "/privacy",
+});
 
 /** What the site keeps on the visitor's device. Keep this in step with the code when a new key is added. */
 const STORED: Array<[string, string]> = [

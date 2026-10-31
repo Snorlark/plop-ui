@@ -23,6 +23,8 @@
     "dist"
   ],
   "keywords": [
+    "plop-ui",
+    "plopui",
     "react",
     "ui",
     "components",
@@ -34,7 +36,10 @@
     "whimsical",
     "design-system",
     "accessible",
-    "nextjs"
+    "nextjs",
+    "ui-kit",
+    "react-component-library",
+    "hand-drawn-ui"
   ],
   "repository": {
     "type": "git",

@@ -298,3 +298,14 @@ html[data-tear]::view-transition-old(root) {
 .changelog__list p { margin: 0; }
 .changelog__tags { display: inline-flex; flex-wrap: wrap; gap: 8px; vertical-align: middle; }
 .changelog h2 .changelog__tags { margin-left: 10px; font-size: 16px; }
+
+/* Sections of a page under its sidebar link (the Loading page). */
+.doc-nav .doc-nav__sub { margin: 2px 0 6px 12px; padding-left: 10px; border-left: 2px dashed color-mix(in srgb, var(--plop-ink) 30%, transparent); gap: 0; }
+.doc-nav .doc-nav__sub a { font-size: 14px; padding-top: 2px; padding-bottom: 2px; }
+/* A page with sections: its link plus a small fold toggle (IconButton). Folded lists are [hidden], so their links stay in the HTML. */
+.doc-nav .doc-nav__row { display: flex; align-items: center; gap: 2px; }
+.doc-nav .doc-nav__toggle { display: inline-flex; flex: none; transform: scale(0.72); transform-origin: left center; }
+.doc-nav .doc-nav__toggle svg { transform: rotate(-90deg); transition: transform 0.22s var(--plop-ease-spring); }
+.doc-nav .doc-nav__toggle[data-open] svg { transform: none; }
+.doc-nav .doc-nav__sub[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .doc-nav .doc-nav__toggle svg { transition: none; } }

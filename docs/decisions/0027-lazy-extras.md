@@ -1,4 +1,4 @@
-# 0026: Optional extras load on demand
+# 0027: Optional extras load on demand
 
 Measured with production Vite builds (React external, gzip): a plain Button cost 7.7 kB. Of that, 23% was all six Buddy drawings, kept for the optional `buddy` prop, and 20% the opt-in click particles. Select and SearchField pulled in the whole Spinner and every Buddy for their busy dots (#67).
 

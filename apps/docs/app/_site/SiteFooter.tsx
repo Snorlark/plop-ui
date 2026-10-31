@@ -67,8 +67,8 @@ export function SiteFooter() {
             <Wordmark size={96} />
           </Link>
           <p className={styles.tagline}>
-            Hand-drawn React UI components, imperfect on purpose. They break the visual rulebook, never the accessibility one: WCAG AA
-            and server-rendered with Next.js.
+            PlopUI (also written Plop UI or plop-ui) is a hand-drawn React UI component library, imperfect on purpose. It breaks the
+            visual rulebook, never the accessibility one: WCAG AA and server-rendered with Next.js.
           </p>
         </div>
         <nav className={styles.cols} aria-label="Footer">
