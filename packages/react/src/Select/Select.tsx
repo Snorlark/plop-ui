@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import { Avatar, type AvatarStatus } from "../Avatar/Avatar.js";
 import { useHaptics } from "../hooks/useHaptics.js";
 import { useSound } from "../hooks/useSound.js";
 import { ErrorIcon } from "../icons.js";
 import { cx } from "../internal/cx.js";
 import { Marked } from "../internal/Marked.js";
+import { Skeleton } from "../Skeleton/Skeleton.js";
+import { SpinnerMark } from "../Spinner/Spinner.js";
 import { Tag } from "../Tag/Tag.js";
 import type { TagTone } from "../Tag/types.js";
 import styles from "./Select.module.css";
@@ -46,7 +48,7 @@ interface SelectBaseProps {
   error?: ReactNode;
   /** Greys out the trigger so the list can't be opened. */
   disabled?: boolean;
-  /** Hop dots instead of the chevron, and the trigger waits (aria-busy) until options arrive. */
+  /** While options are on their way: a skeleton line in the trigger, hopping dots instead of the chevron, and the trigger waits (aria-busy, can't open). */
   loading?: boolean;
   /** Extra class on the field wrapper. */
   className?: string;
@@ -253,6 +255,15 @@ function SelectCore({
     );
   }
 
+  if (loading) {
+    value = (
+      <>
+        <Skeleton width="62%" height={12} seed={`${id}-sk`} />
+        <span className={styles.vh}>, loading options</span>
+      </>
+    );
+  }
+
   let group: string | undefined;
   return (
     <div ref={root} className={cx(styles.root, styles[size], open && styles.open, error ? styles.error : undefined, className)}>
@@ -282,11 +293,7 @@ function SelectCore({
       >
         <span className={styles.value}>{value}</span>
         {loading ? (
-          <span className={styles.dots} aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
+          <SpinnerMark kind="dots" className={styles.dots} style={{ "--sp-size": "18px" } as CSSProperties} />
         ) : (
           <Chevron />
         )}

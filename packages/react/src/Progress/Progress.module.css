@@ -40,6 +40,10 @@
   background: var(--pc);
   transform: rotate(6deg);
 }
+/* Unknown length: a band of hatching sweeps across. It moves by transform, so the compositor runs it. */
+.indeterminate .track { overflow: hidden; }
+.indeterminate .fill { right: auto; width: 36%; transition: none; animation: sweep 1.5s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite; }
+@keyframes sweep { from { transform: translateX(-105%); } to { transform: translateX(290%); } }
 .ink { --pc: var(--plop-ink); }
 .mint { --pc: var(--plop-leaf); }
 .tomato { --pc: var(--plop-tomato); }
@@ -47,5 +51,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .fill:not([data-plop-motion="full"] *) { transition-duration: 0.01ms; }
+  .indeterminate .fill:not([data-plop-motion="full"] *) { width: calc(100% - 8px); animation: pulse 1.6s ease-in-out infinite; }
 }
 [data-plop-motion="reduce"] .fill { transition-duration: 0.01ms; }
+[data-plop-motion="reduce"] .indeterminate .fill { width: calc(100% - 8px); animation: pulse 1.6s ease-in-out infinite; }
+/* Reduced motion: the whole bar breathes instead of sweeping. Opacity only. */
+@keyframes pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.8; } }

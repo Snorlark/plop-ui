@@ -1,0 +1,47 @@
+/* A spinner with manners. Colors and motion from PlopUI tokens. */
+.inline { display: grid; justify-items: start; gap: 12px; color: var(--plop-on, var(--plop-ink)); }
+
+/* The slow note: a torn strip of mustard paper with a Cancel button. Empty (and invisible) until it's slow. */
+.slow:empty { display: none; }
+.slow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  max-width: 46ch;
+  padding: 10px 14px 16px;
+  background: var(--plop-mustard);
+  color: var(--plop-ink-text);
+  font-family: var(--plop-font-body);
+  font-size: var(--plop-text-sm, 15px);
+  line-height: 1.35;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), 94% 100%, 86% calc(100% - 5px), 76% 100%, 66% calc(100% - 5px), 56% 100%, 46% calc(100% - 6px), 36% 100%, 26% calc(100% - 5px), 16% 100%, 7% calc(100% - 4px), 0 100%);
+  rotate: -0.6deg;
+  animation: slap 0.4s var(--plop-ease-spring) both;
+}
+@keyframes slap { from { opacity: 0; transform: translateY(-6px) scale(1.04); } }
+
+/* card: a taped Sheet of paper for a whole page or panel, printed on dots, lines, kraft or plain paper */
+.card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(420px, 100%);
+  padding: 40px 28px 28px;
+  background-color: var(--plop-paper);
+  color: var(--plop-ink-text);
+  text-align: center;
+}
+.dots { background-image: radial-gradient(color-mix(in srgb, var(--plop-ink) 26%, transparent) 1.2px, transparent 1.7px); background-size: 12px 12px; }
+.lined { background-image: linear-gradient(90deg, transparent 26px, color-mix(in srgb, var(--plop-tomato) 45%, transparent) 26px 28px, transparent 28px), repeating-linear-gradient(transparent 0 27px, color-mix(in srgb, var(--plop-periwinkle) 70%, transparent) 27px 28px); }
+.kraft { background-color: color-mix(in srgb, var(--plop-paper-back) 85%, var(--plop-mustard)); background-image: radial-gradient(color-mix(in srgb, var(--plop-ink-text) 16%, transparent) 1px, transparent 1.4px); background-size: 7px 7px; }
+.close { position: absolute; top: 10px; right: 10px; }
+.title { margin: 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: var(--plop-weight-heading); font-size: 26px; line-height: 1.1; color: var(--plop-ink); }
+.tip { min-height: 2.7em; margin: 0; font-family: var(--plop-font-body); font-size: 16px; color: var(--plop-ink-soft); animation: tip 0.35s ease-out both; }
+@keyframes tip { from { opacity: 0; transform: translateY(4px); } }
+.card .slow { justify-content: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.slow, .tip):not([data-plop-motion="full"] *) { animation: none; }
+}
+[data-plop-motion="reduce"] :is(.slow, .tip) { animation: none; }

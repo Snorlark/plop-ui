@@ -116,3 +116,7 @@
 .stickyFoot { display: block; margin-top: 14px; font-family: var(--plop-font-body); font-size: 16px; color: var(--plop-ink-text); }
 .pink { --note: var(--plop-bubblegum); }
 .mint { --note: var(--plop-mint); }
+
+/* Loading cards: words become paper scraps; the card keeps its shape. */
+.loadingLines { flex: 1; display: grid; gap: 8px; min-width: 120px; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
