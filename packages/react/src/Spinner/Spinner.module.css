@@ -1,30 +1,31 @@
-/* Hand-drawn loading. Lines draw in currentColor; fills and motion from PlopUI tokens. */
+/*
+ * Hand-drawn loading. Lines draw in currentColor; fills and motion from PlopUI tokens.
+ * Performance: every looping animation here is a transform or opacity on an HTML box (or a whole <svg>),
+ * so the compositor runs it and the main thread does no style, layout or paint work per frame.
+ * Never animate stroke-dash*, SVG children or filters in this file.
+ */
 .root { display: inline-flex; align-items: center; gap: 0.55em; vertical-align: middle; }
 .label { font-family: var(--plop-font-body); font-size: 0.95em; color: inherit; }
 .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 .mark { --s: var(--sp-size, 1.25em); position: relative; display: inline-flex; align-items: center; gap: calc(var(--s) * 0.12); flex: none; line-height: 0; }
-.ink, .flip { width: var(--s); height: var(--s); }
 .mark svg { display: block; overflow: visible; }
 
-/* The boil: three drawings of the same line, swapped like flipbook frames. */
-.frame { opacity: 0; animation: boil 0.42s linear infinite; }
-.frame:nth-child(2) { animation-delay: -0.14s; }
-.frame:nth-child(3) { animation-delay: -0.28s; }
-@keyframes boil { 0%, 33.3% { opacity: 1; } 33.4%, 100% { opacity: 0; } }
-
-/* ---- ink: a marker loop that chases itself ---- */
-.ring { width: 100%; height: 100%; animation: spin 1.15s linear infinite; }
+/* ---- ink: a marker arc surging round a boiling pencil guideline ---- */
+.ring { position: relative; display: block; width: var(--s); height: var(--s); }
 .track, .arc { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
-/* The pencil guideline it traces over: dashed and faint, like a sketch under the ink. */
+/* The pencil guideline it traces over: dotted and faint, like a sketch under the ink. */
 .track { stroke-width: 3; stroke-dasharray: 0.5 5.5; opacity: 0.45; }
-.arc { stroke-width: 6.4; stroke-dasharray: 8 92; animation: chase 1.5s var(--plop-ease-squish) infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes chase {
-  0% { stroke-dasharray: 6 94; stroke-dashoffset: 0; }
-  50% { stroke-dasharray: 48 52; stroke-dashoffset: -16; }
-  100% { stroke-dasharray: 6 94; stroke-dashoffset: -100; }
-}
+.arc { stroke-width: 6.4; stroke-dasharray: 30 70; }
+/* The boil: three drawings on one strip, stepped through a window like flipbook frames. */
+.window { position: absolute; inset: -8%; overflow: hidden; }
+.strip { display: flex; width: 300%; height: 100%; animation: boil 0.42s steps(3, end) infinite; }
+.strip svg { flex: none; width: calc(100% / 3); height: 100%; }
+@keyframes boil { to { transform: translateX(-100%); } }
+/* One turn with a little push and drag in it, like a hand going round a circle. */
+.spin { position: absolute; inset: 0; display: block; animation: turn 1s cubic-bezier(0.4, 0.15, 0.45, 0.85) infinite; }
+.spin svg { width: 100%; height: 100%; }
+@keyframes turn { to { transform: rotate(360deg); } }
 
 /* ---- dots: three ink blobs that hop, stretch on the way up and squash when they land ---- */
 .hops { display: inline-flex; align-items: flex-end; gap: calc(var(--s) * 0.1); height: var(--s); }
@@ -51,7 +52,6 @@
   background: currentColor;
   opacity: 0.2;
 }
-.dot .ground { animation: shrink 0.84s infinite; animation-delay: calc(var(--i) * 0.13s); }
 @keyframes hop {
   0% { transform: translateY(0) scale(1.3, 0.72); animation-timing-function: var(--plop-ease-spring); }
   14% { transform: translateY(0) scale(1, 1); animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
@@ -64,22 +64,22 @@
   44% { transform: scaleX(0.45); opacity: 0.08; }
 }
 
-/* ---- scribble: a pen writes a line of loops, then rubs it out from the start ---- */
-.pen { width: calc(var(--s) * 1.7); height: auto; }
-.pen .frame { fill: none; stroke: currentColor; stroke-width: 4.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100 100; animation: boil 0.42s linear infinite, write 2s ease-in-out infinite; }
-.pen .frame:nth-child(2) { animation-delay: -0.14s, 0s; }
-.pen .frame:nth-child(3) { animation-delay: -0.28s, 0s; }
-@keyframes write {
-  0% { stroke-dashoffset: 100; }
-  55% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: -100; }
-}
+/* ---- scribble: a pen writes a line of loops, then it's rubbed out from the start ---- */
+/* A stop-motion flipbook: 21 drawings on one strip, stepped through a window at about 10 frames a second. */
+.pen { position: relative; display: block; width: calc(var(--s) * 1.7); height: calc(var(--s) * 1.06); overflow: hidden; }
+.penStrip { display: flex; width: calc(100% * 21); height: 100%; animation: flipbook 2.1s steps(21, end) infinite; }
+.penStrip svg { flex: none; width: calc(100% / 21); height: 100%; }
+.penStrip path { fill: none; stroke: currentColor; stroke-width: 4.4; stroke-linecap: round; stroke-linejoin: round; }
+.tip { fill: currentColor; }
+@keyframes flipbook { to { transform: translateX(-100%); } }
 
 /* ---- sticker: a die-cut star flipped like a coin; paper back, squash on landing ---- */
-.flip { position: relative; display: block; perspective: calc(var(--s) * 4); rotate: var(--tilt, 0deg); }
+.flip { position: relative; display: block; width: var(--s); height: var(--s); perspective: calc(var(--s) * 4); rotate: var(--tilt, 0deg); }
 .coin { position: absolute; inset: 0 0 16%; transform-style: preserve-3d; animation: flip 1.6s infinite; }
-.face { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; filter: drop-shadow(1px 2px 0 var(--plop-shadow)); }
+.face { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .back { transform: rotateY(180deg); }
+/* A drawn offset shadow, not a filter: filters inside a 3D flip re-raster every frame. */
+.drop { fill: var(--plop-shadow); stroke: var(--plop-shadow); stroke-width: 18; stroke-linejoin: round; }
 .cut { fill: var(--plop-paper); stroke: var(--plop-paper); stroke-width: 18; stroke-linejoin: round; }
 .shape { fill: var(--fill, var(--plop-mustard)); stroke: var(--plop-ink); stroke-width: 6; stroke-linejoin: round; }
 .shine { fill: none; stroke: var(--plop-paper); stroke-width: 5; stroke-linecap: round; opacity: 0.85; }
@@ -95,6 +95,8 @@
 /* ---- buddy: Hum rocks back and forth, thinking it over ---- */
 .hum { display: block; width: calc(var(--s) * 1.5); transform-origin: 50% 100%; animation: mull 1.8s ease-in-out infinite; }
 .hum svg { width: 100%; height: auto; }
+/* Hum's own thought-bubble pulse animates SVG children (main-thread work); the rocking is enough here. */
+.hum svg * { animation: none; }
 @keyframes mull {
   0%, 100% { transform: rotate(-6deg); }
   45% { transform: rotate(5deg) translateY(-4%); }
@@ -109,19 +111,13 @@
 @keyframes fade { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .mark:not([data-plop-motion="full"] *) :is(.ring, .arc, .frame, .blob, .ground, .coin, .hum) { animation: none; }
-  .mark:not([data-plop-motion="full"] *) .frame:not(:first-child) { opacity: 0; }
-  .mark:not([data-plop-motion="full"] *) .frame:first-child { opacity: 1; }
-  .mark:not([data-plop-motion="full"] *) .arc { stroke-dasharray: 34 66; }
-  .mark:not([data-plop-motion="full"] *) .pen .frame { stroke-dashoffset: 0; }
+  .mark:not([data-plop-motion="full"] *) :is(.strip, .spin, .blob, .ground, .penStrip, .coin, .hum) { animation: none; }
+  .mark:not([data-plop-motion="full"] *) .penStrip { transform: translateX(calc(-100% * 13 / 21)); }
   .mark:not([data-plop-motion="full"] *) .blob { animation: fade 1.2s ease-in-out infinite; animation-delay: calc(var(--i) * 0.2s); }
   .mark:not([data-plop-motion="full"] *):not(.dots) .rest { display: inline-flex; }
 }
-[data-plop-motion="reduce"] .mark :is(.ring, .arc, .frame, .blob, .ground, .coin, .hum) { animation: none; }
-[data-plop-motion="reduce"] .mark .frame:not(:first-child) { opacity: 0; }
-[data-plop-motion="reduce"] .mark .frame:first-child { opacity: 1; }
-[data-plop-motion="reduce"] .mark .arc { stroke-dasharray: 34 66; }
-[data-plop-motion="reduce"] .mark .pen .frame { stroke-dashoffset: 0; }
+[data-plop-motion="reduce"] .mark :is(.strip, .spin, .blob, .ground, .penStrip, .coin, .hum) { animation: none; }
+[data-plop-motion="reduce"] .mark .penStrip { transform: translateX(calc(-100% * 13 / 21)); }
 [data-plop-motion="reduce"] .mark .blob { animation: fade 1.2s ease-in-out infinite; animation-delay: calc(var(--i) * 0.2s); }
 [data-plop-motion="reduce"] .mark:not(.dots) .rest { display: inline-flex; }
 

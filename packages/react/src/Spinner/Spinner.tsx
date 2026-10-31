@@ -47,8 +47,8 @@ export function inkLoop(value: Seed): string {
   return smooth(pts);
 }
 
-/** A run of cursive loops ("eee"), the line a pen makes while it thinks. */
-export function scribbleLine(value: Seed): string {
+/** Points along a run of cursive loops ("eee"), the line a pen makes while it thinks. */
+function scribblePoints(value: Seed): Array<[number, number]> {
   const rnd = seeded(value);
   const pts: Array<[number, number]> = [];
   const loops = 3;
@@ -58,7 +58,38 @@ export function scribbleLine(value: Seed): string {
     // A prolate cycloid: rolling forward slower than it turns makes the loops.
     pts.push([12 + 2.6 * t - 9 * Math.sin(t) + (rnd() - 0.5) * 1.2, 26 - 12 * Math.cos(t) + (rnd() - 0.5) * 1.2]);
   }
-  return smooth(pts);
+  return pts;
+}
+
+/** The whole scribble as one path. */
+export function scribbleLine(value: Seed): string {
+  return smooth(scribblePoints(value));
+}
+
+/** Frames of the scribble flipbook: the pen writes it stroke by stroke, holds, then it's rubbed out from the start. */
+const WRITE = 12;
+const HOLD = 3;
+const ERASE = 6;
+export const SCRIBBLE_FRAMES = WRITE + HOLD + ERASE;
+
+/** One drawing per frame, each redrawn with its own wobble, like stop-motion on paper. `tip` is where the pen is. */
+export function scribbleFrames(value: Seed): Array<{ d: string; tip?: [number, number] }> {
+  const frames: Array<{ d: string; tip?: [number, number] }> = [];
+  for (let f = 0; f < SCRIBBLE_FRAMES; f++) {
+    const pts = scribblePoints(`${value}:${f % 3}`);
+    const last = pts.length - 1;
+    if (f < WRITE) {
+      const end = Math.max(2, Math.round(((f + 1) / WRITE) * last));
+      const part = pts.slice(0, end + 1);
+      frames.push({ d: smooth(part), tip: part[part.length - 1] });
+    } else if (f < WRITE + HOLD) {
+      frames.push({ d: smooth(pts) });
+    } else {
+      const start = Math.round(((f - WRITE - HOLD + 1) / (ERASE + 1)) * last);
+      frames.push({ d: smooth(pts.slice(start)) });
+    }
+  }
+  return frames;
 }
 
 export interface SpinnerProps {
@@ -105,17 +136,24 @@ export function SpinnerMark({ kind = "ink", seed, tone = "mustard", className, s
       </span>
     );
   } else if (kind === "scribble") {
+    // A flipbook: every frame is its own drawing on one strip, stepped through a window (one transform).
     art = (
-      <svg className={styles.pen} viewBox="0 0 80 50">
-        {frames.map((f) => (
-          <path key={f} className={styles.frame} d={scribbleLine(`${s}:${f}`)} pathLength={100} />
-        ))}
-      </svg>
+      <span className={styles.pen}>
+        <span className={styles.penStrip}>
+          {scribbleFrames(s).map((fr, i) => (
+            <svg key={i} viewBox="0 0 80 50">
+              <path d={fr.d} />
+              {fr.tip && <circle className={styles.tip} cx={fr.tip[0]} cy={fr.tip[1]} r={3.6} />}
+            </svg>
+          ))}
+        </span>
+      </span>
     );
   } else if (kind === "sticker") {
     const d = DOODLE_PATHS.star;
     const face = (back: boolean) => (
       <svg className={cx(styles.face, back && styles.back)} viewBox="-10 -10 120 120">
+        <path className={styles.drop} d={d} transform="translate(4 6)" />
         <path className={styles.cut} d={d} />
         <path className={styles.shape} d={d} style={back ? { fill: "var(--plop-paper-back)" } : undefined} />
         {!back && <path className={styles.shine} d="M34 42 C 38 36, 44 33, 50 32" />}
@@ -137,18 +175,25 @@ export function SpinnerMark({ kind = "ink", seed, tone = "mustard", className, s
       </span>
     );
   } else {
+    // The pencil guideline boils: three drawings side by side on one strip, stepped through a window like a
+    // flipbook. The ink arc surges round on one rotation. Two compositor animations, nothing else moves.
     art = (
-      <svg className={styles.ring} viewBox="0 0 50 50">
-        {frames.map((f) => {
-          const d = inkLoop(`${s}:${f}`);
-          return (
-            <g key={f} className={styles.frame}>
-              <path className={styles.track} d={d} />
-              <path className={styles.arc} d={d} pathLength={100} />
-            </g>
-          );
-        })}
-      </svg>
+      <span className={styles.ring}>
+        <span className={styles.window}>
+          <span className={styles.strip}>
+            {frames.map((f) => (
+              <svg key={f} viewBox="-4 -4 58 58">
+                <path className={styles.track} d={inkLoop(`${s}:${f}`)} />
+              </svg>
+            ))}
+          </span>
+        </span>
+        <span className={styles.spin}>
+          <svg viewBox="0 0 50 50">
+            <path className={styles.arc} d={inkLoop(s)} pathLength={100} />
+          </svg>
+        </span>
+      </span>
     );
   }
 

@@ -69,3 +69,14 @@ export const InAButton: Story = {
     </div>
   ),
 };
+
+/** 300 spinners at once, for checking they stay off the main thread (see apps/docs/e2e/loading.spec.ts). */
+export const Stress: Story = {
+  render: () => (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+      {Array.from({ length: 300 }, (_, i) => (
+        <Spinner key={i} kind={KINDS[i % KINDS.length]} size={i % 3 === 0 ? "lg" : "md"} label={`Loading ${i}`} seed={i} />
+      ))}
+    </div>
+  ),
+};
