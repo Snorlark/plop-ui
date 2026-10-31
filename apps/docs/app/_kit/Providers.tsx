@@ -125,8 +125,9 @@ export function useFeedback(): Feedback {
   return ctx;
 }
 
+type TearTransition = { finished: Promise<void>; skipTransition: () => void };
 type ViewTransitionDocument = Document & {
-  startViewTransition?: (update: () => void) => { finished: Promise<void>; skipTransition: () => void };
+  startViewTransition?: (update: () => void) => TearTransition;
 };
 
 /**
@@ -161,19 +162,38 @@ export function useSurfaceSwitch() {
       swapped = true;
       flushSync(() => setSurface(next));
     };
-    const vt = doc.startViewTransition(swap);
-    // WebKit sometimes stalls a transition before its snapshot and never runs the swap (seen on CI):
-    // after a second, skip the tear and swap anyway, so the switch always works.
-    const stall = window.setTimeout(() => {
-      if (swapped) return;
-      vt.skipTransition();
-      swap();
-    }, 1000);
+    let stall = 0;
+    let release = 0;
     const done = () => {
       window.clearTimeout(stall);
+      window.clearTimeout(release);
       html.removeAttribute("data-tear");
       busy.current = false;
     };
+    let vt: TearTransition;
+    try {
+      vt = doc.startViewTransition(swap);
+    } catch {
+      // WebKit can refuse to start a transition at all: switch without the tear.
+      swap();
+      done();
+      return;
+    }
+    // WebKit sometimes stalls a transition before its snapshot and never runs the swap (seen on CI).
+    // The tear takes 0.8s, so after a second skip it and swap anyway. skipTransition() can throw on a
+    // stalled transition, which used to stop the swap and leave the switch dead.
+    stall = window.setTimeout(() => {
+      if (swapped) return;
+      try {
+        vt.skipTransition();
+      } catch {
+        // Already finished or refused: the swap below still lands.
+      }
+      swap();
+      done();
+    }, 1000);
+    // If `finished` never settles, the switch would stay busy and ignore every later press.
+    release = window.setTimeout(done, 2500);
     vt.finished.then(done, done);
   }, [surface, setSurface, reduced, haptics, sound]);
 }

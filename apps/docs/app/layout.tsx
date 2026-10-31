@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { Providers, SURFACE_SCRIPT } from "./_kit/Providers";
 import { GITHUB } from "./_site/nav";
 import { SITE_DESCRIPTION, SITE_URL } from "./_site/site";
+import { HOME_TITLE, JSON_LD } from "./_site/meta";
 import { RideAlong } from "./_site/RideAlong";
 import { SiteFilters } from "./_site/Wordmark";
 import { patrickHand, sketchpop } from "./fonts";
@@ -14,27 +15,14 @@ import { OffscreenPause } from "./_site/OffscreenPause";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "PlopUI — hand-drawn UI, imperfect on purpose", template: "%s · PlopUI" },
+  title: { default: HOME_TITLE, template: "%s · PlopUI" },
   description: SITE_DESCRIPTION,
   applicationName: "PlopUI",
   authors: [{ name: "Lark Sigmuond Babao", url: GITHUB }],
-  keywords: ["React UI library", "React components", "hand-drawn UI", "Next.js", "accessible components", "playful UI", "design system", "sticker UI"],
+  keywords: ["PlopUI", "Plop UI", "plop-ui", "React UI library", "React components", "hand-drawn UI", "Next.js", "accessible components", "playful UI", "design system", "sticker UI"],
   // Shared previews on X, Slack, Discord, LinkedIn: the image is app/opengraph-image.png.
-  openGraph: { type: "website", siteName: "PlopUI", title: "PlopUI — hand-drawn UI, imperfect on purpose", description: SITE_DESCRIPTION },
-  twitter: { card: "summary_large_image", title: "PlopUI — hand-drawn UI, imperfect on purpose", description: SITE_DESCRIPTION },
-};
-
-/** Tells search engines what PlopUI is (schema.org). */
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareSourceCode",
-  name: "PlopUI",
-  description: SITE_DESCRIPTION,
-  url: SITE_URL,
-  codeRepository: GITHUB,
-  license: `${GITHUB}/blob/main/LICENSE`,
-  programmingLanguage: ["TypeScript", "React"],
-  author: { "@type": "Person", name: "Lark Sigmuond Babao" },
+  openGraph: { type: "website", siteName: "PlopUI", title: HOME_TITLE, description: SITE_DESCRIPTION },
+  twitter: { card: "summary_large_image", title: HOME_TITLE, description: SITE_DESCRIPTION },
 };
 
 /**
