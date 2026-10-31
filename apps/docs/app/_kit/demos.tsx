@@ -3,7 +3,6 @@
 import { BuddyDemo } from "./BuddyDemo";
 import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
-import { SpinnerDemo } from "./SpinnerDemo";
 import {
   Avatar,
   AvatarStack,
@@ -17,7 +16,6 @@ import {
   InfoIcon,
   PhoneIcon,
   PinIcon,
-  Progress,
   Radio,
   RadioGroup,
   Sheet,
@@ -46,7 +44,6 @@ import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Swit
 const DEMOS: Record<string, () => ReactNode> = {
   buddy: () => <BuddyDemo />,
   search: () => <SearchDemo />,
-  spinner: () => <SpinnerDemo />,
   select: () => <SelectDemo />,
   menu: () => <MenuDemo />,
   "word-sticker": () => (
@@ -151,13 +148,6 @@ const DEMOS: Record<string, () => ReactNode> = {
         <EmptyState>Nothing flagged. Flag a sketch to come back to it here.</EmptyState>
       </TabPanel>
     </Tabs>
-  ),
-  progress: () => (
-    <div className="stack" style={{ gap: 28, maxWidth: 560 }}>
-      <Progress label="Syncing offline sketches" value={4} max={10} valueText="4 of 10" />
-      <Progress label="Pages inked" value={7} max={9} valueText="7 of 9" tone="mint" />
-      <Progress label="Response time target" value={92} valueText="92% used" tone="tomato" solid />
-    </div>
   ),
   callout: () => (
     <div className="stack" style={{ gap: 18 }}>

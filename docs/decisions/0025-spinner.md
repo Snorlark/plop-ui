@@ -1,11 +1,11 @@
-# 0025: Spinner
+# 0025: Loading (Spinner, Progress, Skeleton, Loader)
 
-A hand-drawn `Spinner` for short waits (issue #74), from the loading reference sheet, redrawn to match the kit.
+Issue #74 asked for a Spinner. Built from the loading reference sheet, redrawn to match the kit, it grew into one Loading page.
 
-- Five kinds, one default. `ink` is a marker loop that starts inside, drifts out and overshoots its start, so it never closes neatly. It chases itself over a dashed pencil guideline. `dots` hop, stretch and squash, with a shadow that shrinks as they rise. `scribble` writes cursive loops and rubs them out. `sticker` flips a die-cut star like a coin and shows its paper back. `buddy` is Hum, rocking while thinking.
-- The lines boil: each line is drawn three times from `seed()` and swapped like flipbook frames with CSS only. No JS timers, so it stays a Server Component.
-- Lines draw in `currentColor`, so it works on ink, in a Card, or tinted by a parent. Only the sticker's fill takes a `tone`.
-- `role="status"` with a label (default "Loading"); the drawing is `aria-hidden`. `delay` hides it for a moment, so quick loads don't flash.
-- Reduced motion: the drawing holds still on one frame and three dots fade (opacity only). There is no spin and no hop.
-- `Button loading` now shows `SpinnerMark` (the drawing without the status role), since the Button already announces with `aria-busy` and its own label.
-- Progress rings, skeletons and the slow-state message from the reference are left for #75.
+- **Spinner** comes in five kinds. `ink` (default) is a marker arc surging round a dotted pencil guideline that never closes neatly. `dots` hop, stretch and squash. `scribble` is a stop-motion flipbook: the pen writes cursive loops stroke by stroke, holds, and they're rubbed out. `sticker` is a die-cut star flipped like a coin, with a paper back. `buddy` is Hum rocking while thinking. Lines draw in `currentColor`; wobble comes from `seed()`.
+- **Performance rule:** every looping animation is a transform or opacity change on an HTML box or a whole `<svg>`, so the compositor runs it. The "boil" is several drawings on one strip, stepped through a window like flipbook frames. No stroke-dash, SVG-child or filter animations. The first version animated stroke-dash on SVG paths: 300 spinners ran at 9 fps. Now they hold the same frame rate as an idle page. `e2e/loading.spec.ts` checks the rule on `/lab/loading`.
+- **Progress** gains `indeterminate`, a hatching band that sweeps by transform. **ProgressRing** traces a lumpy marker circle from the top and draws a tick at 100%.
+- **Skeleton / SkeletonText** are hand-cut paper scraps (seeded corners, line lengths), `aria-hidden`; the region gets `aria-busy`. The shimmer is one transform per scrap.
+- **Loader** is a spinner with manners: after `slowAfter` it says the wait is slow and offers Cancel. The `card` variant is a taped `Sheet` on dots, lined, kraft or plain paper, with Hum, rotating tips and an optional close button, so a whole-page wait can always be left. `useDelayedLoading` avoids flicker on quick loads.
+- **Docs:** Spinner, Progress and Skeleton share one Loading page with four sections, linked from the sidebar. `/docs/components/progress`, `/spinner` and `/skeleton` redirect to those sections.
+- **Reduced motion:** drawings hold still, three dots fade, the sweep becomes a slow fade, and the shimmer stops.

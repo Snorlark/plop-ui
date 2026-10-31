@@ -290,35 +290,43 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     dont: "Use it for a form wizard. It shows where something is, not where you are.",
     a11y: ["An <ol> with aria-current=\"step\" on the current step.", "Each step's status is written in text (\"done\", \"current step\", \"not started\").", "A Server Component: no client JavaScript."],
   },
-  progress: {
-    title: "Progress",
+  loading: {
+    title: "Loading states",
     group: "Feedback",
-    badges: ["Server Component", AA, V01],
-    lede: "Filled with crayon hatching instead of a flat bar. The leading edge is a single heavier stroke.",
-    code: `import { Progress } from "@plop-ui/react";
-
-<Progress label="Syncing offline sketches" value={4} max={10} valueText="4 of 10" />
-<Progress label="Response time target" value={92} valueText="92% used" tone="tomato" solid />`,
-    tables: [{ of: "Progress" }],
-    do: "Show the real count next to the bar: \"4 of 10\".",
-    dont: "Use a progress bar for things that aren't going anywhere. That's a meter.",
-    a11y: ["role=\"progressbar\" with value, min, max and a readable aria-valuetext.", "Labeled by its visible label."],
-  },
-  spinner: {
-    title: "Spinner",
-    group: "Feedback",
-    badges: ["Server Component", AA, "New"],
-    lede: "Loading, drawn by hand. The ink loop never closes neatly, the dots squash when they land, the sticker flips like a coin, and every line boils like a flipbook. It takes the color around it.",
-    code: `import { Button, Spinner } from "@plop-ui/react";
+    badges: ["Server Components", AA, "New"],
+    lede: "Spinners, progress, skeletons and the in-between states nobody designs until it's too late. Drawn by hand, honest about time, quiet for screen readers and still under reduced motion.",
+    code: `import { Button, Loader, Progress, ProgressRing, Skeleton, SkeletonText, Spinner, useDelayedLoading } from "@plop-ui/react";
 
 <Spinner label="Loading sketches" />
 <Spinner kind="dots" showLabel label="Saving your board" />
-<Spinner kind="sticker" tone="bubblegum" size="lg" delay={300} />
-<Button loading={isSending} loadingLabel="Sending">Send report</Button>`,
-    tables: [{ of: "Spinner" }],
-    do: "Show it for waits under a few seconds, after a short delay so quick loads don't flash. Use Progress when you know how far along it is.",
-    dont: "Spin forever in silence. After a few seconds, say what's slow and offer a way out.",
-    a11y: ["role=\"status\" with the label read out once; the drawing is aria-hidden.", "Never takes focus. Inside a loading Button, the Button keeps focus and sets aria-busy.", "Reduced motion: the drawing holds still and three dots fade instead of spinning."],
+<Button loading={isSending} loadingLabel="Sending">Send report</Button>
+
+<Progress label="Syncing reports" value={4} max={10} valueText="4 of 10" />
+<Progress label="Finding the closest unit" indeterminate />
+<ProgressRing label="Uploading photos" value={64} />
+
+<section aria-busy={isLoading}>{isLoading ? <SkeletonText lines={3} /> : <Note />}</section>
+
+// Built in: one prop, no custom CSS.
+<TicketCard loading title="" />
+<Select label="Brush" options={[]} loading />
+<Avatar name="Rosa Santos" loading />
+<TabPanel value="drafts" loading />
+
+<Loader label="Loading the crew" slowAfter={4000} onCancel={stop} />
+<Loader variant="card" paper="dots" label="Pressing your page" onClose={close} />
+const showSpinner = useDelayedLoading(isPending);`,
+    tables: [{ of: "Spinner" }, { of: "Progress" }, { of: "ProgressRing" }, { of: "Skeleton" }, { of: "SkeletonText" }, { of: "Loader" }, { of: "TabPanel" }],
+    do: "Under 300 ms show nothing (useDelayedLoading). Up to a few seconds, a spinner. A second or more for a layout, skeletons. When you know how far along it is, Progress. Past a few seconds, say why and offer Cancel.",
+    dont: "Spin forever in silence, or trap someone in a full-page wait with no way out.",
+    a11y: [
+      "Spinner is role=\"status\" with its label read out once; every drawing is aria-hidden.",
+      "Progress and ProgressRing are role=\"progressbar\" with value, min, max and aria-valuetext; indeterminate bars leave the value out.",
+      "Skeletons are aria-hidden: put aria-busy=\"true\" on the region that's loading and drop it when the content lands.",
+      "Loader's slow note is its own status, read out when it appears; Cancel and Close are real buttons.",
+      "Buttons keep their size and focus while loading and set aria-busy.",
+      "Every loop is a transform or opacity change the compositor runs, so a page full of loaders stays smooth. Under reduced motion drawings hold still and three dots fade.",
+    ],
   },
   callout: {
     title: "Callout",

@@ -1,6 +1,8 @@
 import {
   ArrowDownIcon,
   Avatar,
+  Skeleton,
+  SpinnerMark,
   AvatarStack,
   ButtonLink,
   Callout,
@@ -18,7 +20,7 @@ import {
 } from "@plop-ui/react";
 import { color, surfaceNames, surfaces } from "@plop-ui/tokens";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { CopyCommand } from "./CopyCommand";
 import { Hand, Scribble, Tape } from "./Doodles";
 import { PaperStack } from "./PaperStack";
@@ -568,10 +570,35 @@ const GRID: Array<{
     ),
   },
   {
-    slug: "progress",
+    slug: "loading#progress",
     title: "Progress",
     text: "Filled with crayon hatching; the leading edge is one heavier stroke.",
     preview: <span className="grid-fake-progress" />,
+  },
+  {
+    slug: "loading#spinners",
+    title: "Spinner",
+    text: "A marker loop that never closes neatly, hopping dots, a coin-flip sticker. Waits with manners.",
+    preview: (
+      <span style={{ display: "inline-flex", gap: 22, alignItems: "center", color: "var(--plop-ink)" }}>
+        <SpinnerMark style={{ "--sp-size": "38px" } as CSSProperties} seed="home-ink" />
+        <SpinnerMark kind="sticker" style={{ "--sp-size": "38px" } as CSSProperties} seed="home-star" />
+      </span>
+    ),
+  },
+  {
+    slug: "loading#skeletons",
+    title: "Skeleton",
+    text: "Hand-cut paper scraps that hold the place of what's loading.",
+    preview: (
+      <span style={{ display: "flex", gap: 12, alignItems: "center", width: "80%" }}>
+        <Skeleton shape="circle" width={40} height={40} seed="home-a" />
+        <span style={{ flex: 1, display: "grid", gap: 8 }}>
+          <Skeleton height={12} width="90%" seed="home-1" />
+          <Skeleton height={12} width="60%" seed="home-2" />
+        </span>
+      </span>
+    ),
   },
 ];
 
