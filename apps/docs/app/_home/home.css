@@ -314,24 +314,3 @@
 }
 /* The crowd's face drawings, referenced by <use>; takes no space. */
 .home-crowd__sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
-
-/* Below-the-fold home sections skip layout and paint until they're near the screen, so the first paint
-   only lays out the hero (#67). The reserved heights are measured; `auto` remembers the real one after
-   the first render. PaperStack (sticky, sheets fly out) and the letter (scroll-driven drift) are left out. */
-:is(#why, .home-pieces, .home-components, .home-surfaces) { content-visibility: auto; }
-#why { contain-intrinsic-size: auto 1150px; }
-.home-pieces { contain-intrinsic-size: auto 1200px; }
-.home-components { contain-intrinsic-size: auto 1570px; }
-.home-surfaces { contain-intrinsic-size: auto 520px; }
-@media (max-width: 900px) {
-  #why { contain-intrinsic-size: auto 1500px; }
-  .home-pieces { contain-intrinsic-size: auto 1500px; }
-  .home-components { contain-intrinsic-size: auto 2080px; }
-  .home-surfaces { contain-intrinsic-size: auto 570px; }
-}
-@media (max-width: 560px) {
-  #why { contain-intrinsic-size: auto 2470px; }
-  .home-pieces { contain-intrinsic-size: auto 2500px; }
-  .home-components { contain-intrinsic-size: auto 3420px; }
-  .home-surfaces { contain-intrinsic-size: auto 970px; }
-}
