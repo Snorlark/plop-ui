@@ -1,0 +1,79 @@
+/* Styles for the docs pages' live demos (Buddy, the Loading page, the page-loader dialog). Imported only where it's used, so other pages don't download or wait on it (#67). */
+
+/* ---------- Buddy docs demo ---------- */
+.buddy-cast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 20px; margin: 0; padding: 0; list-style: none; }
+.buddy-cast li { display: grid; justify-items: center; gap: 4px; text-align: center; font-size: 15px; color: var(--plop-ink-soft); }
+.buddy-cast strong { font-style: italic; text-transform: uppercase; letter-spacing: .04em; color: var(--plop-ink); }
+.buddy-cast code { font-family: var(--plop-font-mono); font-size: 12px; color: var(--plop-ink-text); }
+.buddy-attached { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 28px 34px; }
+@media (max-width: 640px) { .buddy-cast { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* The Spinner page's whole-page loader demo: a native modal dialog holding a Loader card. */
+.demo-overlay { width: min(440px, calc(100vw - 32px)); max-width: none; border: 0; padding: 14px 0 0; background: transparent; overflow: visible; }
+.demo-overlay > * { width: 100%; }
+.demo-overlay::backdrop { background: color-mix(in srgb, var(--plop-bg, var(--plop-paper)) 78%, transparent); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+
+/* ---- The Loading page: four taped sheets (spinners, progress, skeletons, in context) ---- */
+.load { display: grid; gap: 48px; margin-top: 8px; }
+.load-jump { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+.load-jump a { padding: 6px 14px; border: 2px solid var(--plop-ink); border-radius: 999px 900px 950px 980px; color: var(--plop-ink-text); background: var(--plop-paper); font-style: italic; font-weight: 700; font-size: 14px; letter-spacing: .03em; text-transform: uppercase; text-decoration: none; }
+.load-jump a:hover { background: var(--plop-mustard); }
+.load-jump a:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }
+.load-sec { scroll-margin-top: calc(var(--header-offset, 0px) + 24px); }
+.load-sheet { display: grid; gap: 26px; background: var(--plop-paper); color: var(--plop-ink-text); }
+.load-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 14px 24px; }
+.load-h { margin: 0 0 4px; font-style: italic; font-weight: 900; font-size: clamp(26px, 4vw, 34px); line-height: 1.05; color: var(--plop-ink); }
+.load-hint { margin: 0; max-width: 56ch; font-size: 17px; color: var(--plop-ink-soft); }
+.load-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.load-kinds { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
+.load-kinds li { display: grid; justify-items: center; align-content: end; gap: 6px; min-height: 132px; padding: 14px 8px 12px; border: 2px dashed color-mix(in srgb, var(--plop-ink) 22%, transparent); border-radius: 14px 10px 15px 11px; text-align: center; color: var(--plop-ink); }
+.load-kinds li > :first-child { margin-bottom: auto; }
+.load-kinds b { font-style: italic; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; color: var(--plop-ink); }
+.load-kinds small, .load-tile small { font-size: 14px; line-height: 1.3; color: var(--plop-ink-soft); }
+.load-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; color: var(--plop-ink); }
+.load-onink { display: inline-flex; padding: 8px 14px; background: var(--plop-ink); color: var(--plop-on-ink); border-radius: 14px 10px 15px 11px; }
+.load-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 26px 34px; align-items: start; }
+.load-stack { display: grid; gap: 22px; }
+.load-ringstep { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
+.load-ringstep > :last-child { flex: 1 1 210px; min-width: 0; }
+.load-card { display: grid; padding: 4px 16px; border: 2.5px solid var(--plop-ink); border-radius: 16px 12px 18px 13px; background: var(--plop-paper); }
+.load-person { display: flex; align-items: center; gap: 14px; min-height: 76px; padding: 10px 0; }
+.load-person + .load-person { border-top: 2px dashed color-mix(in srgb, var(--plop-ink) 22%, transparent); }
+.load-lines { flex: 1; min-width: 0; display: grid; gap: 8px; }
+.load-lines b { color: var(--plop-ink-text); }
+.load-lines span { color: var(--plop-ink-soft); }
+.load-ticket { display: grid; gap: 10px; padding: 18px; border: 2.5px dashed color-mix(in srgb, var(--plop-ink) 30%, transparent); border-radius: 14px 12px 15px 11px; }
+.load-land { animation: load-land .45s var(--plop-ease-spring) both; }
+@keyframes load-land { from { opacity: 0; transform: translateY(8px) rotate(-1deg); } }
+.load-ctx { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+.load-tile { display: grid; align-content: start; gap: 12px; padding: 16px; border: 2px dashed color-mix(in srgb, var(--plop-ink) 22%, transparent); border-radius: 14px 10px 15px 11px; }
+.load-tile > b { font-style: italic; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; color: var(--plop-ink); }
+.load-upload { display: flex; align-items: center; gap: 12px; }
+.load-upload > :last-child { flex: 1; min-width: 0; }
+.load-file { display: grid; place-items: center; flex: none; width: 42px; height: 52px; border: 2.5px solid var(--plop-ink); border-radius: 4px 12px 4px 4px; background: var(--plop-paper); color: var(--plop-tomato-text); font-style: italic; font-weight: 900; font-size: 12px; }
+.load-code summary { width: fit-content; cursor: pointer; font-style: italic; font-weight: 700; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--plop-ink); }
+.load-code summary:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }
+.load-code pre { margin: 12px 0 0; padding: 14px 16px; overflow-x: auto; background: color-mix(in srgb, var(--plop-ink) 6%, var(--plop-paper)); border: 2px solid var(--plop-ink); border-radius: 12px 9px 13px 10px; font-family: var(--plop-font-mono); font-size: 13.5px; line-height: 1.6; color: var(--plop-ink-text); }
+@media (max-width: 560px) {
+  .load { gap: 40px; }
+  .load-sheet { gap: 20px; }
+  .load-kinds { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .load-kinds li { min-height: 104px; padding: 10px 4px; }
+  .load-kinds small { display: none; }
+  .load-actions { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .load-land { animation: none; } }
+.doc-props--fold { margin-bottom: 8px; }
+.doc-props--fold > summary { width: fit-content; padding: 8px 16px; cursor: pointer; border: 2px solid var(--plop-ink); border-radius: 12px 9px 13px 10px; background: var(--plop-paper); color: var(--plop-ink-text); font-size: 15px; }
+.doc-props--fold > summary:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }
+.doc-props--fold[open] > summary { margin-bottom: 12px; background: var(--plop-mustard); }
+.load-when { list-style: none; margin: 18px 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 30px 20px; }
+.load-when__card { height: 100%; display: grid; align-content: start; gap: 6px; padding: 34px 20px 20px !important; background: var(--plop-paper); color: var(--plop-ink-text); background-image: radial-gradient(color-mix(in srgb, var(--plop-ink) 18%, transparent) 1.1px, transparent 1.6px); background-size: 12px 12px; }
+.load-when__what { font-style: italic; font-weight: 900; font-size: 24px; color: var(--plop-ink); text-decoration: none; }
+.load-when__what:hover { text-decoration: underline wavy; text-underline-offset: 5px; }
+.load-when__what:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }
+.load-when__time { font-style: italic; font-weight: 700; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--plop-ink-soft); }
+.load-when p { margin: 4px 0 0; font-size: 16px; line-height: 1.45; }
+/* "Which one?" sits on the page, not on paper: use the site's ink so it reads on the cutting mat too. */
+.load-sec > .load-h { color: var(--site-ink, var(--plop-ink)); }
+.load-sec > .load-hint { color: var(--site-soft, var(--plop-ink-soft)); max-width: 70ch; }

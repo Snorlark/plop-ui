@@ -13,6 +13,8 @@ export interface AvatarProps {
   src?: string;
   /** Face size: sm 36px, md 52px, lg 76px, xl 86px. Default `md`. */
   size?: "sm" | "md" | "lg" | "xl";
+  /** Draw the face from an `AvatarSymbol` with this href (e.g. "#face-rosa") instead of inline. For crowds of repeated faces. */
+  faceHref?: string;
   /** Still on its way: a paper scrap the same size and shape, read out as "Loading". `name` may be empty. */
   loading?: boolean;
   /** A status dot. Its meaning is added to the accessible name ("Jun Reyes, online"). */
@@ -31,8 +33,8 @@ const mix = (c: string, pct: number) => `color-mix(in srgb, var(--plop-${c}) ${p
 const SPOTS = ["var(--plop-bubblegum)", "var(--plop-mustard)", "var(--plop-tomato)", "var(--plop-mint)", mix("periwinkle", 80)];
 const BACKS = [mix("bubblegum", 35), mix("mustard", 30), mix("mint", 35), mix("periwinkle", 35), mix("tomato", 18)];
 
-/** The doodle face for a name: same name, same face, on server and client. */
-function Face({ name }: { name: string }) {
+/** The doodle face's drawing for a name: same name, same face, on server and client. */
+function FaceArt({ name }: { name: string }) {
   const h = hashString(name);
   const spot = SPOTS[(h >>> 3) % SPOTS.length] as string;
   const top = (h >>> 11) % 6;
@@ -89,7 +91,7 @@ function Face({ name }: { name: string }) {
     <ellipse cx="34" cy="42" rx="2" ry="2.5" fill={INK} />,
   ];
   return (
-    <svg viewBox="2 2 56 56" aria-hidden="true">
+    <>
       <path d="M30 15 C 42 15, 48 23, 47 34 C 46 45, 39 51, 29 51 C 19 51, 12 44, 12 33 C 12 22, 18 15, 30 15 Z" fill={PAPER} stroke={INK} strokeWidth="3" strokeLinejoin="round" />
       <path d="M13 31 C 6 28, 5 40, 13 41" {...line} fill={PAPER} />
       <path d="M11 34 C 9 35, 9.5 37, 11.5 38" fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round" />
@@ -109,7 +111,31 @@ function Face({ name }: { name: string }) {
           <path d="M33 32.5 L 34 32.3 M23 32 L 15 30" />
         </g>
       )}
+    </>
+  );
+}
+
+const FACE_BOX = "2 2 56 56";
+
+/** The doodle face for a name, as an svg. */
+function Face({ name }: { name: string }) {
+  return (
+    <svg viewBox={FACE_BOX} aria-hidden="true">
+      <FaceArt name={name} />
     </svg>
+  );
+}
+
+/**
+ * A name's face drawn once as an SVG `<symbol>`, for pages that repeat the same faces many times (a crowd).
+ * Put these in a hidden `<svg>`, then point Avatars at them with `faceHref`: each Avatar becomes a few
+ * elements instead of a whole drawing.
+ */
+export function AvatarSymbol({ name, id }: { name: string; id: string }) {
+  return (
+    <symbol id={id} viewBox={FACE_BOX}>
+      <FaceArt name={name} />
+    </symbol>
   );
 }
 
@@ -119,7 +145,7 @@ const STATUS_WORDS: Record<AvatarStatus, string> = { online: "online", busy: "bu
  * A doodle face generated from a name, so the same person always gets the
  * same face. Real photos can drop in with `src`.
  */
-export function Avatar({ name, src, size = "md", status, statusLabel, tilt = 0, loading = false, className }: AvatarProps) {
+export function Avatar({ name, src, size = "md", status, statusLabel, tilt = 0, loading = false, faceHref, className }: AvatarProps) {
   if (loading) {
     return (
       <span className={cx(styles.root, styles.loading, size !== "md" && styles[size], className)} role="img" aria-label={name ? `Loading ${name}` : "Loading"} aria-busy="true">
@@ -136,7 +162,15 @@ export function Avatar({ name, src, size = "md", status, statusLabel, tilt = 0, 
       role="img"
       aria-label={label}
     >
-      {src ? <img className={styles.photo} src={src} alt="" /> : <Face name={name} />}
+      {src ? (
+        <img className={styles.photo} src={src} alt="" />
+      ) : faceHref ? (
+        <svg viewBox={FACE_BOX} aria-hidden="true">
+          <use href={faceHref} />
+        </svg>
+      ) : (
+        <Face name={name} />
+      )}
       {status && <span className={cx(styles.status, status !== "online" && styles[status])} aria-hidden="true" />}
     </span>
   );

@@ -9,7 +9,7 @@ import { cx } from "../internal/cx.js";
 import { Marked } from "../internal/Marked.js";
 import { Tag } from "../Tag/Tag.js";
 import type { TagTone } from "../Tag/types.js";
-import { SpinnerMark } from "../Spinner/Spinner.js";
+import { DotsMark } from "../Spinner/ink.js";
 import styles from "./SearchField.module.css";
 
 export type SearchLead = ReactNode | { avatar: string } | { dot: TagTone };
@@ -318,7 +318,7 @@ export function SearchField({
           </span>
         )}
         {busy && text ? (
-          <SpinnerMark kind="dots" className={styles.dots} style={{ "--sp-size": "18px" } as CSSProperties} />
+          <DotsMark className={styles.dots} style={{ "--sp-size": "18px" } as CSSProperties} />
         ) : (
           text && (
             <button

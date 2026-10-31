@@ -3,6 +3,8 @@
 import {
   type AnchorHTMLAttributes,
   type ElementType,
+  lazy,
+  Suspense,
   useCallback,
   useEffect,
   useRef,
@@ -16,11 +18,11 @@ import {
   type ReactNode,
   type Ref,
 } from "react";
-import { BuddyArt, type BuddyMood } from "../Buddy/Buddy.js";
+import type { BuddyMood } from "../Buddy/Buddy.js";
 import { InkMark } from "../Spinner/ink.js";
 import { useHaptics } from "../hooks/useHaptics.js";
 import { BURST_COLORS, BURST_PRESETS, isFailBurst, type BurstStyle } from "../InkBurst/burstStyles.js";
-import { useInkBurst } from "../InkBurst/useInkBurst.js";
+import { preloadInkBurst, useInkBurst } from "../InkBurst/useInkBurst.js";
 import { useReducedMotion } from "../hooks/useReducedMotion.js";
 import { useSound } from "../hooks/useSound.js";
 import { seededTilt, type Seed } from "../seed.js";
@@ -69,6 +71,16 @@ export interface StickerOwnProps {
 }
 
 export type StickerShadow = "soft" | "solid" | "stripes" | "outline" | "none";
+
+/** A sticker that bursts fetches the burst drawings while the page is idle, so its first press isn't late. */
+function useBurstPreload(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return;
+    const ric = typeof window.requestIdleCallback === "function";
+    const id = ric ? window.requestIdleCallback(() => void preloadInkBurst()) : window.setTimeout(() => void preloadInkBurst(), 200);
+    return () => (ric ? window.cancelIdleCallback(id) : window.clearTimeout(id));
+  }, [enabled]);
+}
 
 /** Resolves the `burst` prop to what actually flies out. */
 function burstFor(burst: StickerOwnProps["burst"], variant: StickerVariant): { colors: readonly string[]; style: BurstStyle } | null {
@@ -126,6 +138,7 @@ export function Sticker({
   const sound = useSound();
   const reduced = useReducedMotion();
   const inkBurst = useInkBurst();
+  useBurstPreload(!!burst);
   const [pressed, setPressed] = useState(false);
   const [released, setReleased] = useState(false);
   const [happy, setHappy] = useState(false);
@@ -244,6 +257,12 @@ export function Sticker({
 }
 
 
+/**
+ * The other characters for `buddyMood`. Pip (the default) is drawn right here in BuddyHead; the rest of the
+ * cast loads only when a sticker asks for one, so a plain Button doesn't ship six drawings (#67).
+ */
+const BuddyArt = lazy(() => import("../Buddy/Buddy.js").then((m) => ({ default: m.BuddyArt })));
+
 function StickerInner({ buddy, buddyMood, loading, loadingLabel, children }: { buddy: boolean | "peek"; buddyMood: BuddyMood; loading: boolean; loadingLabel: string; children: ReactNode }) {
   return (
     <>
@@ -253,7 +272,9 @@ function StickerInner({ buddy, buddyMood, loading, loadingLabel, children }: { b
           <BuddyHead />
         ) : (
           <span className={cx(styles.buddyHead, styles.buddyCast)} aria-hidden="true">
-            <BuddyArt mood={buddyMood} />
+            <Suspense fallback={null}>
+              <BuddyArt mood={buddyMood} />
+            </Suspense>
           </span>
         ))}
       <span className={styles.paper}>
@@ -321,6 +342,7 @@ export function StickerLink({
   const angle = tilt ?? seededTilt(autoSeed);
   const haptics = useHaptics();
   const inkBurst = useInkBurst();
+  useBurstPreload(!!burst);
   const [pressed, setPressed] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   useEffect(() => () => window.clearTimeout(timer.current), []);
