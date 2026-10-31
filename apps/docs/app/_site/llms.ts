@@ -8,6 +8,8 @@ const INTRO = `# PlopUI
 
 > ${SITE_DESCRIPTION}
 
+Also written Plop UI or plop-ui. Not related to Plop (plopjs.com), the code generator.
+
 Install: \`npm i @plop-ui/react @plop-ui/fonts\`, import \`@plop-ui/react/styles.css\` and \`@plop-ui/fonts/fonts.css\` once, and wrap the app in \`<PlopProvider>\`.
 Rules of thumb: every interactive component is a native element with keyboard support; color comes from CSS variables (\`--plop-*\`), never hex; status always carries a text label, never color alone. Source: ${GITHUB}
 `;
