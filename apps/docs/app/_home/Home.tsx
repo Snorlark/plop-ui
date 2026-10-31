@@ -61,7 +61,7 @@ function Hero() {
         <div className="home-hero__cta">
           <ButtonLink
             as={Link}
-            href="/docs/getting-started"
+            href="/docs/what-is-plopui"
             size="lg"
             tilt={-2}
             buddy="peek"

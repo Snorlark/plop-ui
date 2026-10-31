@@ -47,7 +47,7 @@ export const MENUS: Menu[] = [
     label: "Guides",
     href: "/docs/getting-started",
     cols: [
-      { title: "Get going", big: true, links: [["Installation", "/docs/getting-started"], ["Using with Next.js", "/docs/nextjs"], ["Surfaces & themes", "/docs/surfaces"], ["Accessibility", "/docs/accessibility"]] },
+      { title: "Get going", big: true, links: [["What is PlopUI?", "/docs/what-is-plopui"], ["Installation", "/docs/getting-started"], ["Using with Next.js", "/docs/nextjs"], ["Surfaces & themes", "/docs/surfaces"], ["Accessibility", "/docs/accessibility"]] },
       { title: "Design", links: [["Tokens & contrast", "/docs/tokens"], ["Hooks & onColor", "/docs/hooks"], ["Sheet & Heading", "/docs/components/sheet-heading"]] },
       { title: "Reference", links: [["PlopProvider", "/docs/components/provider"], ["Changelog", "/changelog"]] },
     ],
