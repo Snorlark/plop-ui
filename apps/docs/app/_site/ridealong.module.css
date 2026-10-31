@@ -63,11 +63,12 @@
   filter: drop-shadow(3px 4px 0 var(--plop-shadow)); rotate: -2deg;
   animation: pop var(--plop-duration-spring) var(--plop-ease-spring) both;
 }
-/* the tail, pointing down at the stub */
+/* the tail: a straight V pointing down at the buddy's head. A turned square with two inked sides;
+   its paper covers the bubble's border where they meet, so it reads as one line. */
 .hint::after {
-  content: ""; position: absolute; right: 30px; bottom: -10px; width: 14px; height: 12px;
+  content: ""; position: absolute; right: 40px; bottom: -8.5px; width: 13px; height: 13px;
   background: var(--plop-paper); border-right: 2.5px solid var(--plop-ink); border-bottom: 2.5px solid var(--plop-ink);
-  transform: skewX(-30deg); border-radius: 0 0 4px 0;
+  border-radius: 0 0 4px 0; transform: rotate(45deg);
 }
 .hintText {
   display: grid; align-content: center; min-height: 24px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-align: left;

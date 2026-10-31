@@ -38,14 +38,14 @@ test("Switch: clicking the knob's face toggles it once (Firefox and Safari used 
 });
 
 test("Docs: Preview/Code tabs switch with arrow keys", async ({ page }) => {
-  await page.goto("/docs/components/progress");
+  await page.goto("/docs/components/callout");
   // Retry: a key pressed before hydration does nothing on a slow runner.
   await expect(async () => {
     await page.getByRole("tab", { name: "Preview" }).focus();
     await page.keyboard.press("ArrowRight");
     await expect(page.getByRole("tab", { name: "Code" })).toHaveAttribute("aria-selected", "true", { timeout: 1000 });
   }).toPass();
-  await expect(page.getByRole("tabpanel", { name: "Code" })).toContainText("<Progress");
+  await expect(page.getByRole("tabpanel", { name: "Code" })).toContainText("<Callout");
 });
 
 test("Search: typing filters pages and Enter opens the first match", async ({ page }) => {

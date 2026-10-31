@@ -46,7 +46,7 @@ export function Search() {
       DOC_NAV.map((s) => ({
         id: s.group,
         label: s.group === "Getting started" ? "Docs" : s.group,
-        items: s.links.map((l) => ({ id: l.href, title: l.label, sub: l.href.startsWith("/docs/components/") ? "Component" : l.href, keywords: l.keywords, lead: l.href.startsWith("/docs/components/") ? <Sticker /> : <Doc /> })),
+        items: s.links.flatMap((l) => [l, ...(l.sub ?? []).map((x) => ({ ...x, label: `${l.label}: ${x.label}`, keywords: l.keywords }))]).map((l) => ({ id: l.href, title: l.label, sub: l.href.startsWith("/docs/components/") ? "Component" : l.href, keywords: l.keywords, lead: l.href.startsWith("/docs/components/") ? <Sticker /> : <Doc /> })),
       })),
     [],
   );

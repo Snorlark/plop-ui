@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { cx } from "../internal/cx.js";
 import { hashString } from "../seed.js";
+import { Skeleton } from "../Skeleton/Skeleton.js";
 import styles from "./Avatar.module.css";
 
 export type AvatarStatus = "online" | "busy" | "offline";
@@ -12,6 +13,8 @@ export interface AvatarProps {
   src?: string;
   /** Face size: sm 36px, md 52px, lg 76px, xl 86px. Default `md`. */
   size?: "sm" | "md" | "lg" | "xl";
+  /** Still on its way: a paper scrap the same size and shape, read out as "Loading". `name` may be empty. */
+  loading?: boolean;
   /** A status dot. Its meaning is added to the accessible name ("Jun Reyes, online"). */
   status?: AvatarStatus;
   /** Words for the status, e.g. "on a call". Default: online / busy / offline. */
@@ -116,7 +119,14 @@ const STATUS_WORDS: Record<AvatarStatus, string> = { online: "online", busy: "bu
  * A doodle face generated from a name, so the same person always gets the
  * same face. Real photos can drop in with `src`.
  */
-export function Avatar({ name, src, size = "md", status, statusLabel, tilt = 0, className }: AvatarProps) {
+export function Avatar({ name, src, size = "md", status, statusLabel, tilt = 0, loading = false, className }: AvatarProps) {
+  if (loading) {
+    return (
+      <span className={cx(styles.root, styles.loading, size !== "md" && styles[size], className)} role="img" aria-label={name ? `Loading ${name}` : "Loading"} aria-busy="true">
+        <Skeleton shape="circle" width="100%" height="100%" seed={`avatar-${name}`} />
+      </span>
+    );
+  }
   const h = hashString(name);
   const label = status ? `${name}, ${statusLabel ?? STATUS_WORDS[status]}` : name;
   return (

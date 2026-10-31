@@ -38,7 +38,7 @@ export const MENUS: Menu[] = [
         ],
       },
       { title: "Inputs", links: [["Switch", "/docs/components/switch"], ["Checkbox", "/docs/components/checkbox"], ["Radio group", "/docs/components/radio"], ["Text field", "/docs/components/text-field"]] },
-      { title: "Feedback", links: [["Toast", "/docs/components/toast"], ["Callout", "/docs/components/callout"], ["Progress", "/docs/components/progress"], ["Buddy", "/docs/components/buddy"]] },
+      { title: "Feedback", links: [["Toast", "/docs/components/toast"], ["Callout", "/docs/components/callout"], ["Loading", "/docs/components/loading"], ["Buddy", "/docs/components/buddy"]] },
     ],
     feature: { tape: "New", tone: "bubblegum", title: "Command palette", text: "⌘K search with grouped results, recents and the / shortcut.", href: "/docs/components/search", art: "palette" },
   },

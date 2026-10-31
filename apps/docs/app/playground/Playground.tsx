@@ -15,7 +15,13 @@ import {
   PinIcon,
   PlopProvider,
   PlusIcon,
+  Loader,
   Progress,
+  ProgressRing,
+  Skeleton,
+  SkeletonText,
+  Spinner,
+  type SpinnerKind,
   Radio,
   RadioGroup,
   SearchField,
@@ -222,15 +228,95 @@ const ENTRIES: Record<string, Entry> = {
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Syncing offline sketches" },
       { kind: "number", name: "value", label: "Value", default: 4, min: 0, max: 10, step: 1 },
+      { kind: "boolean", name: "indeterminate", label: "Unknown length (indeterminate)", default: false },
       { kind: "select", name: "tone", label: "Tone", options: ["ink", "mint", "tomato"], default: "ink" },
       { kind: "boolean", name: "solid", label: "Solid fill", default: false },
     ],
     render: (v) => (
       <div style={{ width: "min(520px, 100%)" }}>
-        <Progress label={s(v.label)} value={n(v.value)} max={10} valueText={`${n(v.value)} of 10`} tone={s(v.tone) as "ink"} solid={b(v.solid)} />
+        {b(v.indeterminate) ? (
+          <Progress label={s(v.label)} indeterminate tone={s(v.tone) as "ink"} solid={b(v.solid)} />
+        ) : (
+          <Progress label={s(v.label)} value={n(v.value)} max={10} valueText={`${n(v.value)} of 10`} tone={s(v.tone) as "ink"} solid={b(v.solid)} />
+        )}
       </div>
     ),
-    code: (v) => `<Progress label=${jsxAttr(v.label)} value={${n(v.value)}} max={10} valueText="${n(v.value)} of 10"${prop("tone", v.tone, "ink")}${prop("solid", v.solid, false)} />`,
+    code: (v) =>
+      b(v.indeterminate)
+        ? `<Progress label=${jsxAttr(v.label)} indeterminate${prop("tone", v.tone, "ink")}${prop("solid", v.solid, false)} />`
+        : `<Progress label=${jsxAttr(v.label)} value={${n(v.value)}} max={10} valueText="${n(v.value)} of 10"${prop("tone", v.tone, "ink")}${prop("solid", v.solid, false)} />`,
+  },
+  progressRing: {
+    label: "ProgressRing",
+    controls: [
+      { kind: "text", name: "label", label: "Label (read out)", default: "Uploading photos" },
+      { kind: "number", name: "value", label: "Value", default: 64, min: 0, max: 100, step: 1 },
+      { kind: "select", name: "size", label: "Size", options: SIZES, default: "md" },
+      { kind: "select", name: "tone", label: "Tone", options: ["ink", "mint", "tomato"], default: "ink" },
+    ],
+    render: (v) => <ProgressRing label={s(v.label)} value={n(v.value)} size={s(v.size) as "md"} tone={s(v.tone) as "ink"} />,
+    code: (v) => `<ProgressRing label=${jsxAttr(v.label)} value={${n(v.value)}}${prop("size", v.size, "md")}${prop("tone", v.tone, "ink")} />`,
+  },
+  spinner: {
+    label: "Spinner",
+    controls: [
+      { kind: "select", name: "kind", label: "Kind", options: ["ink", "dots", "scribble", "sticker", "buddy"], default: "ink" },
+      { kind: "select", name: "size", label: "Size", options: SIZES, default: "md" },
+      { kind: "text", name: "label", label: "Label", default: "Loading sketches" },
+      { kind: "boolean", name: "showLabel", label: "Show the label", default: false },
+      { kind: "select", name: "tone", label: "Sticker fill", options: ["mustard", "tomato", "mint", "bubblegum", "periwinkle"], default: "mustard" },
+      { kind: "number", name: "delay", label: "Delay (ms)", default: 0, min: 0, max: 1000, step: 100 },
+    ],
+    render: (v) => (
+      <Spinner key={n(v.delay)} kind={s(v.kind) as SpinnerKind} size={s(v.size) as "md"} label={s(v.label)} showLabel={b(v.showLabel)} tone={s(v.tone) as "mustard"} delay={n(v.delay)} />
+    ),
+    code: (v) =>
+      `<Spinner${prop("kind", v.kind, "ink")}${prop("size", v.size, "md")} label=${jsxAttr(v.label)}${prop("showLabel", v.showLabel, false)}${v.kind === "sticker" ? prop("tone", v.tone, "mustard") : ""}${prop("delay", v.delay, 0)} />`,
+  },
+  loader: {
+    label: "Loader",
+    controls: [
+      { kind: "select", name: "variant", label: "Variant", options: ["inline", "card"], default: "inline" },
+      { kind: "text", name: "label", label: "Label", default: "Loading the crew" },
+      { kind: "number", name: "slowAfter", label: "Slow after (ms)", default: 3000, min: 0, max: 10000, step: 500 },
+      { kind: "text", name: "slowMessage", label: "Slow message", default: "Taking longer than usual." },
+      { kind: "boolean", name: "cancel", label: "Cancel button", default: true },
+    ],
+    render: (v) => (
+      <Loader
+        key={`${s(v.variant)}-${n(v.slowAfter)}`}
+        variant={s(v.variant) as "inline"}
+        label={s(v.label)}
+        slowAfter={n(v.slowAfter)}
+        slowMessage={s(v.slowMessage)}
+        onCancel={b(v.cancel) ? () => toast("Stopped loading.") : undefined}
+        tips={s(v.variant) === "card" ? ["Sharpening the pencils.", "Checking the ink.", "Cutting the stickers out."] : undefined}
+      />
+    ),
+    code: (v) =>
+      `<Loader${prop("variant", v.variant, "inline")} label=${jsxAttr(v.label)}${prop("slowAfter", v.slowAfter, 4000)}${prop("slowMessage", v.slowMessage, "This is taking longer than usual.")}${b(v.cancel) ? " onCancel={stop}" : ""}${s(v.variant) === "card" ? ' tips={["Sharpening the pencils.", "Checking the ink."]}' : ""} />`,
+  },
+  skeleton: {
+    label: "Skeleton",
+    controls: [
+      { kind: "select", name: "layout", label: "Layout", options: ["row", "card", "text"], default: "row" },
+      { kind: "number", name: "lines", label: "Lines", default: 2, min: 1, max: 6, step: 1 },
+      { kind: "boolean", name: "animated", label: "Shimmer", default: true },
+    ],
+    render: (v) => (
+      <div style={{ width: "min(460px, 100%)", display: "flex", gap: 14, alignItems: "center", flexDirection: s(v.layout) === "card" ? "column" : "row" }}>
+        {s(v.layout) !== "text" && <Skeleton shape={s(v.layout) === "card" ? "block" : "circle"} animated={b(v.animated)} seed="pg-a" />}
+        <span style={{ flex: 1, width: "100%", display: "grid", gap: 10 }}>
+          {s(v.layout) !== "text" && <Skeleton shape="title" animated={b(v.animated)} seed="pg-t" />}
+          <SkeletonText lines={n(v.lines)} animated={b(v.animated)} seed="pg-l" />
+        </span>
+      </div>
+    ),
+    code: (v) => {
+      const anim = prop("animated", v.animated, true);
+      const lead = s(v.layout) === "text" ? "" : `  <Skeleton shape="${s(v.layout) === "card" ? "block" : "circle"}"${anim} />\n  <Skeleton shape="title"${anim} />\n`;
+      return `<div aria-busy="true">\n${lead}  <SkeletonText lines={${n(v.lines)}}${anim} />\n</div>`;
+    },
   },
   avatar: {
     label: "Avatar",

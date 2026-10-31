@@ -4,6 +4,7 @@ import { createContext, useContext, useId, useState, type KeyboardEvent, type Re
 import { useHaptics } from "../hooks/useHaptics.js";
 import { cx } from "../internal/cx.js";
 import { Lettering } from "../Lettering/Lettering.js";
+import { SkeletonText } from "../Skeleton/Skeleton.js";
 import styles from "./Tabs.module.css";
 
 interface TabsContext {
@@ -118,7 +119,19 @@ export function Tab({ value, children, badge, disabled }: TabProps) {
   );
 }
 
-export function TabPanel({ value, children, className }: { value: string; children: ReactNode; className?: string }) {
+export interface TabPanelProps {
+  /** Matches the Tab that shows it. */
+  value: string;
+  children?: ReactNode;
+  /** Still on its way: skeleton lines instead of the content, and `aria-busy`. The tabs keep working. */
+  loading?: boolean;
+  /** How many skeleton lines while loading. Default 3. */
+  loadingLines?: number;
+  /** Extra class on the panel. */
+  className?: string;
+}
+
+export function TabPanel({ value, children, loading = false, loadingLines = 3, className }: TabPanelProps) {
   const ctx = use("TabPanel");
   return (
     <div
@@ -128,8 +141,16 @@ export function TabPanel({ value, children, className }: { value: string; childr
       tabIndex={0}
       hidden={ctx.value !== value}
       className={cx(styles.panel, className)}
+      aria-busy={loading || undefined}
     >
-      {children}
+      {loading ? (
+        <>
+          <span className={styles.vh}>Loading</span>
+          <SkeletonText lines={loadingLines} seed={`${ctx.base}-${value}`} />
+        </>
+      ) : (
+        children
+      )}
     </div>
   );
 }
