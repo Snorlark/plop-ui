@@ -30,6 +30,7 @@ export { Sheet, type SheetProps } from "./Sheet/Sheet.js";
 export { Heading, type HeadingProps } from "./Heading/Heading.js";
 export { Lettering, type LetteringProps } from "./Lettering/Lettering.js";
 export { WordSticker, type WordStickerProps, type WordStickerTone } from "./WordSticker/WordSticker.js";
+export { Spinner, SpinnerMark, type SpinnerProps, type SpinnerKind, type SpinnerSize } from "./Spinner/Spinner.js";
 export { Doodle, DOODLE_PATHS, type DoodleProps, type DoodleKind, type DoodleTone } from "./Doodle/Doodle.js";
 export { useInkBurst } from "./InkBurst/useInkBurst.js";
 export { BURST_COLORS, BURST_PRESETS, BURST_STYLES, type BurstStyle } from "./InkBurst/burstStyles.js";

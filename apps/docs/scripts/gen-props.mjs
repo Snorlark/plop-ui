@@ -42,6 +42,7 @@ const COMPONENTS = {
   TabList: "TabListProps",
   Tab: "TabProps",
   Progress: "ProgressProps",
+  Spinner: "SpinnerProps",
   Callout: "CalloutProps",
   Count: "CountProps",
   StatusDot: "StatusDotProps",

@@ -304,6 +304,22 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     dont: "Use a progress bar for things that aren't going anywhere. That's a meter.",
     a11y: ["role=\"progressbar\" with value, min, max and a readable aria-valuetext.", "Labeled by its visible label."],
   },
+  spinner: {
+    title: "Spinner",
+    group: "Feedback",
+    badges: ["Server Component", AA, "New"],
+    lede: "Loading, drawn by hand. The ink loop never closes neatly, the dots squash when they land, the sticker flips like a coin, and every line boils like a flipbook. It takes the color around it.",
+    code: `import { Button, Spinner } from "@plop-ui/react";
+
+<Spinner label="Loading sketches" />
+<Spinner kind="dots" showLabel label="Saving your board" />
+<Spinner kind="sticker" tone="bubblegum" size="lg" delay={300} />
+<Button loading={isSending} loadingLabel="Sending">Send report</Button>`,
+    tables: [{ of: "Spinner" }],
+    do: "Show it for waits under a few seconds, after a short delay so quick loads don't flash. Use Progress when you know how far along it is.",
+    dont: "Spin forever in silence. After a few seconds, say what's slow and offer a way out.",
+    a11y: ["role=\"status\" with the label read out once; the drawing is aria-hidden.", "Never takes focus. Inside a loading Button, the Button keeps focus and sets aria-busy.", "Reduced motion: the drawing holds still and three dots fade instead of spinning."],
+  },
   callout: {
     title: "Callout",
     group: "Feedback",

@@ -17,6 +17,7 @@ import {
   type Ref,
 } from "react";
 import { BuddyArt, type BuddyMood } from "../Buddy/Buddy.js";
+import { SpinnerMark } from "../Spinner/Spinner.js";
 import { useHaptics } from "../hooks/useHaptics.js";
 import { BURST_COLORS, BURST_PRESETS, isFailBurst, type BurstStyle } from "../InkBurst/burstStyles.js";
 import { useInkBurst } from "../InkBurst/useInkBurst.js";
@@ -263,11 +264,7 @@ function StickerInner({ buddy, buddyMood, loading, loadingLabel, children }: { b
             <span className={cx(styles.content, loading && styles.hidden)}>{children}</span>
             {loading && (
               <span className={styles.loading}>
-                <span className={styles.dots} aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </span>
+                <SpinnerMark style={{ "--sp-size": "1.5em" } as CSSProperties} />
                 <span style={visuallyHidden}>{loadingLabel}</span>
               </span>
             )}

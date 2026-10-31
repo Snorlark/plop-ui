@@ -3,6 +3,7 @@
 import { BuddyDemo } from "./BuddyDemo";
 import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
+import { SpinnerDemo } from "./SpinnerDemo";
 import {
   Avatar,
   AvatarStack,
@@ -45,6 +46,7 @@ import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Swit
 const DEMOS: Record<string, () => ReactNode> = {
   buddy: () => <BuddyDemo />,
   search: () => <SearchDemo />,
+  spinner: () => <SpinnerDemo />,
   select: () => <SelectDemo />,
   menu: () => <MenuDemo />,
   "word-sticker": () => (
