@@ -146,9 +146,10 @@ jobs:
         env:
           NEXT_DIST_DIR: .next-e2e
 
-  # Mobile Lighthouse on the built site (#67): fails on a real regression (performance under 85, layout
-  # shift, accessibility), warns under the 90 target and past 2.5 s LCP. Reports are kept as an artifact.
-  # Not in the required `ci` check yet: runners are slower and noisier than a laptop, so it reports first.
+  # Mobile Lighthouse on the built site (#67). Fails on what's stable on a runner: layout shift and
+  # accessibility. Warns on the performance score (under 90), LCP (over 2.5 s) and blocking time: a runner's
+  # score swings by 0.2 between runs, so it can't gate a merge. Reports are kept as an artifact. Not in the
+  # required `ci` check yet.
   lighthouse:
     needs: [changes, build-site]
     if: needs.build-site.result == 'success'
