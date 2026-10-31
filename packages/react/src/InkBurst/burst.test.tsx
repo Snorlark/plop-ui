@@ -4,9 +4,16 @@ import { renderWithPlop } from "../../test/render";
 import { Button } from "../Button/Button";
 import { toast } from "../Toast/store";
 import { BURST_STYLES } from "./burst";
+import { preloadInkBurst } from "./useInkBurst";
 
 /* jsdom has no Web Animations: stand one in so the marks stay on the page long enough to count. */
 const marks = () => document.querySelectorAll("svg[viewBox='-13 -13 26 26']").length;
+/** The burst drawings load in their own chunk on first use, so marks land a moment after the press. */
+const flush = () =>
+  act(async () => {
+    await preloadInkBurst();
+    await Promise.resolve();
+  });
 
 beforeEach(() => {
   Object.defineProperty(Element.prototype, "animate", { configurable: true, value: vi.fn(() => ({ onfinish: null })) });
@@ -24,9 +31,10 @@ describe("burst", () => {
     expect(screen.getByRole("button")).not.toHaveAttribute("data-shake");
   });
 
-  it.each(BURST_STYLES)("throws %s marks when asked", (style) => {
+  it.each(BURST_STYLES)("throws %s marks when asked", async (style) => {
     renderWithPlop(<Button burst={style}>Go</Button>, { reducedMotion: "never" });
     fireEvent.click(screen.getByRole("button"));
+    await flush();
     expect(marks()).toBeGreaterThan(0);
   });
 
@@ -53,18 +61,19 @@ describe("burst", () => {
     expect(marks()).toBe(0);
   });
 
-  it("works from the keyboard: Enter on a button with a burst throws marks", () => {
+  it("works from the keyboard: Enter on a button with a burst throws marks", async () => {
     renderWithPlop(<Button burst="sparkle">Save</Button>, { reducedMotion: "never" });
     const button = screen.getByRole("button");
     button.focus();
     fireEvent.keyDown(button, { key: "Enter" });
     fireEvent.click(button);
+    await flush();
     expect(marks()).toBeGreaterThan(0);
   });
 });
 
 describe("toast burst and tint", () => {
-  it("celebrates a success toast that asks for it, once the stamp lands", () => {
+  it("celebrates a success toast that asks for it, once the stamp lands", async () => {
     vi.useFakeTimers();
     renderWithPlop(<span />, { reducedMotion: "never" });
     act(() => {
@@ -72,6 +81,7 @@ describe("toast burst and tint", () => {
     });
     expect(marks()).toBe(0);
     act(() => vi.advanceTimersByTime(320));
+    await flush();
     expect(marks()).toBeGreaterThan(0);
   });
 

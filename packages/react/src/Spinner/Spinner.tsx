@@ -1,10 +1,10 @@
 import type { CSSProperties, ReactNode } from "react";
-import { BuddyArt } from "../Buddy/Buddy.js";
+import { HumArt } from "../Buddy/Buddy.js";
 import { DOODLE_PATHS, type DoodleTone } from "../Doodle/Doodle.js";
 import { cx } from "../internal/cx.js";
 import { useSeed } from "../internal/useSeed.js";
 import { seed as seeded, type Seed } from "../seed.js";
-import { InkArt, inkLoop, MarkFrame, r1, smooth } from "./ink.js";
+import { DotsArt, InkArt, inkLoop, MarkFrame, r1, smooth } from "./ink.js";
 import styles from "./Spinner.module.css";
 
 export { inkLoop };
@@ -90,17 +90,7 @@ export function SpinnerMark({ kind = "ink", seed, tone = "mustard", className, s
   let art: ReactNode;
 
   if (kind === "dots") {
-    const rnd = seeded(`${s}:dots`);
-    art = (
-      <span className={styles.hops}>
-        {[0, 1, 2].map((i) => (
-          <span key={i} className={styles.dot} style={{ "--i": i, "--d": (0.92 + rnd() * 0.22).toFixed(2) } as CSSProperties}>
-            <i className={styles.blob} style={{ borderRadius: `${48 + Math.round(rnd() * 8)}% ${44 + Math.round(rnd() * 8)}% ${50 + Math.round(rnd() * 8)}% ${44 + Math.round(rnd() * 8)}%` }} />
-            <i className={styles.ground} />
-          </span>
-        ))}
-      </span>
-    );
+    art = <DotsArt seed={s} />;
   } else if (kind === "scribble") {
     // A flipbook: every frame is its own drawing on one strip, stepped through a window (one transform).
     art = (
@@ -137,7 +127,7 @@ export function SpinnerMark({ kind = "ink", seed, tone = "mustard", className, s
   } else if (kind === "buddy") {
     art = (
       <span className={styles.hum}>
-        <BuddyArt mood="thinking" />
+        <HumArt />
       </span>
     );
   } else {

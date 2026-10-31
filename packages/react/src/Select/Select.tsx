@@ -8,7 +8,7 @@ import { ErrorIcon } from "../icons.js";
 import { cx } from "../internal/cx.js";
 import { Marked } from "../internal/Marked.js";
 import { Skeleton } from "../Skeleton/Skeleton.js";
-import { SpinnerMark } from "../Spinner/Spinner.js";
+import { DotsMark } from "../Spinner/ink.js";
 import { Tag } from "../Tag/Tag.js";
 import type { TagTone } from "../Tag/types.js";
 import styles from "./Select.module.css";
@@ -293,7 +293,7 @@ function SelectCore({
       >
         <span className={styles.value}>{value}</span>
         {loading ? (
-          <SpinnerMark kind="dots" className={styles.dots} style={{ "--sp-size": "18px" } as CSSProperties} />
+          <DotsMark className={styles.dots} style={{ "--sp-size": "18px" } as CSSProperties} />
         ) : (
           <Chevron />
         )}

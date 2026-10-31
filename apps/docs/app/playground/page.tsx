@@ -5,6 +5,7 @@ import { SiteHeader } from "../_site/SiteHeader";
 import { PlaygroundTools } from "./PlaygroundTools";
 import styles from "./tools.module.css";
 import { pageMeta } from "../_site/meta";
+import "./playground.css";
 
 export const metadata: Metadata = pageMeta({
   title: "Playground",

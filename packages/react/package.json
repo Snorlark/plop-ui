@@ -82,32 +82,5 @@
     "size-limit": "11.2.0",
     "typescript": "5.9.3",
     "vitest": "3.2.7"
-  },
-  "size-limit": [
-    {
-      "name": "Button",
-      "path": "dist/Button/Button.js",
-      "import": "{ Button }",
-      "ignore": [
-        "react",
-        "react-dom"
-      ],
-      "limit": "7.25 kB"
-    },
-    {
-      "name": "whole library (JS)",
-      "path": "dist/index.js",
-      "import": "*",
-      "ignore": [
-        "react",
-        "react-dom"
-      ],
-      "limit": "40 kB"
-    },
-    {
-      "name": "styles.css",
-      "path": "dist/styles.css",
-      "limit": "15 kB"
-    }
-  ]
+  }
 }

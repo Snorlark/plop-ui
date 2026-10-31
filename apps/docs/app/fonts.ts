@@ -7,7 +7,9 @@ import localFont from "next/font/local";
  * to the plain "Sketchpop" family name. Light (300) isn't loaded: the site never uses it.
  */
 export const sketchpop = localFont({
-  variable: "--plop-sketchpop",
+  // The face list goes in --plop-sketchpop-face; globals.css builds --plop-sketchpop from it plus a second
+  // stand-in for systems without Arial (Linux, Android), so text doesn't rewrap when Sketchpop arrives (#67).
+  variable: "--plop-sketchpop-face",
   display: "swap",
   // Not preloaded: the browser fetches only the faces a page actually uses, instead of all six up front.
   preload: false,

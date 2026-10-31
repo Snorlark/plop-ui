@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Breadcrumb, DocNav, DocPager } from "../_site/DocNav";
 import { SiteFooter } from "../_site/SiteFooter";
 import { SiteHeader } from "../_site/SiteHeader";
+import "../_kit/docs-demos.css";
 
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (

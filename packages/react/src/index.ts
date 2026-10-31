@@ -18,7 +18,7 @@ export { RadioGroup, Radio, type RadioGroupProps, type RadioProps } from "./Radi
 export { Select, MultiSelect, type SelectProps, type MultiSelectProps, type SelectOption, type SelectLead } from "./Select/Select.js";
 export { Menu, type MenuProps, type MenuItem } from "./Menu/Menu.js";
 export { Buddy, BuddyPeek, BUDDY_CAST, type BuddyProps, type BuddyPeekProps, type BuddyMood, type BuddySize } from "./Buddy/Buddy.js";
-export { Avatar, AvatarStack, type AvatarProps, type AvatarStackProps, type AvatarStatus } from "./Avatar/Avatar.js";
+export { Avatar, AvatarStack, AvatarSymbol, type AvatarProps, type AvatarStackProps, type AvatarStatus } from "./Avatar/Avatar.js";
 export { TicketCard, UnitCard, UnitCardRow, StickyNote, Eta, type TicketCardProps, type UnitCardProps, type StickyNoteProps } from "./Cards/Cards.js";
 export { Tabs, TabList, Tab, TabPanel, type TabsProps, type TabListProps, type TabProps, type TabPanelProps } from "./Tabs/Tabs.js";
 export { Progress, type ProgressProps } from "./Progress/Progress.js";
