@@ -4,48 +4,15 @@ import { DOODLE_PATHS, type DoodleTone } from "../Doodle/Doodle.js";
 import { cx } from "../internal/cx.js";
 import { useSeed } from "../internal/useSeed.js";
 import { seed as seeded, type Seed } from "../seed.js";
+import { InkArt, inkLoop, MarkFrame, r1, smooth } from "./ink.js";
 import styles from "./Spinner.module.css";
+
+export { inkLoop };
 
 export type SpinnerKind = "ink" | "dots" | "scribble" | "sticker" | "buddy";
 export type SpinnerSize = "sm" | "md" | "lg";
 
 const SIZES: Record<SpinnerSize, number> = { sm: 20, md: 32, lg: 52 };
-/** The boil: the same line redrawn this many times, swapped like frames of a flipbook. */
-const FRAMES = 3;
-
-const r1 = (n: number) => Math.round(n * 10) / 10;
-
-/** A smooth path through points (Catmull-Rom turned into cubic Béziers). */
-function smooth(pts: Array<[number, number]>): string {
-  let d = `M${r1(pts[0]![0])} ${r1(pts[0]![1])}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[i - 1] ?? pts[i]!;
-    const p1 = pts[i]!;
-    const p2 = pts[i + 1]!;
-    const p3 = pts[i + 2] ?? p2;
-    d += ` C ${r1(p1[0] + (p2[0] - p0[0]) / 6)} ${r1(p1[1] + (p2[1] - p0[1]) / 6)}, ${r1(p2[0] - (p3[0] - p1[0]) / 6)} ${r1(p2[1] - (p3[1] - p1[1]) / 6)}, ${r1(p2[0])} ${r1(p2[1])}`;
-  }
-  return d;
-}
-
-/**
- * A marker circle drawn the way a hand draws one: it starts a little inside,
- * drifts out, and overshoots where it began. Never closes neatly.
- */
-export function inkLoop(value: Seed): string {
-  const rnd = seeded(value);
-  const start = rnd() * Math.PI * 2;
-  const steps = 10;
-  const turn = Math.PI * 2 * 1.12;
-  const pts: Array<[number, number]> = [];
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const a = start + t * turn;
-    const r = 16.6 + t * 2.4 + (rnd() - 0.5) * 2.2;
-    pts.push([25 + Math.cos(a) * r, 25 + Math.sin(a) * r]);
-  }
-  return smooth(pts);
-}
 
 /** Points along a run of cursive loops ("eee"), the line a pen makes while it thinks. */
 function scribblePoints(value: Seed): Array<[number, number]> {
@@ -120,7 +87,6 @@ export interface SpinnerProps {
 /** Just the drawing, decorative. Components that announce loading themselves (Button) use this. */
 export function SpinnerMark({ kind = "ink", seed, tone = "mustard", className, style }: Pick<SpinnerProps, "kind" | "seed" | "tone" | "className" | "style">) {
   const s = useSeed(seed);
-  const frames = Array.from({ length: FRAMES }, (_, i) => i);
   let art: ReactNode;
 
   if (kind === "dots") {
@@ -175,37 +141,13 @@ export function SpinnerMark({ kind = "ink", seed, tone = "mustard", className, s
       </span>
     );
   } else {
-    // The pencil guideline boils: three drawings side by side on one strip, stepped through a window like a
-    // flipbook. The ink arc surges round on one rotation. Two compositor animations, nothing else moves.
-    art = (
-      <span className={styles.ring}>
-        <span className={styles.window}>
-          <span className={styles.strip}>
-            {frames.map((f) => (
-              <svg key={f} viewBox="-4 -4 58 58">
-                <path className={styles.track} d={inkLoop(`${s}:${f}`)} />
-              </svg>
-            ))}
-          </span>
-        </span>
-        <span className={styles.spin}>
-          <svg viewBox="0 0 50 50">
-            <path className={styles.arc} d={inkLoop(s)} pathLength={100} />
-          </svg>
-        </span>
-      </span>
-    );
+    art = <InkArt seed={s} />;
   }
 
   return (
-    <span className={cx(styles.mark, styles[kind], className)} aria-hidden="true" style={style}>
+    <MarkFrame kind={kind} className={className} style={style}>
       {art}
-      <span className={styles.rest}>
-        <i />
-        <i />
-        <i />
-      </span>
-    </span>
+    </MarkFrame>
   );
 }
 

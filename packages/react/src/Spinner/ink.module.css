@@ -1,0 +1,38 @@
+/*
+ * The ink loop and the frame every Spinner kind sits in. Split from Spinner.module.css so a loading
+ * Button only ships these classes. Same rule: loops are transform or opacity only (compositor).
+ */
+.mark { --s: var(--sp-size, 1.25em); position: relative; display: inline-flex; align-items: center; gap: calc(var(--s) * 0.12); flex: none; line-height: 0; }
+.mark svg { display: block; overflow: visible; }
+
+/* ---- ink: a marker arc surging round a boiling pencil guideline ---- */
+.ring { position: relative; display: block; width: var(--s); height: var(--s); }
+.track, .arc { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+/* The pencil guideline it traces over: dotted and faint, like a sketch under the ink. */
+.track { stroke-width: 3; stroke-dasharray: 0.5 5.5; opacity: 0.45; }
+.arc { stroke-width: 6.4; stroke-dasharray: 30 70; }
+/* The boil: three drawings on one strip, stepped through a window like flipbook frames. */
+.window { position: absolute; inset: -8%; overflow: hidden; }
+.strip { display: flex; width: 300%; height: 100%; animation: boil 0.42s steps(3, end) infinite; }
+.strip svg { flex: none; width: calc(100% / 3); height: 100%; }
+@keyframes boil { to { transform: translateX(-100%); } }
+/* One turn with a little push and drag in it, like a hand going round a circle. */
+.spin { position: absolute; inset: 0; display: block; animation: turn 1s cubic-bezier(0.4, 0.15, 0.45, 0.85) infinite; }
+.spin svg { width: 100%; height: 100%; }
+@keyframes turn { to { transform: rotate(360deg); } }
+
+/* ---- reduced motion: hold the drawing still; three dots fade instead (no spin, no hop) ---- */
+.rest { display: none; gap: calc(var(--s) * 0.1); }
+.rest i { width: calc(var(--s) * 0.16); min-width: 3px; aspect-ratio: 1; border-radius: 50% 44% 52% 46%; background: currentColor; animation: fade 1.2s ease-in-out infinite; }
+.rest i:nth-child(2) { animation-delay: 0.2s; }
+.rest i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes fade { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+/* The dots kind fades its own blobs, so it skips the extra three. */
+.dots { --kind: dots; }
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.strip, .spin):not([data-plop-motion="full"] *) { animation: none; }
+  .mark:not([data-plop-motion="full"] *):not(.dots) .rest { display: inline-flex; }
+}
+[data-plop-motion="reduce"] :is(.strip, .spin) { animation: none; }
+[data-plop-motion="reduce"] .mark:not(.dots) .rest { display: inline-flex; }
