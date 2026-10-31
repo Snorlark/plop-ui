@@ -1,5 +1,11 @@
 # @plop-ui/fonts
 
+## 0.5.1
+
+### Patch Changes
+
+- 3e78f61: npm keywords now include `plopui` and `plop-ui`, so the packages turn up for every spelling of the name.
+
 ## 0.3.5
 
 ### Patch Changes
