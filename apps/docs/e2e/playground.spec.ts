@@ -189,6 +189,16 @@ test.describe("editor beside the sticker", () => {
     const value = await words.inputValue();
     await expect(board(page).locator("[data-sticker]").first()).toContainText(value);
   });
+
+  test("quotes and angle brackets in the words survive into the copied code", async ({ page }) => {
+    await fresh(page);
+    await page.getByRole("button", { name: "Add Button", exact: true }).click();
+    const editor = page.getByRole("dialog", { name: "Button" });
+    await editor.getByLabel("Words").fill('Say "hi" <3');
+    await expect(board(page).locator("[data-sticker]").first()).toContainText('Say "hi" <3');
+    await editor.locator("summary", { hasText: "Code" }).click();
+    await expect(editor.locator("pre")).toContainText('{"Say \\"hi\\" <3"}');
+  });
 });
 
 for (const [w, h] of [[1280, 720], [375, 740]] as const)
@@ -272,6 +282,12 @@ test.describe("every component", () => {
 test.describe("tweak a component", () => {
   test.skip(({ isMobile }) => isMobile, "desktop layout");
   const picker = (page: Page) => page.getByRole("navigation", { name: "Components" });
+
+  test("a quote in a label is escaped in the copied code", async ({ page }) => {
+    await page.goto("/playground?tool=tweak&c=icon-button");
+    await page.getByLabel("Label (accessible name)").fill('Say "hi"');
+    await expect(page.getByRole("region", { name: "Code" }).locator("pre")).toContainText('label={"Say \\"hi\\""}');
+  });
 
   test("lists every component", async ({ page }) => {
     await page.goto("/playground?tool=tweak");
