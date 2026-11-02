@@ -1,0 +1,96 @@
+/* Changelog: a short timeline on the side, one quiet paper card per minor version. Colors from tokens and the site's surface variables. */
+
+.shell { width: 100%; max-width: 1180px; margin: 0 auto; padding: 56px 40px 96px; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 0 80px; align-items: start; }
+.main { min-width: 0; max-width: 780px; }
+.main code { font-family: var(--plop-font-mono); font-size: 0.84em; padding: 1px 6px; border-radius: 6px; background: color-mix(in srgb, var(--plop-ink) 8%, transparent); color: var(--plop-ink-text); }
+.nowrap { white-space: nowrap; }
+
+/* ---- the timeline: one dot per minor version on a drawn line ---- */
+.timeline { position: sticky; top: calc(var(--header-offset, 0px) + 32px); padding-top: 8px; transition: top 0.3s var(--plop-ease-squish); }
+.timelineTitle { margin: 0 0 18px; font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--site-soft); }
+.timeline ol { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+/* the line the dots sit on */
+.timeline ol::before { content: ""; position: absolute; left: 12px; top: 12px; bottom: 12px; border-left: 2px dashed var(--site-rule); }
+.timeline a {
+  position: relative; display: grid; grid-template-columns: 18px auto 1fr; align-items: center; gap: 14px; padding: 6px 4px;
+  color: var(--site-text); text-decoration: none; border-radius: 10px;
+}
+.dot {
+  width: 18px; height: 18px; border: 2.5px solid var(--site-ink); border-radius: 50% 46% 52% 48%; background: var(--site-bg);
+  transition: transform 0.25s var(--plop-ease-spring), background-color 0.2s;
+}
+.tlVersion { font-family: var(--plop-font-letter); font-weight: 700; font-size: 20px; line-height: 1; font-variant-numeric: tabular-nums; }
+.tlDate { font-size: 13px; color: var(--site-soft); white-space: nowrap; }
+.timeline a:hover .dot { background: color-mix(in srgb, var(--plop-mustard) 60%, var(--site-bg)); transform: scale(1.15) rotate(-8deg); }
+.timeline a:active .dot { transform: scale(0.85); }
+.timeline a[aria-current] .dot { background: var(--plop-mustard); border-color: var(--plop-ink); transform: scale(1.3) rotate(-6deg); }
+.timeline a[aria-current] .tlVersion { color: var(--site-ink); }
+.timeline a:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 2px; }
+
+/* ---- top of the page ---- */
+.lede { margin-top: 6px; }
+.stats { margin: 10px 0 0; font-size: 16px; color: var(--site-soft); }
+.stats strong { color: var(--site-text); }
+
+.tools { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 32px; margin: 36px 0 8px; }
+.filter { margin: 0; }
+.jump { display: none; min-width: 220px; }
+
+/* The kit's radios are real inputs, so picking a package hides what doesn't touch it with CSS alone. */
+.shell:has(input[name="changelog-pkg"][value="react"]:checked) :is(.minor, .release, .items li, .quiet, .timeline li)[data-pkgs]:not([data-pkgs~="react"]),
+.shell:has(input[name="changelog-pkg"][value="tokens"]:checked) :is(.minor, .release, .items li, .quiet, .timeline li)[data-pkgs]:not([data-pkgs~="tokens"]),
+.shell:has(input[name="changelog-pkg"][value="fonts"]:checked) :is(.minor, .release, .items li, .quiet, .timeline li)[data-pkgs]:not([data-pkgs~="fonts"]) { display: none; }
+
+/* ---- a minor version ---- */
+.minor { margin-top: 48px; scroll-margin-top: calc(var(--header-offset, 0px) + 32px); }
+.card { position: relative; padding: 36px 40px 38px; }
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; }
+.head .title { margin: 0; line-height: 1; font-size: inherit; }
+.when { margin: 0; font-size: 15px; color: var(--plop-ink-soft); }
+/* the newest release's mascot peeks over the top edge, clear of the tape */
+.card .buddy { position: absolute; top: -34px; right: 170px; }
+
+.body { display: grid; gap: 36px; margin-top: 28px; }
+.release { display: grid; gap: 14px; scroll-margin-top: calc(var(--header-offset, 0px) + 32px); }
+.releaseTitle { display: flex; align-items: baseline; gap: 12px; margin: 0; font-family: var(--plop-font-letter); font-weight: 700; font-size: 17px; color: var(--plop-ink); }
+.releaseTitle span { font-family: var(--plop-font-body, inherit); font-weight: 400; font-size: 14px; color: var(--plop-ink-soft); }
+
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+.items > li { display: grid; justify-items: start; gap: 6px; }
+.items p { margin: 0; max-width: 64ch; font-size: 17px; line-height: 1.65; color: var(--plop-ink-text); }
+.sub { margin: 2px 0 0; padding-left: 22px; display: grid; gap: 6px; }
+.sub li { font-size: 16px; line-height: 1.55; color: var(--plop-ink-text); }
+.itemPkgs { font-size: 13px; color: var(--plop-ink-soft); }
+.quiet { margin: 0; font-size: 14px; color: var(--plop-ink-soft); }
+
+/* An older minor: one line about it, and a sticker button to unfold the rest. */
+.headline { margin: 18px 0 0; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--plop-ink-text); }
+.fold { margin-top: 20px; }
+.foldBody { display: grid; gap: 36px; margin-top: 28px; padding-top: 28px; border-top: 2px dashed color-mix(in srgb, var(--plop-ink) 25%, transparent); }
+/* `display: grid` would otherwise beat the browser's own [hidden] rule */
+.foldBody[hidden] { display: none; }
+
+/* ---- coming next ---- */
+.next {
+  position: relative; margin-top: 48px; padding: 32px 40px; border: 2.5px dashed var(--site-ink); border-radius: var(--plop-radius-box); color: var(--site-text);
+}
+.next .items p, .next .itemPkgs { color: var(--site-text); }
+.next .buddy { position: absolute; top: -34px; right: 40px; }
+.next .nextTitle { margin: 0 0 20px; font-family: var(--plop-font-letter); font-weight: 900; font-style: italic; font-size: 22px; text-transform: uppercase; color: var(--site-ink); }
+
+.foot { margin-top: 56px; font-size: 15px; color: var(--site-soft); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); padding: 28px 18px 72px; }
+  .timeline { display: none; }
+  .jump { display: block; }
+  .tools { flex-direction: column; align-items: stretch; margin-top: 28px; }
+  .minor { margin-top: 36px; }
+  .card { padding: 28px 22px 30px; }
+  .card .buddy { right: 40%; }
+  .next { padding: 28px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline, .dot { transition: none; }
+}
