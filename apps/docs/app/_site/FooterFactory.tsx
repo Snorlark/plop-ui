@@ -38,20 +38,12 @@ export function FooterFactory({ children }: { children: ReactNode }) {
   const [count, setCount] = useState(0);
   const [drops, setDrops] = useState<number[]>([]);
 
-  useEffect(() => {
-    const svg = scene.current?.querySelector("svg");
-    if (!svg) return;
-    if (reduced) svg.setCurrentTime(1.4);
-    setPaused(reduced);
-  }, [reduced]);
+  // With reduced motion the scene starts paused; footer.module.css rests it on a nice frame.
+  useEffect(() => setPaused(reduced), [reduced]);
 
   // Plays only while on screen and the tab is visible; the pause button still wins.
+  // A CSS rule does the pausing, so it also holds for a scene that arrives later.
   const live = useInView(scene);
-  useEffect(() => {
-    const svg = scene.current?.querySelector("svg");
-    if (paused || !live) svg?.pauseAnimations();
-    else svg?.unpauseAnimations();
-  }, [paused, live]);
 
   const plop = () => {
         setCount((c) => c + 1);
@@ -59,7 +51,7 @@ export function FooterFactory({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div ref={scene} className={styles.scene}>
+    <div ref={scene} className={styles.scene} data-paused={paused || !live ? "" : undefined}>
       {children}
       <div className={styles.controls}>
         <Tooltip content="Plop a sticker" side="bottom">

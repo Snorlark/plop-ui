@@ -33,6 +33,8 @@
 /* each station grows up from the floor (the pack hangs, so it drops from its hook) */
 .scene :global(.pop) { transform-box: fill-box; transform-origin: 50% 100%; }
 .scene :global(.pop[data-hang]) { transform-origin: 50% 0; }
+/* the scene's own loops (.fx, keyframes inside the SVG): stopped by the pause button and off screen */
+.scene[data-paused] :global(.fx) { animation-play-state: paused; }
 
 .controls { position: absolute; left: clamp(20px, 4vw, 120px); top: 8px; z-index: 4; display: flex; gap: 14px; }
 /* a lever pull: a sticker flies along the belt into the pack, then a Plop! */
@@ -120,4 +122,6 @@
 @media (prefers-reduced-motion: reduce) {
   .logo, .tagline, .col, .controls, .scene > svg, .scene :global(.pop) { animation: none !important; }
   .dropSticker, .dropWord { display: none; }
+  /* starts paused (FooterFactory), resting 1.4 s in: puffs mid-air, stickers on the belt */
+  .scene :global(.fx) { --fx-shift: -1.4s; }
 }
