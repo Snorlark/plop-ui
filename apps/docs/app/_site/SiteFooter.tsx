@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "./footer.module.css";
 import { LazyScene } from "./LazyScene";
 import { FooterFactory } from "./FooterFactory";
+import { FACTORY_SCENE_URL } from "./footerScene";
 import { GITHUB } from "./nav";
 import { Wordmark } from "./Wordmark";
 
@@ -88,7 +89,7 @@ export function SiteFooter() {
       </div>
 
       <FooterFactory>
-        <LazyScene src="/scenes/factory.svg" viewBox="0 0 1440 380" preserveAspectRatio="xMidYMax slice" />
+        <LazyScene src={FACTORY_SCENE_URL} viewBox="0 0 1440 380" preserveAspectRatio="xMidYMax slice" />
       </FooterFactory>
 
       <p className={styles.legal}>
