@@ -157,6 +157,10 @@ docs/assets       the logo and the buddy mark
 
 Contributions are welcome: bug fixes, new components, docs, or a new character. Read **[CONTRIBUTING.md](CONTRIBUTING.md)**, which covers setup, the codebase rules, how to add a component from start to finish, and how to open a pull request. Not sure where to start? Pick an issue labelled [good first issue](https://github.com/Snorlark/plop-ui/labels/good%20first%20issue). Found a security problem? See [SECURITY.md](SECURITY.md). Everyone taking part follows the [code of conduct](CODE_OF_CONDUCT.md).
 
+## Support
+
+PlopUI is free and open source, built in my spare time. If it makes your app a little more fun, you can [buy Bix a beanie on Ko-fi](https://ko-fi.com/plopui) or [sponsor on GitHub](https://github.com/sponsors/Snorlark). A star on the repo helps too. ♥
+
 ## License
 
 Code: [MIT](LICENSE), © 2026 Lark Sigmuond Babao. The Sketchpop font: [SIL Open Font License 1.1](packages/fonts/OFL.txt), so you can use, bundle and modify it freely, including in commercial work.

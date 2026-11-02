@@ -3,7 +3,7 @@ import styles from "./footer.module.css";
 import { LazyScene } from "./LazyScene";
 import { FooterFactory } from "./FooterFactory";
 import { FACTORY_SCENE_URL } from "./footerScene";
-import { GITHUB } from "./nav";
+import { GITHUB, SUPPORT } from "./nav";
 import { Wordmark } from "./Wordmark";
 
 /** Descriptive link text on purpose: it tells search engines (and screen reader link lists) what each page is. */
@@ -35,6 +35,7 @@ const COLUMNS: Array<[string, Array<[string, string]>]> = [
       ["Contributing guide", `${GITHUB}/blob/main/CONTRIBUTING.md`],
       ["Sticker playground", "/playground"],
       ["Changelog", "/changelog"],
+      ["Support PlopUI ♥", SUPPORT],
     ],
   ],
   [

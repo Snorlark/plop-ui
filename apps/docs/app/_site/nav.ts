@@ -53,3 +53,5 @@ export function neighbors(href: string): { prev?: NavLink; next?: NavLink } {
 }
 
 export const GITHUB = "https://github.com/Snorlark/plop-ui";
+/** Where people can support PlopUI (Ko-fi pays out through PayPal). */
+export const SUPPORT = "https://ko-fi.com/plopui";
