@@ -22,6 +22,7 @@ export const DOC_NAV: NavSection[] = [
       { href: "/docs/what-is-plopui", label: "What is PlopUI?", keywords: "about overview plop ui plop-ui compare alternatives hand-drawn rough.js free license" },
       { href: "/docs/getting-started", label: "Installation", keywords: "install npm pnpm setup provider" },
       { href: "/docs/nextjs", label: "Using with Next.js", keywords: "server components ssr hydration next/font cookie" },
+      { href: "/docs/shadcn", label: "Install with shadcn", keywords: "shadcn cli registry blocks npx add copy paste" },
       { href: "/docs/surfaces", label: "Surfaces", keywords: "poster mat notebook kraft riso paper theme dark" },
       { href: "/docs/tokens", label: "Tokens & contrast", keywords: "colors contrast roles type motion css variables" },
       { href: "/docs/accessibility", label: "Accessibility", keywords: "wcag keyboard reduced motion screen reader" },
