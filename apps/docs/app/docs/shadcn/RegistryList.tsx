@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { COMPONENT_DOCS } from "../../_site/registry";
+import { BlockPreview } from "./BlockPreview";
 
 /** Where the registry is served (same default as scripts/build-registry.mjs), so copied commands always work. */
 const REGISTRY = "https://plopui.com";
@@ -23,6 +24,7 @@ export function RegistryList({ kind }: { kind: "blocks" | "components" }) {
         <li key={r.name}>
           <strong>{r.href ? <Link href={r.href}>{r.title}</Link> : r.title}</strong>
           {r.text && <span> {r.text}</span>}
+          {kind === "blocks" && <BlockPreview name={r.name} />}
           <code>npx shadcn@latest add {`${REGISTRY}/r/${r.name}.json`}</code>
         </li>
       ))}
