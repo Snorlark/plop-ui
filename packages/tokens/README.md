@@ -65,6 +65,21 @@ surfaces.mat.dark.bg;       // the cutting mat's background in dark mode
 
 Full reference with every variable: [plopui.com/docs/tokens](https://plopui.com/docs/tokens)
 
+## Design tools (Figma, Tokens Studio)
+
+`@plop-ui/tokens/tokens.json` holds every token in the [W3C Design Tokens](https://www.designtokens.org/) format. It's generated from `src/tokens.ts` on every build, so a design kit made from it matches the code:
+
+- **colors**: all plain hex (8 digits when translucent), with `on-fill` text colors (each with its measured WCAG contrast) and `status` linked as aliases;
+- **typography**: families, weights, sizes, and text styles (headings, label, body) as components set them;
+- **radius**: `roundness`, plus each irregular radius as one value per corner, with the full CSS kept in `$extensions`;
+- **shadows** (sticker, sheet) and the dashed **focus ring**;
+- **strokes and motion**: easings as cubic-béziers, durations;
+- **all five surfaces**, each with `light` and `dark` (use them as variable modes).
+
+What a token can't express (italic, uppercase, irregular CSS radii, the paper patterns) is in `$extensions` under `com.plopui`. The file passes Style Dictionary's DTCG build with every reference resolving.
+
+Import it with Tokens Studio for Figma, or read it from `https://unpkg.com/@plop-ui/tokens/dist/tokens.json`.
+
 ## Links
 
 - **The kit:** [`@plop-ui/react`](https://www.npmjs.com/package/@plop-ui/react) · **The font:** [`@plop-ui/fonts`](https://www.npmjs.com/package/@plop-ui/fonts)
