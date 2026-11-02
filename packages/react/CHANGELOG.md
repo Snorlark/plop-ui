@@ -1,5 +1,11 @@
 # @plop-ui/react
 
+## 0.7.1
+
+### Patch Changes
+
+- a693483: Bix, the error Buddy, now wears a tomato-red beanie instead of a mint one, so the character reads as "error" at a glance. Thanks to a Reddit commenter for the catch.
+
 ## 0.7.0
 
 ### Patch Changes
