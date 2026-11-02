@@ -28,7 +28,8 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./tokens.css": "./dist/tokens.css"
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json"
   },
   "files": [
     "dist"
@@ -42,7 +43,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/emit-css.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/emit-css.mjs && node scripts/emit-json.mjs",
     "dev": "tsc -p tsconfig.build.json --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint src scripts"
