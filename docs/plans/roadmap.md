@@ -199,13 +199,34 @@ ecosystem developers already use (8bitcn via the shadcn registry, Product Hunt #
 (Magic UI, Aceternity, Lucide Animated), and being what AI tools reach for (shadcn behind v0, Bolt and Lovable).
 Facebook and LinkedIn reach your network, not developers choosing a UI kit. **Not now:** a Flutter port.
 
+**Positioning:** not another component library, not a shadcn competitor. PlopUI is the go-to React kit for
+expressive, playful, hand-drawn interfaces that are still accessible and well engineered.
+
+**Who it's for (a niche on purpose):** design engineers, product designers who code, indie makers building things
+with personality (creative tools, portfolios, education and kids' apps, community apps, playful onboarding, event
+pages). Not enterprise dashboards.
+
+**North star:** 10 developers who aren't Lark build something real with PlopUI, keep using it, and recommend it.
+Stages: recognition → adoption (prove first) → ecosystem.
+
+**Objection to remove:** "not enough components to build a real product". Already there: Select, MultiSelect,
+Menu, CommandPalette, Tabs, Tooltip, toasts, loading states, form fields. Missing for the niche: Dialog, Accordion,
+Popover, Breadcrumbs, Pagination, Slider, FileInput, Calendar. Skip a data table for now.
+
 - [ ] Week 1: shadcn-compatible registry (`npx shadcn add @plopui/button`) served from plopui.com; 21st.dev listing;
       nudge awesome-react-components #681. Done when a fresh Next.js + shadcn app installs a component in one command
 - [ ] Week 2: design skill (#86) + a before/after clip (same prompt, with and without it); email 3–5 design/AI curators
 - [ ] Week 3: demo.plopui.com (#84) with 2 forkable mini-apps, then Product Hunt + Show HN the same week, plus
       r/reactjs and This Week in React
 - [ ] Ongoing: a 10–15 s looping clip on X every 2–3 days (burst, coin-flip spinner, paper tear, Bix)
-- [ ] Measure weekly: npm downloads, GitHub stars, plopui.com visitors and referrers
+- [ ] Launch channels: Product Hunt, r/reactjs, a DEV Community engineering story, Uneed, Microlaunch, Show HN,
+      This Week in React
+- [ ] Full example apps for the niche (creative workspace, playful project board, portfolio/link-in-bio), forkable
+- [ ] "Make it yours" docs page (tokens, surfaces, roundness); consider a wobble/animation intensity setting
+- [ ] Community: `CONTRIBUTING.md`, a component-request form, a "Built with PlopUI" showcase
+- [ ] Personally reach out to Reddit/LinkedIn commenters to find the first 10 builders
+- [ ] Measure separately, weekly: stars, downloads, real installs (GitHub "Used by"), independent mentions, outside
+      contributors, showcase entries, site visitors and referrers
 
 ## Track E: posting
 
