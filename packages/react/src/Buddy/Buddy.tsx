@@ -65,14 +65,14 @@ const ART_SUCCESS = (
   </>
 );
 
-// Bix: beanie, worried brows, wobbly mouth, a sweat drop.
+// Bix: a tomato-red beanie (red reads as "error"), worried brows, wobbly mouth, a sweat drop.
 const ART_ERROR = (
   <>
     <Head>
-      <path d="M17 40 C 16 22, 30 14, 42 14 C 56 14, 68 22, 67 40 C 50 35, 34 35, 17 40 Z" style={{ fill: "var(--plop-mint)" }} />
+      <path d="M17 40 C 16 22, 30 14, 42 14 C 56 14, 68 22, 67 40 C 50 35, 34 35, 17 40 Z" style={{ fill: "var(--plop-tomato)" }} />
       <path d="M17 40 C 34 35, 50 35, 67 40 C 67.4 42, 67.4 44, 67 46 C 50 41, 34 41, 17 46 C 16.6 44, 16.6 42, 17 40 Z" style={paperFill} />
       <path d="M30 22 C 29.6 27, 29.4 32, 29.6 36 M42 17 C 42.2 23, 42 29, 42 35 M54 22 C 54.6 27, 54.8 32, 54.6 36" fill="none" strokeWidth="1.8" />
-      <circle cx="42" cy="10" r="5" style={{ fill: "var(--plop-mint)" }} />
+      <circle cx="42" cy="10" r="5" style={{ fill: "var(--plop-tomato)" }} />
     </Head>
     <circle cx="34" cy="53" r="2.4" style={inkFill} />
     <circle cx="50" cy="53" r="2.4" style={inkFill} />
