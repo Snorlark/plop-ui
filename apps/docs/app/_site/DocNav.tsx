@@ -3,10 +3,11 @@
 import { ArrowDownIcon, IconButton } from "@plop-ui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { DOC_NAV, neighbors } from "./nav";
 
-function Links() {
+/** `onPick` runs when a link is chosen (the phone list uses it to fold itself up). */
+function Links({ onPick }: { onPick?: () => void }) {
   const path = usePathname();
   // Rendered twice (sidebar and phone disclosure), so ids get a per-copy prefix.
   const uid = useId();
@@ -24,7 +25,7 @@ function Links() {
               return (
                 <li key={l.href}>
                   <span className="doc-nav__row">
-                    <Link href={l.href} aria-current={path === l.href ? "page" : undefined}>
+                    <Link href={l.href} aria-current={path === l.href ? "page" : undefined} onClick={onPick}>
                       {l.label}
                     </Link>
                     {l.sub && (
@@ -49,7 +50,9 @@ function Links() {
                     <ul id={listId} className="doc-nav__sub" hidden={!open}>
                       {l.sub.map((x) => (
                         <li key={x.href}>
-                          <Link href={x.href}>{x.label}</Link>
+                          <Link href={x.href} onClick={onPick}>
+                            {x.label}
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -66,15 +69,22 @@ function Links() {
 
 /** Desktop sidebar plus a "Browse the docs" disclosure on phones. */
 export function DocNav() {
+  const mobile = useRef<HTMLDetailsElement>(null);
   return (
     <>
       <nav aria-label="Docs" className="doc-nav">
         <Links />
       </nav>
-      <details className="doc-nav-mobile">
+      <details ref={mobile} className="doc-nav-mobile">
         <summary>Browse the docs</summary>
         <nav aria-label="Docs (compact)" className="doc-nav">
-          <Links />
+          {/* Folds up when a link is picked. Left open, the long list sat above the next page's title, so the
+              page seemed to land halfway down. It closes on the click, before Next scrolls the new page. */}
+          <Links
+            onPick={() => {
+              if (mobile.current) mobile.current.open = false;
+            }}
+          />
         </nav>
       </details>
     </>
