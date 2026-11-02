@@ -1,0 +1,66 @@
+import { pageMeta } from "../../_site/meta";
+import { RegistryList } from "./RegistryList";
+export const metadata = pageMeta({ title: "Install with shadcn", description: "Add PlopUI components and ready-made blocks to any React app with the shadcn CLI: one command installs the npm packages, the styles and an editable example.", path: "/docs/shadcn" });
+
+# Install with shadcn
+
+<p className="lede">Already use the shadcn CLI? Add PlopUI with one command. It installs the real npm packages, sets up the styles once, and drops an editable example or a whole ready-made screen into your project.</p>
+
+## One command
+
+```bash
+npx shadcn@latest add https://plopui.com/r/button.json
+```
+
+That command:
+
+1. installs `@plop-ui/react` and `@plop-ui/fonts` from npm;
+2. adds `components/plop/plop-provider.tsx` (only the first time), which loads PlopUI's styles and fonts;
+3. adds an example you can edit, here `components/plop/button-example.tsx`.
+
+The components themselves stay in `node_modules`, so `npm update` keeps bringing you fixes. Only the examples and blocks are copied into your project, and they're yours to change.
+
+## Wrap your layout once
+
+After the first install, put `PlopProvider` around your app. In Next.js, that's `app/layout.tsx`:
+
+```tsx
+import { PlopProvider } from "@/components/plop/plop-provider";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className="plop-surface" style={{ minHeight: "100vh" }}>
+        <PlopProvider>{children}</PlopProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+`plop-surface` paints the paper and sets PlopUI's body font; `minHeight` keeps the paper going to the bottom of short pages. `PlopProvider` already shows toasts, so there's no `<Toaster />` to add. Pick another paper with `<PlopProvider surface="notebook">` (see [surfaces](/docs/surfaces)).
+
+## Blocks: whole screens
+
+Ready-made screens built only from PlopUI components. Each is a single file you can rename, restyle and wire to your own data.
+
+```bash
+npx shadcn@latest add https://plopui.com/r/settings-panel.json
+npx shadcn@latest add https://plopui.com/r/signup-card.json
+npx shadcn@latest add https://plopui.com/r/empty-state.json
+```
+
+<RegistryList kind="blocks" />
+
+## Every component
+
+Each component page has a matching registry item that installs PlopUI and adds that page's example.
+
+<RegistryList kind="components" />
+
+## Good to know
+
+- **Tailwind is optional.** The blocks and examples don't use it, and PlopUI's styles aren't affected by Tailwind's reset, so it's fine either way.
+- **Leave room above `buddy` buttons.** The character peeks about 30px above the button.
+- **Not using shadcn?** Install the packages directly: see [Installation](/docs/getting-started).
+- **The whole registry** is listed at [/r/registry.json](/r/registry.json), in the format shadcn's CLI reads.

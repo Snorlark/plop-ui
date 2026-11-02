@@ -77,3 +77,12 @@
 /* "Which one?" sits on the page, not on paper: use the site's ink so it reads on the cutting mat too. */
 .load-sec > .load-h { color: var(--site-ink, var(--plop-ink)); }
 .load-sec > .load-hint { color: var(--site-soft, var(--plop-ink-soft)); max-width: 70ch; }
+
+/* Install with shadcn: one row per registry item, the command below its name. */
+.registry-list { list-style: none; margin: 12px 0 24px; padding: 0; display: grid; gap: 14px; }
+.registry-list li { display: grid; gap: 4px; padding-bottom: 14px; border-bottom: 2px dashed color-mix(in srgb, var(--plop-ink) 22%, transparent); }
+/* Long commands wrap instead of scrolling: a scrolling box would need keyboard access of its own (axe). */
+.registry-list code { justify-self: start; max-width: 100%; overflow-wrap: anywhere; font-size: 13px; }
+/* A live block preview: the same paper frame as component examples. */
+.registry-preview { display: flex; justify-content: center; margin: 10px 0 6px; padding: 48px 24px 40px; background: var(--plop-sheet); color: var(--plop-ink-text); border-radius: 6px 16px 14px 18px; box-shadow: 7px 9px 0 rgba(18,36,120,.14); }
+.registry-preview > * { width: 100%; max-width: 460px; }

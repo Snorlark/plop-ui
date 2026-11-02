@@ -4,12 +4,13 @@
   "type": "module",
   "scripts": {
     "props": "node scripts/gen-props.mjs",
-    "dev": "pnpm props && next dev -p 4321",
-    "build": "pnpm props && next build",
+    "dev": "pnpm props && pnpm registry && next dev -p 4321",
+    "build": "pnpm props && pnpm registry && next build",
     "start": "next start -p 4321",
     "typecheck": "pnpm props && tsc --noEmit",
     "lint": "eslint app scripts",
-    "test:e2e": "NEXT_DIST_DIR=.next-e2e next build && NEXT_DIST_DIR=.next-e2e playwright test"
+    "test:e2e": "NEXT_DIST_DIR=.next-e2e next build && NEXT_DIST_DIR=.next-e2e playwright test",
+    "registry": "node scripts/build-registry.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "3.1.1",

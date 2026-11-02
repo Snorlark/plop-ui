@@ -13,6 +13,8 @@ test-results
 playwright-report
 next-env.d.ts
 apps/docs/app/_generated
+# shadcn registry, built by apps/docs/scripts/build-registry.mjs
+apps/docs/public/r/
 .next-e2e
 .superpowers/
 

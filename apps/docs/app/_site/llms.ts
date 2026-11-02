@@ -26,7 +26,7 @@ export function llmsIndex() {
         })
         .join("\n"),
   );
-  return [INTRO, ...sections, `## Optional\n\n- [Every component with code, in one file](${SITE_URL}/llms-full.txt)\n`].join("\n\n");
+  return [INTRO, ...sections, `## Optional\n\n- [Every component with code, in one file](${SITE_URL}/llms-full.txt)\n- [shadcn registry: every component and block, installable with \`npx shadcn add\`](${SITE_URL}/r/registry.json)\n`].join("\n\n");
 }
 
 /** llms-full.txt: every component's summary, example code, do/don't and accessibility notes in one file. */
