@@ -59,7 +59,6 @@
   background: var(--plop-paper); color: var(--plop-ink-text); font: inherit; font-size: 17px;
 }
 .text:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 3px; }
-.range { width: 100%; min-height: 30px; accent-color: var(--plop-ink); }
 .swatches, .pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .swatch, .pill { position: relative; }
 .swatch input, .pill input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }

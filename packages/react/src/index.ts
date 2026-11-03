@@ -72,3 +72,5 @@ export {
   EditIcon,
   TrashIcon,
 } from "./icons.js";
+
+export { Slider, type SliderProps } from "./Slider/Slider.js";

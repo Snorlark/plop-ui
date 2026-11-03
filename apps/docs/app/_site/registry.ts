@@ -19,6 +19,29 @@ const AA = "WCAG AA";
 const V01 = "Since v0.1";
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  slider: {
+    title: "Slider",
+    group: "Inputs",
+    badges: ["Client component", AA],
+    lede: "A marker stroke with a mustard sticker to grab. The thumb squishes into the paper when pressed and springs back on release; a native range input does the work underneath.",
+    code: `import { Slider } from "@plop-ui/react";
+
+<Slider label="Pencil pressure" defaultValue={40} showValue />
+<Slider label="Radius" min={0} max={2} step={0.1}
+  value={radius} onValueChange={setRadius}
+  showValue formatValue={(v) => \`\${v}×\`} />
+<Slider label="Volume" defaultValue={60} disabled showValue />`,
+    tables: [{ of: "Slider", inheritedFrom: '<input type="range">' }],
+    do: "Use it for approximate adjustments like volume, pressure or corner radius. Give every slider a visible label; use formatValue to explain units.",
+    dont: "Use a slider for precise data entry or implement a second keyboard interaction. The native range already handles arrows, Home and End.",
+    a11y: [
+      "A native input type=range with an associated visible label. min, max and step define its values; the last step never exceeds max.",
+      "Tab focuses the input. Arrow keys adjust it and Home/End reach the bounds using the browser's built-in behavior.",
+      "formatValue sets aria-valuetext even when showValue is false. The visible value is decorative, avoiding duplicate live announcements.",
+      "A 44px-high input supports pointer and touch dragging. Disabled sliders leave the tab order; name and form work with native forms.",
+      "Surface text tokens keep labels readable in all light/dark surfaces. Reduced motion removes thumb transforms and transitions; forced colors restore the native range appearance.",
+    ],
+  },
   button: {
     title: "Button",
     group: "Actions",

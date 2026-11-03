@@ -1,5 +1,6 @@
 "use client";
 
+import { Slider as PlopSlider } from "@plop-ui/react";
 import { useId, type ReactNode } from "react";
 import styles from "./tools.module.css";
 
@@ -53,15 +54,7 @@ export function Choice({ label, value, options, onChange }: { label: string; val
 
 /** A labelled range slider that shows its value. */
 export function Slider({ label, value, min, max, step = 1, unit = "", onChange }: { label: string; value: number; min: number; max: number; step?: number; unit?: string; onChange: (v: number) => void }) {
-  const id = useId();
-  return (
-    <div className={styles.field}>
-      <label htmlFor={id} className={styles.label}>
-        {label} <output htmlFor={id}>{`${Math.round(value * 100) / 100}${unit}`}</output>
-      </label>
-      <input id={id} className={styles.range} type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
-    </div>
-  );
+  return <PlopSlider label={label} value={value} min={min} max={max} step={step} showValue formatValue={(v) => `${Math.round(v * 100) / 100}${unit}`} onValueChange={onChange} />;
 }
 
 /** A plain text field in the kit's look (native input). */
