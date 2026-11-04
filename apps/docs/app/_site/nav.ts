@@ -28,6 +28,7 @@ export const DOC_NAV: NavSection[] = [
       { href: "/docs/accessibility", label: "Accessibility", keywords: "wcag keyboard reduced motion screen reader" },
     ],
   },
+  { group: "Navigation", links: [c("breadcrumb", "Breadcrumb", "breadcrumbs path hierarchy trail links")] },
   { group: "Actions", links: [c("button", "Button", "buddy loading link sticker"), c("icon-button", "IconButton", "icon round"), c("menu", "Menu", "dropdown menu actions more kebab"), c("tooltip", "Tooltip", "hint bubble")] },
   { group: "Inputs", links: [c("slider", "Slider", "range radius volume pressure native input"), c("switch", "Switch", "toggle"), c("checkbox", "Checkbox", "tick indeterminate"), c("radio", "RadioGroup", "radio option"), c("text-field", "TextField", "input textarea form error"), c("select", "Select & MultiSelect", "dropdown select listbox picker people multi tags combobox"), c("search", "SearchField & CommandPalette", "search combobox command palette cmdk find")] },
   { group: "Display", links: [c("tag", "Tag", "status washi tape filter chip"), c("avatar", "Avatar", "face person"), c("cards", "Cards", "ticket unit sticky note"), c("tabs", "Tabs", "tablist panel"), c("badges", "Count & StatusDot", "badge dot count"), c("word-sticker", "WordSticker & Doodle", "lettering text font sticker star heart sparkle")] },

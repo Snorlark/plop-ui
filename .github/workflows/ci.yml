@@ -179,9 +179,20 @@ jobs:
           include-hidden-files: true
           path: apps/docs/.lighthouseci
 
+  # Fails a PR that adds or bumps a dependency with a known high or critical vulnerability.
+  # Needs the repo's Dependency graph on (Settings > Advanced Security).
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
+        with:
+          fail-on-severity: high
+
   # The one required check. Skipped jobs are fine (that change didn't need them); failed or cancelled ones are not.
   ci:
-    needs: [changes, check, build-site, e2e]
+    needs: [changes, check, build-site, e2e, dependency-review]
     if: always()
     runs-on: ubuntu-latest
     steps:

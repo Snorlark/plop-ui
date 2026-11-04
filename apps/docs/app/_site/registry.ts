@@ -42,6 +42,36 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Surface text tokens keep labels readable in all light/dark surfaces. Reduced motion removes thumb transforms and transitions; forced colors restore the native range appearance.",
     ],
   },
+  breadcrumb: {
+    title: "Breadcrumb",
+    group: "Navigation",
+    badges: ["Client component", AA],
+    lede: "A trail of marker slashes from home to here. Intermediate pages tuck behind an ellipsis in narrow containers; reveal them with a click, Enter or Space.",
+    code: `import { Breadcrumb } from "@plop-ui/react";
+import Link from "next/link"; // Only in your app; optional for plain anchors.
+
+<Breadcrumb as={Link} items={[
+  { label: "Home", href: "/" },
+  { label: "Docs", href: "/docs/what-is-plopui" },
+  { label: "Breadcrumb" },
+]} />
+
+// Keep every ancestor visible even in narrow containers:
+<Breadcrumb collapse={false} items={[
+  { label: "Home", href: "/" },
+  { label: "Current page" },
+]} />`,
+    tables: [{ of: "Breadcrumb", inheritedFrom: "<nav>" }],
+    do: "List locations in hierarchy order. The last item is always the current page. Set href on ancestors; omit it for a non-navigable category.",
+    dont: "Use breadcrumbs as browsing history, or replace primary navigation with them.",
+    a11y: [
+      "Native nav with aria-label=Breadcrumb and an ordered list. Override aria-label when more than one trail is present.",
+      "The final item has aria-current=page and never renders as a link, even if given an href.",
+      "Marker separators are decorative and hidden from screen readers. Tab visits ancestor links; Enter follows them.",
+      "Below 520px of container width, a labelled button reveals intermediate items with Enter or Space. It keeps focus and reports aria-expanded.",
+      "Surface text and focus tokens work across all five surfaces in light and dark. There is no animation, including under reduced motion.",
+    ],
+  },
   button: {
     title: "Button",
     group: "Actions",

@@ -39,9 +39,9 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
       </div>
 
       {slug === "loading" ? <LoadingShowcase /> : <ExampleTabs slug={slug} code={doc.code} />}
-      <p className="doc-try">
+      {slug !== "breadcrumb" && <p className="doc-try">
         Change every prop live in the <Link href={`/playground?c=${slug === "loading" ? "spinner" : slug}`}>playground</Link>.
-      </p>
+      </p>}
 
       <h2 className="doc-h2">Props</h2>
       {doc.tables.length > 3

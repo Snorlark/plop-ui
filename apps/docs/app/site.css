@@ -229,7 +229,7 @@ html[data-tear]::view-transition-old(root) {
 
 .doc-main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
 .doc-main > * { margin-top: 0; margin-bottom: 0; }
-.doc-crumb { font-size: 16px; color: var(--site-soft); }
+.doc-crumb { margin-bottom: 12px; }
 .doc-h1, .doc-main.content h1 {
   margin: 0; font-style: italic; font-weight: 900; font-size: clamp(44px, 7vw, 68px); line-height: 1; text-transform: uppercase; color: var(--site-ink); filter: url(#plop-crayon);
 }

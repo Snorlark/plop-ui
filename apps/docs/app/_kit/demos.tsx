@@ -5,6 +5,7 @@ import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
 import {
   Slider,
+  Breadcrumb,
   Avatar,
   AvatarStack,
   Button,
@@ -48,6 +49,16 @@ const DEMOS: Record<string, () => ReactNode> = {
       <Slider label="Pencil pressure" defaultValue={40} showValue />
       <Slider label="Radius" defaultValue={1} min={0} max={2} step={0.1} showValue formatValue={(v) => `${v}×`} />
       <Slider label="Volume" defaultValue={60} showValue disabled />
+    </div>
+  ),
+  breadcrumb: () => (
+    <div style={{ width: "100%" }}>
+      <Breadcrumb aria-label="Example breadcrumb" items={[
+        { label: "Home", href: "/" },
+        { label: "Docs", href: "/docs/what-is-plopui" },
+        { label: "Components", href: "/docs/components/button" },
+        { label: "Breadcrumb" },
+      ]} />
     </div>
   ),
   buddy: () => <BuddyDemo />,

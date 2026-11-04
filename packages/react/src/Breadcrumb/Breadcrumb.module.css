@@ -1,0 +1,62 @@
+.root {
+  container-type: inline-size;
+  color: var(--plop-on);
+  font-family: var(--plop-font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.item, .disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+.link, .label, .current {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--plop-on-soft);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 4px;
+}
+.link:hover { color: var(--plop-on); text-decoration-style: solid; }
+.current { font-weight: 700; }
+.separator { width: 10px; height: 20px; flex: none; color: var(--plop-on-soft); }
+.disclosure { display: none; }
+.toggle {
+  display: inline-grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--plop-on);
+  font: inherit;
+  cursor: pointer;
+}
+.toggle:hover { text-decoration: underline; }
+.link:focus-visible, .toggle:focus-visible {
+  outline: 2px dashed var(--plop-focus);
+  outline-offset: 3px;
+}
+@container (max-width: 520px) {
+  .collapsible .disclosure { display: inline-flex; }
+  .collapsible:not([data-expanded]) .middle { display: none; }
+}
+/* No animation: expanding is immediate, including under reduced motion. */
