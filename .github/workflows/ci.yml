@@ -150,8 +150,9 @@ jobs:
 
   # Mobile Lighthouse on the built site (#67). Fails on what's stable on a runner: layout shift and
   # accessibility. Warns on the performance score (under 90), LCP (over 2.5 s) and blocking time: a runner's
-  # score swings by 0.2 between runs, so it can't gate a merge. Reports are kept as an artifact. Not in the
-  # required `ci` check yet.
+  # score swings by 0.2 between runs, so it can't gate a merge. Layout shift takes the median of its 3 values,
+  # not the median-score run's: one run in three can catch a late font on Linux (no Arial) and shift the home
+  # crowd by 0.3. Reports are kept as an artifact. Not in the required `ci` check yet.
   lighthouse:
     needs: [changes, build-site]
     if: needs.build-site.result == 'success'
