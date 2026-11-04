@@ -4,6 +4,7 @@ import { BuddyDemo } from "./BuddyDemo";
 import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
 import {
+  Breadcrumb,
   Avatar,
   AvatarStack,
   Button,
@@ -42,6 +43,16 @@ import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Swit
 
 /** Live demos for the generic component pages (app/docs/components/[slug]). */
 const DEMOS: Record<string, () => ReactNode> = {
+  breadcrumb: () => (
+    <div style={{ width: "100%" }}>
+      <Breadcrumb aria-label="Example breadcrumb" items={[
+        { label: "Home", href: "/" },
+        { label: "Docs", href: "/docs/what-is-plopui" },
+        { label: "Components", href: "/docs/components/button" },
+        { label: "Breadcrumb" },
+      ]} />
+    </div>
+  ),
   buddy: () => <BuddyDemo />,
   search: () => <SearchDemo />,
   select: () => <SelectDemo />,

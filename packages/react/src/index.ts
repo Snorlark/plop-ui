@@ -72,3 +72,5 @@ export {
   EditIcon,
   TrashIcon,
 } from "./icons.js";
+
+export { Breadcrumb, type BreadcrumbProps, type BreadcrumbItem } from "./Breadcrumb/Breadcrumb.js";
