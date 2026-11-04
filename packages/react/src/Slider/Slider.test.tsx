@@ -121,6 +121,20 @@ describe("Slider", () => {
     expect(container.querySelector('[style*="--slider-tilt"]')).toHaveAttribute("style", tilt);
   });
 
+  it("draws ruler ticks per step, tenths past 20 steps, or a set count, hidden from assistive tech", () => {
+    const ticks = (c: HTMLElement) => c.querySelectorAll('[aria-hidden="true"] > span');
+    const { container, rerender } = renderWithPlop(<Slider label="Radius" min={0} max={2} step={0.5} ticks />);
+    expect(ticks(container)).toHaveLength(5);
+    expect(container.querySelectorAll("[data-major]")).toHaveLength(3);
+    rerender(<Slider label="Volume" ticks />);
+    expect(ticks(container)).toHaveLength(11);
+    rerender(<Slider label="Volume" ticks={4} />);
+    expect(ticks(container)).toHaveLength(5);
+    rerender(<Slider label="Volume" />);
+    expect(ticks(container)).toHaveLength(0);
+    expect(screen.getByRole("slider")).toBeInTheDocument();
+  });
+
   it("uses AA text roles on all surfaces and contrasting ink on the paper track and mustard thumb", () => {
     for (const surface of surfaceNames) for (const theme of ["light", "dark"] as const) {
       const { on, onSoft, bg } = surfaces[surface][theme];

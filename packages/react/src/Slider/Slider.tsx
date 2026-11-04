@@ -26,9 +26,15 @@ export interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   showValue?: boolean;
   /** Format the displayed value and aria-valuetext, e.g. v => `${v}×`. */
   formatValue?: (value: number) => string;
+  /** Marker color of the filled part. Default `ink`. */
+  tone?: SliderTone;
+  /** Ruler ticks under the track: `true` marks every step (or tenths past 20 steps), a number sets how many gaps. Default `false`. */
+  ticks?: boolean | number;
   /** Stable imperfections, shared by server and client. Default generated from useId. */
   seed?: Seed;
 }
+
+export type SliderTone = "ink" | "tomato" | "mustard" | "mint" | "periwinkle" | "bubblegum";
 
 const ADJUST_KEYS = new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
 
@@ -43,7 +49,7 @@ function normalize(value: number, min: number, max: number, step: number | "any"
 /** A native range with a marker track and a paper-edged sticker thumb. */
 export function Slider({
   ref, label, value, defaultValue, min = 0, max = 100, step = 1,
-  onValueChange, onChange, showValue = false, formatValue, seed: seedProp,
+  onValueChange, onChange, showValue = false, formatValue, tone = "ink", ticks = false, seed: seedProp,
   className, style, id, dir, disabled, onKeyDown, onKeyUp, onBlur, ...input
 }: SliderProps) {
   const autoId = useId();
@@ -60,6 +66,15 @@ export function Slider({
   const current = normalize(value ?? uncontrolled, lower, upper, increment);
   const ratio = upper > lower ? (current - lower) / (upper - lower) : 0;
   const text = formatValue?.(current) ?? String(current);
+  const steps = increment === "any" ? Infinity : (upper - lower) / increment;
+  const gaps = typeof ticks === "number" ? Math.min(100, Math.max(1, Math.round(ticks))) : ticks ? (Number.isInteger(steps) && steps <= 20 ? steps : 10) : 0;
+  // Drawn by hand: each tick a little taller or shorter, a touch off vertical.
+  const tickMarks = Array.from({ length: gaps > 0 ? gaps + 1 : 0 }, (_, i) => ({
+    at: i / gaps,
+    major: i === 0 || i === gaps || i * 2 === gaps,
+    h: 5 + random() * 3,
+    r: (random() - 0.5) * 8,
+  }));
   const inputRef = useRef<HTMLInputElement>(null);
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
@@ -82,12 +97,19 @@ export function Slider({
   }
 
   return (
-    <div className={cx(styles.root, className)} style={{ "--slider-tilt": `${seededTilt(autoSeed, 5)}deg`, ...style } as CSSProperties} dir={dir}>
+    <div className={cx(styles.root, styles[tone], className)} style={{ "--slider-tilt": `${seededTilt(autoSeed, 5)}deg`, ...style } as CSSProperties} dir={dir}>
       <div className={styles.top}>
         <label className={styles.label} htmlFor={fieldId}>{label}</label>
         {showValue && <output className={styles.value} htmlFor={fieldId} aria-hidden="true">{text}</output>}
       </div>
-      <div className={styles.control}>
+      <div className={styles.control} data-ticks={gaps > 0 ? "" : undefined}>
+        {gaps > 0 && (
+          <span className={styles.ticks} aria-hidden="true">
+            {tickMarks.map((t, i) => (
+              <span key={i} data-major={t.major ? "" : undefined} style={{ "--at": t.at, "--h": `${t.major ? t.h + 4 : t.h}px`, "--r": `${t.r}deg` } as CSSProperties} />
+            ))}
+          </span>
+        )}
         <svg className={styles.track} viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true" focusable="false">
           <defs>
             <clipPath id={`${autoId}-fill`} clipPathUnits="userSpaceOnUse">

@@ -17,7 +17,27 @@
 .track path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .outline { stroke: var(--plop-ink); stroke-width: 13px; }
 .paper { stroke: var(--plop-paper); stroke-width: 8px; }
-.fill { stroke: var(--plop-ink); stroke-width: 8px; }
+.fill { stroke: var(--slider-fill, var(--plop-ink)); stroke-width: 8px; }
+.tomato { --slider-fill: var(--plop-tomato); }
+.mustard { --slider-fill: var(--plop-mustard); }
+.mint { --slider-fill: var(--plop-mint); }
+.periwinkle { --slider-fill: var(--plop-periwinkle); }
+.bubblegum { --slider-fill: var(--plop-bubblegum); }
+/* Ruler ticks hang under the track, inset like the track so each one sits under the thumb's center at its value. */
+.control[data-ticks] { margin-bottom: 10px; }
+.ticks { position: absolute; left: 16px; right: 16px; top: 38px; height: 12px; pointer-events: none; }
+.ticks > span {
+  position: absolute;
+  left: calc(var(--at) * 100%);
+  top: 0;
+  width: 2px;
+  height: var(--h);
+  margin-left: -1px;
+  border-radius: 999px;
+  background: var(--plop-on-soft);
+  transform: rotate(var(--r));
+}
+.ticks > [data-major] { width: 2.5px; background: var(--plop-on); }
 [data-plop-filters] .track { filter: url(#plop-wob1); }
 .input {
   position: relative;
@@ -74,7 +94,7 @@
 .input:disabled { cursor: not-allowed; }
 /* System high-contrast mode gets its native track and thumb back. */
 @media (forced-colors: active) {
-  .track { display: none; }
+  .track, .ticks { display: none; }
   .input { appearance: auto; -webkit-appearance: auto; }
   .input::-webkit-slider-thumb { all: revert; }
   .input::-moz-range-thumb { all: revert; }

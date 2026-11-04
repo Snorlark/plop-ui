@@ -252,7 +252,8 @@ html[data-tear]::view-transition-old(root) {
 .doc-table td { padding: 13px 18px; border-bottom: 2px dashed rgba(40,72,216,.25); vertical-align: top; color: var(--plop-ink-text); }
 .doc-table tr:last-child td { border-bottom: 0; }
 .doc-table .mono { font-family: var(--plop-font-mono); font-size: 14px; }
-.doc-table .req { color: var(--plop-tomato-text); font-family: var(--plop-font-body); font-weight: 700; font-size: 13px; }
+.doc-table .req { display: inline-block; margin-left: 8px; vertical-align: middle; }
+.doc-table .req > [data-plop-tag] { font-size: 11px; padding: 3px 9px; }
 /* Phones: each prop becomes a little card (name, type, default, what it does) instead of a table to scroll sideways. */
 @media (max-width: 640px) {
   .doc-table table { min-width: 0; }

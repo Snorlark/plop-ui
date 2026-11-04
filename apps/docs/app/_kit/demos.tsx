@@ -49,6 +49,8 @@ const DEMOS: Record<string, () => ReactNode> = {
       <Slider label="Pencil pressure" defaultValue={40} showValue />
       <Slider label="Radius" defaultValue={1} min={0} max={2} step={0.1} showValue formatValue={(v) => `${v}×`} />
       <Slider label="Volume" defaultValue={60} showValue disabled />
+      <Slider label="Spice" defaultValue={3} min={0} max={5} tone="tomato" ticks showValue />
+      <Slider label="Mood" defaultValue={70} tone="mint" ticks={4} />
     </div>
   ),
   breadcrumb: () => (
