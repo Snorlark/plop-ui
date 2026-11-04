@@ -1,5 +1,11 @@
 # @plop-ui/react
 
+## 0.9.0
+
+### Minor Changes
+
+- f8f3df4: Add Slider: a native range input with a wobbly marker track, a paper-edged sticker thumb, token-based press and spring feedback, optional formatted values, and controlled/uncontrolled form support. Replace the Playground's radius and numeric controls with the library slider.
+
 ## 0.8.0
 
 ### Minor Changes
