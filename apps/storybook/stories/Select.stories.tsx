@@ -1,5 +1,6 @@
 import { MultiSelect, Select, type SelectOption } from "@plop-ui/react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
 
 const BRUSHES: SelectOption[] = [
   { value: "pencil", label: "Pencil", hint: "Light and scratchy", lead: { dot: "periwinkle" } },
@@ -30,3 +31,24 @@ export const Multi: Story = { render: () => <MultiSelect label="Tags" options={T
 export const Error: Story = { args: { placeholder: "Pick a brush", error: "Pick a brush before you post." } };
 export const Disabled: Story = { args: { defaultValue: "pencil", disabled: true, hint: "Locked while the sketch is shipping." } };
 export const Loading: Story = { args: { label: "Collaborator", options: [], placeholder: "Loading friends", loading: true } };
+
+/** `name` puts the value in a plain <form> (and a Server Action). Pick, then submit to see what the form sends. */
+function InAFormDemo() {
+  const [sent, setSent] = useState("");
+  return (
+    <form
+      style={{ display: "grid", gap: 16 }}
+      onSubmit={(e) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        setSent(JSON.stringify({ brush: data.get("brush"), tags: data.getAll("tags") }));
+      }}
+    >
+      <Select label="Brush" name="brush" options={BRUSHES} placeholder="Pick a brush" />
+      <MultiSelect label="Tags" name="tags" options={TAGS} placeholder="Any tag" />
+      <button type="submit">Send</button>
+      {sent && <pre aria-live="polite">{sent}</pre>}
+    </form>
+  );
+}
+export const InAForm: Story = { render: () => <InAFormDemo /> };

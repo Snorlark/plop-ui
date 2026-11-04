@@ -52,6 +52,10 @@ interface SelectBaseProps {
   loading?: boolean;
   /** Extra class on the field wrapper. */
   className?: string;
+  /**
+   * The field's name in a plain `<form>` or a Next.js Server Action. The picked value is submitted through a hidden input, so `new FormData(form).get(name)` returns it (an empty string while nothing is picked, and nothing at all while the field is `disabled`). A MultiSelect submits one entry per picked value: read them with `getAll(name)`.
+   */
+  name?: string;
 }
 
 export interface SelectProps extends SelectBaseProps {
@@ -126,6 +130,7 @@ function SelectCore({
   disabled = false,
   loading = false,
   className,
+  name,
 }: SelectBaseProps & { multiple: boolean; chosen: string[]; pick: (value: string) => void }) {
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
@@ -384,6 +389,12 @@ function SelectCore({
         </div>
       )}
       </div>
+
+      {/* The form value: a hidden input per picked option, so a plain <form> or a Server Action gets it. Only values that are in `options` count, as those are the ones the trigger shows. */}
+      {name &&
+        (multiple ? picked.map((o) => o.value) : [picked[0]?.value ?? ""]).map((v) => (
+          <input key={v} type="hidden" name={name} value={v} disabled={disabled} />
+        ))}
 
       {message && (
         // A div, not a <p>: page prose styles shouldn't resize the field's own message.

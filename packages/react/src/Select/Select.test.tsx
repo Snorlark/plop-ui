@@ -17,6 +17,87 @@ const PEOPLE: SelectOption[] = [
   { value: "ana", label: "Ana Cruz", hint: "Letterer", group: "Away", lead: { avatar: "Ana Cruz" } },
 ];
 
+describe("Select in a form", () => {
+  const formOf = (container: HTMLElement) => container.querySelector("form") as HTMLFormElement;
+
+  it("submits the picked option through a hidden input named by `name`", async () => {
+    const { container } = renderWithPlop(
+      <form>
+        <Select label="Drink" name="drink" options={BRUSHES} />
+      </form>,
+    );
+    expect(new FormData(formOf(container)).get("drink")).toBe("");
+    await userEvent.click(screen.getByRole("button", { name: /Drink/ }));
+    await userEvent.click(screen.getByRole("option", { name: "Marker" }));
+    const input = container.querySelector('input[type="hidden"][name="drink"]') as HTMLInputElement;
+    expect(input.value).toBe("marker");
+    expect(new FormData(formOf(container)).get("drink")).toBe("marker");
+  });
+
+  it("submits a default value from the start, and follows a controlled value", () => {
+    const first = renderWithPlop(
+      <form>
+        <Select label="Drink" name="drink" options={BRUSHES} defaultValue="ink" />
+      </form>,
+    );
+    expect(new FormData(formOf(first.container)).get("drink")).toBe("ink");
+    first.unmount();
+    const second = renderWithPlop(
+      <form>
+        <Select label="Drink" name="drink" options={BRUSHES} value="pencil" />
+      </form>,
+    );
+    expect(new FormData(formOf(second.container)).get("drink")).toBe("pencil");
+  });
+
+  it("submits nothing for a value that no option has, because the trigger does not show it", () => {
+    const { container } = renderWithPlop(
+      <form>
+        <Select label="Drink" name="drink" options={BRUSHES} value="water" />
+      </form>,
+    );
+    expect(new FormData(formOf(container)).get("drink")).toBe("");
+    expect(screen.getByRole("button", { name: /Drink/ })).toHaveTextContent("Choose…");
+  });
+
+  it("renders no input without a `name`, and none is submitted while the field is disabled", () => {
+    const { container } = renderWithPlop(
+      <form>
+        <Select label="Drink" options={BRUSHES} defaultValue="ink" />
+        <Select label="Locked" name="locked" options={BRUSHES} defaultValue="ink" disabled />
+      </form>,
+    );
+    expect(container.querySelectorAll('input[type="hidden"]')).toHaveLength(1);
+    expect(new FormData(formOf(container)).has("locked")).toBe(false);
+  });
+
+  it("keeps the keyboard and the accessibility tree as they were", () => {
+    renderWithPlop(
+      <form>
+        <Select label="Drink" name="drink" options={BRUSHES} />
+      </form>,
+    );
+    expect(screen.getAllByRole("button")).toHaveLength(1);
+    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(document.querySelector('input[type="hidden"]')).not.toHaveAttribute("tabindex");
+  });
+
+  it("submits one entry per picked option in a MultiSelect, in the order of the options", async () => {
+    const { container } = renderWithPlop(
+      <form>
+        <MultiSelect label="Brushes" name="brushes" options={BRUSHES} />
+      </form>,
+    );
+    expect(new FormData(formOf(container)).getAll("brushes")).toEqual([]);
+    await userEvent.click(screen.getByRole("button", { name: /Brushes/ }));
+    await userEvent.click(screen.getByRole("option", { name: "Ink pen" }));
+    await userEvent.click(screen.getByRole("option", { name: "Pencil" }));
+    expect(new FormData(formOf(container)).getAll("brushes")).toEqual(["pencil", "ink"]);
+    await userEvent.click(screen.getByRole("option", { name: "Pencil" }));
+    expect(new FormData(formOf(container)).getAll("brushes")).toEqual(["ink"]);
+  });
+});
+
 describe("Select", () => {
   it("opens from the keyboard, skips disabled options, picks with Enter and hands focus back", async () => {
     const onValueChange = vi.fn();
