@@ -30,7 +30,10 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
 <Slider label="Radius" min={0} max={2} step={0.1}
   value={radius} onValueChange={setRadius}
   showValue formatValue={(v) => \`\${v}×\`} />
-<Slider label="Volume" defaultValue={60} disabled showValue />`,
+<Slider label="Volume" defaultValue={60} disabled showValue />
+
+// A colored marker fill, and ruler ticks at every step:
+<Slider label="Spice" min={0} max={5} defaultValue={3} tone="tomato" ticks showValue />`,
     tables: [{ of: "Slider", inheritedFrom: '<input type="range">' }],
     do: "Use it for approximate adjustments like volume, pressure or corner radius. Give every slider a visible label; use formatValue to explain units.",
     dont: "Use a slider for precise data entry or implement a second keyboard interaction. The native range already handles arrows, Home and End.",
@@ -39,6 +42,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Tab focuses the input. Arrow keys adjust it and Home/End reach the bounds using the browser's built-in behavior.",
       "formatValue sets aria-valuetext even when showValue is false. The visible value is decorative, avoiding duplicate live announcements.",
       "A 44px-high input supports pointer and touch dragging. Disabled sliders leave the tab order; name and form work with native forms.",
+      "Ruler ticks and the fill color are decorative and hidden from screen readers; the value is announced by the native input.",
       "Surface text tokens keep labels readable in all light/dark surfaces. Reduced motion removes thumb transforms and transitions; forced colors restore the native range appearance.",
     ],
   },
@@ -46,7 +50,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     title: "Breadcrumb",
     group: "Navigation",
     badges: ["Client component", AA],
-    lede: "A trail of marker slashes from home to here. Intermediate pages tuck behind an ellipsis in narrow containers; reveal them with a click, Enter or Space.",
+    lede: "A trail of hand-drawn chevrons from home to here. Intermediate pages tuck behind an ellipsis in narrow containers; reveal them with a click, Enter or Space.",
     code: `import { Breadcrumb } from "@plop-ui/react";
 import Link from "next/link"; // Only in your app; optional for plain anchors.
 

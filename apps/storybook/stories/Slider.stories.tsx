@@ -21,6 +21,17 @@ export const Fractional: Story = { args: { label: "Radius", min: 0, max: 2, step
 export const Negative: Story = { args: { label: "Tilt", min: -20, max: 20, step: 0.5, defaultValue: -5, formatValue: (v) => `${v}°` } };
 export const Continuous: Story = { args: { label: "Mix", min: 0, max: 1, step: "any", defaultValue: 0.365, formatValue: (v) => v.toFixed(3) } };
 export const FixedBounds: Story = { args: { label: "Fixed pressure", min: 5, max: 5, defaultValue: 5 } };
+export const Tones: Story = {
+  render: (args) => (
+    <div style={{ display: "grid", gap: 20 }}>
+      {(["ink", "tomato", "mustard", "mint", "periwinkle", "bubblegum"] as const).map((tone) => <Slider key={tone} {...args} label={tone} tone={tone} />)}
+    </div>
+  ),
+};
+export const TicksPerStep: Story = { args: { label: "Spice", min: 0, max: 5, defaultValue: 3, ticks: true } };
+export const TicksTenths: Story = { args: { ticks: true } };
+export const TicksCount: Story = { args: { ticks: 4, tone: "mint" } };
+export const TicksRightToLeft: Story = { args: { ticks: true, dir: "rtl" } };
 export const Narrow: Story = { decorators: [(Story) => <div style={{ width: 180 }}><Story /></div>] };
 export const RightToLeft: Story = { args: { dir: "rtl" } };
 export const SquareCorners: Story = { decorators: [(Story) => <PlopProvider roundness={0}><Story /></PlopProvider>] };

@@ -73,5 +73,5 @@ export {
   TrashIcon,
 } from "./icons.js";
 
-export { Slider, type SliderProps } from "./Slider/Slider.js";
+export { Slider, type SliderProps, type SliderTone } from "./Slider/Slider.js";
 export { Breadcrumb, type BreadcrumbProps, type BreadcrumbItem } from "./Breadcrumb/Breadcrumb.js";

@@ -46,6 +46,7 @@ import {
   type ButtonVariant,
   BURST_STYLES,
   type BurstStyle,
+  type SliderTone,
 } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useSearchParams } from "next/navigation";
@@ -96,11 +97,13 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "text", name: "label", label: "Label", default: "Pencil pressure" },
       { kind: "number", name: "value", label: "Value", default: 40, min: 0, max: 100, step: 1 },
       { kind: "number", name: "step", label: "Step", default: 1, min: 1, max: 20, step: 1 },
+      { kind: "select", name: "tone", label: "Fill", options: ["ink", "tomato", "mustard", "mint", "periwinkle", "bubblegum"], default: "ink" },
+      { kind: "boolean", name: "ticks", label: "Ruler ticks", default: true },
       { kind: "boolean", name: "showValue", label: "Show value", default: true },
       { kind: "boolean", name: "disabled", label: "Disabled", default: false },
     ],
-    render: (v) => <div style={{ width: "100%", maxWidth: 400 }}><Slider label={s(v.label)} defaultValue={n(v.value)} key={`${v.value}-${v.step}`} step={n(v.step)} showValue={b(v.showValue)} disabled={b(v.disabled)} /></div>,
-    code: (v) => `<Slider label=${jsxAttr(v.label)} defaultValue={${n(v.value)}}${prop("step", v.step, 1)}${prop("showValue", v.showValue, false)}${prop("disabled", v.disabled, false)} />`,
+    render: (v) => <div style={{ width: "100%", maxWidth: 400 }}><Slider label={s(v.label)} defaultValue={n(v.value)} key={`${v.value}-${v.step}`} step={n(v.step)} tone={s(v.tone) as SliderTone} ticks={b(v.ticks)} showValue={b(v.showValue)} disabled={b(v.disabled)} /></div>,
+    code: (v) => `<Slider label=${jsxAttr(v.label)} defaultValue={${n(v.value)}}${prop("step", v.step, 1)}${prop("tone", v.tone, "ink")}${prop("ticks", v.ticks, false)}${prop("showValue", v.showValue, false)}${prop("disabled", v.disabled, false)} />`,
   },
   button: {
     label: "Button",
