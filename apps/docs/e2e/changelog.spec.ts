@@ -21,7 +21,8 @@ test("picking a release from the timeline (a Select on phones) opens it and mark
   const id = (await page.locator("section[id^='v']").last().getAttribute("id"))!;
   if (isMobile) {
     await page.getByRole("button", { name: /Jump to a release/ }).click();
-    await page.getByRole("option", { name: /^0\.1/ }).click();
+    // The oldest release, the same one `id` names (options run newest first; "0.1" alone would also match 0.10+).
+    await page.getByRole("option").last().click();
   } else {
     const nav = page.getByRole("navigation", { name: "Releases" });
     await nav.locator(`a[href='#${id}']`).click();

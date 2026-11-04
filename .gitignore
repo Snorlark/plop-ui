@@ -27,3 +27,7 @@ TASKS.md
 
 # Lighthouse CI reports (apps/docs/lighthouserc.json)
 .lighthouseci/
+
+# graphify knowledge graph output (local)
+graphify-out/
+CLAUDE.local.md
