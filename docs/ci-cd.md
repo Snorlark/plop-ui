@@ -79,6 +79,7 @@ pnpm users get a new version about 24 hours after you approve it: pnpm 11 waits 
 
 - **A browser job is red:** open it, expand the failed step, read the first error. Click **Re-run failed jobs** only if it looks unrelated to your change (a timeout, a network error).
 - **Firefox failed once, then passed on retry:** expected. Firefox rarely throws a hydration error (React #418, about 1 in 130 page loads), so the Firefox job retries once. It's tracked in [issue #63](https://github.com/Snorlark/plop-ui/issues/63).
+- **`dependency-review` is red:** the pull request adds or bumps a dependency with a known high or critical vulnerability. Its summary names the package and the advisory; pick a fixed version. If it says the dependency graph is off, turn it on in **Settings** → **Advanced Security**.
 - **`ci` is red but every job is green:** a job was cancelled (usually a newer push replaced it). Re-run, or push again.
 - **The bot's PR has no `ci` check:** open Actions → CI → **Run workflow**, pick the branch `changeset-release/main`, run it.
 - **Release fails with `ENEEDAUTH` for a package:** that package's trusted publisher on npm expired or is missing. On npmjs.com: the package → Settings → **Trusted Publisher** must show `Snorlark/plop-ui`, `release.yml`, permission **npm stage publish**, status **Valid**. Fix it, then re-run the Release workflow. Don't approve react until tokens' new version is live.

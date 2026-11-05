@@ -1,3 +1,4 @@
+import { Tag } from "@plop-ui/react";
 import props from "../_generated/props.json";
 
 type Name = keyof typeof props;
@@ -23,7 +24,13 @@ export function PropsTable({ of, inheritedFrom }: { of: Name; inheritedFrom?: st
               <tr key={p.name}>
                 <td className="mono">
                   {p.name}
-                  {p.required && <span className="req"> required</span>}
+                  {p.required && (
+                    <span className="req">
+                      <Tag tone="tomato" tilt={-3}>
+                        required
+                      </Tag>
+                    </span>
+                  )}
                 </td>
                 <td className="mono" data-label="Type">
                   {p.type}

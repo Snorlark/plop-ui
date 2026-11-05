@@ -1,6 +1,6 @@
 {
   "name": "@plop-ui/react",
-  "version": "0.7.1",
+  "version": "0.10.0",
   "description": "PlopUI: hand-drawn React UI, imperfect on purpose. Wobbly stickers, washi tape and a hand-lettered font, accessible to WCAG AA.",
   "license": "MIT",
   "author": "Lark Sigmuond Babao",
@@ -74,13 +74,13 @@
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.7",
     "@vitejs/plugin-react": "4.7.0",
-    "@vitest/coverage-v8": "3.2.7",
+    "@vitest/coverage-v8": "4.1.12",
     "esbuild": "0.25.12",
     "jsdom": "26.1.0",
     "react": "19.2.9",
     "react-dom": "19.2.9",
     "size-limit": "11.2.0",
     "typescript": "5.9.3",
-    "vitest": "3.2.7"
+    "vitest": "4.1.12"
   }
 }

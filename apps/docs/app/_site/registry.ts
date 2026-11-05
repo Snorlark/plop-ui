@@ -19,6 +19,63 @@ const AA = "WCAG AA";
 const V01 = "Since v0.1";
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  slider: {
+    title: "Slider",
+    group: "Inputs",
+    badges: ["Client component", AA],
+    lede: "A marker stroke with a mustard sticker to grab. The thumb squishes into the paper when pressed and springs back on release; a native range input does the work underneath.",
+    code: `import { Slider } from "@plop-ui/react";
+
+<Slider label="Pencil pressure" defaultValue={40} showValue />
+<Slider label="Radius" min={0} max={2} step={0.1}
+  value={radius} onValueChange={setRadius}
+  showValue formatValue={(v) => \`\${v}×\`} />
+<Slider label="Volume" defaultValue={60} disabled showValue />
+
+// A colored marker fill, and ruler ticks at every step:
+<Slider label="Spice" min={0} max={5} defaultValue={3} tone="tomato" ticks showValue />`,
+    tables: [{ of: "Slider", inheritedFrom: '<input type="range">' }],
+    do: "Use it for approximate adjustments like volume, pressure or corner radius. Give every slider a visible label; use formatValue to explain units.",
+    dont: "Use a slider for precise data entry or implement a second keyboard interaction. The native range already handles arrows, Home and End.",
+    a11y: [
+      "A native input type=range with an associated visible label. min, max and step define its values; the last step never exceeds max.",
+      "Tab focuses the input. Arrow keys adjust it and Home/End reach the bounds using the browser's built-in behavior.",
+      "formatValue sets aria-valuetext even when showValue is false. The visible value is decorative, avoiding duplicate live announcements.",
+      "A 44px-high input supports pointer and touch dragging. Disabled sliders leave the tab order; name and form work with native forms.",
+      "Ruler ticks and the fill color are decorative and hidden from screen readers; the value is announced by the native input.",
+      "Surface text tokens keep labels readable in all light/dark surfaces. Reduced motion removes thumb transforms and transitions; forced colors restore the native range appearance.",
+    ],
+  },
+  breadcrumb: {
+    title: "Breadcrumb",
+    group: "Navigation",
+    badges: ["Client component", AA],
+    lede: "A trail of hand-drawn chevrons from home to here. Intermediate pages tuck behind an ellipsis in narrow containers; reveal them with a click, Enter or Space.",
+    code: `import { Breadcrumb } from "@plop-ui/react";
+import Link from "next/link"; // Only in your app; optional for plain anchors.
+
+<Breadcrumb as={Link} items={[
+  { label: "Home", href: "/" },
+  { label: "Docs", href: "/docs/what-is-plopui" },
+  { label: "Breadcrumb" },
+]} />
+
+// Keep every ancestor visible even in narrow containers:
+<Breadcrumb collapse={false} items={[
+  { label: "Home", href: "/" },
+  { label: "Current page" },
+]} />`,
+    tables: [{ of: "Breadcrumb", inheritedFrom: "<nav>" }],
+    do: "List locations in hierarchy order. The last item is always the current page. Set href on ancestors; omit it for a non-navigable category.",
+    dont: "Use breadcrumbs as browsing history, or replace primary navigation with them.",
+    a11y: [
+      "Native nav with aria-label=Breadcrumb and an ordered list. Override aria-label when more than one trail is present.",
+      "The final item has aria-current=page and never renders as a link, even if given an href.",
+      "Marker separators are decorative and hidden from screen readers. Tab visits ancestor links; Enter follows them.",
+      "Below 520px of container width, a labelled button reveals intermediate items with Enter or Space. It keeps focus and reports aria-expanded.",
+      "Surface text and focus tokens work across all five surfaces in light and dark. There is no animation, including under reduced motion.",
+    ],
+  },
   button: {
     title: "Button",
     group: "Actions",

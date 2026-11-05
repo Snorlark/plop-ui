@@ -4,6 +4,8 @@ import { BuddyDemo } from "./BuddyDemo";
 import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
 import {
+  Slider,
+  Breadcrumb,
   Avatar,
   AvatarStack,
   Button,
@@ -42,6 +44,25 @@ import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Swit
 
 /** Live demos for the generic component pages (app/docs/components/[slug]). */
 const DEMOS: Record<string, () => ReactNode> = {
+  slider: () => (
+    <div style={{ display: "grid", gap: 28, width: "100%", maxWidth: 400 }}>
+      <Slider label="Pencil pressure" defaultValue={40} showValue />
+      <Slider label="Radius" defaultValue={1} min={0} max={2} step={0.1} showValue formatValue={(v) => `${v}×`} />
+      <Slider label="Volume" defaultValue={60} showValue disabled />
+      <Slider label="Spice" defaultValue={3} min={0} max={5} tone="tomato" ticks showValue />
+      <Slider label="Mood" defaultValue={70} tone="mint" ticks={4} />
+    </div>
+  ),
+  breadcrumb: () => (
+    <div style={{ width: "100%" }}>
+      <Breadcrumb aria-label="Example breadcrumb" items={[
+        { label: "Home", href: "/" },
+        { label: "Docs", href: "/docs/what-is-plopui" },
+        { label: "Components", href: "/docs/components/button" },
+        { label: "Breadcrumb" },
+      ]} />
+    </div>
+  ),
   buddy: () => <BuddyDemo />,
   search: () => <SearchDemo />,
   select: () => <SelectDemo />,

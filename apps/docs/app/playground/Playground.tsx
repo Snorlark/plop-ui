@@ -18,6 +18,7 @@ import {
   Loader,
   Progress,
   ProgressRing,
+  Slider,
   Skeleton,
   SkeletonText,
   Spinner,
@@ -45,6 +46,7 @@ import {
   type ButtonVariant,
   BURST_STYLES,
   type BurstStyle,
+  type SliderTone,
 } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { useSearchParams } from "next/navigation";
@@ -91,6 +93,21 @@ function prop(name: string, value: Value | undefined, def?: Value) {
 }
 
 const ENTRIES: Record<string, Entry> = {
+  slider: {
+    label: "Slider",
+    rounds: true,
+    controls: [
+      { kind: "text", name: "label", label: "Label", default: "Pencil pressure" },
+      { kind: "number", name: "value", label: "Value", default: 40, min: 0, max: 100, step: 1 },
+      { kind: "number", name: "step", label: "Step", default: 1, min: 1, max: 20, step: 1 },
+      { kind: "select", name: "tone", label: "Fill", options: ["ink", "tomato", "mustard", "mint", "periwinkle", "bubblegum"], default: "ink" },
+      { kind: "boolean", name: "ticks", label: "Ruler ticks", default: true },
+      { kind: "boolean", name: "showValue", label: "Show value", default: true },
+      { kind: "boolean", name: "disabled", label: "Disabled", default: false },
+    ],
+    render: (v) => <div style={{ width: "100%", maxWidth: 400 }}><Slider label={s(v.label)} defaultValue={n(v.value)} key={`${v.value}-${v.step}`} step={n(v.step)} tone={s(v.tone) as SliderTone} ticks={b(v.ticks)} showValue={b(v.showValue)} disabled={b(v.disabled)} /></div>,
+    code: (v) => `<Slider label=${jsxAttr(v.label)} defaultValue={${n(v.value)}}${prop("step", v.step, 1)}${prop("tone", v.tone, "ink")}${prop("ticks", v.ticks, false)}${prop("showValue", v.showValue, false)}${prop("disabled", v.disabled, false)} />`,
+  },
   button: {
     label: "Button",
     rounds: true,
@@ -554,6 +571,7 @@ const ENTRIES: Record<string, Entry> = {
 };
 
 const IMPORTS: Record<string, string> = {
+  slider: "Slider",
   button: "Button",
   "icon-button": "IconButton",
   tag: "Tag",
@@ -616,15 +634,7 @@ function ControlField({ control, value, onChange }: { control: Control; value: V
     case "text":
       return <TextField label={control.label} value={s(value)} onChange={(e) => onChange(e.target.value)} />;
     case "number":
-      return (
-        <label className="pg-range">
-          <span>
-            {control.label} <output>{n(value)}</output>
-          </span>
-          {/* Named on the input itself: the wrapping label's <output> kept browsers from naming it. */}
-          <input type="range" aria-label={control.label} min={control.min} max={control.max} step={control.step} value={n(value)} onChange={(e) => onChange(Number(e.target.value))} />
-        </label>
-      );
+      return <Slider label={control.label} min={control.min} max={control.max} step={control.step} value={n(value)} showValue onValueChange={onChange} />;
   }
 }
 
@@ -686,14 +696,7 @@ export function Playground() {
               </Radio>
             ))}
           </RadioGroup>
-          {rounds && (
-            <label className="pg-range pg-radius">
-              <span>
-                Radius <output>{roundness}×</output>
-              </span>
-              <input type="range" aria-label="Radius" min={0} max={2} step={0.1} value={roundness} onChange={(e) => setRoundness(Number(e.target.value))} />
-            </label>
-          )}
+          {rounds && <Slider className="pg-radius" label="Radius" min={0} max={2} step={0.1} value={roundness} showValue formatValue={(v) => `${v}×`} onValueChange={setRoundness} />}
           <Switch checked={theme === "dark"} onCheckedChange={(on) => setTheme(on ? "dark" : "light")} color="ink">
             Dark
           </Switch>

@@ -1,5 +1,23 @@
 # @plop-ui/react
 
+## 0.10.0
+
+### Minor Changes
+
+- 83e2bbe: Slider takes a `tone` for its marker fill and `ticks` for hand-drawn ruler marks under the track. Breadcrumb now letters its trail like the site nav, with hand-drawn chevrons between levels instead of slashes: a highlighter swipe on hover and focus, and a tomato underline under the current page.
+
+## 0.9.0
+
+### Minor Changes
+
+- f8f3df4: Add Slider: a native range input with a wobbly marker track, a paper-edged sticker thumb, token-based press and spring feedback, optional formatted values, and controlled/uncontrolled form support. Replace the Playground's radius and numeric controls with the library slider.
+
+## 0.8.0
+
+### Minor Changes
+
+- cc7c314: Add Breadcrumb with native navigation and ordered-list semantics, marker slash separators, router link adapters, and keyboard-accessible disclosure of intermediate pages in narrow containers. Use it above docs page titles.
+
 ## 0.7.1
 
 ### Patch Changes

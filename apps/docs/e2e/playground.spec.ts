@@ -337,6 +337,8 @@ const radiusChanges = (page: Page) =>
           const css = getComputedStyle(el, p);
           return css.content !== "none" && Math.min(parseFloat(css.width) || 0, parseFloat(css.height) || 0) >= 6 ? [corners(css)] : [];
         });
+        // A range thumb's corners can't be read back (Chrome returns the input's own style), so compare the token it's drawn with.
+        if (el instanceof HTMLInputElement && el.type === "range") pseudos.push(getComputedStyle(el).getPropertyValue("--plop-radius-face"));
         return [...own, ...pseudos];
       }).join("|");
     const el = stage as HTMLElement;

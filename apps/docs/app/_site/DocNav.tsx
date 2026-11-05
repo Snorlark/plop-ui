@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownIcon, IconButton } from "@plop-ui/react";
+import { ArrowDownIcon, Breadcrumb as PlopBreadcrumb, IconButton } from "@plop-ui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useId, useRef, useState } from "react";
@@ -116,15 +116,22 @@ export function DocPager() {
   );
 }
 
-/** "Section / Page" above the title. */
+/** Linked hierarchy above every docs title. */
 export function Breadcrumb() {
   const path = usePathname();
   const section = DOC_NAV.find((s) => s.links.some((l) => l.href === path));
   const page = section?.links.find((l) => l.href === path);
   if (!section || !page) return null;
   return (
-    <div className="doc-crumb">
-      {section.group} / {page.label}
-    </div>
+    <PlopBreadcrumb
+      key={path}
+      className="doc-crumb"
+      as={Link}
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Docs", href: "/docs/what-is-plopui" },
+        { label: page.label },
+      ]}
+    />
   );
 }

@@ -1,4 +1,4 @@
-# 0030: Measured tray previews, and a Radius slider only where it does something
+# 0032: Measured tray previews, and a Radius slider only where it does something
 
 Two Playground fixes that each had a simpler-looking option.
 
