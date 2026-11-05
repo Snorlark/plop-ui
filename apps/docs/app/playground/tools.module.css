@@ -120,14 +120,15 @@
 .tray .pills { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
 .trayGrid { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 6px; scrollbar-width: thin; }
 .trayItem {
-  position: relative; flex: 0 0 132px; display: grid; grid-template-rows: 1fr auto; place-items: center; height: 92px; padding: 4px;
+  position: relative; flex: 0 0 132px; display: grid; grid-template: minmax(0, 1fr) auto / minmax(0, 1fr); place-items: center; height: 92px; padding: 4px;
   border: 2px dashed color-mix(in srgb, var(--plop-ink) 25%, transparent); border-radius: 12px; background: var(--plop-sheet);
   overflow: hidden; transition: transform 0.25s var(--plop-ease-spring), border-color 0.2s;
 }
 .trayItem:hover, .trayItem:focus-within { border-color: var(--plop-ink); transform: rotate(-2deg) scale(1.03); }
-.trayPreview { display: grid; place-items: center; width: 100%; height: 100%; transform: scale(0.6); pointer-events: none; }
-.trayPreview:is([data-kind="word"], [data-kind="timeline"], [data-kind="toast"], [data-kind="ticket"], [data-kind="unit"], [data-kind="textfield"],
-  [data-kind="textarea"], [data-kind="search"], [data-kind="select"], [data-kind="multiselect"], [data-kind="tabs"], [data-kind="radio"]) { transform: scale(0.4); }
+.trayStage { position: relative; display: block; width: 100%; height: 100%; pointer-events: none; }
+/* Takes its own width from the origin at the stage's center; TrayPreview then measures and fits it. The transform here only shows until that runs.
+   Never transitioned, even by a global reduced-motion rule: the fit has to read its untransformed size straight away. */
+.trayPreview { position: absolute; left: 50%; top: 50%; display: grid; width: max-content; transform-origin: 0 0; transform: scale(0.4) translate(-50%, -50%); transition: none !important; }
 .trayHint { font-size: 12px; line-height: 1.2; color: var(--plop-ink-soft); text-align: center; white-space: nowrap; }
 .trayAdd { position: absolute; inset: 0; margin: 0; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: grab; touch-action: none; }
 .trayAdd:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: -4px; }

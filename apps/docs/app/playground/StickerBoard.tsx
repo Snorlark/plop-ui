@@ -2,7 +2,7 @@
 
 import { Buddy, Button, PlopProvider, seededTilt, Select, toast, useHaptics, useSound } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { getPass, getServerPass, subscribe } from "../_site/pass";
 import { useBoardHistory, type Board } from "./history";
 import { Inspector } from "./Inspector";
@@ -384,9 +384,7 @@ export function StickerBoard() {
           {shelfItems.map((entry, i) => (
             <div role="listitem" key={`${shelf}-${i}`} className={styles.trayItem}>
               {/* The preview is a real component, so it sits beside the add button rather than inside it. */}
-              <span className={styles.trayPreview} data-kind={entry.kind} aria-hidden="true" inert>
-                {KINDS[entry.kind].render(entry.props)}
-              </span>
+              <TrayPreview entry={entry} />
               <span className={styles.trayHint} aria-hidden="true">
                 {entry.hint}
               </span>
@@ -423,6 +421,74 @@ export function StickerBoard() {
   );
 }
 
+
+/** Small stickers stop growing here, so a Count doesn't fill its tile. */
+const TRAY_MAX_SCALE = 0.6;
+/** Breathing room inside the tile, which also absorbs its hover tilt. */
+const TRAY_INSET = 4;
+
+/** The box of everything you can see in `el`, including what hangs outside its layout box (a Buddy's head, a Tooltip's bubble). */
+function visibleBounds(el: HTMLElement) {
+  const rects = [el, ...el.querySelectorAll("*")].flatMap((node) => {
+    const r = node.getBoundingClientRect();
+    if (!r.width || !r.height) return [];
+    const css = getComputedStyle(node);
+    return css.visibility === "hidden" || css.opacity === "0" ? [] : [r];
+  });
+  return {
+    left: Math.min(...rects.map((r) => r.left)),
+    right: Math.max(...rects.map((r) => r.right)),
+    top: Math.min(...rects.map((r) => r.top)),
+    bottom: Math.max(...rects.map((r) => r.bottom)),
+  };
+}
+
+/** A sticker shrunk to fit its tile and centered by what's visible. Measured, because no fixed scale suits every kind, font and tile width. */
+function TrayPreview({ entry }: { entry: TrayEntry }) {
+  const stage = useRef<HTMLSpanElement>(null);
+  const art = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const box = stage.current;
+    const el = art.current;
+    if (!box || !el) return;
+    const fit = () => {
+      const w = box.clientWidth - TRAY_INSET * 2;
+      const h = box.clientHeight - TRAY_INSET * 2;
+      el.style.transform = "none";
+      const b = visibleBounds(el);
+      const origin = el.getBoundingClientRect();
+      if (w <= 0 || h <= 0 || b.right <= b.left || b.bottom <= b.top) {
+        el.style.transform = "";
+        return;
+      }
+      const scale = Math.min(TRAY_MAX_SCALE, w / (b.right - b.left), h / (b.bottom - b.top));
+      // The art's origin sits at the stage's center, so moving the bounds' center onto it centers the art.
+      const x = -scale * ((b.left + b.right) / 2 - origin.left);
+      const y = -scale * ((b.top + b.bottom) / 2 - origin.top);
+      el.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    };
+    fit();
+    let live = true;
+    void document.fonts?.ready.then(() => {
+      if (live) fit();
+    });
+    const ro = new ResizeObserver(fit);
+    ro.observe(box);
+    return () => {
+      live = false;
+      ro.disconnect();
+    };
+  }, [entry]);
+
+  return (
+    <span ref={stage} className={styles.trayStage} aria-hidden="true" inert>
+      <span ref={art} className={styles.trayPreview} data-kind={entry.kind}>
+        {KINDS[entry.kind].render(entry.props)}
+      </span>
+    </span>
+  );
+}
 
 /** A tray sticker's real size: its preview is scaled down, so undo the scale. */
 function previewSize(addButton: HTMLElement) {

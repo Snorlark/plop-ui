@@ -279,6 +279,78 @@ test.describe("every component", () => {
   });
 });
 
+test.describe("tray previews", () => {
+  test.skip(({ isMobile }) => isMobile, "sizes are set per test");
+  const SHELVES = ["Actions", "Status", "Cards", "Forms", "Pickers", "People", "Characters", "Words & doodles"];
+
+  for (const [w, h, motion] of [[1280, 720, "no-preference"], [375, 740, "no-preference"], [1280, 720, "reduce"], [375, 740, "reduce"]] as const) {
+    test(`every preview sits whole and centered in its tile at ${w}×${h}, ${motion} motion`, async ({ page }) => {
+      // Reduced motion matters here: the site's rule gives everything a tiny transition, which once delayed the measurement.
+      await page.emulateMedia({ reducedMotion: motion });
+      await page.setViewportSize({ width: w, height: h });
+      await fresh(page);
+      await page.evaluate(() => document.fonts.ready);
+      const problems: string[] = [];
+      for (const shelf of SHELVES) {
+        await page.getByRole("radio", { name: shelf, exact: true }).check();
+        await page.waitForTimeout(100);
+        const found = await page.locator("[data-tray] [role=listitem]").evaluateAll((tiles) =>
+          tiles.flatMap((tile) => {
+            const t = tile.getBoundingClientRect();
+            const art = tile.querySelector("[data-kind]")!;
+            const seen = [art, ...art.querySelectorAll("*")].filter((el) => {
+              const r = el.getBoundingClientRect();
+              const css = getComputedStyle(el);
+              return r.width > 0 && r.height > 0 && css.visibility !== "hidden" && css.opacity !== "0";
+            }).map((el) => el.getBoundingClientRect());
+            const left = Math.min(...seen.map((r) => r.left));
+            const right = Math.max(...seen.map((r) => r.right));
+            const top = Math.min(...seen.map((r) => r.top));
+            const bottom = Math.max(...seen.map((r) => r.bottom));
+            const name = tile.querySelector(":scope > button")!.getAttribute("aria-label");
+            const out: string[] = [];
+            if (left < t.left || right > t.right || top < t.top || bottom > t.bottom) {
+              out.push(`${name} clipped: L${(left - t.left).toFixed(0)} R${(t.right - right).toFixed(0)} T${(top - t.top).toFixed(0)} B${(t.bottom - bottom).toFixed(0)}`);
+            }
+            const off = (left + right) / 2 - (t.left + t.right) / 2;
+            if (Math.abs(off) > 3) out.push(`${name} off-center by ${off.toFixed(0)}px`);
+            return out;
+          }),
+        );
+        problems.push(...found.map((f) => `${shelf}: ${f}`));
+      }
+      expect(problems).toEqual([]);
+    });
+  }
+});
+
+/** Whether `--plop-roundness` visibly changes anything in the Tweak preview. */
+const radiusChanges = (page: Page) =>
+  page.locator(".pg-stage").evaluate((stage) => {
+    const corners = (css: CSSStyleDeclaration) => `${css.borderTopLeftRadius} ${css.borderTopRightRadius} ${css.borderBottomRightRadius} ${css.borderBottomLeftRadius}`;
+    // A corner on anything under 6px (a 3px connector line, a folded corner that isn't peeled) can't be seen.
+    const sig = () =>
+      [...stage.querySelectorAll("*")].flatMap((el) => {
+        const r = el.getBoundingClientRect();
+        const own = Math.min(r.width, r.height) >= 6 ? [corners(getComputedStyle(el))] : [];
+        const pseudos = ["::before", "::after"].flatMap((p) => {
+          const css = getComputedStyle(el, p);
+          return css.content !== "none" && Math.min(parseFloat(css.width) || 0, parseFloat(css.height) || 0) >= 6 ? [corners(css)] : [];
+        });
+        // A range thumb's corners can't be read back (Chrome returns the input's own style), so compare the token it's drawn with.
+        if (el instanceof HTMLInputElement && el.type === "range") pseudos.push(getComputedStyle(el).getPropertyValue("--plop-radius-face"));
+        return [...own, ...pseudos];
+      }).join("|");
+    const el = stage as HTMLElement;
+    const was = el.style.getPropertyValue("--plop-roundness");
+    el.style.setProperty("--plop-roundness", "1");
+    const one = sig();
+    el.style.setProperty("--plop-roundness", "0");
+    const zero = sig();
+    el.style.setProperty("--plop-roundness", was);
+    return one !== zero;
+  });
+
 test.describe("tweak a component", () => {
   test.skip(({ isMobile }) => isMobile, "desktop layout");
   const picker = (page: Page) => page.getByRole("navigation", { name: "Components" });
@@ -322,6 +394,68 @@ test.describe("tweak a component", () => {
     }).toPass();
     await expect.poll(() => paper.evaluate((el) => getComputedStyle(el).borderTopLeftRadius)).toBe("0px");
     await expect(page.getByRole("region", { name: "Code" }).locator("pre")).toContainText("roundness={0}");
+  });
+
+  test("the radius slider leaves with a component it can't change, and its value comes back", async ({ page }) => {
+    await page.goto("/playground?tool=tweak&c=button");
+    const code = page.getByRole("region", { name: "Code" }).locator("pre");
+    await expect(async () => {
+      await page.getByRole("slider", { name: "Radius" }).fill("0");
+      await expect(page.locator(".pg-radius output")).toHaveText("0×", { timeout: 1000 });
+    }).toPass();
+    await picker(page).getByRole("button", { name: "IconButton", exact: true }).click();
+    await expect(page.getByRole("slider", { name: "Radius" })).toHaveCount(0);
+    await expect(code).not.toContainText("roundness");
+    await picker(page).getByRole("button", { name: "Button", exact: true }).click();
+    await expect(page.getByRole("slider", { name: "Radius" })).toHaveValue("0");
+    await expect(code).toContainText("roundness={0}");
+  });
+
+  test("a Callout only offers radius once it has an action button", async ({ page }) => {
+    await page.goto("/playground?tool=tweak&c=callout");
+    await expect(page.getByRole("slider", { name: "Radius" })).toHaveCount(0);
+    await expect(async () => {
+      await page.getByRole("switch", { name: "With an action" }).click();
+      await expect(page.getByRole("slider", { name: "Radius" })).toBeVisible({ timeout: 1000 });
+    }).toPass();
+    expect(await radiusChanges(page)).toBe(true);
+  });
+
+  test("a Loader offers radius for its card or its Cancel button, not for a bare spinner", async ({ page }) => {
+    await page.goto("/playground?tool=tweak&c=loader");
+    const slider = page.getByRole("slider", { name: "Radius" });
+    await expect(slider).toBeVisible();
+    await expect(async () => {
+      await page.getByRole("switch", { name: "Cancel button" }).click();
+      await expect(slider).toHaveCount(0, { timeout: 1000 });
+    }).toPass();
+    expect(await radiusChanges(page)).toBe(false);
+    // The label, not the input: the Radio's drawn box sits over its hidden input.
+    await page.getByRole("region", { name: "Props" }).getByText("card", { exact: true }).click();
+    await expect(slider).toBeVisible();
+    expect(await radiusChanges(page)).toBe(true);
+  });
+
+  test("the radius slider shows exactly for the components it visibly changes", async ({ page }) => {
+    await page.goto("/playground?tool=tweak&c=button");
+    await page.addStyleTag({ content: "*, *::before, *::after { transition: none !important; }" });
+    await expect(picker(page).getByRole("button", { name: "Heading", exact: true })).toBeVisible();
+    const names = await picker(page).getByRole("button").allTextContents();
+    expect(names.length).toBeGreaterThan(20);
+    const wrong: string[] = [];
+    for (const name of names) {
+      // Retry: a click before hydration doesn't reach React on a slow first load.
+      await expect(async () => {
+        await picker(page).getByRole("button", { name, exact: true }).click();
+        await expect(page.getByRole("region", { name: `${name} preview` })).toBeVisible({ timeout: 1000 });
+      }).toPass();
+      // The inline Loader's only corners are on a Cancel button that appears once the wait turns slow.
+      if (name === "Loader") await expect(page.getByRole("region", { name: "Loader preview" }).getByRole("button", { name: "Cancel" })).toBeVisible({ timeout: 6000 });
+      const changes = await radiusChanges(page);
+      const shown = (await page.getByRole("slider", { name: "Radius" }).count()) > 0;
+      if (shown !== changes) wrong.push(`${name}: slider ${shown ? "shown" : "hidden"}, radius ${changes ? "changes it" : "does nothing"}`);
+    }
+    expect(wrong).toEqual([]);
   });
 });
 

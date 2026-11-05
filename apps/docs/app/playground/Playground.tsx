@@ -66,6 +66,8 @@ type Control =
 
 interface Entry {
   label: string;
+  /** Does `--plop-roundness` visibly change it? Percent radii and circles don't, so those get no Radius slider. */
+  rounds: boolean | ((v: Values) => boolean);
   controls: Control[];
   render: (v: Values) => ReactNode;
   code: (v: Values) => string;
@@ -93,6 +95,7 @@ function prop(name: string, value: Value | undefined, def?: Value) {
 const ENTRIES: Record<string, Entry> = {
   slider: {
     label: "Slider",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Pencil pressure" },
       { kind: "number", name: "value", label: "Value", default: 40, min: 0, max: 100, step: 1 },
@@ -107,6 +110,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   button: {
     label: "Button",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Post sketch" },
       { kind: "select", name: "variant", label: "Variant", options: VARIANTS, default: "ink" },
@@ -139,6 +143,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "icon-button": {
     label: "IconButton",
+    rounds: false,
     controls: [
       { kind: "select", name: "icon", label: "Icon", options: ["plus", "phone", "close", "bell", "pin"], default: "phone" },
       { kind: "text", name: "label", label: "Label (accessible name)", default: "Start SOS call" },
@@ -151,6 +156,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   tag: {
     label: "Tag",
+    rounds: false,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "In progress" },
       { kind: "select", name: "status", label: "Status", options: ["none", "critical", "dispatched", "en-route", "resolved", "unassigned"], default: "en-route" },
@@ -175,6 +181,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   switch: {
     label: "Switch",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Share live location" },
       { kind: "select", name: "color", label: "Color when on", options: ["mint", "ink", "tomato"], default: "mint" },
@@ -190,6 +197,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   checkbox: {
     label: "Checkbox",
+    rounds: false,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Notify my friends" },
       { kind: "boolean", name: "on", label: "Starts checked", default: true },
@@ -207,6 +215,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "status-timeline": {
     label: "StatusTimeline",
+    rounds: false,
     controls: [
       { kind: "text", name: "steps", label: "Steps (comma separated)", default: "Sketched, Inked, Colored, Shipped" },
       { kind: "number", name: "current", label: "Current step", default: 2, min: 0, max: 8, step: 1 },
@@ -223,6 +232,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   callout: {
     label: "Callout",
+    rounds: (v) => b(v.action),
     controls: [
       { kind: "select", name: "tone", label: "Tone", options: ["info", "warn", "error", "success"], default: "warn" },
       { kind: "text", name: "title", label: "Title", default: "Not saved yet" },
@@ -241,6 +251,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   progress: {
     label: "Progress",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Syncing offline sketches" },
       { kind: "number", name: "value", label: "Value", default: 4, min: 0, max: 10, step: 1 },
@@ -264,6 +275,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   progressRing: {
     label: "ProgressRing",
+    rounds: false,
     controls: [
       { kind: "text", name: "label", label: "Label (read out)", default: "Uploading photos" },
       { kind: "number", name: "value", label: "Value", default: 64, min: 0, max: 100, step: 1 },
@@ -275,6 +287,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   spinner: {
     label: "Spinner",
+    rounds: false,
     controls: [
       { kind: "select", name: "kind", label: "Kind", options: ["ink", "dots", "scribble", "sticker", "buddy"], default: "ink" },
       { kind: "select", name: "size", label: "Size", options: SIZES, default: "md" },
@@ -291,6 +304,8 @@ const ENTRIES: Record<string, Entry> = {
   },
   loader: {
     label: "Loader",
+    // The inline loader has no corners of its own: only the Cancel button rounds, and slowAfter 0 never shows it.
+    rounds: (v) => s(v.variant) === "card" || (b(v.cancel) && n(v.slowAfter) > 0),
     controls: [
       { kind: "select", name: "variant", label: "Variant", options: ["inline", "card"], default: "inline" },
       { kind: "text", name: "label", label: "Label", default: "Loading the crew" },
@@ -314,6 +329,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   skeleton: {
     label: "Skeleton",
+    rounds: true,
     controls: [
       { kind: "select", name: "layout", label: "Layout", options: ["row", "card", "text"], default: "row" },
       { kind: "number", name: "lines", label: "Lines", default: 2, min: 1, max: 6, step: 1 },
@@ -336,6 +352,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   avatar: {
     label: "Avatar",
+    rounds: false,
     controls: [
       { kind: "text", name: "name", label: "Name (picks the face)", default: "Rosa Santos" },
       { kind: "select", name: "size", label: "Size", options: ["sm", "md", "lg", "xl"], default: "xl" },
@@ -347,6 +364,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "text-field": {
     label: "TextField",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Location" },
       { kind: "text", name: "placeholder", label: "Placeholder", default: "Untitled masterpiece" },
@@ -364,6 +382,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   toast: {
     label: "Toast",
+    rounds: true,
     controls: [
       { kind: "select", name: "kind", label: "Kind", options: ["success", "error", "info"], default: "success" },
       { kind: "text", name: "text", label: "Text", default: "Sketch posted" },
@@ -380,6 +399,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   tooltip: {
     label: "Tooltip",
+    rounds: true,
     controls: [
       { kind: "text", name: "content", label: "Tip", default: "Saves a copy" },
       { kind: "text", name: "label", label: "Button words", default: "Save" },
@@ -394,6 +414,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "radio-group": {
     label: "RadioGroup",
+    rounds: false,
     controls: [
       { kind: "text", name: "legend", label: "Question", default: "Medium" },
       { kind: "text", name: "options", label: "Options (comma separated)", default: "Ink, Paint, Pencil" },
@@ -411,6 +432,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   tabs: {
     label: "Tabs",
+    rounds: true,
     controls: [{ kind: "text", name: "labels", label: "Tabs (comma separated)", default: "Sketch, Ink, Color" }],
     render: (v) => {
       const t = items(v.labels);
@@ -425,6 +447,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "ticket-card": {
     label: "TicketCard",
+    rounds: true,
     controls: [
       { kind: "text", name: "title", label: "Title", default: "Sketch #1042" },
       { kind: "text", name: "meta", label: "Meta", default: "9:14 AM" },
@@ -436,6 +459,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "unit-card": {
     label: "UnitCard",
+    rounds: true,
     controls: [
       { kind: "text", name: "name", label: "Name", default: "Rosa Santos" },
       { kind: "text", name: "subtitle", label: "Subtitle", default: "Inker" },
@@ -445,6 +469,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "sticky-note": {
     label: "StickyNote",
+    rounds: true,
     controls: [
       { kind: "text", name: "text", label: "Words", default: "Buy more ink!" },
       { kind: "select", name: "tone", label: "Paper", options: ["mustard", "mint", "pink"], default: "mustard" },
@@ -454,6 +479,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   select: {
     label: "Select",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Brush" },
       { kind: "text", name: "options", label: "Options (comma separated)", default: "Ink pen, Watercolor, Charcoal" },
@@ -469,6 +495,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "multi-select": {
     label: "MultiSelect",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Colors" },
       { kind: "text", name: "options", label: "Options (comma separated)", default: "Tomato, Mustard, Mint" },
@@ -483,6 +510,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   menu: {
     label: "Menu",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Sketch actions" },
       { kind: "text", name: "items", label: "Items (comma separated)", default: "Rename, Duplicate, Delete" },
@@ -492,6 +520,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "text-area": {
     label: "TextArea",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Notes" },
       { kind: "text", name: "placeholder", label: "Placeholder", default: "What's it about?" },
@@ -506,6 +535,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "search-field": {
     label: "SearchField",
+    rounds: true,
     controls: [
       { kind: "text", name: "label", label: "Label", default: "Search sketches" },
       { kind: "text", name: "placeholder", label: "Placeholder", default: "Find a sketch" },
@@ -519,6 +549,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   "status-dot": {
     label: "StatusDot",
+    rounds: false,
     controls: [
       { kind: "text", name: "label", label: "Words", default: "Inking now" },
       { kind: "select", name: "tone", label: "Status", options: ["online", "busy", "offline"], default: "online" },
@@ -528,6 +559,7 @@ const ENTRIES: Record<string, Entry> = {
   },
   heading: {
     label: "Heading",
+    rounds: false,
     controls: [
       { kind: "text", name: "text", label: "Words", default: "Sketchbook" },
       { kind: "select", name: "level", label: "Level", options: ["1", "2", "3", "4"], default: "2" },
@@ -615,6 +647,9 @@ export function Playground() {
   const [theme, setTheme] = useState<"light" | "dark">(params.get("theme") === "dark" ? "dark" : "light");
   const [roundness, setRoundness] = useState(1);
   const entry = ENTRIES[component]!;
+  const rounds = typeof entry.rounds === "function" ? entry.rounds(values) : entry.rounds;
+  // The slider keeps its value for the next component it applies to, but only counts where it's shown.
+  const appliedRoundness = rounds ? roundness : 1;
 
   // Keep the address shareable: component, surface and theme.
   useEffect(() => {
@@ -627,10 +662,10 @@ export function Playground() {
 
   const code = useMemo(() => {
     const name = IMPORTS[component]!;
-    if (roundness === 1) return `import { ${name} } from "@plop-ui/react";\n\n${entry.code(values)}`;
+    if (appliedRoundness === 1) return `import { ${name} } from "@plop-ui/react";\n\n${entry.code(values)}`;
     // Roundness lives on the provider (or --plop-roundness in CSS), so the snippet shows it wrapped.
-    return `import { PlopProvider, ${name} } from "@plop-ui/react";\n\n<PlopProvider roundness={${roundness}}>\n  ${entry.code(values).replace(/\n/g, "\n  ")}\n</PlopProvider>`;
-  }, [component, entry, values, roundness]);
+    return `import { PlopProvider, ${name} } from "@plop-ui/react";\n\n<PlopProvider roundness={${appliedRoundness}}>\n  ${entry.code(values).replace(/\n/g, "\n  ")}\n</PlopProvider>`;
+  }, [component, entry, values, appliedRoundness]);
 
   const pick = (id: string) => {
     setComponent(id);
@@ -661,14 +696,14 @@ export function Playground() {
               </Radio>
             ))}
           </RadioGroup>
-          <Slider className="pg-radius" label="Radius" min={0} max={2} step={0.1} value={roundness} showValue formatValue={(v) => `${v}×`} onValueChange={setRoundness} />
+          {rounds && <Slider className="pg-radius" label="Radius" min={0} max={2} step={0.1} value={roundness} showValue formatValue={(v) => `${v}×`} onValueChange={setRoundness} />}
           <Switch checked={theme === "dark"} onCheckedChange={(on) => setTheme(on ? "dark" : "light")} color="ink">
             Dark
           </Switch>
         </div>
 
         <section aria-label={`${entry.label} preview`} className="pg-preview">
-          <PlopProvider surface={surface} theme={theme} toaster={false} roundness={roundness} className="pg-stage">
+          <PlopProvider surface={surface} theme={theme} toaster={false} roundness={appliedRoundness} className="pg-stage">
             {entry.render(values)}
           </PlopProvider>
         </section>
