@@ -216,7 +216,13 @@ import Link from "next/link"; // Only in your app; optional for plain anchors.
 // tags: [{ value: "wild", label: "Wild idea", tone: "tomato" }, …]  each pick becomes a strip of tape
 
 <Select label="Paper" options={papers} error="Pick a paper before you post." />
-<Select label="Collaborator" options={[]} loading />`,
+<Select label="Collaborator" options={[]} loading />
+
+// In a plain <form> or a Server Action: name puts the value in the form data
+<form action={post}>
+  <Select label="Brush" name="brush" options={brushes} />       {/* formData.get("brush") */}
+  <MultiSelect label="Tags" name="tags" options={tags} />       {/* formData.getAll("tags") */}
+</form>`,
     tables: [{ of: "Select" }, { of: "MultiSelect" }],
     do: "Use it for 6 or more choices, or when space is tight. Turn on searchable once a list gets long enough to scroll.",
     dont: "Hide 2 to 5 choices people should compare at a glance; a RadioGroup shows them all at once.",
