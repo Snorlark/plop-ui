@@ -116,7 +116,9 @@ test("404: a 404 status with no site header; the buddy talks back and the button
   await expect(page).toHaveURL(/\/playground/);
 });
 
-test("Header settings: one sticker opens the toggles; the cutting mat switch is remembered; Escape closes", async ({ page }) => {
+test("Header settings: one sticker opens the toggles; the cutting mat switch is remembered; Escape closes", async ({ page, browserName }) => {
+  // WebKit on a Linux runner can stall the decorative tear transition; reduced motion swaps without it (the tear itself isn't under test).
+  if (browserName === "webkit") await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/docs/getting-started");
   const html = page.locator("html");
   await expect(html).toHaveAttribute("data-plop-surface", "poster");

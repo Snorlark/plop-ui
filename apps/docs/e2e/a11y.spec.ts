@@ -16,7 +16,8 @@ test.use({ reducedMotion: "reduce" });
 
 /** Zero serious or critical axe violations on every page of the site. */
 for (const path of PAGES) {
-  test(`axe: ${path}`, async ({ page }) => {
+  test(`axe: ${path}`, async ({ page, browserName }) => {
+    test.slow(browserName === "webkit" && path === "/", "the home page is the heaviest to audit: near 30s in WebKit on a Linux runner");
     await page.goto(path);
     expect(await blocking(page)).toEqual([]);
   });
