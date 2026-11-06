@@ -1,22 +1,66 @@
-/* "Built with PlopUI": project sheets and the contributor list. Colors from tokens only. No looping motion. */
+/* "Built with PlopUI": project cards (each one link), an add-yours slot and the contributor list. Colors from tokens only. */
 .page { display: grid; gap: 22px; }
-.section { display: grid; gap: 18px; scroll-margin-top: 90px; }
-.note { margin: 0; max-width: 62ch; font-size: 17px; line-height: 1.5; color: var(--site-text, var(--plop-ink-text)); }
+.section { display: grid; gap: 0; scroll-margin-top: 90px; }
+.sub { margin: 6px 0 30px; max-width: 62ch; font-size: 17px; line-height: 1.5; color: var(--site-soft); }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-.projects, .people { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; }
-.projects { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+/* A small Callout pointing at the official demos: title and one sticker, only as wide as it needs. */
+.demos { justify-self: start; width: fit-content; max-width: 100%; }
+/* The docs style every h2 (.doc-main.content h2) as a section title; inside the Callout it stays the Callout's small label. */
+.demos.demos.demos h2 { margin: 2px 0 0; font-size: 15px; line-height: 1.3; filter: none; color: inherit; }
+
+.projects, .people { display: grid; margin: 0; padding: 0; list-style: none; }
+.projects { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 40px 30px; }
 .projects > li { display: flex; }
 .projects > li > * { width: 100%; }
 
-.project { display: grid; align-content: start; justify-items: start; gap: 10px; height: 100%; }
-.project h3 { margin: 6px 0 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 22px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--plop-ink); }
-.project p { margin: 0; font-size: 16px; line-height: 1.45; color: var(--plop-ink-text); }
-.project .by { margin-top: -6px; color: var(--plop-ink-soft); }
-.shot { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; object-position: top; border: var(--plop-stroke-sm, 2px) solid var(--plop-ink); border-radius: var(--plop-radius-box); }
-.tags { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 2px 0 6px; }
+/* Doubled class: beats the Sheet's own padding without touching the kit. */
+.project.project { position: relative; display: flex; flex-direction: column; padding: 16px 16px 20px; transition: transform 0.4s var(--plop-ease-spring); }
+.project:hover, .project:focus-within { transform: translateY(-4px) rotate(calc(var(--tilt, 0deg) - 0.5deg)); }
+.project:focus-within { outline: 2.5px dashed var(--plop-focus); outline-offset: 6px; }
+.shot { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border: 2.5px solid var(--plop-ink); border-radius: 10px 8px 11px 9px; }
+.project h3 { margin: 16px 0 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: 900; font-size: 24px; line-height: 1.1; }
+.project h3 a { color: var(--plop-ink); text-decoration: none; }
+/* The stretched link: its ::after covers the card, so the whole card opens the project. */
+.project h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.project h3 a:focus-visible { outline: none; }
+.project h3 a:hover { text-decoration: underline; }
+.by { margin: 2px 0 0; font-size: 16px; color: var(--plop-ink-soft); }
+.desc { margin: 10px 0 0; font-size: 17px; line-height: 1.5; color: var(--plop-ink-text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: auto 0 0; padding-top: 16px; font-size: 15px; color: var(--plop-ink-soft); }
+.go { display: inline-flex; align-items: center; gap: 6px; font-style: italic; font-weight: 700; color: var(--plop-ink); }
+.go svg { width: 16px; height: 16px; transition: transform 0.3s var(--plop-ease-spring); }
+.project:hover .go svg { transform: translate(3px, -3px); }
 
-.people { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px 22px; }
-.person { display: flex; align-items: center; gap: 14px; padding: 6px; border-radius: var(--plop-radius-box); color: var(--site-text, var(--plop-ink-text)); text-decoration: none; font-size: 15px; line-height: 1.4; }
-.person strong { display: block; color: var(--site-ink, var(--plop-ink)); font-size: 17px; }
-.person:hover strong { text-decoration: underline; }
-.person:focus-visible { outline: 3px solid var(--plop-focus); outline-offset: 3px; }
+/* The last card: an empty dashed slot asking for the next project. */
+.add.add { align-items: center; justify-content: center; gap: 10px; min-height: 280px; text-align: center; border: 2.5px dashed var(--site-ink, var(--plop-ink)); border-radius: 14px 18px 11px 20px / 18px 12px 20px 14px; }
+.add h3 { margin: 0; }
+.add h3 a { color: var(--site-ink, var(--plop-ink)); }
+.add p { margin: 0; max-width: 24ch; font-size: 16px; color: var(--site-soft); }
+.plus { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50% 46% 53% 48%; background: var(--plop-mustard); border: 3px solid var(--plop-ink-text); box-shadow: 0 0 0 6px var(--plop-paper); color: var(--plop-ink-text); }
+.plus svg { width: 28px; height: 28px; }
+
+.people { grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 6px 24px; }
+.person { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 14px 10px 15px 11px; color: var(--site-text, var(--plop-ink-text)); text-decoration: none; font-size: 15px; line-height: 1.35; transition: background-color 0.2s; }
+.person:hover { background: color-mix(in srgb, var(--plop-periwinkle) 22%, transparent); }
+.person:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 2px; }
+.person strong { display: block; font-family: var(--plop-font-letter); font-style: italic; font-size: 17px; color: var(--site-ink, var(--plop-ink)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .project.project, .go svg, .person { transition: none; }
+  .project:hover, .project:focus-within { transform: rotate(var(--tilt, 0deg)); }
+}
+
+/* "Plop-ing soon!": a native modal dialog, centered by the browser, the note popping in like a sticker. */
+.soon { width: min(92vw, 460px); max-width: none; padding: 0; border: 0; background: none; overflow: visible; color: var(--plop-ink-text); }
+.soon::backdrop { background: color-mix(in srgb, var(--plop-ink-text) 45%, transparent); }
+.soonSheet.soonSheet { display: grid; justify-items: center; gap: 12px; padding: 44px 28px 30px; text-align: center; }
+.soonSheet h2 { margin: 0; }
+.soonSheet p { margin: 0; max-width: 32ch; font-size: 18px; line-height: 1.45; color: var(--plop-ink-text); }
+.soonSheet > :last-child { margin-top: 6px; }
+@media (prefers-reduced-motion: no-preference) {
+  .soon[open] .soonSheet { animation: soon-pop 0.45s var(--plop-ease-spring); }
+  .soon[open]::backdrop { animation: soon-fade 0.25s ease; }
+}
+@keyframes soon-pop { from { opacity: 0; transform: scale(0.7) rotate(-6deg); } }
+@keyframes soon-fade { from { opacity: 0; } }

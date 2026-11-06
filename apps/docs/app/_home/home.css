@@ -52,8 +52,15 @@
   display: inline-flex; align-items: center; gap: 12px; padding: 6px 8px 6px 18px; border-radius: 12px 9px 13px 10px; background: var(--plop-paper);
   border: 2px dashed rgba(40,72,216,.45); font-family: var(--plop-font-mono); font-size: 15px; color: var(--plop-ink-text);
 }
-/* Phones get only the npm line: the shadcn command wraps there, and nobody runs a CLI on a phone. */
-@media (max-width: 480px) { .home-hero__cta > .home-npm + .home-npm { display: none; } }
+/* The install box with its quiet "Using shadcn?" link underneath. The command bounces in when it swaps. */
+.home-install { position: relative; display: inline-flex; }
+/* Hangs under the box, so the box stays level with Get started. */
+.home-install__alt { position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); white-space: nowrap; min-height: 32px; padding: 0 10px; border: 0; background: none; cursor: pointer; font: inherit; font-size: 15px; color: var(--site-soft, var(--plop-ink-soft)); text-decoration: underline dashed; text-underline-offset: 4px; }
+.home-install__alt:hover { color: var(--site-ink, var(--plop-ink)); }
+.home-install__alt:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 2px; border-radius: 8px; }
+@media (prefers-reduced-motion: no-preference) { .home-install code { animation: home-swap .3s var(--plop-ease-spring); } }
+@keyframes home-swap { from { opacity: 0; transform: translateY(6px); } }
+@media (max-width: 480px) { .home-install code { font-size: 13px; white-space: nowrap; } .home-install .home-npm { gap: 8px; padding-left: 12px; } }
 
 /* The crowd runs the full width of the screen, behind the pack. It is drawn still on purpose:
    ~90 faces with a wobble filter and a blink each kept the page repainting every frame. */

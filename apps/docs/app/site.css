@@ -111,7 +111,11 @@ html[data-restoring] body { visibility: hidden; }
   .site-search__lens { width: 20px; height: 20px; }
   .site-header__in > .site-settings { order: 2; }
 }
-/* The star only fits beside a one-row header; narrower, the footer and README carry it. */
+/* The star wiggles when you reach for it. */
+.site-header__star-icon { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) { .site-header__star:is(:hover, :focus-visible) .site-header__star-icon { animation: star-wiggle .6s var(--plop-ease-spring); } }
+@keyframes star-wiggle { 30% { transform: rotate(-24deg) scale(1.3); } 60% { transform: rotate(14deg) scale(1.15); } }
+/* The star only fits beside a one-row header; narrower, the phone menu and the footer carry it. */
 @media (max-width: 1199px) { .site-header__star { display: none !important; } }
 /* The smallest phones (320px, the first iPhone SE): tighter edges so the menu button still fits. */
 @media (max-width: 360px) {

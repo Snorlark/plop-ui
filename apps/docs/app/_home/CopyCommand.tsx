@@ -16,7 +16,7 @@ export function CopyCommand({ command = "npm i @plop-ui/react", what = "install 
 
   return (
     <span className="home-npm">
-      <code>{command}</code>
+      <code key={command}>{command}</code>
       <IconButton
         size="sm"
         variant={copied ? "mint" : "mustard"}
