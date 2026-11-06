@@ -24,5 +24,5 @@ test("Install with shadcn page lists every block in the registry", async ({ page
   expect(blocks.length).toBeGreaterThan(0);
   await page.goto("/docs/shadcn");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/install with shadcn/i);
-  for (const b of blocks) await expect(page.getByText(`/r/${b.name}.json`).first()).toBeAttached();
+  for (const b of blocks) await expect(page.getByText(`@plopui/${b.name}`).first()).toBeAttached();
 });
