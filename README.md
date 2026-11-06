@@ -52,6 +52,8 @@ export function App() {
 }
 ```
 
+Like it? [Star the repo on GitHub](https://github.com/Snorlark/plop-ui) ⭐ so more people find it.
+
 For the paper to cover the whole screen (not just your content), and why buttons stretch inside a grid, see [Good to know](https://plopui.com/docs/getting-started) in the Getting Started guide.
 
 Using Next.js? The library never imports `next/*`, and every interactive component already carries `"use client"`, so it drops straight into the App Router. Static pieces like `StatusTimeline` stay Server Components. See [Using with Next.js](https://plopui.com/docs/nextjs).
@@ -156,6 +158,24 @@ docs/assets       the logo and the buddy mark
 ## Contributing
 
 Contributions are welcome: bug fixes, new components, docs, or a new character. Read **[CONTRIBUTING.md](CONTRIBUTING.md)**, which covers setup, the codebase rules, how to add a component from start to finish, and how to open a pull request. Not sure where to start? Pick an issue labelled [good first issue](https://github.com/Snorlark/plop-ui/labels/good%20first%20issue). Found a security problem? See [SECURITY.md](SECURITY.md). Everyone taking part follows the [code of conduct](CODE_OF_CONDUCT.md).
+
+## Contributors
+
+Thank you to everyone who has shipped code to PlopUI:
+
+<p>
+  <a href="https://github.com/glaucusec"><img src="https://github.com/glaucusec.png" width="56" alt="glaucusec"></a>
+  <a href="https://github.com/aneqlique"><img src="https://github.com/aneqlique.png" width="56" alt="aneqlique"></a>
+  <a href="https://github.com/matheussilvano"><img src="https://github.com/matheussilvano.png" width="56" alt="matheussilvano"></a>
+  <a href="https://github.com/bfs2021"><img src="https://github.com/bfs2021.png" width="56" alt="bfs2021"></a>
+</p>
+
+- [@glaucusec](https://github.com/glaucusec): `Breadcrumb` and `Slider`
+- [@aneqlique](https://github.com/aneqlique): the playground's radius control
+- [@matheussilvano](https://github.com/matheussilvano): the `name` prop on `Select` and `MultiSelect`
+- [@bfs2021](https://github.com/bfs2021): JSX escaping in the playground's copy button
+
+Want to be on this list? See [Contributing](#contributing).
 
 ## Support
 
