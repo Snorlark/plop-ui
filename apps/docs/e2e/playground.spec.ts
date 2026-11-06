@@ -436,7 +436,8 @@ test.describe("tweak a component", () => {
     expect(await radiusChanges(page)).toBe(true);
   });
 
-  test("the radius slider shows exactly for the components it visibly changes", async ({ page }) => {
+  test("the radius slider shows exactly for the components it visibly changes", async ({ page, browserName }) => {
+    test.slow(browserName === "webkit", "loops over every component: over 30s in WebKit on a Linux runner");
     await page.goto("/playground?tool=tweak&c=button");
     await page.addStyleTag({ content: "*, *::before, *::after { transition: none !important; }" });
     await expect(picker(page).getByRole("button", { name: "Heading", exact: true })).toBeVisible();

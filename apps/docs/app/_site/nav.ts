@@ -26,6 +26,7 @@ export const DOC_NAV: NavSection[] = [
       { href: "/docs/surfaces", label: "Surfaces", keywords: "poster mat notebook kraft riso paper theme dark" },
       { href: "/docs/tokens", label: "Tokens & contrast", keywords: "colors contrast roles type motion css variables" },
       { href: "/docs/accessibility", label: "Accessibility", keywords: "wcag keyboard reduced motion screen reader" },
+      { href: "/docs/showcase", label: "Built with PlopUI", keywords: "showcase examples projects apps made with contributors community credits" },
     ],
   },
   { group: "Navigation", links: [c("breadcrumb", "Breadcrumb", "breadcrumbs path hierarchy trail links")] },
@@ -55,5 +56,7 @@ export function neighbors(href: string): { prev?: NavLink; next?: NavLink } {
 }
 
 export const GITHUB = "https://github.com/Snorlark/plop-ui";
+/** The official demo apps (issue #84). */
+export const DEMOS = "https://demo.plopui.com";
 /** Where people can support PlopUI (Ko-fi pays out through PayPal). */
 export const SUPPORT = "https://ko-fi.com/plopui";

@@ -66,7 +66,7 @@ export const MENUS: Menu[] = [
     id: "community",
     label: "Community",
     cols: [
-      { title: "Join in", big: true, links: [["GitHub", GITHUB], ["Changelog", "/changelog"], ["Contributing", `${GITHUB}/blob/main/CONTRIBUTING.md`]] },
+      { title: "Join in", big: true, links: [["GitHub", GITHUB], ["Built with PlopUI", "/docs/showcase"], ["Changelog", "/changelog"], ["Contributing", `${GITHUB}/blob/main/CONTRIBUTING.md`]] },
       { title: "Packages", links: [["@plop-ui/react", `${NPM}/react`], ["@plop-ui/tokens", `${NPM}/tokens`], ["@plop-ui/fonts", `${NPM}/fonts`]] },
     ],
     feature: { tape: "The crew", tone: "mint", title: "Say hi", text: "Pip, Bix, Snooze and friends keep the press running.", href: "/docs/components/buddy", art: "crew" },
@@ -76,6 +76,7 @@ export const MENUS: Menu[] = [
 /** Which menu the current page belongs to, so its trigger stays highlighted. */
 export function menuFor(path: string): MenuId | undefined {
   if (path.startsWith("/docs/components")) return "components";
+  if (path === "/docs/showcase") return "community";
   if (path.startsWith("/docs")) return "guides";
   if (path.startsWith("/playground")) return "playground";
   if (path === "/changelog") return "community";

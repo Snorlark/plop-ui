@@ -21,7 +21,7 @@ import {
 import { color, surfaceNames, surfaces } from "@plop-ui/tokens";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
-import { CopyCommand } from "./CopyCommand";
+import { InstallCommand } from "./InstallCommand";
 import { Crowd } from "./Crowd";
 import { Scribble, Tape } from "./Doodles";
 import { PaperStack } from "./PaperStack";
@@ -68,7 +68,7 @@ function Hero() {
           >
             Get started
           </ButtonLink>
-          <CopyCommand />
+          <InstallCommand />
         </div>
       </div>
 

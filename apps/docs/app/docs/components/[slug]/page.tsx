@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PropsTable } from "../../../_components/PropsTable";
 import { LoadingShowcase } from "../../../_kit/LoadingShowcase";
+import { githubProfile } from "../../../_site/contributors";
 import { ExampleTabs } from "../../../_site/ExampleTabs";
 import { COMPONENT_DOCS } from "../../../_site/registry";
 import { pageMeta } from "../../../_site/meta";
@@ -37,6 +38,18 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
           </Tag>
         ))}
       </div>
+      {doc.contributors && (
+        <p className="doc-credit">
+          Contributed by{" "}
+          {doc.contributors.map((login, i) => (
+            <span key={login}>
+              {i > 0 && ", "}
+              <a href={githubProfile(login)}>@{login}</a>
+            </span>
+          ))}
+          . <Link href="/docs/showcase#contributors">Meet the contributors</Link>
+        </p>
+      )}
 
       {slug === "loading" ? <LoadingShowcase /> : <ExampleTabs slug={slug} code={doc.code} />}
       {slug !== "breadcrumb" && <p className="doc-try">

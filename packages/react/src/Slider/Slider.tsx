@@ -110,16 +110,19 @@ export function Slider({
             ))}
           </span>
         )}
-        <svg className={styles.track} viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-          <defs>
-            <clipPath id={`${autoId}-fill`} clipPathUnits="userSpaceOnUse">
-              <rect x="-10" y="-10" width={ratio * 300 + 10 + (ratio === 1 ? 10 : 0)} height="40" />
-            </clipPath>
-          </defs>
-          <path className={styles.outline} d={track} />
-          <path className={styles.paper} d={track} />
-          <path className={styles.fill} d={track} clipPath={`url(#${autoId}-fill)`} visibility={ratio === 0 ? "hidden" : undefined} />
-        </svg>
+        {/* The wobble filter goes on this span, not the svg: WebKit squashes non-scaling strokes to a hairline under an svg filter. */}
+        <span className={styles.track} aria-hidden="true">
+          <svg viewBox="0 0 300 20" preserveAspectRatio="none" focusable="false">
+            <defs>
+              <clipPath id={`${autoId}-fill`} clipPathUnits="userSpaceOnUse">
+                <rect x="-10" y="-10" width={ratio * 300 + 10 + (ratio === 1 ? 10 : 0)} height="40" />
+              </clipPath>
+            </defs>
+            <path className={styles.outline} d={track} />
+            <path className={styles.paper} d={track} />
+            <path className={styles.fill} d={track} clipPath={`url(#${autoId}-fill)`} visibility={ratio === 0 ? "hidden" : undefined} />
+          </svg>
+        </span>
         <input {...input} ref={inputRef} id={fieldId} type="range" className={styles.input}
           min={lower} max={upper} step={increment} value={current} disabled={disabled}
           aria-valuetext={input["aria-valuetext"] ?? (formatValue ? text : undefined)}

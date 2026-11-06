@@ -1,9 +1,10 @@
 "use client";
 
-import { Buddy, CloseIcon, IconButton, MenuIcon, Tag, useHaptics, useReducedMotion, type BuddyMood } from "@plop-ui/react";
+import { Buddy, ButtonLink, CloseIcon, IconButton, MenuIcon, Tag, useHaptics, useReducedMotion, type BuddyMood } from "@plop-ui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { GITHUB } from "./nav";
 import { MENUS, menuFor, type FeatureArt, type Menu, type MenuId } from "./menus";
 import styles from "./megaNav.module.css";
 import { HoloPip } from "./RideAlong";
@@ -90,7 +91,7 @@ function Columns({ menu, onGo }: { menu: Menu; onGo: () => void }) {
  * follows its trigger in the DOM, so Tab walks straight into it). On phones a
  * burger opens every menu as one scrolling sheet.
  */
-export function MegaNav() {
+export function MegaNav({ stars }: { stars?: number | null }) {
   const path = usePathname();
   const active = menuFor(path);
   const base = useId();
@@ -265,6 +266,10 @@ export function MegaNav() {
                 <Columns menu={m} onGo={close} />
               </details>
             ))}
+            {/* The header's star sticker has no room on phones, so it lives at the foot of the menu. */}
+            <ButtonLink href={GITHUB} size="sm" variant="plain" tilt={-1} burst={false} className={styles.sheetStar} iconLeft={<span aria-hidden="true">★</span>} aria-label={stars ? `Star PlopUI on GitHub, ${stars} stars` : "Star PlopUI on GitHub"}>
+              {stars ? `Star on GitHub · ${stars}` : "Star on GitHub"}
+            </ButtonLink>
           </nav>
         )}
       </div>
