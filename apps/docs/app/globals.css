@@ -50,7 +50,7 @@ a { color: inherit; }
   text-transform: uppercase;
   font-size: 18px;
 }
-.content p, .content li { font-size: var(--plop-text-body); line-height: 1.5; max-width: 68ch; }
+.content p, .content li:not([role]) { font-size: var(--plop-text-body); line-height: 1.5; max-width: 68ch; }
 .content .lede { font-size: 22px; color: var(--plop-on-soft); max-width: 46ch; margin-top: 4px; }
 .content code {
   font-family: var(--plop-font-mono);
