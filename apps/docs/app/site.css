@@ -111,6 +111,8 @@ html[data-restoring] body { visibility: hidden; }
   .site-search__lens { width: 20px; height: 20px; }
   .site-header__in > .site-settings { order: 2; }
 }
+/* The star only fits beside a one-row header; narrower, the footer and README carry it. */
+@media (max-width: 1199px) { .site-header__star { display: none !important; } }
 /* The smallest phones (320px, the first iPhone SE): tighter edges so the menu button still fits. */
 @media (max-width: 360px) {
   .site-header__in { padding-left: 12px; padding-right: 12px; column-gap: 6px; }
