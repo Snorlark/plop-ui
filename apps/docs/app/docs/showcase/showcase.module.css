@@ -1,0 +1,22 @@
+/* "Built with PlopUI": project sheets and the contributor list. Colors from tokens only. No looping motion. */
+.page { display: grid; gap: 22px; }
+.section { display: grid; gap: 18px; scroll-margin-top: 90px; }
+.note { margin: 0; max-width: 62ch; font-size: 17px; line-height: 1.5; color: var(--site-text, var(--plop-ink-text)); }
+
+.projects, .people { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; }
+.projects { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.projects > li { display: flex; }
+.projects > li > * { width: 100%; }
+
+.project { display: grid; align-content: start; justify-items: start; gap: 10px; height: 100%; }
+.project h3 { margin: 6px 0 0; font-family: var(--plop-font-letter); font-style: italic; font-weight: 700; font-size: 22px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--plop-ink); }
+.project p { margin: 0; font-size: 16px; line-height: 1.45; color: var(--plop-ink-text); }
+.project .by { margin-top: -6px; color: var(--plop-ink-soft); }
+.shot { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; object-position: top; border: var(--plop-stroke-sm, 2px) solid var(--plop-ink); border-radius: var(--plop-radius-box); }
+.tags { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: 2px 0 6px; }
+
+.people { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px 22px; }
+.person { display: flex; align-items: center; gap: 14px; padding: 6px; border-radius: var(--plop-radius-box); color: var(--site-text, var(--plop-ink-text)); text-decoration: none; font-size: 15px; line-height: 1.4; }
+.person strong { display: block; color: var(--site-ink, var(--plop-ink)); font-size: 17px; }
+.person:hover strong { text-decoration: underline; }
+.person:focus-visible { outline: 3px solid var(--plop-focus); outline-offset: 3px; }

@@ -13,6 +13,8 @@ export interface ComponentDoc {
   do: string;
   dont: string;
   a11y: string[];
+  /** GitHub logins of the outside contributors who built it, credited under the title. */
+  contributors?: string[];
 }
 
 const AA = "WCAG AA";
@@ -20,6 +22,7 @@ const V01 = "Since v0.1";
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
   slider: {
+    contributors: ["glaucusec"],
     title: "Slider",
     group: "Inputs",
     badges: ["Client component", AA],
@@ -47,6 +50,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
   breadcrumb: {
+    contributors: ["glaucusec"],
     title: "Breadcrumb",
     group: "Navigation",
     badges: ["Client component", AA],
@@ -192,6 +196,7 @@ import Link from "next/link"; // Only in your app; optional for plain anchors.
     a11y: ["A <fieldset> and <legend> holding native radios.", "Arrow keys move between options, as with any radio group."],
   },
   select: {
+    contributors: ["matheussilvano"],
     title: "Select & MultiSelect",
     group: "Inputs",
     badges: ["Client component", AA, "New"],

@@ -26,6 +26,7 @@ export const DOC_NAV: NavSection[] = [
       { href: "/docs/surfaces", label: "Surfaces", keywords: "poster mat notebook kraft riso paper theme dark" },
       { href: "/docs/tokens", label: "Tokens & contrast", keywords: "colors contrast roles type motion css variables" },
       { href: "/docs/accessibility", label: "Accessibility", keywords: "wcag keyboard reduced motion screen reader" },
+      { href: "/docs/showcase", label: "Built with PlopUI", keywords: "showcase examples projects apps made with contributors community credits" },
     ],
   },
   { group: "Navigation", links: [c("breadcrumb", "Breadcrumb", "breadcrumbs path hierarchy trail links")] },

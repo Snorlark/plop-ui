@@ -69,6 +69,7 @@ function Hero() {
             Get started
           </ButtonLink>
           <CopyCommand />
+          <CopyCommand command="npx shadcn add @plopui/button" what="shadcn command" />
         </div>
       </div>
 

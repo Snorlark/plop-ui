@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { stamp } from "../_site/pass";
 
 /** The install command with a copy sticker. The icon turns into a tick for a moment after copying. */
-export function CopyCommand({ command = "npm i @plop-ui/react" }: { command?: string }) {
+export function CopyCommand({ command = "npm i @plop-ui/react", what = "install command" }: { command?: string; what?: string }) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export function CopyCommand({ command = "npm i @plop-ui/react" }: { command?: st
         size="sm"
         variant={copied ? "mint" : "mustard"}
         tilt={4}
-        label={copied ? "Copied install command" : "Copy install command"}
+        label={copied ? `Copied ${what}` : `Copy ${what}`}
         icon={copied ? <CheckIcon /> : <CopyIcon />}
         onClick={async () => {
           try {

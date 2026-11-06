@@ -52,6 +52,8 @@
   display: inline-flex; align-items: center; gap: 12px; padding: 6px 8px 6px 18px; border-radius: 12px 9px 13px 10px; background: var(--plop-paper);
   border: 2px dashed rgba(40,72,216,.45); font-family: var(--plop-font-mono); font-size: 15px; color: var(--plop-ink-text);
 }
+/* Phones get only the npm line: the shadcn command wraps there, and nobody runs a CLI on a phone. */
+@media (max-width: 480px) { .home-hero__cta > .home-npm + .home-npm { display: none; } }
 
 /* The crowd runs the full width of the screen, behind the pack. It is drawn still on purpose:
    ~90 faces with a wobble filter and a blink each kept the page repainting every frame. */

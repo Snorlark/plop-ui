@@ -241,6 +241,7 @@ html[data-tear]::view-transition-old(root) {
 .doc-h3 { margin: 10px 0 0; font-size: 18px; }
 .doc-main.content p, .doc-main.content li { font-size: 19px; color: var(--site-text); }
 .doc-try { font-size: 17px; color: var(--site-soft); }
+.doc-credit { margin: 14px 0 0; font-size: 16px; color: var(--site-soft); }
 .doc-example { margin-top: 14px; }
 .doc-example [role="tabpanel"] { background: var(--plop-sheet); border-radius: 6px 16px 14px 18px; box-shadow: 7px 9px 0 rgba(18,36,120,.14); }
 .doc-example__preview { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 240px; padding: 70px 28px 52px !important; }
