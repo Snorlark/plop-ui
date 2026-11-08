@@ -14,6 +14,7 @@ const out = join(here, "../app/_generated/props.json");
 
 const COMPONENTS = {
   PlopProvider: "PlopProviderProps",
+  Pagination: "PaginationProps",
   Slider: "SliderProps",
   Breadcrumb: "BreadcrumbProps",
   Button: "ButtonProps",

@@ -1,5 +1,6 @@
 "use client";
 
+import { PaginationDemo } from "./PaginationDemo";
 import { BuddyDemo } from "./BuddyDemo";
 import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
@@ -44,6 +45,7 @@ import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Swit
 
 /** Live demos for the generic component pages (app/docs/components/[slug]). */
 const DEMOS: Record<string, () => ReactNode> = {
+  pagination: () => <PaginationDemo />,
   slider: () => (
     <div style={{ display: "grid", gap: 28, width: "100%", maxWidth: 400 }}>
       <Slider label="Pencil pressure" defaultValue={40} showValue />

@@ -1,12 +1,15 @@
-import { Buddy, Radio, RadioGroup, Sheet, Tag, WordSticker } from "@plop-ui/react";
+import { Buddy, Pagination, Sheet, Tag, WordSticker } from "@plop-ui/react";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ReleaseFilter } from "./ReleaseFilter";
+import { changelogHref, RELEASES_PER_PAGE, type PackageFilter } from "./pagination";
 import { Fragment, type ReactNode } from "react";
 import { entries, headline, minors, pendingNotes, releaseTrains, PACKAGES, type Item, type Minor, type Train } from "../_site/changelog";
 import { GITHUB } from "../_site/nav";
 import { SiteFooter } from "../_site/SiteFooter";
 import { SiteHeader } from "../_site/SiteHeader";
 import { pageMeta } from "../_site/meta";
-import { Fold, ReleaseJump, ReleaseTimeline, type NavRelease } from "./ReleaseNav";
+import { Fold, ReleaseHash, ReleaseJump, ReleaseTimeline, type NavRelease } from "./ReleaseNav";
 import styles from "./changelog.module.css";
 
 export const metadata: Metadata = pageMeta({
@@ -120,18 +123,34 @@ function MinorCard({ m, index }: { m: Minor; index: number }) {
   );
 }
 
-export default async function ChangelogPage() {
-  const trains = await releaseTrains();
-  const groups = minors(trains);
-  const pending = pendingNotes();
+export default async function ChangelogPage({ searchParams }: { searchParams: Promise<{ page?: string; pkg?: string }> }) {
+  const [trains, query] = await Promise.all([releaseTrains(), searchParams]);
+  const pkg: PackageFilter = PACKAGES.includes(query.pkg as typeof PACKAGES[number]) ? query.pkg as PackageFilter : "all";
+  const filtered = pkg === "all" ? trains : trains.map((t) => ({ ...t, packages: t.packages.filter((p) => p.pkg === pkg) })).filter((t) => t.packages.length > 0);
+  const groups = minors(filtered);
+  const pageCount = Math.max(1, Math.ceil(groups.length / RELEASES_PER_PAGE));
+  const requested = Number(query.page ?? 1);
+  const page = Number.isFinite(requested) ? Math.max(1, Math.min(pageCount, Math.floor(requested))) : 1;
+  const offset = (page - 1) * RELEASES_PER_PAGE;
+  const visible = groups.slice(offset, offset + RELEASES_PER_PAGE);
+  const pending = pendingNotes().filter((note) => pkg === "all" || note.packages.includes(pkg));
+  // Old #version links remain useful even if their release is on another page or behind a package filter.
+  const destinations: Record<string, string> = {};
+  minors(trains).forEach((m, index) => {
+    const filteredIndex = groups.findIndex((g) => g.minor === m.minor);
+    const targetPage = Math.floor((filteredIndex < 0 ? index : filteredIndex) / RELEASES_PER_PAGE) + 1;
+    const targetPkg = filteredIndex < 0 ? "all" : pkg;
+    for (const id of [anchor(m.minor), ...m.trains.map((t) => anchor(t.version))]) destinations[id] = changelogHref(targetPage, targetPkg, id);
+  });
   const latest = PACKAGES.map((pkg) => ({ pkg, version: trains.find((t) => t.packages.some((p) => p.pkg === pkg))?.version })).filter((x) => x.version);
-  const nav: NavRelease[] = groups.map((m) => ({ id: anchor(m.minor), label: m.minor, date: day(m.date, false), pkgs: m.pkgs }));
+  const nav: NavRelease[] = groups.map((m, index) => ({ id: anchor(m.minor), label: m.minor, date: day(m.date, false), pkgs: m.pkgs, href: changelogHref(Math.floor(index / RELEASES_PER_PAGE) + 1, pkg, anchor(m.minor)) }));
 
   return (
     <div className="site site--docs">
       <SiteHeader />
+      <ReleaseHash destinations={destinations} />
       <div className={styles.shell}>
-        <ReleaseTimeline releases={nav} />
+        <ReleaseTimeline key={`${pkg}-${page}`} releases={nav} />
         <main id="main" className={styles.main}>
           <h1 className="doc-h1">Changelog</h1>
           <p className={`doc-lede ${styles.lede}`}>What changed in each release, newest first.</p>
@@ -148,19 +167,11 @@ export default async function ChangelogPage() {
           </p>
 
           <div className={styles.tools}>
-            {/* Real radio buttons: the :has() rules in the CSS do the filtering, so it works before JavaScript loads. */}
-            <RadioGroup legend="Show" name="changelog-pkg" defaultValue="all" vertical={false} className={styles.filter}>
-              <Radio value="all">Everything</Radio>
-              {PACKAGES.map((p) => (
-                <Radio key={p} value={p}>
-                  {p}
-                </Radio>
-              ))}
-            </RadioGroup>
+            <ReleaseFilter pkg={pkg} />
             <ReleaseJump releases={nav} />
           </div>
 
-          {pending.length > 0 && (
+          {page === 1 && pending.length > 0 && (
             <section id="next" aria-labelledby="next-h" className={styles.next} data-pkgs={[...new Set(pending.flatMap((n) => n.packages))].join(" ")}>
               <Buddy mood="preview" size="sm" className={styles.buddy} />
               <h2 id="next-h" className={styles.nextTitle}>
@@ -177,7 +188,11 @@ export default async function ChangelogPage() {
             </section>
           )}
 
-          {groups.length === 0 ? <p>No release on npm yet.</p> : groups.map((m, i) => <MinorCard key={m.minor} m={m} index={i} />)}
+          <div id="releases" tabIndex={-1} className={styles.releases}>
+            <p className={styles.stats}>{groups.length ? `Releases ${offset + 1}–${Math.min(offset + RELEASES_PER_PAGE, groups.length)} of ${groups.length}` : "No releases for this package yet."}</p>
+            {visible.map((m, i) => <MinorCard key={m.minor} m={m} index={offset + i} />)}
+          </div>
+          <Pagination className={styles.pagination} page={page} pageCount={groups.length ? pageCount : 0} as={Link} href={(target) => changelogHref(target, pkg)} />
 
           <p className={styles.foot}>
             Also on <a href={`${GITHUB}/releases`}>GitHub Releases</a>. Before 1.0, a minor version can break things, and always says how to move over.
