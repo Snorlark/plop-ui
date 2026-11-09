@@ -21,6 +21,8 @@ PlopUI (also written Plop UI or plop-ui) is an open-source React + TypeScript co
 
 The "o" in the logo is the capped buddy who peeks over the top of a `Button`. He is the kit's mascot, and his friends show up wherever the kit has something to tell you.
 
+![PlopUI — hand-drawn React components that squish, wake up and stick to a board](./docs/assets/plop-ui-demo.gif)
+
 ## Packages
 
 | Package | What it is |
