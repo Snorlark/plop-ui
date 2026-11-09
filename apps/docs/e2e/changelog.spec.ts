@@ -38,7 +38,10 @@ test("the package filter shows only releases that touch that package", async ({ 
   const all = await cards.count();
   const newest = await cards.first().getAttribute("id");
   // The kit's Radio draws over its real input, so pick it the way a person does: by its label.
-  const pick = (name: string) => page.locator("fieldset label", { hasText: new RegExp(`^${name}$`) }).click();
+  const pick = async (name: string) => {
+    await expect(page.getByRole("button", { name: "Show releases", exact: true })).toBeHidden();
+    await page.locator("fieldset label", { hasText: new RegExp(`^${name}$`) }).click();
+  };
   await pick("fonts");
   await expect(page.getByRole("radio", { name: "fonts" })).toBeChecked();
   await expect(page).toHaveURL(/pkg=fonts#releases$/);

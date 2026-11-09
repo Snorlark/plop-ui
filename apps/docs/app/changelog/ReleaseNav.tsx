@@ -1,8 +1,6 @@
 "use client";
 
 import { Button, Select, useHaptics, useReducedMotion } from "@plop-ui/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useId, useState, type ReactNode } from "react";
 import styles from "./changelog.module.css";
 
@@ -20,7 +18,7 @@ const OPEN_EVENT = "plop:changelog-open";
 function go(id: string, smooth: boolean) {
   window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: id }));
   requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }));
-  history.replaceState(null, "", `#${id}`);
+  history.replaceState(history.state, "", `#${id}`);
 }
 
 /** Which release is being read: the last one whose top has passed a line just under the header. */
@@ -67,7 +65,7 @@ export function ReleaseTimeline({ releases }: { releases: NavRelease[] }) {
       <ol>
         {releases.map((r) => (
           <li key={r.id} data-pkgs={r.pkgs.join(" ")}>
-            <Link
+            <a
               href={r.href ?? `#${r.id}`}
               aria-current={active === r.id ? "true" : undefined}
               onClick={(e) => {
@@ -81,7 +79,7 @@ export function ReleaseTimeline({ releases }: { releases: NavRelease[] }) {
               <span className={styles.dot} aria-hidden="true" />
               <span className={styles.tlVersion}>{r.label}</span>
               {r.date && <span className={styles.tlDate}>{r.date}</span>}
-            </Link>
+            </a>
           </li>
         ))}
       </ol>
@@ -91,7 +89,6 @@ export function ReleaseTimeline({ releases }: { releases: NavRelease[] }) {
 
 /** Phones: the same list as a Select that jumps to the release picked. */
 export function ReleaseJump({ releases }: { releases: NavRelease[] }) {
-  const router = useRouter();
   const reduced = useReducedMotion();
   return (
     <div className={styles.jump}>
@@ -102,7 +99,7 @@ export function ReleaseJump({ releases }: { releases: NavRelease[] }) {
         options={releases.map((r) => ({ value: r.id, label: r.label, hint: r.date }))}
         onValueChange={(id) => {
           const href = releases.find((r) => r.id === id)?.href;
-          if (href && new URL(href, location.href).search !== location.search) router.push(href);
+          if (href && new URL(href, location.href).search !== location.search) window.location.assign(href);
           else go(id, !reduced);
         }}
       />
@@ -152,17 +149,16 @@ export function Fold({ id, count, children }: { id: string; count: number; child
 
 /** Resolve existing fragment-only release links to the page that now contains them. */
 export function ReleaseHash({ destinations }: { destinations: Record<string, string> }) {
-  const router = useRouter();
   useEffect(() => {
     const resolve = () => {
       let id: string;
       try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
       const href = destinations[id];
-      if (href && !document.getElementById(id) && new URL(href, location.href).search !== location.search) router.replace(href);
+      if (href && !document.getElementById(id) && new URL(href, location.href).search !== location.search) window.location.replace(href);
     };
     resolve();
     addEventListener("hashchange", resolve);
     return () => removeEventListener("hashchange", resolve);
-  }, [destinations, router]);
+  }, [destinations]);
   return null;
 }

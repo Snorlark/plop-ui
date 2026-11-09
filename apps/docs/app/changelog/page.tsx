@@ -1,6 +1,5 @@
 import { Buddy, Pagination, Sheet, Tag, WordSticker } from "@plop-ui/react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ReleaseFilter } from "./ReleaseFilter";
 import { changelogHref, RELEASES_PER_PAGE, type PackageFilter } from "./pagination";
 import { Fragment, type ReactNode } from "react";
@@ -192,7 +191,7 @@ export default async function ChangelogPage({ searchParams }: { searchParams: Pr
             <p className={styles.stats}>{groups.length ? `Releases ${offset + 1}–${Math.min(offset + RELEASES_PER_PAGE, groups.length)} of ${groups.length}` : "No releases for this package yet."}</p>
             {visible.map((m, i) => <MinorCard key={m.minor} m={m} index={offset + i} />)}
           </div>
-          <Pagination className={styles.pagination} page={page} pageCount={groups.length ? pageCount : 0} as={Link} href={(target) => changelogHref(target, pkg)} />
+          <Pagination className={styles.pagination} page={page} pageCount={groups.length ? pageCount : 0} href={(target) => changelogHref(target, pkg)} />
 
           <p className={styles.foot}>
             Also on <a href={`${GITHUB}/releases`}>GitHub Releases</a>. Before 1.0, a minor version can break things, and always says how to move over.

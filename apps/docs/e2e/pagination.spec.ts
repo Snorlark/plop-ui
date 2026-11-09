@@ -20,19 +20,82 @@ test("changelog pages navigate by keyboard, reload and browser Back", async ({ p
   await page.reload();
   await expect(cards(page).first()).toHaveAttribute("id", secondRelease!);
   await page.goBack();
+  await expect(page).toHaveURL(/\/changelog$/);
   await expect(cards(page).first()).toHaveAttribute("id", firstRelease!);
   await page.goForward();
+  await expect(page).toHaveURL(/page=2#releases$/);
   await expect(cards(page).first()).toHaveAttribute("id", secondRelease!);
+});
+
+for (const navigation of ["page", "package"] as const) {
+  test(`Back and Forward restore server results while reload hydration is blocked after ${navigation} navigation`, async ({ page }) => {
+    let blockHydration = false;
+    let resumeHydration!: () => void;
+    const hydration = new Promise<void>((resolve) => { resumeHydration = resolve; });
+    await page.route("**/_next/static/**", async (route) => {
+      if (blockHydration && new URL(route.request().url()).pathname.endsWith(".js")) await hydration;
+      // A document navigation can cancel a script request while it is held.
+      await route.continue().catch(() => {});
+    });
+    try {
+      await page.goto("/changelog");
+      const first = await cards(page).first().getAttribute("id");
+      if (navigation === "page") await pagination(page).getByRole("link", { name: "Next", exact: true }).click();
+      else {
+        await expect(page.getByRole("button", { name: "Show releases", exact: true })).toBeHidden();
+        await page.locator("fieldset label", { hasText: /^fonts$/ }).click();
+      }
+      const destination = navigation === "page" ? /page=2#releases$/ : /pkg=fonts#releases$/;
+      await expect(page).toHaveURL(destination);
+      const second = await cards(page).first().getAttribute("id");
+      expect(second).not.toBe(first);
+      blockHydration = true;
+      await page.reload({ waitUntil: "commit" });
+      await expect(cards(page).first()).toHaveAttribute("id", second!);
+      await page.goBack({ waitUntil: "commit" });
+      await expect(page).toHaveURL(/\/changelog$/);
+      await expect(cards(page).first()).toHaveAttribute("id", first!);
+      await expect(pagination(page).getByRole("link", { name: "Page 1", exact: true })).toHaveAttribute("aria-current", "page");
+      await page.goForward({ waitUntil: "commit" });
+      await expect(page).toHaveURL(destination);
+      await expect(cards(page).first()).toHaveAttribute("id", second!);
+    } finally {
+      resumeHydration();
+    }
+  });
+}
+
+test("package filtering has a native submit button before hydration", async ({ page }) => {
+  let resume!: () => void;
+  const hydration = new Promise<void>((resolve) => { resume = resolve; });
+  await page.route("**/_next/static/**", async (route) => {
+    if (new URL(route.request().url()).pathname.endsWith(".js")) await hydration;
+    await route.continue().catch(() => {});
+  });
+  try {
+    await page.goto("/changelog", { waitUntil: "commit" });
+    const submit = page.getByRole("button", { name: "Show releases", exact: true });
+    await expect(submit).toBeVisible();
+    await page.locator("fieldset label", { hasText: /^fonts$/ }).click();
+    await submit.focus();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/pkg=fonts$/);
+    await expect(cards(page).first()).toHaveAttribute("data-pkgs", "fonts");
+  } finally {
+    resume();
+  }
 });
 
 test("filters run before pagination, start at page one, and preserve the package in links", async ({ page }) => {
   await page.goto("/changelog?page=2");
+  await expect(page.getByRole("button", { name: "Show releases", exact: true })).toBeHidden();
   await page.locator("fieldset label", { hasText: /^react$/ }).click();
   await expect(page).toHaveURL(/\/changelog\?pkg=react#releases$/);
   await expect(pagination(page).getByRole("link", { name: "Page 1", exact: true })).toHaveAttribute("aria-current", "page");
   await pagination(page).getByRole("link", { name: "Next", exact: true }).click();
   await expect(page).toHaveURL(/pkg=react&page=2#releases$/);
   for (const value of await cards(page).evaluateAll((els) => els.map((el) => el.getAttribute("data-pkgs")))) expect(value).toBe("react");
+  await expect(page.getByRole("button", { name: "Show releases", exact: true })).toBeHidden();
   await page.locator("fieldset label", { hasText: /^fonts$/ }).click();
   await expect(page).toHaveURL(/pkg=fonts#releases$/);
   expect(await cards(page).count()).toBeGreaterThan(0);
