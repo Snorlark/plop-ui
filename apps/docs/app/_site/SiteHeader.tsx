@@ -7,10 +7,10 @@ import { GITHUB } from "./nav";
 import { Search } from "./Search";
 import { Wordmark } from "./Wordmark";
 
-/** The repo's star count, refreshed hourly. Null if GitHub is unreachable, and the sticker just says Star. */
+/** The repo's star count. A GitHub star webhook (app/api/github) refreshes it right away; hourly is the fallback. Null if GitHub is unreachable, and the sticker just says Star. */
 async function starCount(): Promise<number | null> {
   try {
-    const res = await fetch("https://api.github.com/repos/Snorlark/plop-ui", { next: { revalidate: 3600 } });
+    const res = await fetch("https://api.github.com/repos/Snorlark/plop-ui", { next: { revalidate: 3600, tags: ["stars"] } });
     return res.ok ? ((await res.json()) as { stargazers_count: number }).stargazers_count : null;
   } catch {
     return null;
