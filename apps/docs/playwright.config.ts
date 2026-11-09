@@ -30,6 +30,6 @@ export default defineConfig({
     command: `pnpm next start -p ${PORT}`,
     port: PORT,
     reuseExistingServer: !process.env.CI,
-    env: { NEXT_TELEMETRY_DISABLED: "1", NEXT_DIST_DIR: ".next-e2e" },
+    env: { NEXT_TELEMETRY_DISABLED: "1", NEXT_DIST_DIR: ".next-e2e", GITHUB_WEBHOOK_SECRET: "e2e-webhook-secret" },
   },
 });
