@@ -176,3 +176,24 @@ for (const surface of SURFACES) for (const theme of THEMES) {
     expect(results.violations).toEqual([]);
   });
 }
+
+test("docs page shows compact, First/Last and loading variants, each its own landmark", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/docs/components/pagination");
+  const compact = page.getByRole("navigation", { name: "Compact", exact: true });
+  await expect(compact).toContainText("2 of 17");
+  await compact.getByRole("button", { name: "Next", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(compact).toContainText("3 of 17");
+
+  const ends = page.getByRole("navigation", { name: "First and last", exact: true });
+  await ends.getByRole("button", { name: "Last", exact: true }).click();
+  await expect(ends.locator('[aria-current="page"]')).toHaveAccessibleName("Page 40");
+  await expect(ends.getByRole("button", { name: "Last", exact: true })).toBeDisabled();
+
+  const slow = page.getByRole("navigation", { name: "Slow fetch", exact: true });
+  await slow.getByRole("button", { name: "Page 4", exact: true }).click();
+  await expect(slow).toHaveAttribute("aria-busy", "true");
+  await expect(slow).not.toHaveAttribute("aria-busy");
+  await expect(slow.locator('[aria-current="page"]')).toHaveAccessibleName("Page 4");
+});

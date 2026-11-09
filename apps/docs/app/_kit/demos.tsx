@@ -45,7 +45,15 @@ import { ButtonBursts, ButtonHero, ButtonVariants, Checkboxes, IconButtons, Swit
 
 /** Live demos for the generic component pages (app/docs/components/[slug]). */
 const DEMOS: Record<string, () => ReactNode> = {
-  pagination: () => <PaginationDemo />,
+  pagination: () => (
+    <div className="stack" style={{ gap: 32, width: "100%" }}>
+      <PaginationDemo />
+      <PaginationDemo label="Compact" variant="compact" pageCount={17} initialPage={2} />
+      <PaginationDemo label="First and last" showEnds pageCount={40} initialPage={12} />
+      <PaginationDemo label="Compact with ends" variant="compact" showEnds pageCount={17} initialPage={9} />
+      <PaginationDemo label="Slow fetch" slowFetch pageCount={12} initialPage={3} />
+    </div>
+  ),
   slider: () => (
     <div style={{ display: "grid", gap: 28, width: "100%", maxWidth: 400 }}>
       <Slider label="Pencil pressure" defaultValue={40} showValue />
