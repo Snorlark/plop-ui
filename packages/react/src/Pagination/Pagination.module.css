@@ -1,0 +1,40 @@
+.root {
+  min-width: 0;
+}
+/* Reset the list explicitly so pagination also works in prose containers. */
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 12px;
+}
+.list > li {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+.control {
+  min-width: 44px;
+  min-height: 44px;
+}
+/* Compact "2 of 17": lettered like the stickers, fixed-width digits so Previous/Next don't jump. */
+.list > li.count {
+  gap: 8px;
+  padding: 0 6px;
+  font-family: var(--plop-font-letter);
+  font-weight: var(--plop-weight-letter);
+  font-size: var(--plop-text-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--plop-on);
+}
+.gap {
+  padding: 0 2px;
+  font-family: var(--plop-font-body);
+  font-size: var(--plop-text-body);
+  color: var(--plop-on-soft);
+}

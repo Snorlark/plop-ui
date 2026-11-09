@@ -21,12 +21,12 @@ test("picking a release from the timeline (a Select on phones) opens it and mark
   const id = (await page.locator("section[id^='v']").last().getAttribute("id"))!;
   if (isMobile) {
     await page.getByRole("button", { name: /Jump to a release/ }).click();
-    // The oldest release, the same one `id` names (options run newest first; "0.1" alone would also match 0.10+).
-    await page.getByRole("option").last().click();
+    const version = id.slice(1).replaceAll("-", ".");
+    await page.getByRole("option").filter({ hasText: version }).first().click();
   } else {
     const nav = page.getByRole("navigation", { name: "Releases" });
-    await nav.locator(`a[href='#${id}']`).click();
-    await expect(nav.locator("a[aria-current]")).toHaveAttribute("href", `#${id}`);
+    await nav.locator(`a[href$='#${id}']`).click();
+    await expect(nav.locator("a[aria-current]")).toHaveAttribute("href", new RegExp(`#${id}$`));
   }
   await expect(folded(page, id)).toBeVisible();
   await expect(page.locator(`#${id}`).getByRole("heading", { level: 2 })).toBeInViewport();
@@ -36,14 +36,21 @@ test("the package filter shows only releases that touch that package", async ({ 
   await page.goto("/changelog");
   const cards = page.locator("section[id^='v']:visible");
   const all = await cards.count();
+  const newest = await cards.first().getAttribute("id");
   // The kit's Radio draws over its real input, so pick it the way a person does: by its label.
-  const pick = (name: string) => page.locator("fieldset label", { hasText: new RegExp(`^${name}$`) }).click();
+  const pick = async (name: string) => {
+    await expect(page.getByRole("button", { name: "Show releases", exact: true })).toBeHidden();
+    await page.locator("fieldset label", { hasText: new RegExp(`^${name}$`) }).click();
+  };
   await pick("fonts");
   await expect(page.getByRole("radio", { name: "fonts" })).toBeChecked();
-  await expect.poll(() => cards.count()).toBeLessThan(all);
+  await expect(page).toHaveURL(/pkg=fonts#releases$/);
+  await expect(cards.first()).toHaveAttribute("data-pkgs", /fonts/);
+  expect(await cards.count()).toBeGreaterThan(0);
   for (const pkgs of await cards.evaluateAll((els) => els.map((el) => el.getAttribute("data-pkgs")))) expect(pkgs).toContain("fonts");
   await pick("Everything");
-  await expect.poll(() => cards.count()).toBe(all);
+  await expect(cards.first()).toHaveAttribute("id", newest!);
+  await expect(cards).toHaveCount(all);
 });
 
 test("a link to a release opens the card that holds it, arriving or in the page", async ({ page }) => {

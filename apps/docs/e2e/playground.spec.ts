@@ -230,7 +230,7 @@ test.describe("every component", () => {
     StatusDot: "Status",
     TicketCard: "Cards", UnitCard: "Cards", StickyNote: "Cards",
     TextField: "Forms", TextArea: "Forms", SearchField: "Forms", RadioGroup: "Forms",
-    Select: "Pickers", MultiSelect: "Pickers", Tabs: "Pickers",
+    Select: "Pickers", MultiSelect: "Pickers", Tabs: "Pickers", Pagination: "Pickers",
     Heading: "Words & doodles",
   };
 

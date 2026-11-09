@@ -49,6 +49,7 @@ import {
   type SliderTone,
 } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
+import { PaginationDemo } from "../_kit/PaginationDemo";
 import { useSearchParams } from "next/navigation";
 import { jsxAttr, jsString, jsxText } from "./code";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -93,6 +94,21 @@ function prop(name: string, value: Value | undefined, def?: Value) {
 }
 
 const ENTRIES: Record<string, Entry> = {
+  pagination: {
+    label: "Pagination",
+    rounds: true,
+    controls: [
+      { kind: "number", name: "page", label: "Starting page", default: 1, min: 1, max: 100, step: 1 },
+      { kind: "number", name: "pageCount", label: "Page count", default: 20, min: 1, max: 100, step: 1 },
+      { kind: "select", name: "variant", label: "Style", options: ["full", "compact"], default: "full" },
+      { kind: "boolean", name: "showEnds", label: "First and Last", default: false },
+      { kind: "boolean", name: "loading", label: "Loading", default: false },
+      { kind: "boolean", name: "disabled", label: "Disabled", default: false },
+    ],
+    render: (v) => <PaginationDemo key={`${v.page}-${v.pageCount}`} initialPage={n(v.page)} pageCount={n(v.pageCount)} disabled={b(v.disabled)}
+      variant={s(v.variant) === "compact" ? "compact" : "full"} showEnds={b(v.showEnds)} loading={b(v.loading)} />,
+    code: (v) => `<Pagination page={${n(v.page)}} pageCount={${n(v.pageCount)}}${prop("variant", v.variant, "full")}${prop("showEnds", v.showEnds, false)}${prop("loading", v.loading, false)} onPageChange={setPage}${prop("disabled", v.disabled, false)} />`,
+  },
   slider: {
     label: "Slider",
     rounds: true,
@@ -571,6 +587,7 @@ const ENTRIES: Record<string, Entry> = {
 };
 
 const IMPORTS: Record<string, string> = {
+  pagination: "Pagination",
   slider: "Slider",
   button: "Button",
   "icon-button": "IconButton",

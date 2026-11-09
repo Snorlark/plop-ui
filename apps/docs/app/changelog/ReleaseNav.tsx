@@ -9,6 +9,7 @@ export interface NavRelease {
   label: string;
   date?: string;
   pkgs: string[];
+  href?: string;
 }
 
 const OPEN_EVENT = "plop:changelog-open";
@@ -17,7 +18,7 @@ const OPEN_EVENT = "plop:changelog-open";
 function go(id: string, smooth: boolean) {
   window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: id }));
   requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }));
-  history.replaceState(null, "", `#${id}`);
+  history.replaceState(history.state, "", `#${id}`);
 }
 
 /** Which release is being read: the last one whose top has passed a line just under the header. */
@@ -30,7 +31,7 @@ function useActive(ids: string[]) {
     const measure = () => {
       frame = 0;
       const line = Math.max(240, innerHeight * 0.35);
-      let current = ids[0] ?? "";
+      let current = ids.find((id) => document.getElementById(id)?.offsetParent) ?? ids[0] ?? "";
       for (const id of ids) {
         const el = document.getElementById(id);
         if (!el || !el.offsetParent) continue; // hidden by the package filter
@@ -65,9 +66,11 @@ export function ReleaseTimeline({ releases }: { releases: NavRelease[] }) {
         {releases.map((r) => (
           <li key={r.id} data-pkgs={r.pkgs.join(" ")}>
             <a
-              href={`#${r.id}`}
+              href={r.href ?? `#${r.id}`}
               aria-current={active === r.id ? "true" : undefined}
               onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                if (new URL(r.href ?? `#${r.id}`, location.href).search !== location.search) return;
                 e.preventDefault();
                 haptics.tap();
                 go(r.id, !reduced);
@@ -94,7 +97,11 @@ export function ReleaseJump({ releases }: { releases: NavRelease[] }) {
         size="sm"
         placeholder="Pick a version"
         options={releases.map((r) => ({ value: r.id, label: r.label, hint: r.date }))}
-        onValueChange={(id) => go(id, !reduced)}
+        onValueChange={(id) => {
+          const href = releases.find((r) => r.id === id)?.href;
+          if (href && new URL(href, location.href).search !== location.search) window.location.assign(href);
+          else go(id, !reduced);
+        }}
       />
     </div>
   );
@@ -137,4 +144,21 @@ export function Fold({ id, count, children }: { id: string; count: number; child
       </div>
     </div>
   );
+}
+
+
+/** Resolve existing fragment-only release links to the page that now contains them. */
+export function ReleaseHash({ destinations }: { destinations: Record<string, string> }) {
+  useEffect(() => {
+    const resolve = () => {
+      let id: string;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+      const href = destinations[id];
+      if (href && !document.getElementById(id) && new URL(href, location.href).search !== location.search) window.location.replace(href);
+    };
+    resolve();
+    addEventListener("hashchange", resolve);
+    return () => removeEventListener("hashchange", resolve);
+  }, [destinations]);
+  return null;
 }

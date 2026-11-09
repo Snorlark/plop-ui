@@ -9,8 +9,8 @@ import path from "node:path";
  * network the page just leaves them out.
  */
 
-export const PACKAGES = ["react", "tokens", "fonts"] as const;
-export type Pkg = (typeof PACKAGES)[number];
+import { PACKAGES, type Pkg } from "./changelog-packages";
+export { PACKAGES, type Pkg } from "./changelog-packages";
 
 /** Changesets' section names, in the words the page uses. */
 export type Kind = "breaking" | "new" | "fixed";

@@ -21,6 +21,40 @@ const AA = "WCAG AA";
 const V01 = "Since v0.1";
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  pagination: {
+    title: "Pagination",
+    group: "Navigation",
+    badges: ["Server-compatible", AA],
+    lede: "Page numbers as small stickers. The current page is inked in; long runs leave a little ellipsis between the pages that matter. Uses the same paper edge, seeded tilt and press feedback as Button.",
+    code: `import { Pagination } from "@plop-ui/react";
+
+// Links: href is evaluated on the server; each destination is a real anchor.
+<Pagination page={3} pageCount={20} href={(page) => \`/articles?page=\${page}\`} />
+
+// Buttons: use inside a client component with your own state.
+<Pagination page={page} pageCount={20} onPageChange={setPage} />
+
+// Next.js stays in your app:
+<Pagination page={page} pageCount={20} as={Link} href={(page) => \`/articles?page=\${page}\`} />
+
+// Tight spaces: "2 of 17" between Previous and Next. Add First/Last for long lists.
+<Pagination variant="compact" showEnds page={page} pageCount={17} onPageChange={setPage} />
+
+// While the next page fetches, its sticker shows a spinner.
+<Pagination page={page} pageCount={20} loading={isFetching} onPageChange={setPage} />`,
+    tables: [{ of: "Pagination", inheritedFrom: "<nav>" }],
+    do: "Use links for destinations that have a URL; use buttons for local lists. Keep page controlled by the same state that selects your results.",
+    dont: "Use arrow-key widget navigation or focus a different page after every click. Tab, Enter and Space already work through native links and buttons.",
+    a11y: [
+      "A nav labelled Pagination contains native buttons or links. Override aria-label when you show more than one pagination landmark.",
+      "The selected page has aria-current=page and an ink fill. Numbered controls have names like Page 3; getPageLabel can translate them.",
+      "Previous and Next are disabled at the bounds. Disabled link destinations render as native disabled buttons without href.",
+      "Ellipses are decorative and have no tab stop. Large page counts render a bounded window rather than every page.",
+      "The compact variant reads its count as plain text in the nav; formatCount translates it. First and Last are disabled at the ends, like Previous and Next.",
+      "loading sets aria-busy on the nav. The current page becomes a busy button whose spinner says loadingLabel; other pages stay usable, so the latest pick wins.",
+      "Controls are at least 44px tall and wrap in narrow containers. Reused Button styles provide token contrast, focus, press feedback and reduced-motion handling.",
+    ],
+  },
   slider: {
     contributors: ["glaucusec"],
     title: "Slider",

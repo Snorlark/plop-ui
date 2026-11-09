@@ -36,11 +36,6 @@
 .filter { margin: 0; }
 .jump { display: none; min-width: 220px; }
 
-/* The kit's radios are real inputs, so picking a package hides what doesn't touch it with CSS alone. */
-.shell:has(input[name="changelog-pkg"][value="react"]:checked) :is(.minor, .release, .items li, .quiet, .timeline li)[data-pkgs]:not([data-pkgs~="react"]),
-.shell:has(input[name="changelog-pkg"][value="tokens"]:checked) :is(.minor, .release, .items li, .quiet, .timeline li)[data-pkgs]:not([data-pkgs~="tokens"]),
-.shell:has(input[name="changelog-pkg"][value="fonts"]:checked) :is(.minor, .release, .items li, .quiet, .timeline li)[data-pkgs]:not([data-pkgs~="fonts"]) { display: none; }
-
 /* ---- a minor version ---- */
 .minor { margin-top: 48px; scroll-margin-top: calc(var(--header-offset, 0px) + 32px); }
 .card { position: relative; padding: 36px 40px 38px; }
@@ -94,3 +89,7 @@
 @media (prefers-reduced-motion: reduce) {
   .timeline, .dot { transition: none; }
 }
+
+.releases { scroll-margin-top: calc(var(--header-offset, 0px) + 32px); }
+.releases:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 8px; }
+.pagination { margin-top: 40px; }

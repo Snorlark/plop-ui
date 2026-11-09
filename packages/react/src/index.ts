@@ -75,3 +75,5 @@ export {
 
 export { Slider, type SliderProps, type SliderTone } from "./Slider/Slider.js";
 export { Breadcrumb, type BreadcrumbProps, type BreadcrumbItem } from "./Breadcrumb/Breadcrumb.js";
+
+export { Pagination, type PaginationProps } from "./Pagination/Pagination.js";
