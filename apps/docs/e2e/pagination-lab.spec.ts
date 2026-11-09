@@ -58,6 +58,7 @@ test("recipes stay in sync: go to page validates, First/Last and Select step tog
 });
 
 test("no horizontal scroll on a phone, and no axe violations in light or dark", async ({ page }) => {
+  test.slow(); // two axe passes over 60+ paginations take over 30s on CI firefox
   await page.setViewportSize({ width: 320, height: 740 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
   const scan = () => new AxeBuilder({ page }).include('[data-testid="pagination-lab"]').withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
