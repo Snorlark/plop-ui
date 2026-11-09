@@ -9,6 +9,8 @@ interface ControlProps {
   page: number;
   label: string;
   current: boolean;
+  loading: boolean;
+  loadingLabel: string;
   disabled: boolean;
   href?: string;
   as?: ElementType;
@@ -19,14 +21,15 @@ interface ControlProps {
 }
 
 /** Uses the same paper edge, ink, keyboard press and reduced-motion handling as Button. */
-export function PaginationControl({ className, page, label, current, disabled, href, as, onPageChange, seed, rel, children }: ControlProps) {
+export function PaginationControl({ className, page, label, current, loading, loadingLabel, disabled, href, as, onPageChange, seed, rel, children }: ControlProps) {
   const shared = {
     size: "sm" as const, variant: current ? "ink" as const : "plain" as const,
     seed, shadow: "soft" as const, className,
     "aria-label": label, "aria-current": current ? "page" as const : undefined,
   };
-  if (href !== undefined) return <ButtonLink {...shared} href={href} as={as} rel={rel} onClick={(event) => {
+  // A loading page is mid-fetch, so it is a busy button, not a link to follow again.
+  if (href !== undefined && !loading) return <ButtonLink {...shared} href={href} as={as} rel={rel} onClick={(event) => {
     if (!current && !event.defaultPrevented && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) onPageChange?.(page);
   }}>{children}</ButtonLink>;
-  return <Button {...shared} type="button" disabled={disabled} onClick={() => { if (!current) onPageChange?.(page); }}>{children}</Button>;
+  return <Button {...shared} type="button" disabled={disabled} loading={loading} loadingLabel={loadingLabel} onClick={() => { if (!current) onPageChange?.(page); }}>{children}</Button>;
 }

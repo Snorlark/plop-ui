@@ -21,6 +21,17 @@
   min-width: 44px;
   min-height: 44px;
 }
+/* Compact "2 of 17": lettered like the stickers, fixed-width digits so Previous/Next don't jump. */
+.list > li.count {
+  gap: 8px;
+  padding: 0 6px;
+  font-family: var(--plop-font-letter);
+  font-weight: var(--plop-weight-letter);
+  font-size: var(--plop-text-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--plop-on);
+}
 .gap {
   padding: 0 2px;
   font-family: var(--plop-font-body);

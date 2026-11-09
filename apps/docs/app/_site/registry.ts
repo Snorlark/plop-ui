@@ -35,7 +35,13 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
 <Pagination page={page} pageCount={20} onPageChange={setPage} />
 
 // Next.js stays in your app:
-<Pagination page={page} pageCount={20} as={Link} href={(page) => \`/articles?page=\${page}\`} />`,
+<Pagination page={page} pageCount={20} as={Link} href={(page) => \`/articles?page=\${page}\`} />
+
+// Tight spaces: "2 of 17" between Previous and Next. Add First/Last for long lists.
+<Pagination variant="compact" showEnds page={page} pageCount={17} onPageChange={setPage} />
+
+// While the next page fetches, its sticker shows a spinner.
+<Pagination page={page} pageCount={20} loading={isFetching} onPageChange={setPage} />`,
     tables: [{ of: "Pagination", inheritedFrom: "<nav>" }],
     do: "Use links for destinations that have a URL; use buttons for local lists. Keep page controlled by the same state that selects your results.",
     dont: "Use arrow-key widget navigation or focus a different page after every click. Tab, Enter and Space already work through native links and buttons.",
@@ -44,6 +50,8 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "The selected page has aria-current=page and an ink fill. Numbered controls have names like Page 3; getPageLabel can translate them.",
       "Previous and Next are disabled at the bounds. Disabled link destinations render as native disabled buttons without href.",
       "Ellipses are decorative and have no tab stop. Large page counts render a bounded window rather than every page.",
+      "The compact variant reads its count as plain text in the nav; formatCount translates it. First and Last are disabled at the ends, like Previous and Next.",
+      "loading sets aria-busy on the nav. The current page becomes a busy button whose spinner says loadingLabel; other pages stay usable, so the latest pick wins.",
       "Controls are at least 44px tall and wrap in narrow containers. Reused Button styles provide token contrast, focus, press feedback and reduced-motion handling.",
     ],
   },

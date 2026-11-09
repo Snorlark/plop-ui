@@ -100,10 +100,14 @@ const ENTRIES: Record<string, Entry> = {
     controls: [
       { kind: "number", name: "page", label: "Starting page", default: 1, min: 1, max: 100, step: 1 },
       { kind: "number", name: "pageCount", label: "Page count", default: 20, min: 1, max: 100, step: 1 },
+      { kind: "select", name: "variant", label: "Style", options: ["full", "compact"], default: "full" },
+      { kind: "boolean", name: "showEnds", label: "First and Last", default: false },
+      { kind: "boolean", name: "loading", label: "Loading", default: false },
       { kind: "boolean", name: "disabled", label: "Disabled", default: false },
     ],
-    render: (v) => <PaginationDemo key={`${v.page}-${v.pageCount}`} initialPage={n(v.page)} pageCount={n(v.pageCount)} disabled={b(v.disabled)} />,
-    code: (v) => `<Pagination page={${n(v.page)}} pageCount={${n(v.pageCount)}} onPageChange={setPage}${prop("disabled", v.disabled, false)} />`,
+    render: (v) => <PaginationDemo key={`${v.page}-${v.pageCount}`} initialPage={n(v.page)} pageCount={n(v.pageCount)} disabled={b(v.disabled)}
+      variant={s(v.variant) === "compact" ? "compact" : "full"} showEnds={b(v.showEnds)} loading={b(v.loading)} />,
+    code: (v) => `<Pagination page={${n(v.page)}} pageCount={${n(v.pageCount)}}${prop("variant", v.variant, "full")}${prop("showEnds", v.showEnds, false)}${prop("loading", v.loading, false)} onPageChange={setPage}${prop("disabled", v.disabled, false)} />`,
   },
   slider: {
     label: "Slider",

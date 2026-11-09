@@ -13,6 +13,7 @@ import {
   IconButton,
   Menu,
   MultiSelect,
+  Pagination,
   PhoneIcon,
   PinIcon,
   PlusIcon,
@@ -53,7 +54,7 @@ import styles from "./tools.module.css";
 
 export type Kind =
   | "button" | "icon" | "switch" | "checkbox" | "tag" | "timeline" | "toast" | "count" | "avatar" | "buddy" | "word" | "doodle" | "holo"
-  | "tooltip" | "menu" | "dot" | "ticket" | "unit" | "note" | "textfield" | "textarea" | "search" | "radio" | "select" | "multiselect" | "tabs" | "heading";
+  | "tooltip" | "menu" | "dot" | "ticket" | "unit" | "note" | "textfield" | "textarea" | "search" | "radio" | "select" | "multiselect" | "tabs" | "pagination" | "heading";
 export type Props = Record<string, string | number | boolean>;
 
 export interface Item {
@@ -453,6 +454,23 @@ export const KINDS: Record<Kind, KindSpec> = {
       return `<Tabs defaultValue=${jsxAttr(labels[0])}>\n  <TabList label="Sketch views">\n${labels.map((l) => `    <Tab value=${jsxAttr(l)}>${jsxText(l)}</Tab>`).join("\n")}\n  </TabList>\n${labels.map((l) => `  <TabPanel value=${jsxAttr(l)}>…</TabPanel>`).join("\n")}\n</Tabs>`;
     },
   },
+  pagination: {
+    name: "Pagination",
+    imports: ["Pagination"],
+    fields: [
+      { key: "page", type: "step", label: "Current page", min: 1, max: 99 },
+      { key: "pageCount", type: "step", label: "Pages", min: 1, max: 99 },
+      { key: "variant", type: "choice", label: "Style", options: [["full", "Numbers"], ["compact", "Compact"]] },
+      { key: "ends", type: "toggle", label: "First and Last" },
+      { key: "loading", type: "toggle", label: "Loading" },
+    ],
+    render: (p) => (
+      <Pagination page={Number(p.page) || 1} pageCount={Number(p.pageCount) || 1} aria-label="Board pages"
+        variant={p.variant === "compact" ? "compact" : "full"} showEnds={p.ends === true} loading={p.loading === true} />
+    ),
+    code: (p) =>
+      `<Pagination page={page} pageCount={${Number(p.pageCount) || 1}}${p.variant === "compact" ? ` variant="compact"` : ""}${p.ends ? " showEnds" : ""}${p.loading ? " loading" : ""} onPageChange={setPage} />`,
+  },
   heading: {
     name: "Heading",
     imports: ["Heading"],
@@ -535,6 +553,7 @@ export const SHELVES: Array<{ id: string; label: string; items: TrayEntry[] }> =
       { kind: "select", props: { label: "Brush", options: BRUSHES.join(", "), placeholder: "Pick a brush" }, hint: "Select" },
       { kind: "multiselect", props: { label: "Colors", options: "Tomato, Mustard, Mint", placeholder: "Pick colors" }, hint: "MultiSelect" },
       { kind: "tabs", props: { labels: "Sketch, Ink, Color" }, hint: "Tabs" },
+      { kind: "pagination", props: { page: 2, pageCount: 12, variant: "full", ends: false, loading: false }, hint: "Pagination" },
     ],
   },
   {

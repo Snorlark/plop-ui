@@ -5,9 +5,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { renderWithPlop } from "../../test/render";
 import { Pagination } from "./Pagination";
 
-function LocalPages({ initial = 5, pageCount = 20 }: { initial?: number; pageCount?: number }) {
+function LocalPages({ initial = 5, pageCount = 20, ...props }: { initial?: number; pageCount?: number } & Partial<ComponentProps<typeof Pagination>>) {
   const [page, setPage] = useState(initial);
-  return <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />;
+  return <Pagination {...props} page={page} pageCount={pageCount} onPageChange={setPage} />;
 }
 
 describe("Pagination", () => {
@@ -120,5 +120,66 @@ describe("Pagination", () => {
     expect(markup).toContain('href="/articles?page=3"');
     expect(markup).toContain('aria-current="page"');
     expect(markup).not.toContain("function");
+  });
+
+  it("compact shows the count instead of numbers and still pages by keyboard", async () => {
+    const user = userEvent.setup();
+    renderWithPlop(<LocalPages initial={2} pageCount={17} variant="compact" />);
+    const nav = screen.getByRole("navigation", { name: "Pagination" });
+    expect(within(nav).queryByRole("button", { name: /^Page/ })).not.toBeInTheDocument();
+    expect(nav).toHaveTextContent("2 of 17");
+    await user.tab();
+    await user.keyboard("{Enter}");
+    expect(nav).toHaveTextContent("1 of 17");
+    expect(screen.getByRole("button", { name: "Previous" })).toBeDisabled();
+    screen.getByRole("button", { name: "Next" }).focus();
+    await user.keyboard(" ");
+    expect(nav).toHaveTextContent("2 of 17");
+  });
+
+  it("formats the compact count for other languages", () => {
+    renderWithPlop(<Pagination page={3} pageCount={9} variant="compact" formatCount={(page, count) => `Page ${page} sur ${count}`} />);
+    expect(screen.getByRole("navigation")).toHaveTextContent("Page 3 sur 9");
+  });
+
+  it("First and Last jump to the ends by keyboard and are disabled there", async () => {
+    const user = userEvent.setup();
+    renderWithPlop(<LocalPages initial={5} pageCount={20} showEnds />);
+    screen.getByRole("button", { name: "Last" }).focus();
+    await user.keyboard("{Enter}");
+    expect(screen.getByRole("button", { name: "Page 20" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("button", { name: "Last" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Next" })).toBeDisabled();
+    screen.getByRole("button", { name: "First" }).focus();
+    await user.keyboard(" ");
+    expect(screen.getByRole("button", { name: "Page 1" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("button", { name: "First" })).toBeDisabled();
+  });
+
+  it("loading marks the nav busy, puts a spinner in the current page and keeps other pages usable", async () => {
+    const user = userEvent.setup();
+    const change = vi.fn();
+    renderWithPlop(<Pagination page={3} pageCount={10} loading loadingLabel="Loading page 3" onPageChange={change} />);
+    expect(screen.getByRole("navigation")).toHaveAttribute("aria-busy", "true");
+    const current = screen.getByRole("button", { name: "Page 3" });
+    expect(current).toHaveAttribute("aria-busy", "true");
+    expect(current).toHaveAttribute("aria-current", "page");
+    expect(current).toHaveTextContent("Loading page 3");
+    screen.getByRole("button", { name: "Page 4" }).focus();
+    await user.keyboard("{Enter}");
+    expect(change).toHaveBeenCalledWith(4);
+  });
+
+  it("loading in link mode turns the current page into a busy button, not a link", () => {
+    renderWithPlop(<Pagination page={2} pageCount={5} loading href={(page) => `#page-${page}`} />);
+    expect(screen.queryByRole("link", { name: "Page 2" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Page 2" })).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByRole("link", { name: "Page 3" })).toHaveAttribute("href", "#page-3");
+  });
+
+  it("compact loading announces through a status spinner", () => {
+    renderWithPlop(<Pagination page={2} pageCount={5} variant="compact" loading />);
+    expect(within(screen.getByRole("navigation")).getByRole("status")).toHaveTextContent("Loading");
+    expect(screen.getByRole("navigation")).toHaveAttribute("aria-busy", "true");
   });
 });
