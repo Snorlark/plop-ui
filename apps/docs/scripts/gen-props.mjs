@@ -16,6 +16,7 @@ const COMPONENTS = {
   PlopProvider: "PlopProviderProps",
   Pagination: "PaginationProps",
   Slider: "SliderProps",
+  NumberStepper: "NumberStepperProps",
   Breadcrumb: "BreadcrumbProps",
   Button: "ButtonProps",
   ButtonLink: "ButtonLinkProps",

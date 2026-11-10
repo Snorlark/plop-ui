@@ -83,6 +83,34 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "Surface text tokens keep labels readable in all light/dark surfaces. Reduced motion removes thumb transforms and transitions; forced colors restore the native range appearance.",
     ],
   },
+  "number-stepper": {
+    contributors: ["luxmoncoeur"],
+    title: "NumberStepper",
+    group: "Inputs",
+    badges: ["Client component", AA],
+    lede: "A quantity stepper for carts and counters: the number sits on a tilted scrap of paper between two small round stickers, − and +. A native number input does the work underneath.",
+    code: `import { NumberStepper } from "@plop-ui/react";
+
+<NumberStepper label="Quantity" min={1} max={9} defaultValue={2} />
+
+// A cart row: controlled, small, with the label kept for screen readers only.
+<NumberStepper label="Quantity of Matcha latte" hideLabel size="sm"
+  min={1} max={9} value={qty} onValueChange={setQty} />
+
+// Bigger steps; End jumps to max.
+<NumberStepper label="Tea bags" min={0} max={100} step={10} defaultValue={20} />`,
+    tables: [{ of: "NumberStepper", inheritedFrom: '<input type="number">' }],
+    do: "Use it for small whole quantities, like items in a cart or guests at a table. Set min and max so − and + know when to stop, and give each one a label that says what it counts.",
+    dont: "Use it for large or imprecise ranges (use Slider) or for values that aren't counts, like phone numbers or PINs (use TextField).",
+    a11y: [
+      "A native input type=number with a visible label, so it is announced as a spinbutton with its value. hideLabel keeps the label for screen readers in tight rows.",
+      "ArrowUp and ArrowDown change it by step; Home and End jump to min and max. Enter or leaving the field clamps and snaps what was typed.",
+      "The − and + buttons are named after the label (\"Increase Quantity of Matcha latte\"), point at the input with aria-controls, and disable at the limits.",
+      "When a focused button disables at a limit, focus moves to the input instead of the page. Button presses announce the new value through a polite live region.",
+      "Buttons are at least 44px; name, disabled, readOnly and form reset work like any input.",
+      "Surface text tokens keep the label readable on all five surfaces in light and dark. Reduced motion stops the outline boil and highlighter swipe.",
+    ],
+  },
   breadcrumb: {
     contributors: ["glaucusec"],
     title: "Breadcrumb",
