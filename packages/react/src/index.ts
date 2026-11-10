@@ -48,6 +48,7 @@ export { onColor, contrastRatio, parseColor, luminance, DEEP_INK, CREAM, type On
 export { seed, seededTilt, seededPick, hashString, type Seed } from "./seed.js";
 export {
   PlusIcon,
+  MinusIcon,
   CloseIcon,
   PinIcon,
   PhoneIcon,
@@ -74,6 +75,7 @@ export {
 } from "./icons.js";
 
 export { Slider, type SliderProps, type SliderTone } from "./Slider/Slider.js";
+export { NumberStepper, type NumberStepperProps } from "./NumberStepper/NumberStepper.js";
 export { Breadcrumb, type BreadcrumbProps, type BreadcrumbItem } from "./Breadcrumb/Breadcrumb.js";
 
 export { Pagination, type PaginationProps } from "./Pagination/Pagination.js";
