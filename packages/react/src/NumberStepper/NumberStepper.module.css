@@ -1,0 +1,83 @@
+.root { display: inline-grid; gap: 8px; justify-items: start; min-width: 0; color: var(--plop-on); }
+
+.label {
+  font-family: var(--plop-font-letter);
+  font-style: italic;
+  font-weight: var(--plop-weight-letter);
+  font-size: var(--plop-text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  padding: 0 4px;
+  /* Focus swipes a highlighter across the label, like TextField. */
+  background: linear-gradient(transparent 8%, var(--plop-mustard) 8% 92%, transparent 92%) no-repeat 0 0 / 0% 100%;
+  transition: background-size 0.35s var(--plop-ease-squish);
+}
+.root:has(.input:focus) .label { background-size: 100% 100%; color: var(--plop-on-fill-mustard); }
+
+.control { display: flex; align-items: center; gap: 10px; }
+
+/* The number sits on a slightly tilted scrap of paper with a wobbly ink outline. */
+.box {
+  position: relative;
+  display: block;
+  background: var(--plop-paper);
+  border-radius: var(--plop-radius-box);
+  box-shadow: 3px 4px 0 var(--plop-shadow);
+  transform: rotate(var(--stepper-tilt, 0deg));
+}
+.box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2.5px solid var(--plop-ink);
+  pointer-events: none;
+  transition: border-width 0.15s;
+}
+[data-plop-filters] .box::before { filter: url(#plop-wob1); }
+.box:focus-within::before { border-width: 3.5px; }
+[data-plop-filters] .box:focus-within::before { animation: boil 0.5s steps(1) infinite; }
+
+.input {
+  display: block;
+  /* Wide enough for four digits; the field is for quantities, not prose. */
+  width: 3.4em;
+  min-height: 44px;
+  padding: 8px 6px;
+  border: 0;
+  background: transparent;
+  font-family: var(--plop-font-body);
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--plop-ink-text);
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+/* The stickers are the spin buttons: hide the browser's own. */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.input:disabled { cursor: not-allowed; }
+
+.sm { gap: 4px; }
+.sm .control { gap: 6px; }
+.sm .input { width: 3em; min-height: 40px; padding: 4px; font-size: 19px; }
+
+.disabled { opacity: 0.6; }
+
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; padding: 0; }
+
+@keyframes boil {
+  0% { filter: url(#plop-wob1); }
+  33.33% { filter: url(#plop-wob2); }
+  66.66% { filter: url(#plop-wob3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root:not([data-plop-motion="full"] *) *, .root:not([data-plop-motion="full"] *) .box::before { animation: none !important; transition-duration: 0.01ms !important; }
+}
+[data-plop-motion="reduce"] .root *, [data-plop-motion="reduce"] .root .box::before { animation: none !important; transition-duration: 0.01ms !important; }
+@media (forced-colors: active) {
+  .box::before { border-color: CanvasText; }
+}

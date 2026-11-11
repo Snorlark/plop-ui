@@ -19,6 +19,7 @@ import {
   Progress,
   ProgressRing,
   Slider,
+  NumberStepper,
   Skeleton,
   SkeletonText,
   Spinner,
@@ -123,6 +124,21 @@ const ENTRIES: Record<string, Entry> = {
     ],
     render: (v) => <div style={{ width: "100%", maxWidth: 400 }}><Slider label={s(v.label)} defaultValue={n(v.value)} key={`${v.value}-${v.step}`} step={n(v.step)} tone={s(v.tone) as SliderTone} ticks={b(v.ticks)} showValue={b(v.showValue)} disabled={b(v.disabled)} /></div>,
     code: (v) => `<Slider label=${jsxAttr(v.label)} defaultValue={${n(v.value)}}${prop("step", v.step, 1)}${prop("tone", v.tone, "ink")}${prop("ticks", v.ticks, false)}${prop("showValue", v.showValue, false)}${prop("disabled", v.disabled, false)} />`,
+  },
+  "number-stepper": {
+    label: "NumberStepper",
+    rounds: true,
+    controls: [
+      { kind: "text", name: "label", label: "Label", default: "Quantity" },
+      { kind: "number", name: "value", label: "Value", default: 2, min: 0, max: 20, step: 1 },
+      { kind: "number", name: "min", label: "Min", default: 1, min: 0, max: 10, step: 1 },
+      { kind: "number", name: "max", label: "Max", default: 9, min: 1, max: 20, step: 1 },
+      { kind: "number", name: "step", label: "Step", default: 1, min: 1, max: 5, step: 1 },
+      { kind: "select", name: "size", label: "Size", options: ["md", "sm"], default: "md" },
+      { kind: "boolean", name: "disabled", label: "Disabled", default: false },
+    ],
+    render: (v) => <NumberStepper key={`${v.value}-${v.min}-${v.max}-${v.step}`} label={s(v.label)} defaultValue={n(v.value)} min={n(v.min)} max={n(v.max)} step={n(v.step)} size={s(v.size) === "sm" ? "sm" : "md"} disabled={b(v.disabled)} />,
+    code: (v) => `<NumberStepper label=${jsxAttr(v.label)} defaultValue={${n(v.value)}} min={${n(v.min)}} max={${n(v.max)}}${prop("step", v.step, 1)}${prop("size", v.size, "md")}${prop("disabled", v.disabled, false)} />`,
   },
   button: {
     label: "Button",
@@ -589,6 +605,7 @@ const ENTRIES: Record<string, Entry> = {
 const IMPORTS: Record<string, string> = {
   pagination: "Pagination",
   slider: "Slider",
+  "number-stepper": "NumberStepper",
   button: "Button",
   "icon-button": "IconButton",
   tag: "Tag",

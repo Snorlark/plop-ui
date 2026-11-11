@@ -1,11 +1,13 @@
 "use client";
 
 import { PaginationDemo } from "./PaginationDemo";
+import { CartDemo } from "./CartDemo";
 import { BuddyDemo } from "./BuddyDemo";
 import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
 import {
   Slider,
+  NumberStepper,
   Breadcrumb,
   Avatar,
   AvatarStack,
@@ -61,6 +63,16 @@ const DEMOS: Record<string, () => ReactNode> = {
       <Slider label="Volume" defaultValue={60} showValue disabled />
       <Slider label="Spice" defaultValue={3} min={0} max={5} tone="tomato" ticks showValue />
       <Slider label="Mood" defaultValue={70} tone="mint" ticks={4} />
+    </div>
+  ),
+  "number-stepper": () => (
+    <div style={{ display: "grid", gap: 32, width: "100%" }}>
+      <CartDemo />
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 28 }}>
+        <NumberStepper label="Quantity" min={1} max={9} defaultValue={2} />
+        <NumberStepper label="Tea bags" min={0} max={100} step={10} defaultValue={20} />
+        <NumberStepper label="Sold out" defaultValue={0} disabled />
+      </div>
     </div>
   ),
   breadcrumb: () => (

@@ -30,6 +30,14 @@ export function PlusIcon(props: IconProps) {
   );
 }
 
+export function MinusIcon(props: IconProps) {
+  return (
+    <Icon viewBox="0 0 26 26" {...props}>
+      <path {...stroke} strokeWidth={3.2} d="M4 13.5 C 10 12.5, 16 13.5, 22 12.8" />
+    </Icon>
+  );
+}
+
 export function CloseIcon(props: IconProps) {
   return (
     <Icon {...props}>
