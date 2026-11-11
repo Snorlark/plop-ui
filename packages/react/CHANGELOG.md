@@ -1,5 +1,11 @@
 # @plop-ui/react
 
+## 0.13.1
+
+### Patch Changes
+
+- 9ff1cf1: `NumberStepper` at `size="sm"`: the input is now 44px tall (was 40px), so every part of the control meets the 44px target at both sizes.
+
 ## 0.13.0
 
 ### Minor Changes
