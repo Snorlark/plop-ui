@@ -63,7 +63,7 @@
 
 .sm { gap: 4px; }
 .sm .control { gap: 6px; }
-.sm .input { width: 3em; min-height: 40px; padding: 4px; font-size: 19px; }
+.sm .input { width: 3em; min-height: 44px; padding: 4px; font-size: 19px; }
 
 .disabled { opacity: 0.6; }
 
