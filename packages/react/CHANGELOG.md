@@ -1,5 +1,11 @@
 # @plop-ui/react
 
+## 0.13.0
+
+### Minor Changes
+
+- 3473e8e: Add `NumberStepper`, a quantity stepper (− 2 +) for carts and counters: a native number input between two small round stickers, with ArrowUp/ArrowDown, Home/End, limits that disable − and +, and announced changes. Also adds `MinusIcon`.
+
 ## 0.12.0
 
 ### Minor Changes
