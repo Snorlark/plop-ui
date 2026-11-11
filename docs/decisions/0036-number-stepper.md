@@ -9,3 +9,5 @@ What you type is kept as a draft. A typed number that is already in range and on
 The − and + buttons disable at the limits instead of using `aria-disabled`, so they read and behave like any disabled button. When the focused button becomes disabled (pressing + up to the max), focus moves to the input instead of dropping to the page. Button presses are announced through a polite live region, because focus stays on the button and the input's new value wouldn't otherwise be read. Typing and arrow keys don't announce: the spinbutton already does.
 
 The paper box takes a small seeded tilt and TextField's wobbly outline and label highlighter. Reduced motion stops the boil and the highlighter swipe.
+
+Both sizes keep every target at 44px or more: the `sm` IconButtons render at 48px, and the input has a 44px minimum height at `sm` and `md`. `sm` saves width (narrower input, tighter gaps), not height, since the buttons already set the row height.

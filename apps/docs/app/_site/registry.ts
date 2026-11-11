@@ -107,7 +107,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       "ArrowUp and ArrowDown change it by step; Home and End jump to min and max. Enter or leaving the field clamps and snaps what was typed.",
       "The − and + buttons are named after the label (\"Increase Quantity of Matcha latte\"), point at the input with aria-controls, and disable at the limits.",
       "When a focused button disables at a limit, focus moves to the input instead of the page. Button presses announce the new value through a polite live region.",
-      "Buttons are at least 44px; name, disabled, readOnly and form reset work like any input.",
+      "Every target is at least 44px at both sizes (48px buttons, 44px input); name, disabled, readOnly and form reset work like any input.",
       "Surface text tokens keep the label readable on all five surfaces in light and dark. Reduced motion stops the outline boil and highlighter swipe.",
     ],
   },
