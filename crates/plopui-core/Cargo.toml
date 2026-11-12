@@ -1,0 +1,11 @@
+[package]
+name = "plopui-core"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic, dependency-free visual core for PlopUI's GPUI renderer"
+repository = "https://github.com/Snorlark/plop-ui"
+homepage = "https://plopui.com"
+license = "MIT"
+publish = false
+
+[dependencies]

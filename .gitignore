@@ -31,3 +31,6 @@ TASKS.md
 # graphify knowledge graph output (local)
 graphify-out/
 CLAUDE.local.md
+
+# Rust build output
+target/

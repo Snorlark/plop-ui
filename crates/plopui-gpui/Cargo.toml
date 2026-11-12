@@ -1,0 +1,27 @@
+[package]
+name = "plopui-gpui"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Hand-drawn PlopUI components for GPUI"
+repository = "https://github.com/Snorlark/plop-ui"
+homepage = "https://plopui.com"
+rust-version = "1.99"
+publish = false
+
+[dependencies]
+gpui-kit = { version = "=0.9.0", default-features = false }
+plopui-core = { path = "../plopui-core" }
+
+[dev-dependencies]
+gpui-pre = { version = "=0.3.11", default-features = false, features = ["test-support"] }
+gpui-pre-platform = { version = "=0.3.11", default-features = false, features = ["test-support"] }
+image = "0.25"
+
+[[example]]
+name = "gallery"
+path = "examples/gallery.rs"
+
+[[example]]
+name = "capture"
+path = "examples/capture.rs"
