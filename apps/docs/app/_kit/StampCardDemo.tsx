@@ -5,8 +5,8 @@ import { useState } from "react";
 
 const TOTAL = 8;
 
-/** The café's own stamp: a matcha cup, drawn in currentColor so it takes the ink. */
-const cup = (
+/** The café's own stamp: a matcha cup, drawn in currentColor so it takes the ink. Also used by the playground. */
+export const matchaCupStamp = (
   <svg viewBox="0 0 48 48" aria-hidden="true">
     <path d="M10 17h25l-2.6 19.5c-.3 2.4-2.3 4.2-4.7 4.2H17.4c-2.4 0-4.4-1.8-4.7-4.2Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
     <path d="M35 21.5c4.4-.6 6.6 1.6 6.1 4.6-.5 3-3.4 4.6-7.4 4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
@@ -22,7 +22,7 @@ export function StampCardDemo() {
   return (
     <div style={{ display: "grid", gap: 28, width: "100%" }}>
       <div style={{ display: "grid", gap: 16, justifyItems: "start" }}>
-        <StampCard total={TOTAL} filled={filled} title="Matcha Corner" stamp={cup} ink="leaf" seed="matcha-corner" />
+        <StampCard total={TOTAL} filled={filled} title="Matcha Corner" stamp={matchaCupStamp} ink="leaf" seed="matcha-corner" />
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
           <Button size="sm" variant={full ? "mustard" : "ink"} onClick={() => setFilled(full ? 0 : filled + 1)}>
             {full ? "Redeem and start a new card" : "Buy a matcha"}
