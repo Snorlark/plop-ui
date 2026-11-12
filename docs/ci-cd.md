@@ -1,8 +1,9 @@
 # CI and releases: what runs, when, and what you do
 
-Two workflows do all the automation:
+Three workflows do all the automation:
 
 - **CI** (`.github/workflows/ci.yml`) checks changes. It never publishes anything.
+- **Rust** (`.github/workflows/rust.yml`) checks the GPUI port. See [The Rust workflow](#the-rust-workflow).
 - **Release** (`.github/workflows/release.yml`) turns merged changes into npm releases.
 
 CI looks at which files a pull request changed and runs only what that change needs. The rules live in `scripts/ci-changes.mjs` (with tests in `scripts/ci-changes.test.mjs`), and the reasoning is in `docs/superpowers/specs/2026-10-27-smart-ci-design.md`. When it isn't sure, it runs everything.
@@ -47,6 +48,21 @@ Every run ends with a job called **`ci`**. It is red if any job that needed to r
 5. **Save changes.**
 
 Do this while the pull request that introduces this CI is open, once its `ci` check is green. That pull request already runs the new CI, so it reports `ci` and per-browser checks such as `e2e (desktop)`, but never a check named plain `e2e`. Under the old rules it would wait forever. After it merges, update every other open pull request from `main` (**Update branch**), so it runs the new CI and reports `ci` too.
+
+## The Rust workflow
+
+The GPUI port lives in `crates/` and has its own workspace, so it gets its own workflow. It runs only when `crates/**`, `Cargo.toml`, `Cargo.lock`, `rust-toolchain.toml` or the workflow file changes; a docs-only pull request never pays for it.
+
+One job on `macos-14`, because the headless renderer is Metal — Linux and Windows are untested:
+
+```sh
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+cargo doc -p plopui-core -p plopui-gpui --no-deps   # RUSTDOCFLAGS=-D warnings
+```
+
+It is not part of the required `ci` check. A Rust change shows a separate **Rust / test** check; wait for it before merging anything under `crates/`.
 
 ## Branches: dev and main
 
@@ -104,4 +120,9 @@ Before this change, every change paid for the full suite three times: on its pul
 ```sh
 pnpm test:ci                                      # the classifier's tests
 node scripts/ci-changes.mjs --base origin/main    # what CI would run for your branch
+
+cargo fmt --all -- --check                        # the Rust job, by hand
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+RUSTDOCFLAGS="-D warnings" cargo doc -p plopui-core -p plopui-gpui --no-deps
 ```
