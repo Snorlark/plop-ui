@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button, NumberStepper, PlopProvider } from "@plop-ui/react";
 import { surfaceNames } from "@plop-ui/tokens";
 import type { Meta, StoryObj } from "@storybook/react";
@@ -13,6 +13,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const AtMinimum: Story = { args: { defaultValue: 1 } };
+export const AtMinimumWithRemove: Story = { args: { defaultValue: 1, onRemove: () => {} } };
+export const CustomRemoveLabel: Story = { args: { label: "Quantity of Matcha latte", defaultValue: 1, onRemove: () => {}, removeLabel: "Remove Matcha latte", removedMessage: "Matcha latte removed" } };
 export const AtMaximum: Story = { args: { defaultValue: 9 } };
 export const NoUpperLimit: Story = { args: { label: "Count", min: 0, max: undefined, defaultValue: 120 } };
 export const Small: Story = { args: { size: "sm" } };
@@ -42,6 +44,34 @@ function CartRow() {
   );
 }
 export const InACart: Story = { render: () => <CartRow /> };
+
+function RemovableCartRow() {
+  const [qty, setQty] = useState(1);
+  const [inCart, setInCart] = useState(true);
+  const addBack = useRef<HTMLButtonElement>(null);
+  if (!inCart) {
+    return <Button ref={addBack} size="sm" onClick={() => { setQty(1); setInCart(true); }}>Add Matcha latte back</Button>;
+  }
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16, justifyContent: "space-between", maxWidth: 420 }}>
+      <span>Matcha latte · ₱{qty * 180}</span>
+      <NumberStepper
+        label="Quantity of Matcha latte"
+        hideLabel
+        size="sm"
+        value={qty}
+        onValueChange={setQty}
+        min={1}
+        max={9}
+        removeLabel="Remove Matcha latte"
+        removedMessage="Matcha latte removed"
+        // The row unmounts, so hand focus to what replaces it.
+        onRemove={() => { setInCart(false); requestAnimationFrame(() => addBack.current?.focus()); }}
+      />
+    </div>
+  );
+}
+export const InACartWithRemove: Story = { render: () => <RemovableCartRow /> };
 
 export const FormReset: Story = {
   render: (args) => <form style={{ display: "grid", gap: 20, justifyItems: "start" }}><NumberStepper {...args} name="qty" /><Button type="reset" size="sm">Reset quantity</Button></form>,

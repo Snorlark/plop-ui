@@ -15,7 +15,8 @@ import {
   type Ref,
 } from "react";
 import { IconButton } from "../IconButton/IconButton.js";
-import { MinusIcon, PlusIcon } from "../icons.js";
+import { MinusIcon, PlusIcon, TrashIcon } from "../icons.js";
+import { announce } from "../internal/announce.js";
 import { cx } from "../internal/cx.js";
 import { useSeed } from "../internal/useSeed.js";
 import { seededTilt, type Seed } from "../seed.js";
@@ -45,6 +46,15 @@ export interface NumberStepperProps
   onValueChange?: (value: number) => void;
   /** Accessible name of the − button. Default "Decrease {label}" when label is text, else "Decrease". */
   decrementLabel?: string;
+  /**
+   * Called when the trash button is pressed. When passed, − turns into a trash button at `min` instead of
+   * disabling. The row usually unmounts afterwards: move focus somewhere sensible, like the next row or the cart heading.
+   */
+  onRemove?: () => void;
+  /** Accessible name of the trash button shown at `min` when `onRemove` is passed. Default "Remove item". */
+  removeLabel?: string;
+  /** Announced to screen readers after the trash button is pressed. Default "Item removed". */
+  removedMessage?: string;
   /** Accessible name of the + button. Default "Increase {label}" when label is text, else "Increase". */
   incrementLabel?: string;
   /** `sm` for dense rows like a cart, `md` otherwise. Default `md`. */
@@ -76,6 +86,9 @@ export function NumberStepper({
   onValueChange,
   decrementLabel,
   incrementLabel,
+  onRemove,
+  removeLabel = "Remove item",
+  removedMessage = "Item removed",
   size = "md",
   seed: seedProp,
   id,
@@ -125,6 +138,8 @@ export function NumberStepper({
   const atMin = current <= min;
   const atMax = current >= max;
   const locked = disabled || readOnly;
+  // With onRemove, − becomes a trash button at the minimum instead of disabling.
+  const removable = onRemove !== undefined && atMin;
   const name = typeof label === "string" || typeof label === "number" ? String(label) : "";
 
   function commit(next: number) {
@@ -141,9 +156,17 @@ export function NumberStepper({
     const next = commit(current + direction * step);
     setAnnouncement(String(next));
     // A button that disables under focus would drop focus to the page: hand it to the input instead.
+    // With onRemove, − doesn't disable at min (it turns into trash), so focus stays on it.
     const button = direction < 0 ? decRef.current : incRef.current;
-    const hitLimit = direction < 0 ? next <= min : next >= max;
+    const hitLimit = direction < 0 ? next <= min && !onRemove : next >= max;
     if (hitLimit && button && button === document.activeElement) inputRef.current?.focus();
+  }
+
+  function remove() {
+    if (locked) return;
+    // Announced from document.body, because the row (and this component's live region) usually unmounts next.
+    announce(removedMessage);
+    onRemove?.();
   }
 
   function change(event: ChangeEvent<HTMLInputElement>) {
@@ -195,14 +218,15 @@ export function NumberStepper({
       <div className={styles.control}>
         <IconButton
           ref={decRef}
-          icon={<MinusIcon />}
-          label={decrementLabel ?? (name ? `Decrease ${name}` : "Decrease")}
+          icon={removable ? <TrashIcon className={styles.swapIn} /> : <MinusIcon />}
+          className={removable ? styles.trash : undefined}
+          label={removable ? removeLabel : decrementLabel ?? (name ? `Decrease ${name}` : "Decrease")}
           variant="plain"
           size="sm"
           seed={`${autoSeed}-dec`}
-          aria-controls={fieldId}
-          disabled={locked || atMin}
-          onClick={() => press(-1)}
+          aria-controls={removable ? undefined : fieldId}
+          disabled={locked || (atMin && !removable)}
+          onClick={() => (removable ? remove() : press(-1))}
         />
         <span className={styles.box}>
           <input

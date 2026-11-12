@@ -97,17 +97,27 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
 <NumberStepper label="Quantity of Matcha latte" hideLabel size="sm"
   min={1} max={9} value={qty} onValueChange={setQty} />
 
+// At 1, − turns into a trash button. The row unmounts after onRemove: move focus to the next row.
+<NumberStepper label="Quantity of Matcha latte" hideLabel size="sm"
+  min={1} max={9} value={qty} onValueChange={setQty}
+  removeLabel="Remove Matcha latte" removedMessage="Matcha latte removed"
+  onRemove={() => { removeRow("latte"); focusNextRow(); }} />
+
 // Bigger steps; End jumps to max.
 <NumberStepper label="Tea bags" min={0} max={100} step={10} defaultValue={20} />`,
     tables: [{ of: "NumberStepper", inheritedFrom: '<input type="number">' }],
-    do: "Use it for small whole quantities, like items in a cart or guests at a table. Set min and max so − and + know when to stop, and give each one a label that says what it counts.",
+    do: "Use it for small whole quantities, like items in a cart or guests at a table. Set min and max so − and + know when to stop, and give each one a label that says what it counts. In a cart, pass onRemove so − becomes a trash button at the minimum.",
     dont: "Use it for large or imprecise ranges (use Slider) or for values that aren't counts, like phone numbers or PINs (use TextField).",
     a11y: [
       "A native input type=number with a visible label, so it is announced as a spinbutton with its value. hideLabel keeps the label for screen readers in tight rows.",
       "ArrowUp and ArrowDown change it by step; Home and End jump to min and max. Enter or leaving the field clamps and snaps what was typed.",
       "The − and + buttons are named after the label (\"Increase Quantity of Matcha latte\"), point at the input with aria-controls, and disable at the limits.",
       "When a focused button disables at a limit, focus moves to the input instead of the page. Button presses announce the new value through a polite live region.",
-      "Every target is at least 44px at both sizes (48px buttons, 44px input); name, disabled, readOnly and form reset work like any input.",
+      "With onRemove, − turns into a native trash button at min (named by removeLabel, default \"Remove item\") instead of disabling. It is the same button, so keyboard focus stays on it when it swaps.",
+      "Pressing trash announces removedMessage (default \"Item removed\") through a polite region on the page body, so it is still read when the row unmounts.",
+      "The trash button turns tomato on hover and press; the color is never the only signal (the icon and name change too).",
+      "After onRemove the row usually unmounts and focus would drop to the page: move it somewhere sensible, like the next row's stepper or the cart heading.",
+      "Every target is at least 44px at both sizes (48px −, + and trash buttons, 44px input); name, disabled, readOnly and form reset work like any input.",
       "Surface text tokens keep the label readable on all five surfaces in light and dark. Reduced motion stops the outline boil and highlighter swipe.",
     ],
   },
