@@ -169,6 +169,94 @@ describe("NumberStepper", () => {
     expect(input()).toHaveAccessibleName("Hojicha");
   });
 
+  describe("with onRemove", () => {
+    const trash = (name = "Remove item") => screen.getByRole("button", { name });
+
+    it("keeps − disabled at min when onRemove isn't passed", () => {
+      renderWithPlop(<NumberStepper label="Quantity" min={1} defaultValue={1} />);
+      expect(minus()).toBeDisabled();
+      expect(screen.queryByRole("button", { name: "Remove item" })).not.toBeInTheDocument();
+    });
+
+    it("turns − into an enabled trash button at min that calls onRemove", async () => {
+      const user = userEvent.setup();
+      const onRemove = vi.fn();
+      const onValueChange = vi.fn();
+      renderWithPlop(<NumberStepper label="Quantity" min={1} defaultValue={1} onRemove={onRemove} onValueChange={onValueChange} />);
+      expect(trash()).toBeEnabled();
+      expect(trash()).not.toHaveAttribute("aria-controls");
+      expect(screen.queryByRole("button", { name: /decrease/i })).not.toBeInTheDocument();
+      await user.click(trash());
+      expect(onRemove).toHaveBeenCalledTimes(1);
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(input()).toHaveValue(1);
+    });
+
+    it("keeps focus on the same button when − swaps to trash, and Space removes", async () => {
+      const user = userEvent.setup();
+      const onRemove = vi.fn();
+      renderWithPlop(<NumberStepper label="Quantity" min={1} max={9} defaultValue={2} onRemove={onRemove} />);
+      await user.tab();
+      const button = minus();
+      expect(button).toHaveFocus();
+      await user.keyboard("{Enter}");
+      expect(input()).toHaveValue(1);
+      expect(trash()).toBe(button);
+      expect(button).toHaveFocus();
+      expect(onRemove).not.toHaveBeenCalled();
+      await user.keyboard(" ");
+      expect(onRemove).toHaveBeenCalledTimes(1);
+    });
+
+    it("turns back into − when the value leaves min", async () => {
+      const user = userEvent.setup();
+      renderWithPlop(<NumberStepper label="Quantity" min={1} defaultValue={1} onRemove={() => {}} />);
+      await user.click(plus());
+      expect(screen.queryByRole("button", { name: "Remove item" })).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Decrease Quantity" })).toHaveAttribute("aria-controls", input().id);
+    });
+
+    it("never removes from the keyboard on the input", async () => {
+      const user = userEvent.setup();
+      const onRemove = vi.fn();
+      renderWithPlop(<NumberStepper label="Quantity" min={1} defaultValue={2} onRemove={onRemove} />);
+      await user.click(input());
+      await user.keyboard("{ArrowDown}{ArrowDown}{Home}");
+      expect(input()).toHaveValue(1);
+      expect(onRemove).not.toHaveBeenCalled();
+    });
+
+    it("announces the removal even after the row unmounts", async () => {
+      const user = userEvent.setup();
+      function Cart() {
+        const [inCart, setInCart] = useState(true);
+        return inCart ? <NumberStepper label="Matcha latte" hideLabel min={1} defaultValue={1} removeLabel="Remove Matcha latte" removedMessage="Matcha latte removed" onRemove={() => setInCart(false)} /> : <p>Cart is empty</p>;
+      }
+      renderWithPlop(<Cart />);
+      await user.click(trash("Remove Matcha latte"));
+      expect(screen.getByText("Cart is empty")).toBeInTheDocument();
+      expect(await screen.findByText("Matcha latte removed", { selector: "[aria-live]" })).toBeInTheDocument();
+    });
+
+    it("marks the trash button so it turns red on hover and press, and leaves − alone", async () => {
+      const user = userEvent.setup();
+      renderWithPlop(<NumberStepper label="Quantity" min={1} defaultValue={2} onRemove={() => {}} />);
+      expect(minus().className).not.toMatch(/trash/);
+      await user.click(minus());
+      expect(trash().className).toMatch(/trash/);
+    });
+
+    it("locks the trash button when disabled or read-only", () => {
+      const onRemove = vi.fn();
+      const { rerender } = renderWithPlop(<NumberStepper label="Quantity" min={1} defaultValue={1} onRemove={onRemove} disabled />);
+      expect(trash()).toBeDisabled();
+      rerender(<NumberStepper label="Quantity" min={1} defaultValue={1} onRemove={onRemove} readOnly />);
+      expect(trash()).toBeDisabled();
+      fireEvent.click(trash());
+      expect(onRemove).not.toHaveBeenCalled();
+    });
+  });
+
   it("draws the same seeded tilt on every render", () => {
     const tilts = () => [...document.querySelectorAll<HTMLElement>("[style*='tilt']")].map((el) => el.getAttribute("style"));
     const first = renderWithPlop(<NumberStepper label="Quantity" seed="cart-1" />);

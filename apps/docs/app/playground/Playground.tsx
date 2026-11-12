@@ -135,10 +135,12 @@ const ENTRIES: Record<string, Entry> = {
       { kind: "number", name: "max", label: "Max", default: 9, min: 1, max: 20, step: 1 },
       { kind: "number", name: "step", label: "Step", default: 1, min: 1, max: 5, step: 1 },
       { kind: "select", name: "size", label: "Size", options: ["md", "sm"], default: "md" },
+      { kind: "boolean", name: "removable", label: "Trash at min (onRemove)", default: false },
       { kind: "boolean", name: "disabled", label: "Disabled", default: false },
     ],
-    render: (v) => <NumberStepper key={`${v.value}-${v.min}-${v.max}-${v.step}`} label={s(v.label)} defaultValue={n(v.value)} min={n(v.min)} max={n(v.max)} step={n(v.step)} size={s(v.size) === "sm" ? "sm" : "md"} disabled={b(v.disabled)} />,
-    code: (v) => `<NumberStepper label=${jsxAttr(v.label)} defaultValue={${n(v.value)}} min={${n(v.min)}} max={${n(v.max)}}${prop("step", v.step, 1)}${prop("size", v.size, "md")}${prop("disabled", v.disabled, false)} />`,
+    render: (v) => <NumberStepper key={`${v.value}-${v.min}-${v.max}-${v.step}`} label={s(v.label)} defaultValue={n(v.value)} min={n(v.min)} max={n(v.max)} step={n(v.step)} size={s(v.size) === "sm" ? "sm" : "md"} disabled={b(v.disabled)}
+      onRemove={b(v.removable) ? () => toast("Item removed") : undefined} />,
+    code: (v) => `<NumberStepper label=${jsxAttr(v.label)} defaultValue={${n(v.value)}} min={${n(v.min)}} max={${n(v.max)}}${prop("step", v.step, 1)}${prop("size", v.size, "md")}${b(v.removable) ? " onRemove={removeItem}" : ""}${prop("disabled", v.disabled, false)} />`,
   },
   button: {
     label: "Button",

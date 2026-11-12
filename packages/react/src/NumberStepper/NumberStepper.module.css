@@ -67,8 +67,15 @@
 
 .disabled { opacity: 0.6; }
 
+/* − turning into the trash can pops in like a fresh sticker. */
+.swapIn { animation: swap-in 0.3s var(--plop-ease-squish); }
+
+/* The trash button blushes tomato when you point at it or press it. */
+.trash:not(:disabled):is(:hover, :active) { --fill: var(--plop-fill-tomato); --label: var(--plop-on-fill-tomato); }
+
 .vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; padding: 0; }
 
+@keyframes swap-in { from { transform: scale(0.4) rotate(-20deg); opacity: 0; } }
 @keyframes boil {
   0% { filter: url(#plop-wob1); }
   33.33% { filter: url(#plop-wob2); }
