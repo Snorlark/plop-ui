@@ -2,6 +2,7 @@
 
 import { PaginationDemo } from "./PaginationDemo";
 import { CartDemo } from "./CartDemo";
+import { StampCardDemo } from "./StampCardDemo";
 import { BuddyDemo } from "./BuddyDemo";
 import { MenuDemo, SelectDemo } from "./DropdownDemo";
 import { SearchDemo } from "./SearchDemo";
@@ -117,6 +118,7 @@ const DEMOS: Record<string, () => ReactNode> = {
   switch: () => <Switches />,
   checkbox: () => <Checkboxes />,
   "status-timeline": () => <TimelineDemo />,
+  "stamp-card": () => <StampCardDemo />,
   provider: () => (
     <div className="surface-strip">
       {surfaceNames.map((s) => (

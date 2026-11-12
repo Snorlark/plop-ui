@@ -1,0 +1,17 @@
+/* The card is a Sheet (paper, ink edge, shadow, tilt), sized like a loyalty card. Inner layout is inline (see StampCard.tsx). */
+.root { display: inline-grid; gap: 12px; max-width: 100%; padding: 16px 18px 18px; }
+
+/* Each impression's drawing fills its slot, rubbed with crayon grain when the filters are on. */
+.stamp > svg { width: 100%; height: 100%; }
+[data-plop-filters] .stamp { filter: url(#plop-crayon); }
+/* The newest stamp thunks onto the paper; reduced motion stops it. */
+.latest { animation: thunk 0.6s var(--plop-ease-spring) both; }
+@keyframes thunk { from { transform: rotate(-30deg) scale(1.9); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .latest:not([data-plop-motion="full"] *) { animation: none; }
+}
+[data-plop-motion="reduce"] .latest { animation: none; }
+/* Forced colors repaint the ink on their own; multiply would sink it into a dark Canvas. */
+@media (forced-colors: active) {
+  .stamp { mix-blend-mode: normal !important; }
+}
