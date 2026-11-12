@@ -31,6 +31,10 @@ The "o" in the logo is the capped buddy who peeks over the top of a `Button`. He
 | [`@plop-ui/tokens`](packages/tokens) | Colors, contrast roles, type, motion and 5 surfaces, as CSS variables and a typed object |
 | [`@plop-ui/fonts`](packages/fonts) | Sketchpop, the hand-drawn marker family (SIL OFL 1.1) |
 
+### GPUI port (experimental)
+
+[`crates/plopui-gpui`](crates/plopui-gpui) rebuilds the same tokens and seeded geometry in Rust for [GPUI](https://gpui.rs), with focus and keyboard behaviour borrowed from `gpui-base` instead of reimplemented. It is experimental, not a published crate, but it runs and is tested: 52 components and builders, from stickers and paper cards to `Select`, `Menu`, `CommandPalette`, the six-character buddy cast, generated avatar faces with status dots, five waiting marks, the lettering tools, radio groups, a live toast queue and seeded ink bursts on every sticker press. Every keyboard rule is driven by tests: checkbox and switch on Space, tabs on arrows/Home/End, slider on arrows, text entry through the base IME stack, `Select` on Space/Enter/Down + Escape, `MultiSelect` options on Space, menu items on Enter, radio groups on arrows/Home/End with a single tab stop, links on Enter only, and a loading button that swallows Space and Enter until it settles. The same kit also drives a working dispatch console (`examples/dispatch.rs`): a ticket queue, the five-stage timeline, unit cards, a report form and the toast queue, with a loading resolve action. A headless path renders the gallery and the console to PNG without a window. Run the gallery with `cargo run -p plopui-gpui --example gallery`, or read the [crate README](crates/plopui-gpui/README.md), [the port decision](docs/decisions/0038-gpui-port.md), [the maturity pass](docs/decisions/0039-gpui-maturity.md), [the toast queue decision](docs/decisions/0042-gpui-toast-queue.md), [the radio group decision](docs/decisions/0043-gpui-radio-group.md), [the button states decision](docs/decisions/0045-gpui-button-icon-and-loading.md), [the paper text decision](docs/decisions/0047-gpui-paper-text-scope.md), [the dispatch demo decision](docs/decisions/0048-gpui-dispatch-demo.md) and [the ink burst decision](docs/decisions/0049-gpui-ink-burst.md).
+
 ## Quick start
 
 ```sh
@@ -149,6 +153,8 @@ CONTRIBUTING.md   how to contribute, step by step
 packages/tokens   design tokens → CSS variables + typed object (source: src/tokens.ts)
 packages/fonts    Sketchpop woff2/ttf, the OFL license, font build tools
 packages/react    @plop-ui/react (esbuild, CSS Modules, per-file "use client")
+crates/plopui-core  pure Rust: tokens, seeded randomness, contrast, geometry (no GPUI)
+crates/plopui-gpui  the GPUI port: components, gallery and dispatch examples
 apps/docs         Next.js 15 site: landing, docs, playground
 apps/dispatch-demo  Next.js 15 live incident queue built only from PlopUI (SSE + Server Action)
 apps/storybook    Storybook 8 workshop with the a11y addon
