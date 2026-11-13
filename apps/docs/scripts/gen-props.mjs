@@ -25,6 +25,7 @@ const COMPONENTS = {
   Switch: "SwitchProps",
   Checkbox: "CheckboxProps",
   StatusTimeline: "StatusTimelineProps",
+  StampCard: "StampCardProps",
   Tooltip: "TooltipProps",
   TextField: "TextFieldProps",
   TextArea: "TextAreaProps",

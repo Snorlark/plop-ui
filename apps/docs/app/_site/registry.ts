@@ -572,6 +572,41 @@ toast.error("Couldn't post", { burst: "zap" });
     dont: "Set body text or long labels in it; the die-cut border is for short, loud words.",
     a11y: ["The words are read once; the three stacked layers are hidden from screen readers.", "Doodles are decorative (aria-hidden) and never take focus.", "Same words, same wobble: the jitter is seeded by the text, so it matches on the server and in the browser."],
   },
+  "stamp-card": {
+    contributors: ["luxmoncoeur"],
+    title: "StampCard",
+    group: "Display",
+    badges: ["Server Component", AA, "New"],
+    lede: "A loyalty punch card: a row of paper slots that fill with rubber stamps. Each stamp lands with its own seeded tilt and ink, and the newest one thunks onto the card.",
+    code: `import { StampCard } from "@plop-ui/react";
+
+<StampCard total={8} filled={3} title="Matcha Corner" />
+
+// Your own stamp, drawn in currentColor so it takes the ink.
+<StampCard
+  total={8}
+  filled={5}
+  title="Matcha Corner"
+  ink="leaf"
+  stamp={
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M10 17h25l-2.6 19.5c-.3 2.4-2.3 4.2-4.7 4.2H17.4c-2.4 0-4.4-1.8-4.7-4.2Z" fill="none" stroke="currentColor" strokeWidth="3" />
+    </svg>
+  }
+/>
+
+// A different last stamp: pass a function of the slot index.
+<StampCard total={6} filled={6} stamp={(i) => (i === 5 ? <b>FREE</b> : "★")} />`,
+    tables: [{ of: "StampCard" }],
+    do: "Use it for a short run of repeat visits, like 6 to 12 drinks, and say what the card is for in the title. Pass your own stamp so it feels like your café.",
+    dont: "Use it for long or fine-grained progress (use Progress) or for steps in a process (use StatusTimeline).",
+    a11y: [
+      "An ordered list named with the progress, like \"Matcha Corner, 3 of 8 stamps\"; each slot says \"Stamped\" or \"Empty\" in text, and countText and statusText change the words.",
+      "Stamps are decorative and hidden from screen readers, so a custom stamp never needs alt text. The count on the card is hidden too, since the list's name already says it.",
+      "Nothing is focusable: it's a picture of progress, not a control. A Server Component: no client JavaScript.",
+      "The card is paper with ink text, so it passes AA on every surface, light and dark; every stamp ink is 3:1 or more on the paper. Reduced motion stops the thunk, and forced colors draw stamps in the system text color.",
+    ],
+  },
   buddy: {
     title: "Buddy",
     group: "Feedback",

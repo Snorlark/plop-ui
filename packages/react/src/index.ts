@@ -11,6 +11,7 @@ export { Tag, type TagPattern, type TagProps, type TagTone } from "./Tag/Tag.js"
 export { Switch, type SwitchColor, type SwitchProps } from "./Switch/Switch.js";
 export { Checkbox, type CheckboxProps } from "./Checkbox/Checkbox.js";
 export { StatusTimeline, type StatusTimelineProps, type TimelineStep } from "./StatusTimeline/StatusTimeline.js";
+export { StampCard, STAMP_INKS, type StampCardProps, type StampInk } from "./StampCard/StampCard.js";
 export { Tooltip, type TooltipProps } from "./Tooltip/Tooltip.js";
 export { SearchField, CommandPalette, useIsMac, type SearchFieldProps, type CommandPaletteProps, type SearchGroup, type SearchItem, type SearchLead } from "./SearchField/SearchField.js";
 export { TextField, TextArea, type TextFieldProps, type TextAreaProps } from "./TextField/TextField.js";

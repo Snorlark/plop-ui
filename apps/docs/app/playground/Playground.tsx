@@ -29,6 +29,7 @@ import {
   SearchField,
   Select,
   StatusDot,
+  StampCard,
   StatusTimeline,
   StickyNote,
   Switch,
@@ -51,6 +52,7 @@ import {
 } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { PaginationDemo } from "../_kit/PaginationDemo";
+import { matchaCupStamp } from "../_kit/StampCardDemo";
 import { useSearchParams } from "next/navigation";
 import { jsxAttr, jsString, jsxText } from "./code";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -263,6 +265,24 @@ const ENTRIES: Record<string, Entry> = {
       const steps = s(v.steps).split(",").map((x) => jsString(x.trim())).filter((x) => x !== '""');
       return `<StatusTimeline\n  steps={[${steps.join(", ")}]}\n  current={${n(v.current)}}${v.orientation !== "auto" ? `\n  orientation="${s(v.orientation)}"` : ""}\n/>`;
     },
+  },
+  "stamp-card": {
+    label: "StampCard",
+    rounds: true,
+    controls: [
+      { kind: "text", name: "title", label: "Title", default: "Matcha Corner" },
+      { kind: "number", name: "total", label: "Slots", default: 8, min: 1, max: 12, step: 1 },
+      { kind: "number", name: "filled", label: "Stamped", default: 3, min: 0, max: 12, step: 1 },
+      { kind: "select", name: "ink", label: "Ink", options: ["mixed", "tomato", "ink", "leaf", "ochre", "berry"], default: "mixed" },
+      // A custom stamp is any node you draw; the playground offers one example so you can see the swap.
+      { kind: "select", name: "stamp", label: "Stamp", options: ["star", "matcha cup"], default: "star" },
+      { kind: "boolean", name: "showCount", label: "Show count", default: true },
+    ],
+    render: (v) => (
+      <StampCard title={s(v.title) || undefined} total={n(v.total)} filled={n(v.filled)} ink={s(v.ink) as "mixed"} showCount={b(v.showCount)} seed="playground"
+        stamp={v.stamp === "matcha cup" ? matchaCupStamp : undefined} />
+    ),
+    code: (v) => `<StampCard${s(v.title) ? ` title=${jsxAttr(v.title)}` : ""} total={${n(v.total)}} filled={${n(v.filled)}}${prop("ink", v.ink, "mixed")}${v.stamp === "matcha cup" ? " stamp={<MatchaCupSvg />}" : ""}${prop("showCount", v.showCount, true)} />`,
   },
   callout: {
     label: "Callout",
@@ -614,6 +634,7 @@ const IMPORTS: Record<string, string> = {
   switch: "Switch",
   checkbox: "Checkbox",
   "status-timeline": "StatusTimeline",
+  "stamp-card": "StampCard",
   callout: "Callout",
   progress: "Progress",
   avatar: "Avatar",
