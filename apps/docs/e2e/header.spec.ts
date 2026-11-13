@@ -4,9 +4,18 @@ import { expect, test, type Page } from "@playwright/test";
 
 const trigger = (page: Page, name: string) => page.locator("header").getByRole("button", { name: new RegExp(`^${name}`) }).first();
 
+/**
+ * Menus open on pointermove, which React drops before hydration commits (it replays pointerenter),
+ * so a hover on a slow runner can be lost. The bar's first effect sets --header-height: wait for it.
+ */
+async function hydrated(page: Page) {
+  await expect.poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue("--header-height"))).not.toBe("");
+}
+
 test("switching menus swaps the links in place instead of blanking and fading them back", async ({ page, isMobile }) => {
   test.skip(isMobile, "phones use the sheet");
   await page.goto("/");
+  await hydrated(page);
   await trigger(page, "Components").hover();
   await expect(trigger(page, "Components")).toHaveAttribute("aria-expanded", "true");
   await page.waitForTimeout(600);
@@ -32,6 +41,7 @@ test("moving down into the open menu across another trigger doesn't replay or cl
   // moves can outlast the switch delay and legitimately open the menu the pointer only brushed.
   await page.clock.install({ time: new Date("2026-01-01T00:00:00") });
   await page.goto("/");
+  await hydrated(page);
   await page.clock.pauseAt(new Date("2026-01-01T00:01:00"));
   const center = async (name: string) => {
     const b = (await trigger(page, name).boundingBox())!;
@@ -58,6 +68,7 @@ test("the bar sliding back in under a resting pointer doesn't open a menu", asyn
   // Firefox under Playwright handles scroll events a step late, so the bar hides and shows out of step with this script.
   test.skip(browserName !== "chromium", "scroll timing; the fix itself is engine-agnostic");
   await page.goto("/");
+  await hydrated(page);
   const caret = trigger(page, "Components");
   const shown = () => page.evaluate(() => document.querySelector("header")!.getBoundingClientRect().bottom > 1);
   const scrollTo = async (y: number, visible: boolean) => {
@@ -65,8 +76,6 @@ test("the bar sliding back in under a resting pointer doesn't open a menu", asyn
     await expect.poll(shown).toBe(visible);
     await page.waitForTimeout(400); // the bar's slide
   };
-  // A first jump can land before hydration, unseen by the bar; it reacts from the next one.
-  await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
   await scrollTo(1000, false);
   await scrollTo(800, true);
   const b = (await caret.boundingBox())!;
