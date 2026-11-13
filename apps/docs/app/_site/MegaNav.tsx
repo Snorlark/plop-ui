@@ -116,6 +116,8 @@ export function MegaNav({ stars }: { stars?: number | null }) {
   const root = useRef<HTMLDivElement>(null);
   const scrim = useRef<HTMLDivElement>(null);
   const timer = useRef<number | undefined>(undefined);
+  // The trigger the pointer is over, so moving within it doesn't restart the open delay.
+  const hovered = useRef<MenuId | null>(null);
   // The open menu, readable from hover timers that outlive a render.
   const current = useRef<MenuId | null>(null);
   useEffect(() => {
@@ -185,7 +187,16 @@ export function MegaNav({ stars }: { stars?: number | null }) {
         <ul className={styles.triggers}>
           {MENUS.map((m) => (
             // Switching waits a beat too: a pointer crossing the bar to a far menu must not flash the ones it passes.
-            <li key={m.id} onPointerEnter={(e) => e.pointerType === "mouse" && later(m.id, open ? 130 : 90)}>
+            // Opens on a real move, not on enter: the bar sliding back in under a resting pointer must not open a menu.
+            <li
+              key={m.id}
+              onPointerMove={(e) => {
+                if (e.pointerType !== "mouse" || hovered.current === m.id) return;
+                hovered.current = m.id;
+                later(m.id, open ? 130 : 90);
+              }}
+              onPointerLeave={() => (hovered.current = null)}
+            >
               {m.href ? (
                 // The label goes to the section; the caret beside it opens the menu (keyboard and touch).
                 <span className={styles.split} data-open={open === m.id ? "" : undefined}>
