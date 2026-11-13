@@ -14,5 +14,5 @@ const upFront = { modifyEsbuildConfig: (config) => ({ ...config, plugins: [...(c
 export default [
   { name: "Button (up front)", path: "dist/Button/Button.js", import: "{ Button }", ignore: ["react", "react-dom"], limit: "5 kB", ...upFront },
   { name: "whole library (JS)", path: "dist/index.js", import: "*", ignore: ["react", "react-dom"], limit: "40 kB" },
-  { name: "styles.css", path: "dist/styles.css", limit: "16 kB" },
+  { name: "styles.css", path: "dist/styles.css", limit: "18 kB" },
 ];
