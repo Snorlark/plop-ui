@@ -56,23 +56,6 @@ const defaultStamp = (
   </svg>
 );
 
-/*
- * The inner layout is written inline rather than in StampCard.module.css: styles.css has a size budget, and
- * these rules never change per state. The card itself keeps its class (apps restyle that), and the stylesheet
- * keeps only what inline styles can't do: sizing the stamp's drawing, the crayon filter, the thunk, reduced
- * motion and forced colors.
- */
-const letter: CSSProperties = { fontFamily: "var(--plop-font-letter)", fontStyle: "italic", fontWeight: "var(--plop-weight-letter)" as CSSProperties["fontWeight"], textTransform: "uppercase", letterSpacing: "0.04em" };
-const css = {
-  head: { display: "flex", flexWrap: "wrap", alignItems: "baseline", justifyContent: "space-between", gap: "4px 16px" },
-  title: { ...letter, fontSize: 17, color: "var(--plop-ink)", overflowWrap: "anywhere" },
-  count: { ...letter, fontSize: "var(--plop-text-xs)", color: "var(--plop-ink-soft)" },
-  slots: { display: "grid", gap: 10, margin: 0, padding: 0, listStyle: "none" },
-  slot: { position: "relative", aspectRatio: 1, border: "2.5px dashed var(--plop-ink-soft)", borderRadius: "50%" },
-  stamp: { position: "absolute", inset: -5, display: "grid", placeItems: "center", mixBlendMode: "multiply" },
-  vh: { position: "absolute", clipPath: "inset(50%)" },
-} satisfies Record<string, CSSProperties>;
-
 /** Whole slots only: NaN and negatives become 0, fractions round down. */
 const count = (n: number) => (Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0);
 
@@ -107,23 +90,23 @@ export function StampCard({
   return (
     <Sheet id={id} tape="none" tilt={seededTilt(autoSeed, 1.2)} className={cx(styles.root, className)} style={style}>
       {(title || showCount) && (
-        <div style={css.head}>
-          {title && <div style={css.title}>{title}</div>}
+        <div className={styles.head}>
+          {title && <div className={styles.title}>{title}</div>}
           {/* Already in the list's name, so screen readers don't hear it twice. */}
           {showCount && (
-            <span style={css.count} aria-hidden="true">
+            <span className={styles.count} aria-hidden="true">
               {progress}
             </span>
           )}
         </div>
       )}
-      <ol style={{ ...css.slots, gridTemplateColumns: `repeat(${cols}, minmax(0, 52px))` }} aria-label={name ? `${name}, ${progress}` : progress}>
+      <ol className={styles.slots} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 52px))` }} aria-label={name ? `${name}, ${progress}` : progress}>
         {Array.from({ length: total }, (_, i) => {
           const stamped = i < filled;
           if (!stamped) {
             return (
-              <li key={i} style={css.slot}>
-                <span style={css.vh}>{statusText.empty}</span>
+              <li key={i} className={styles.slot}>
+                <span className={styles.vh}>{statusText.empty}</span>
               </li>
             );
           }
@@ -134,14 +117,13 @@ export function StampCard({
           const nudge = () => Math.round((r() * 2 - 1) * 20) / 10;
           const x = nudge();
           const look: CSSProperties = {
-            ...css.stamp,
             color: `var(--plop-${ink === "mixed" ? STAMP_INKS[Math.floor(r() * STAMP_INKS.length)] : ink})`,
             opacity: pressure,
             transform: `translate(${x}px, ${nudge()}px) rotate(${tilt}deg)`,
           };
           return (
-            <li key={i} style={css.slot}>
-              <span style={css.vh}>{statusText.filled}</span>
+            <li key={i} className={styles.slot}>
+              <span className={styles.vh}>{statusText.filled}</span>
               <span className={cx(styles.stamp, i === filled - 1 && styles.latest)} style={look} aria-hidden="true">
                 {typeof stamp === "function" ? stamp(i) : stamp}
               </span>
