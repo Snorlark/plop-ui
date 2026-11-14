@@ -1,7 +1,19 @@
-/* The card is a Sheet (paper, ink edge, shadow, tilt), sized like a loyalty card. Inner layout is inline (see StampCard.tsx). */
+/* The card is a Sheet (paper, ink edge, shadow, tilt), sized like a loyalty card. */
 .root { display: inline-grid; gap: 12px; max-width: 100%; padding: 16px 18px 18px; }
 
-/* Each impression's drawing fills its slot, rubbed with crayon grain when the filters are on. */
+/* Header: the title and the count share a line and wrap apart on a narrow card. */
+.head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.title, .count { font-family: var(--plop-font-letter); font-style: italic; font-weight: var(--plop-weight-letter); text-transform: uppercase; letter-spacing: 0.04em; }
+.title { font-size: 17px; color: var(--plop-ink); overflow-wrap: anywhere; }
+.count { font-size: var(--plop-text-xs); color: var(--plop-ink-soft); }
+
+/* Slots: dashed rings in a grid. The column count is per instance, so it stays inline. */
+.slots { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.slot { position: relative; aspect-ratio: 1; border: 2.5px dashed var(--plop-ink-soft); border-radius: 50%; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Each impression overhangs its ring a little; its ink, pressure and tilt are seeded per slot, inline. */
+.stamp { position: absolute; inset: -5px; display: grid; place-items: center; mix-blend-mode: multiply; }
 .stamp > svg { width: 100%; height: 100%; }
 [data-plop-filters] .stamp { filter: url(#plop-crayon); }
 /* The newest stamp thunks onto the paper; reduced motion stops it. */
@@ -13,5 +25,5 @@
 [data-plop-motion="reduce"] .latest { animation: none; }
 /* Forced colors repaint the ink on their own; multiply would sink it into a dark Canvas. */
 @media (forced-colors: active) {
-  .stamp { mix-blend-mode: normal !important; }
+  .stamp { mix-blend-mode: normal; }
 }
