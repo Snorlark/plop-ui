@@ -52,7 +52,7 @@ import {
 } from "@plop-ui/react";
 import { surfaceNames, surfaces, type SurfaceName } from "@plop-ui/tokens";
 import { PaginationDemo } from "../_kit/PaginationDemo";
-import { matchaCupStamp } from "../_kit/StampCardDemo";
+import { matchaCupSource, matchaCupStamp } from "../_kit/StampCardDemo";
 import { useSearchParams } from "next/navigation";
 import { jsxAttr, jsString, jsxText } from "./code";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -75,6 +75,8 @@ interface Entry {
   controls: Control[];
   render: (v: Values) => ReactNode;
   code: (v: Values) => string;
+  /** Declarations the snippet needs, placed between the import and the JSX (so a PlopProvider wrap stays valid). */
+  setup?: (v: Values) => string | undefined;
 }
 
 const VARIANTS = ["ink", "periwinkle", "mint", "tomato", "mustard", "plain"];
@@ -282,7 +284,8 @@ const ENTRIES: Record<string, Entry> = {
       <StampCard title={s(v.title) || undefined} total={n(v.total)} filled={n(v.filled)} ink={s(v.ink) as "mixed"} showCount={b(v.showCount)} seed="playground"
         stamp={v.stamp === "matcha cup" ? matchaCupStamp : undefined} />
     ),
-    code: (v) => `<StampCard${s(v.title) ? ` title=${jsxAttr(v.title)}` : ""} total={${n(v.total)}} filled={${n(v.filled)}}${prop("ink", v.ink, "mixed")}${v.stamp === "matcha cup" ? " stamp={<MatchaCupSvg />}" : ""}${prop("showCount", v.showCount, true)} />`,
+    code: (v) => `<StampCard${s(v.title) ? ` title=${jsxAttr(v.title)}` : ""} total={${n(v.total)}} filled={${n(v.filled)}}${prop("ink", v.ink, "mixed")}${v.stamp === "matcha cup" ? " stamp={matchaCup}" : ""}${prop("showCount", v.showCount, true)} />`,
+    setup: (v) => (v.stamp === "matcha cup" ? `// Any drawing works: use currentColor so it takes the ink.\n${matchaCupSource}` : undefined),
   },
   callout: {
     label: "Callout",
@@ -719,9 +722,11 @@ export function Playground() {
 
   const code = useMemo(() => {
     const name = IMPORTS[component]!;
-    if (appliedRoundness === 1) return `import { ${name} } from "@plop-ui/react";\n\n${entry.code(values)}`;
+    const setup = entry.setup?.(values);
+    const pre = setup ? `${setup}\n\n` : "";
+    if (appliedRoundness === 1) return `import { ${name} } from "@plop-ui/react";\n\n${pre}${entry.code(values)}`;
     // Roundness lives on the provider (or --plop-roundness in CSS), so the snippet shows it wrapped.
-    return `import { PlopProvider, ${name} } from "@plop-ui/react";\n\n<PlopProvider roundness={${appliedRoundness}}>\n  ${entry.code(values).replace(/\n/g, "\n  ")}\n</PlopProvider>`;
+    return `import { PlopProvider, ${name} } from "@plop-ui/react";\n\n${pre}<PlopProvider roundness={${appliedRoundness}}>\n  ${entry.code(values).replace(/\n/g, "\n  ")}\n</PlopProvider>`;
   }, [component, entry, values, appliedRoundness]);
 
   const pick = (id: string) => {

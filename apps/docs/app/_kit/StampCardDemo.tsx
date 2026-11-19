@@ -6,14 +6,32 @@ import { useState } from "react";
 const TOTAL = 8;
 
 /** The café's own stamp: a matcha cup, drawn in currentColor so it takes the ink. Also used by the playground. */
+const cupPaths = [
+  { d: "M10 17h25l-2.6 19.5c-.3 2.4-2.3 4.2-4.7 4.2H17.4c-2.4 0-4.4-1.8-4.7-4.2Z", strokeWidth: "3", strokeLinejoin: "round" },
+  { d: "M35 21.5c4.4-.6 6.6 1.6 6.1 4.6-.5 3-3.4 4.6-7.4 4", strokeWidth: "3", strokeLinecap: "round" },
+  { d: "M13.4 24.5c5.6 1.8 13.6 1.8 20 0", strokeWidth: "2.4", strokeLinecap: "round" },
+  { d: "M19 6.5c-2 2.6 2 4.4 0 7M26 6.5c-2 2.6 2 4.4 0 7", strokeWidth: "2.4", strokeLinecap: "round" },
+] as const;
+
 export const matchaCupStamp = (
   <svg viewBox="0 0 48 48" aria-hidden="true">
-    <path d="M10 17h25l-2.6 19.5c-.3 2.4-2.3 4.2-4.7 4.2H17.4c-2.4 0-4.4-1.8-4.7-4.2Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
-    <path d="M35 21.5c4.4-.6 6.6 1.6 6.1 4.6-.5 3-3.4 4.6-7.4 4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <path d="M13.4 24.5c5.6 1.8 13.6 1.8 20 0" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-    <path d="M19 6.5c-2 2.6 2 4.4 0 7M26 6.5c-2 2.6 2 4.4 0 7" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    {cupPaths.map((p) => (
+      <path key={p.d} fill="none" stroke="currentColor" {...p} />
+    ))}
   </svg>
 );
+
+/** The same drawing as JSX source, so the playground's copied snippet defines the stamp it uses. */
+export const matchaCupSource = [
+  "const matchaCup = (",
+  '  <svg viewBox="0 0 48 48" aria-hidden="true">',
+  ...cupPaths.map(
+    ({ d, ...rest }) =>
+      `    <path d="${d}" fill="none" stroke="currentColor"${Object.entries(rest).map(([k, v]) => ` ${k}="${v}"`).join("")} />`,
+  ),
+  "  </svg>",
+  ");",
+].join("\n");
 
 /** A café loyalty card with a custom stamp: each "Buy a matcha" thunks the next cup onto the card. */
 export function StampCardDemo() {
