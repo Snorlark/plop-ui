@@ -9,7 +9,7 @@ import styles from "./Heading.module.css";
 export interface HeadingProps {
   /** The heading text. Plain text gets lettered; anything else renders as is. */
   children: ReactNode;
-  /** h1–h4. Default 2. */
+  /** h1 to h4. Default 2. */
   level?: 1 | 2 | 3 | 4;
   /** Tomato scribble underline. Default true for h1/h2. */
   scribble?: boolean;

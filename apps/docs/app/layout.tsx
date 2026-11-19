@@ -12,6 +12,7 @@ import { RideAlong } from "./_site/RideAlong";
 import { SiteFilters } from "./_site/Wordmark";
 import { patrickHand, sketchpop } from "./fonts";
 import { OffscreenPause } from "./_site/OffscreenPause";
+import { PagePeel } from "./_site/PagePeel";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
           <RideAlong />
           <OffscreenPause />
+          <PagePeel />
         </Providers>
       </body>
     </html>

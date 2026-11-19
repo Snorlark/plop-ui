@@ -3,6 +3,11 @@ import props from "../_generated/props.json";
 
 type Name = keyof typeof props;
 
+/** Prop descriptions come from JSDoc, where `x` marks code: show it as <code>, not as literal backticks. */
+function inlineCode(text: string) {
+  return text.split("`").map((part, i) => (i % 2 ? <code key={i}>{part}</code> : part));
+}
+
 /** Props for a component, generated from @plop-ui/react's TypeScript types (scripts/gen-props.mjs). */
 export function PropsTable({ of, inheritedFrom }: { of: Name; inheritedFrom?: string }) {
   const entry = props[of];
@@ -36,9 +41,9 @@ export function PropsTable({ of, inheritedFrom }: { of: Name; inheritedFrom?: st
                   {p.type}
                 </td>
                 <td className="mono" data-label="Default">
-                  {p.default ?? (p.required ? "—" : p.type === "boolean" ? "false" : "none")}
+                  {p.default ?? (!p.required && p.type === "boolean" ? "false" : "none")}
                 </td>
-                <td>{p.description || "—"}</td>
+                <td>{inlineCode(p.description)}</td>
               </tr>
             ))}
           </tbody>

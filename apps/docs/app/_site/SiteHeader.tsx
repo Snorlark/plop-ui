@@ -23,12 +23,13 @@ export async function SiteHeader() {
   return (
     <HeaderBar>
       <div className="site-header__in">
-        <Link href="/" aria-label="PlopUI home" className="site-header__logo logo-sticker">
+        <Link href="/" className="site-header__logo logo-sticker">
           <Wordmark size={40} />
+          <span className="vh">PlopUI home</span>
         </Link>
         <MegaNav stars={stars} />
         <Search />
-        <ButtonLink href={GITHUB} size="sm" variant="plain" tilt={2} burst={false} className="site-header__star" aria-label={stars ? `Star PlopUI on GitHub, ${stars} stars` : "Star PlopUI on GitHub"} iconLeft={<span className="site-header__star-icon" aria-hidden="true">★</span>}>
+        <ButtonLink href={GITHUB} size="sm" variant="plain" tilt={2} burst={false} className="site-header__star" aria-label={stars ? `Star · ${stars} stars, PlopUI on GitHub` : "Star PlopUI on GitHub"} iconLeft={<span className="site-header__star-icon" aria-hidden="true">★</span>}>
           {stars ? `Star · ${stars}` : "Star"}
         </ButtonLink>
         <FeedbackToggles />

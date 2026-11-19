@@ -455,7 +455,7 @@ const GRID: Array<{
     title: "Callout",
     text: "A strip torn off a pad, for what people must know before they act.",
     preview: (
-      <Callout tone="warn" title="Not saved yet" headingLevel={4} />
+      <Callout tone="warn" title="Not saved yet" headingLevel={3} />
     ),
   },
   {

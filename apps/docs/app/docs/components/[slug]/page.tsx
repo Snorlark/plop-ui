@@ -13,12 +13,24 @@ export function generateStaticParams() {
   return Object.keys(COMPONENT_DOCS).map((slug) => ({ slug }));
 }
 
+/** Search results cut descriptions past 160 chars: keep the whole sentences that fit, else cut at a word. */
+function metaDescription(lede: string) {
+  if (lede.length <= 160) return lede;
+  let out = "";
+  for (const sentence of lede.split(/(?<=[.!?])\s/)) {
+    const next = out ? `${out} ${sentence}` : sentence;
+    if (next.length > 160) break;
+    out = next;
+  }
+  return out.length >= 50 ? out : `${lede.slice(0, 157).replace(/\s+\S*$/, "")}…`;
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const slug = (await params).slug;
   const doc = COMPONENT_DOCS[slug];
   if (!doc) return { title: "Component" };
   // "Button: hand-drawn React component · PlopUI": people search "react <component> component".
-  return pageMeta({ title: `${doc.title}: hand-drawn React component`, description: doc.lede, path: `/docs/components/${slug}` });
+  return pageMeta({ title: `${doc.title}: hand-drawn React component`, description: metaDescription(doc.lede), path: `/docs/components/${slug}` });
 }
 
 const BADGE_TONES = ["periwinkle", "mint", "mustard"] as const;
@@ -51,6 +63,8 @@ export default async function ComponentPage({ params }: { params: Promise<{ slug
         </p>
       )}
 
+      {/* the demo can hold headings (Callout, Card titles): give it an h2 so the outline never skips from h1 to h3 */}
+      <h2 className="vh">Live example</h2>
       {slug === "loading" ? <LoadingShowcase /> : <ExampleTabs slug={slug} code={doc.code} />}
       {slug !== "breadcrumb" && <p className="doc-try">
         Change every prop live in the <Link href={`/playground?c=${slug === "loading" ? "spinner" : slug}`}>playground</Link>.
