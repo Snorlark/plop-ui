@@ -194,6 +194,23 @@ export function RideAlong() {
     const t = window.setTimeout(() => setHint(true), reduced ? 0 : 1800);
     return () => window.clearTimeout(t);
   }, [done, reduced]);
+  // The bubble only greets at the top of a page (the h1 on screen) and steps aside once you scroll into the
+  // content or reach the footer, so it never sits over a props table or the footer's links. The ticket shrinks
+  // to its round stamp at the same moment, as it always is on a phone.
+  const [away, setAway] = useState(false);
+  useEffect(() => {
+    const top = document.querySelector("main h1");
+    const foot = document.querySelector("footer");
+    if (typeof IntersectionObserver === "undefined") return;
+    const seen = new Map<Element, boolean>();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) seen.set(e.target, e.isIntersecting);
+      setAway((top ? seen.get(top) === false : false) || (foot ? seen.get(foot) === true : false));
+    });
+    if (top) io.observe(top);
+    if (foot) io.observe(foot);
+    return () => io.disconnect();
+  }, [path]);
   const dismissHint = () => {
     setHint(false);
     markHintSeen();
@@ -323,9 +340,9 @@ export function RideAlong() {
         </div>
       )}
 
-      <div className={styles.corner} data-done={done ? "" : undefined} data-open={open ? "" : undefined}>
+      <div className={styles.corner} data-done={done ? "" : undefined} data-open={open ? "" : undefined} data-compact={away ? "" : undefined}>
         {hint && !open && !done && (
-          <div className={styles.hint}>
+          <div className={styles.hint} data-away={away ? "" : undefined}>
             <button type="button" className={styles.hintText} onClick={() => { dismissHint(); setOpen(true); }}>
               Not sure where to start?
               <span className="vh"> Take the five-stop tour</span>
@@ -347,7 +364,8 @@ export function RideAlong() {
           }}
           data-bump={bump ? "" : undefined}
           onAnimationEnd={(e) => e.target === e.currentTarget && setBump(false)}
-          aria-label={done ? `Ride-along pass, all ${STEPS.length} stops stamped` : `New here? Ride-along pass, ${n} of ${STEPS.length} stops stamped`}
+          // the name starts with the stub's visible text ("New here? 2/5") so voice control can say what it sees
+          aria-label={done ? `Ride-along ${n}/${STEPS.length}, all stops stamped` : `New here? ${n}/${STEPS.length} stops stamped on the Ride-along pass`}
         >
           {done ? (
             <Stub done n={n} next={next} />

@@ -142,6 +142,9 @@ export function MegaNav({ stars }: { stars?: number | null }) {
 
   // Leaving the page, Escape, or a press outside closes everything.
   useEffect(() => {
+    // a hover timer still pending from before the click would reopen the menu over the new page
+    window.clearTimeout(timer.current);
+    current.current = null;
     setOpen(null);
     setSheet(false);
   }, [path]);
@@ -278,7 +281,7 @@ export function MegaNav({ stars }: { stars?: number | null }) {
               </details>
             ))}
             {/* The header's star sticker has no room on phones, so it lives at the foot of the menu. */}
-            <ButtonLink href={GITHUB} size="sm" variant="plain" tilt={-1} burst={false} className={styles.sheetStar} iconLeft={<span aria-hidden="true">★</span>} aria-label={stars ? `Star PlopUI on GitHub, ${stars} stars` : "Star PlopUI on GitHub"}>
+            <ButtonLink href={GITHUB} size="sm" variant="plain" tilt={-1} burst={false} className={styles.sheetStar} iconLeft={<span aria-hidden="true">★</span>} aria-label={stars ? `Star on GitHub · ${stars} stars for PlopUI` : "Star PlopUI on GitHub"}>
               {stars ? `Star on GitHub · ${stars}` : "Star on GitHub"}
             </ButtonLink>
           </nav>

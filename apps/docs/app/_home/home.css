@@ -56,7 +56,9 @@
 .home-install { position: relative; display: inline-flex; }
 /* Hangs under the box, so the box stays level with Get started. */
 .home-install__alt { position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); white-space: nowrap; min-height: 32px; padding: 0 10px; border: 0; background: none; cursor: pointer; font: inherit; font-size: 15px; color: var(--site-soft, var(--plop-ink-soft)); text-decoration: underline dashed; text-underline-offset: 4px; }
-.home-install__alt:hover { color: var(--site-ink, var(--plop-ink)); }
+/* the nav's highlighter swipe (megaNav.module.css .trigger), so this link answers like the rest of the site */
+.home-install__alt { background: linear-gradient(transparent 50%, color-mix(in srgb, var(--plop-mustard) 55%, transparent) 50% 86%, transparent 86%) no-repeat 0 0 / 0% 100%; transition: background-size 0.3s cubic-bezier(0.5, 0, 0.75, 0); }
+.home-install__alt:is(:hover, :focus-visible) { color: var(--site-ink, var(--plop-ink)); background-size: 100% 100%; transition: background-size 0.35s var(--plop-ease-squish); }
 .home-install__alt:focus-visible { outline: 2.5px dashed var(--plop-focus); outline-offset: 2px; border-radius: 8px; }
 @media (prefers-reduced-motion: no-preference) { .home-install code { animation: home-swap .3s var(--plop-ease-spring); } }
 @keyframes home-swap { from { opacity: 0; transform: translateY(6px); } }

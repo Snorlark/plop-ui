@@ -35,9 +35,9 @@
 
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Phones: blow the scene up and let its outer edges run off the screen, so the 404 stays big. */
+/* Phones: blow the scene up and let its outer edges (crane, props) run off the screen; both 4s stay inside. */
 @media (max-width: 600px) {
-  .stage { width: 150%; max-width: none; }
+  .stage { width: 125%; max-width: none; }
   .say { font-size: 13px; padding: 6px 10px; top: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .say { animation: none; } }

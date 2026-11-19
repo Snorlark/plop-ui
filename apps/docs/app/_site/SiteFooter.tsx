@@ -67,8 +67,9 @@ export function SiteFooter() {
     <footer className={styles.foot} aria-label="Site footer" data-pausable>
       <div className={styles.top}>
         <div className={styles.brand}>
-          <Link href="/" aria-label="PlopUI home" className={`${styles.logo} logo-sticker`}>
+          <Link href="/" className={`${styles.logo} logo-sticker`}>
             <Wordmark size={96} />
+            <span className="vh">PlopUI home</span>
           </Link>
           <p className={styles.tagline}>
             PlopUI (also written Plop UI or plop-ui) is a hand-drawn React UI component library, imperfect on purpose. It breaks the

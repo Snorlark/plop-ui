@@ -71,7 +71,7 @@ test("Playground: changing a prop updates the preview and the code", async ({ pa
 test("Ride-along pass: Enter opens it from the corner stub, Escape closes it and returns focus", async ({ page }) => {
   await page.goto("/docs/getting-started");
   const stub = page.getByRole("button", { name: /Ride-along pass/ });
-  await expect(stub).toHaveAccessibleName(/1 of 5 stops stamped/);
+  await expect(stub).toHaveAccessibleName(/1\/5 stops stamped/);
   await stub.focus();
   await page.keyboard.press("Enter");
   const pass = page.getByRole("dialog", { name: "Ride-along pass" });

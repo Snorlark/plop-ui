@@ -9,7 +9,7 @@ import styles from "./what.module.css";
 export const metadata = pageMeta({
   title: "What is PlopUI?",
   description:
-    "PlopUI (also written Plop UI or plop-ui) is an open source, hand-drawn React UI component library: wobbly stickers, washi tape and a hand-lettered font, built on native elements and accessible to WCAG AA.",
+    "PlopUI (also Plop UI or plop-ui) is an open source, hand-drawn React component library built on native elements and accessible to WCAG AA.",
   path: "/docs/what-is-plopui",
 });
 
