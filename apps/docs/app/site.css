@@ -203,6 +203,91 @@ html[data-tear]::view-transition-old(root) {
 @media (prefers-reduced-motion: reduce) {
   html[data-tear]::view-transition-old(root) { animation: none; }
 }
+
+/*
+ * Page change: the old page peels off like a sticker (PagePeel.tsx). A 45-degree fold starts at the
+ * bottom-right corner, the corner lifts and hesitates, then the sheet comes away to the top-left in one pull.
+ * Past the fold the new page shows. The peeled part lies folded back over the old page as a flap: a die-cut
+ * paper sheet with a hand-drawn ink edge and the site's hatched shadow. The fold itself gets an ink crease
+ * and a hatched band where the lifted sheet shades the new page.
+ *
+ * The fold is the line x + y = c. Every layer moves by its own transform keyframes, all written from the
+ * same c (100vw + 100vh at the start, 93% of it after the lift, just past 0 at the end) and the same timing,
+ * so they stay locked together on the compositor. Only the old page's mask is a clip-path.
+ * The header is part of the sheet: it peels off with the old page, and the new page's header is underneath.
+ */
+html[data-peel]::view-transition-old(root) {
+  z-index: 2;
+  /* the UA crossfades the pair with plus-lighter, which shows both pages at once: the old page is a solid sheet */
+  mix-blend-mode: normal;
+  animation: page-peel-mask 1s linear both;
+}
+html[data-peel]::view-transition-new(root) { mix-blend-mode: normal; animation: none; }
+@keyframes page-peel-mask {
+  0% { clip-path: polygon(0 0, calc((100vw + 100vh)) 0, 0 calc(100vw + 100vh)); animation-timing-function: cubic-bezier(.3, .6, .4, 1); }
+  18% { clip-path: polygon(0 0, calc((100vw + 100vh) * 0.93) 0, 0 calc((100vw + 100vh) * 0.93)); animation-timing-function: cubic-bezier(.5, 0, .25, 1); }
+  100% { clip-path: polygon(0 0, calc(-3vmin) 0, 0 -3vmin); }
+}
+
+.page-peel-fx { display: none; }
+html[data-peel] .page-peel-fx {
+  display: block; position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; pointer-events: none;
+  view-transition-name: page-peel-fx;
+}
+html[data-peel]::view-transition-group(page-peel-fx) { z-index: 4; animation: none; }
+html[data-peel]::view-transition-old(page-peel-fx) { display: none; }
+html[data-peel]::view-transition-new(page-peel-fx) { mix-blend-mode: normal; animation: none; }
+/* Everything below starts parked at the corner (the 0% pose) and runs once the transition is ready. */
+.page-peel-fx > *, .page-peel-fx__unfold, .page-peel-fx__flap { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+
+/* The old side of the fold: a big square turned 45 degrees with one edge on the fold, so the flap is cut there. */
+.page-peel-fx__fold { width: calc(200vw + 200vh); height: calc(200vw + 200vh); overflow: hidden; }
+html[data-peel] .page-peel-fx__fold { animation: page-peel-fold 1s linear both paused; }
+@keyframes page-peel-fold {
+  0% { transform: translate(calc((100vw + 100vh) / 2), calc((100vw + 100vh) / 2)) rotate(45deg) translate(calc((100vw + 100vh) * -2), calc((100vw + 100vh) * -1)); animation-timing-function: cubic-bezier(.3, .6, .4, 1); }
+  18% { transform: translate(calc((100vw + 100vh) * 0.465), calc((100vw + 100vh) * 0.465)) rotate(45deg) translate(calc((100vw + 100vh) * -2), calc((100vw + 100vh) * -1)); animation-timing-function: cubic-bezier(.5, 0, .25, 1); }
+  100% { transform: translate(-1.5vmin, -1.5vmin) rotate(45deg) translate(calc((100vw + 100vh) * -2), calc((100vw + 100vh) * -1)); }
+}
+/* undoes the fold's turn, so the flap inside is placed in plain screen coordinates */
+html[data-peel] .page-peel-fx__unfold { animation: page-peel-unfold 1s linear both paused; }
+@keyframes page-peel-unfold {
+  0% { transform: translate(calc((100vw + 100vh) * 2), calc(100vw + 100vh)) rotate(-45deg) translate(calc((100vw + 100vh) / -2), calc((100vw + 100vh) / -2)); animation-timing-function: cubic-bezier(.3, .6, .4, 1); }
+  18% { transform: translate(calc((100vw + 100vh) * 2), calc(100vw + 100vh)) rotate(-45deg) translate(calc((100vw + 100vh) * -0.465), calc((100vw + 100vh) * -0.465)); animation-timing-function: cubic-bezier(.5, 0, .25, 1); }
+  100% { transform: translate(calc((100vw + 100vh) * 2), calc(100vw + 100vh)) rotate(-45deg) translate(1.5vmin, 1.5vmin); }
+}
+/* The flap is the peeled corner mirrored across the fold: a right triangle whose tip is the corner's mirror image
+   (c - 100vh, c - 100vw) and whose legs are the page's bottom and right edges, now lying along x and y. */
+.page-peel-fx__flap { width: calc(100vw + 100vh); height: calc(100vw + 100vh); }
+html[data-peel] .page-peel-fx__flap { animation: page-peel-flap 1s linear both paused; }
+@keyframes page-peel-flap {
+  0% { transform: translate(calc((100vw + 100vh) - 100vh), calc((100vw + 100vh) - 100vw)); animation-timing-function: cubic-bezier(.3, .6, .4, 1); }
+  18% { transform: translate(calc((100vw + 100vh) * 0.93 - 100vh), calc((100vw + 100vh) * 0.93 - 100vw)); animation-timing-function: cubic-bezier(.5, 0, .25, 1); }
+  100% { transform: translate(calc(-3vmin - 100vh), calc(-3vmin - 100vw)); }
+}
+.page-peel-fx__flap > * { position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 0 100%); }
+/* the site's hatched sticker shadow, peeking out past the flap's two free edges */
+.page-peel-fx__hatch { background: var(--plop-shadow-hatch); translate: -7px -7px; }
+.page-peel-fx__paper { background: var(--plop-paper); }
+.page-peel-fx__ink { clip-path: none; overflow: visible; }
+
+/* The crease: an ink line on the fold, and hatching where the lifted sheet shades the new page. */
+.page-peel-fx__edge {
+  width: 28px; height: calc(300vw + 300vh);
+  background:
+    linear-gradient(var(--plop-ink), var(--plop-ink)) 0 0 / 2.5px 100% no-repeat,
+    repeating-linear-gradient(0deg, var(--plop-hatch) 0 2.2px, transparent 2.2px 5.6px);
+  -webkit-mask: linear-gradient(to right, black 0 10%, transparent); mask: linear-gradient(to right, black 0 10%, transparent);
+}
+html[data-peel] .page-peel-fx__edge { animation: page-peel-edge 1s linear both paused; }
+@keyframes page-peel-edge {
+  0% { transform: translate(calc((100vw + 100vh) / 2), calc((100vw + 100vh) / 2)) rotate(45deg) translateY(-50%); animation-timing-function: cubic-bezier(.3, .6, .4, 1); }
+  18% { transform: translate(calc((100vw + 100vh) * 0.465), calc((100vw + 100vh) * 0.465)) rotate(45deg) translateY(-50%); animation-timing-function: cubic-bezier(.5, 0, .25, 1); }
+  100% { transform: translate(-1.5vmin, -1.5vmin) rotate(45deg) translateY(-50%); }
+}
+html[data-peel-run] .page-peel-fx * { animation-play-state: running; }
+@media (prefers-reduced-motion: reduce) {
+  html[data-peel]::view-transition-old(root), html[data-peel] .page-peel-fx * { animation: none; }
+}
 @media (max-width: 640px) {
   .site-header__in { padding: 16px 18px 12px; }
 }
